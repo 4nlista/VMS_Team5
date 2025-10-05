@@ -1,0 +1,122 @@
+/* Container tổng cho sidebar và content */
+.content-container {
+    display: flex;
+    height: 100vh;
+    background-color: floralwhite; /* Giữ màu nền sáng cho toàn bộ container */
+}
+
+/* Sidebar */
+.sidebar {
+    width: 280px;
+    background-color: #192942; /* Màu nền sidebar sáng hơn */
+    color: #000; /* Màu chữ trong sidebar sẽ đổi thành đen */
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Giữ hiệu ứng bóng mờ */
+    border-right: 4px solid #16a085; /* Viền bên phải cho sidebar */
+}
+
+/* Logo trong sidebar */
+.sidebar .logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 0 20px 20px 0;
+    padding: 10px 0;
+    margin-bottom: 1rem;
+    gap: 10px;
+}
+
+.sidebar .logo img {
+    width: 80px;
+    height: 80px;
+    border-radius: 5px; /* Bo viền logo thành vuông */
+    border: 3px solid #16a085; /* Thêm viền cho logo */
+    object-fit: cover;
+}
+
+.sidebar .logo span {
+    font-weight: 700;
+    font-size: 1rem;
+    color: white; /* Đổi màu chữ logo thành đen */
+    margin-top: 5px;
+    text-align: center;
+}
+
+/* Menu list */
+.sidebar ul.nav {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.sidebar ul.nav li {
+    margin-bottom: 0.5rem;
+}
+
+/* Các liên kết trong menu */
+.sidebar ul.nav li a {
+    display: flex;
+    align-items: center;
+    color: #000; /* Màu chữ menu sidebar đen */
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+/* Thêm icon vào menu */
+.sidebar ul.nav li a i {
+    font-size: 1.2rem;
+    margin-right: 12px;
+}
+
+/* Khi hover */
+.sidebar ul.nav li a:hover {
+    background: linear-gradient(90deg, #16a085, #1abc9c); /* Gradient khi hover */
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(75, 108, 183, 0.5);
+    transform: translateX(5px);
+}
+
+/* Khi được chọn (active) */
+.sidebar ul.nav li a.active {
+    background: linear-gradient(90deg, #16a085, #1abc9c);
+    color: #fff;
+    box-shadow: 0 3px 12px rgba(75, 108, 183, 0.6); /* Sáng hơn hover */
+    transform: translateX(5px);
+    font-weight: bold;
+}
+
+/* Khi vừa active vừa hover */
+.sidebar ul.nav li a.active:hover {
+    filter: brightness(1.1); /* Tăng sáng chút nữa */
+}
+
+/* Main content */
+.main-content {
+    flex-grow: 1;
+    padding: 2rem 3rem;
+    background-color: #FDF4F5; /* Màu nền sáng cho main content */
+    color: #333; /* Màu chữ tối cho dễ đọc */
+}
+
+/* Button logout đẹp hơn */
+.main-content button {
+    background-color: #dc3545;
+    border: none;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+}
+
+.main-content button:hover {
+    background-color: #b02a37;
+}

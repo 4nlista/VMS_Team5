@@ -1,0 +1,65 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Sep 22, 2025, 10:37:30 AM
+    Author     : Admin
+*/
+
+/* Giãn khoảng cách filter và search */
+.filter-form .filter-input {
+    min-width: 160px;
+}
+
+/* Hiển thị trạng thái Active / Inactive */
+.status-badge {
+    padding: 5px 12px;
+    border-radius: 50px;
+    display: inline-flex;
+    align-items: center;
+    font-weight: 500;
+}
+
+.status-badge.active {
+    background-color: #198754; /* Bootstrap green */
+    color: white;
+}
+
+.status-badge.inactive {
+    background-color: #dc3545; /* Bootstrap red */
+    color: white;
+}
+
+/* Icon hành động */
+/*.action-icons i {
+    font-size: 1.1rem;
+    cursor: pointer;
+}*/
+
+.action-icons a:hover i {
+    opacity: 0.8;
+}
+.action-icons a {
+    font-size: 1.5rem; /* Tăng kích thước biểu tượng */
+    margin-right: 10px; /* Khoảng cách giữa các biểu tượng */
+    transition: all 0.3s ease; /* Hiệu ứng hover */
+}
+
+.action-icons a:hover {
+    color: #0056b3; /* Màu khi hover */
+    background-color: rgba(0, 123, 255, 0.1); /* Màu nền khi hover */
+}
+.action-icons a {
+    margin-right: 10px; /* Khoảng cách giữa các biểu tượng */
+    transition: background-color 0.3s ease; /* Hiệu ứng chuyển màu khi hover */
+}
+
+.action-icons a.btn-success:hover {
+    background-color: rgba(40, 167, 69, 0.1); /* Màu nền khi hover màu xanh lá */
+}
+
+.action-icons a.btn-warning:hover {
+    background-color: rgba(255, 193, 7, 0.1); /* Màu nền khi hover màu vàng */
+}
+
