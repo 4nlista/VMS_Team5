@@ -26,7 +26,7 @@ public class AccountService {
         return accountDAO.getAccountById(id);
     }
 
-    // 1. Hiển thị dữ liệu danh sách các Accounts
+    // 1.1 Hiển thị dữ liệu danh sách các Accounts
     public List<Account> getAllAccounts() {
         return accountDAO.getAllAccounts();
     }
