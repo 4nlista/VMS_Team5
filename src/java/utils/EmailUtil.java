@@ -21,8 +21,8 @@ public class EmailUtil {
 
      public static void sendEmail(String toEmail, String subject, String messageContent) {
         // Thông tin người gửi
-        final String fromEmail = "your_email@gmail.com"; // Đổi thành Gmail của bạn
-        final String password = "your_app_password";     // App password (16 ký tự)
+        final String fromEmail = "chatboxaipro@gmail.com"; // Đổi thành Gmail của bạn
+        final String password = "tgzkkuuhpwgeoiza";     // App password (16 ký tự)
 
         // Cấu hình server SMTP của Gmail
         Properties props = new Properties();
