@@ -12,6 +12,7 @@ import model.Account;
  *
  * @author Admin
  */
+// xử lí nghiệp vụ logic login đăng nhập
 public class LoginService {
 
     private LoginDAO loginDAO;

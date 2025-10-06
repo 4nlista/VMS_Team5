@@ -11,7 +11,7 @@ import utils.EmailUtil;
  * @author Admin
  */
 
-// code logic chức năng gửi mail
+// xử lí nghiệp vụ logic chức năng gửi mail
 public class EmailService {
 
     // Gửi email xác nhận đăng ký

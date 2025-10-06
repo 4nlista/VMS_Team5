@@ -12,7 +12,7 @@ import model.Account;
  *
  * @author Admin
  */
-// xử lí nghiệp vụ logic login và đăng nhập
+// xử lí lấy dữ liệu các tài khoản
 public class AccountService {
 
     private AccountDAO accountDAO;
