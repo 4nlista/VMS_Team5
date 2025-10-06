@@ -43,13 +43,12 @@ public class RegisterServlet extends HttpServlet {
         String gender = request.getParameter("gender");
         String address = request.getParameter("address");
 
-        // Mã hóa mật khẩu (bắt buộc)
-        String hashedPassword = PasswordUtil.hashPassword(password);
+
 
         // Tạo đối tượng Account
         Account acc = new Account();
         acc.setUsername(username);
-        acc.setPassword(hashedPassword);
+        acc.setPassword(password);
         acc.setRole("volunteer"); // mặc định
         acc.setStatus(true);
 

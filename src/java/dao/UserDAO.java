@@ -7,6 +7,8 @@ package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Date;
+import model.Account;
 import model.User;
 import utils.DBContext;
 
@@ -63,6 +65,54 @@ public class UserDAO {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public static void main(String[] args) {
+        try {
+            System.out.println("===== TEST REGISTER FULL (EXCEPT JOB & BIO) =====");
+
+            // --- Khởi tạo DAO ---
+            AccountDAO accountDAO = new AccountDAO();
+            UserDAO userDAO = new UserDAO();
+
+            // --- B1: Tạo tài khoản mới ---
+            Account acc = new Account();
+            acc.setUsername("an_fulltest");
+            acc.setPassword("123456"); // Có thể hash nếu muốn
+            acc.setRole("volunteer");
+            acc.setStatus(true);
+
+            // Gọi DAO để insert account
+            int accountId = accountDAO.insertAccount(acc);
+
+            if (accountId <= 0) {
+                System.out.println("❌ Insert account thất bại!");
+                return;
+            }
+            System.out.println("✅ Account inserted with ID = " + accountId);
+
+            // --- B2: Tạo user đầy đủ thông tin ---
+            User user = new User();
+            user.setAccount_id(accountId);
+            user.setFull_name("Nguyen Bao An Test");
+            user.setEmail("an_fulltest@example.com");
+            user.setGender("Male");
+            user.setPhone("0989123123");
+            user.setAddress("Hanoi, Vietnam");
+//            user.setDob(Date.valueOf("2004-05-20")); // yyyy-MM-dd format
+
+            // Bỏ qua job & bio
+            boolean inserted = userDAO.insertUser(user);
+
+            if (inserted) {
+                System.out.println("✅ Insert user thành công!");
+            } else {
+                System.out.println("❌ Insert user thất bại!");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

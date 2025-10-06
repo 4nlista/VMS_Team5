@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import model.Account;
 import utils.DBContext;
+import utils.PasswordUtil;
 
 /**
  *
@@ -29,26 +30,54 @@ public class LoginDAO {
 
     // 1. Kiểm tra đăng nhập (username và password) 
     public Account checkLogin(String username, String password) {
-        String sql = "SELECT id, username, password, role, status "
-                + "FROM Accounts WHERE username = ? AND password = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, username);
-            ps.setString(2, password);
+        String sql = "SELECT * FROM Accounts WHERE username = ?";
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return new Account(
-                            rs.getInt("id"),
-                            rs.getString("username"),
-                            rs.getString("password"),
-                            rs.getString("role"),
-                            rs.getBoolean("status") // Gán giá trị status
-                    );
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                String storedPass = rs.getString("password");
+
+                System.out.println("Stored pass in DB = " + storedPass);
+                System.out.println("Input password = " + password);
+                System.out.println("Input hashed = " + PasswordUtil.hashPassword(password));
+
+                // ✅ 1️⃣ Nếu DB lưu plain text
+                if (storedPass.equals(password)) {
+                    System.out.println("👉 Match: plain text");
+                    return mapAccount(rs);
                 }
+
+                // ✅ 2️⃣ Nếu DB lưu hash SHA-256
+                String hashedInput = PasswordUtil.hashPassword(password);
+                if (storedPass.equals(hashedInput)) {
+                    System.out.println("👉 Match: hashed (SHA-256)");
+                    return mapAccount(rs);
+                }
+
+                System.out.println("❌ Password không khớp (plain & hashed đều sai)");
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null; // Nếu login thất bại
+        return null;
+    }
+
+    private Account mapAccount(ResultSet rs) throws Exception {
+        return new Account(
+                rs.getInt("id"),
+                    rs.getString("username"),
+                rs.getString("password"),
+                rs.getString("role"),
+                rs.getBoolean("status")
+        );
+    }
+
+    public static void main(String[] args) {
+        LoginDAO dao = new LoginDAO();
+        Account acc = dao.checkLogin("andeptrai123", "123");
+        System.out.println(acc != null ? "✅ Login thành công" : "❌ Login thất bại");
     }
 }
