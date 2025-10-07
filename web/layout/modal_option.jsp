@@ -12,9 +12,9 @@
             <div class="col-md-5 d-flex justify-content-center counter-wrap ftco-animate">
                 <div class="block-18 color-1 align-items-stretch">
                     <div class="text">
-                        <span>Served Over</span>
-                        <strong class="number" data-number="1432805">0</strong>
-                        <span>Children in 190 countries in the world</span>
+                        <span>Quỹ đóng góp từ thiện của tổ chức</span>
+                        <strong class="number" data-number="26550000">0</strong>
+                        <span>Bảo vệ môi trường và giúp đỡ những hoàn cảnh khó khăn.</span>
                     </div>
                 </div>
             </div>

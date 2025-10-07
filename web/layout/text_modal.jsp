@@ -13,8 +13,8 @@
                 <div class="media block-6 d-flex services p-3 py-4 d-block">
                     <div class="icon d-flex mb-3"><span class="flaticon-donation-1"></span></div>
                     <div class="media-body pl-4">
-                        <h3 class="heading">Make Donation</h3>
-                        <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic.</p>
+                        <h3 class="heading">Nhà tài trợ</h3>
+                        <p>Đăng ký trở thành nhà tài trợ. Theo dõi sự kiện đóng góp và chia sẻ rộng rãi ra toàn thế giới.</p>
                     </div>
                 </div>      
             </div>
@@ -22,8 +22,8 @@
                 <div class="media block-6 d-flex services p-3 py-4 d-block">
                     <div class="icon d-flex mb-3"><span class="flaticon-charity"></span></div>
                     <div class="media-body pl-4">
-                        <h3 class="heading">Become A Volunteer</h3>
-                        <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic.</p>
+                        <h3 class="heading">Tình nguyện viên</h3>
+                        <p>Đăng ký trở thành tình nguyên viên năng động, sáng tạo. Xây dựng môi trường sạch đẹp và giúp đỡ các hoàn cảnh khó khăn.</p>
                     </div>
                 </div>      
             </div>
@@ -31,8 +31,8 @@
                 <div class="media block-6 d-flex services p-3 py-4 d-block">
                     <div class="icon d-flex mb-3"><span class="flaticon-donation"></span></div>
                     <div class="media-body pl-4">
-                        <h3 class="heading">Sponsorship</h3>
-                        <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic.</p>
+                        <h3 class="heading">Quyên góp ủng hộ</h3>
+                        <p>Tài trợ và đóng góp cho sự kiện, góp phần tăng chất lượng và lan tỏa tình yêu thương. Xây dưng một cuộc sống tươi đẹp.</p>
                     </div>
                 </div>    
             </div>

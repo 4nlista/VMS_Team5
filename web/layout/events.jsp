@@ -21,7 +21,7 @@
                     <div class="text p-4 d-block">
                         <div class="meta mb-3">
                             <div><a href="#">Sep. 10, 2018</a></div>
-                            <div><a href="#">Name of Organization</a></div>
+                            <div><a href="#">Tên của tổ chức</a></div>
                             <div><a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a></div>
                         </div>
                         <h3 class="heading mb-4"><a href="#">World Wide Donation</a></h3>
@@ -38,7 +38,7 @@
                     <div class="text p-4 d-block">
                         <div class="meta mb-3">
                             <div><a href="#">Sep. 10, 2018</a></div>
-                            <div><a href="#">Name of Organization</a></div>
+                            <div><a href="#">Tên của người tổ chức</a></div>
                             <div><a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a></div>
                         </div>
                         <h3 class="heading mb-4"><a href="#">World Wide Donation</a></h3>
@@ -55,7 +55,7 @@
                     <div class="text p-4 d-block">
                         <div class="meta mb-3">
                             <div><a href="#">Sep. 10, 2018</a></div>
-                            <div><a href="#">Name of Organization</a></div>
+                            <div><a href="#">Tên của người tổ chức</a></div>
                             <div><a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a></div>
                         </div>
                         <h3 class="heading mb-4"><a href="#">World Wide Donation</a></h3>
