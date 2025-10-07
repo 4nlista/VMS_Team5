@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package utils;
+
 import jakarta.mail.Authenticator;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
@@ -12,6 +13,7 @@ import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import java.util.Properties;
+
 /**
  *
  * @author Admin
@@ -19,10 +21,10 @@ import java.util.Properties;
 //class dùng để gửi Mail cho email dùng để đăng kí.
 public class EmailUtil {
 
-     public static void sendEmail(String toEmail, String subject, String messageContent) {
+    public static void sendEmail(String toEmail, String subject, String messageContent) {
         // Thông tin người gửi
-        final String fromEmail = "chatboxaipro@gmail.com"; // Đổi thành Gmail của bạn
-        final String password = "tgzkkuuhpwgeoiza";     // App password (16 ký tự)
+        final String fromEmail = "chatboxaipro@gmail.com"; // Đổi thành Gmail người gửi
+        final String password = "tgzkkuuhpwgeoiza";     // App password do google cung cấp 
 
         // Cấu hình server SMTP của Gmail
         Properties props = new Properties();
@@ -40,14 +42,13 @@ public class EmailUtil {
                 }
             });
 
-            // Soạn nội dung mail
+            // Nội dung mail gửi đi
             Message msg = new MimeMessage(session);
             msg.setFrom(new InternetAddress(fromEmail));
             msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
             msg.setSubject(subject);
-            msg.setText(messageContent);
-
-            // Gửi mail
+            msg.setContent(messageContent, "text/html; charset=UTF-8");
+//            msg.setHeader("Content-Type", "text/html; charset=UTF-8"); 
             Transport.send(msg);
             System.out.println("Email sent successfully to " + toEmail);
         } catch (MessagingException e) {

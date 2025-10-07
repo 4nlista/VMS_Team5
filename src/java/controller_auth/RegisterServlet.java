@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+
+import java.sql.Date;
 import model.Account;
 import model.User;
 import service.RegisterService;
@@ -26,6 +28,7 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.sendRedirect("auth/register.jsp");
 
     }
 
@@ -33,44 +36,61 @@ public class RegisterServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Lấy dữ liệu từ form JSP
         request.setCharacterEncoding("UTF-8");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        String fullName = request.getParameter("full_name");
+        String confirmPassword = request.getParameter("confirmPassword");
         String email = request.getParameter("email");
+        String fullName = request.getParameter("fullName");
         String phone = request.getParameter("phone");
-        String gender = request.getParameter("gender");
         String address = request.getParameter("address");
+        String gender = request.getParameter("gender");
+        String role = request.getParameter("role");
+        String dobStr = request.getParameter("dob");
 
+        // 2️. Kiểm tra mật khẩu khớp
+        if (username == null || password == null || confirmPassword == null
+                || !password.equals(confirmPassword)) {
+            request.setAttribute("error", "Mật khẩu xác nhận không khớp!");
+            request.getRequestDispatcher("auth/register.jsp").forward(request, response);
+            return;
+        }
 
+        // 3️. Chuyển đổi DOB sang java.sql.Date
+        Date dob = null;
+        if (dobStr != null && !dobStr.isEmpty()) {
+            try {
+                dob = Date.valueOf(dobStr); // format yyyy-MM-dd
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            }
+        }
 
-        // Tạo đối tượng Account
+        // 4️ Tạo đối tượng Account
         Account acc = new Account();
         acc.setUsername(username);
         acc.setPassword(password);
-        acc.setRole("volunteer"); // mặc định
-        acc.setStatus(true);
+        acc.setRole(role);
+        acc.setStatus(true); // mặc định kích hoạt
 
-        // Tạo đối tượng User
+        // 5️ Tạo đối tượng User
         User user = new User();
         user.setFull_name(fullName);
         user.setEmail(email);
         user.setPhone(phone);
-        user.setGender(gender);
         user.setAddress(address);
+        user.setGender(gender);
+        user.setDob(dob);
 
-        // Gọi service để xử lý logic
+        // 6️ Gọi service để xử lý đăng ký
         String result = registerService.register(acc, user);
 
+        // 7️ Xử lý kết quả
         if ("success".equals(result)) {
-            // Nếu đăng ký thành công → chuyển đến trang login
-            request.setAttribute("message", "Đăng ký thành công! Vui lòng đăng nhập.");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
+                response.sendRedirect("auth/login.jsp");
         } else {
-            // Nếu thất bại → trả lỗi về form
             request.setAttribute("error", result);
-            request.getRequestDispatcher("register.jsp").forward(request, response);
+            request.getRequestDispatcher("auth/register.jsp").forward(request, response);
         }
 
     }

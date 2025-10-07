@@ -98,11 +98,11 @@
                                                 <div class="col-md-6">
                                                     <label class="form-label d-block">Giới tính</label>
                                                     <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="gender" value="Nam"/>
+                                                        <input class="form-check-input" type="radio" name="gender" value="male"/>
                                                         <label class="form-check-label">Nam</label>
                                                     </div>
                                                     <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="gender" value="Nữ"/>
+                                                        <input class="form-check-input" type="radio" name="gender" value="female"/>
                                                         <label class="form-check-label">Nữ</label>
                                                     </div>
                                                 </div>
