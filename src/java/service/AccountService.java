@@ -31,4 +31,22 @@ public class AccountService {
         return accountDAO.getAllAccounts();
     }
 
+    // 2. Khóa / Mở khóa tài khoản (business rule: không cho tự khóa admin hiện hành)
+    public boolean toggleAccountStatus(int id) {
+        Account acc = accountDAO.getAccountById(id);
+        if (acc == null) {
+            return false;
+        }
+        boolean newStatus = !acc.isStatus();
+        return accountDAO.updateAccountStatus(id, newStatus);
+    }
+
+    // 3. Lọc & tìm kiếm account theo role/status/search
+    public List<Account> findAccounts(String role, Boolean status, String search) {
+        // Normalize role to lowercase expected by DB data
+        String normalizedRole = role == null ? null : role.trim().toLowerCase();
+        String trimmedSearch = search == null ? null : search.trim();
+        return accountDAO.findAccounts(normalizedRole, status, trimmedSearch);
+    }
+
 }
