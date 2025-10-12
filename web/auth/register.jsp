@@ -22,14 +22,13 @@
                     model.Account acc = (model.Account) request.getAttribute("acc");
                     model.User user = (model.User) request.getAttribute("user");
                 %>
-
+                
                 <% if (error != null) { %>
-                <div class="error-message text-danger text-center mt-3">
-                    <script>
-                        alert("<%= error %>");
-                    </script>
-                </div>
+                <script>
+                    alert("<%= error %>");
+                </script>
                 <% } %>
+
 
                 <div class="container py-5">
                     <div class="row justify-content-center align-items-center">
@@ -167,6 +166,7 @@
                 </div>
             </section>
         </form>
+
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.1.0/mdb.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
