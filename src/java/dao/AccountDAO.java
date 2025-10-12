@@ -247,4 +247,116 @@ public class AccountDAO {
         }
     }
 
+    // 6. Kiểm tra ràng buộc dữ liệu liên quan (FK) trước khi xóa
+    public boolean hasRelatedRecords(int accountId) {
+        String[] queries = new String[] {
+            // Users is intentionally excluded because we delete it first in a transaction
+            "SELECT COUNT(*) FROM Events WHERE organization_id = ?",
+            "SELECT COUNT(*) FROM Event_Volunteers WHERE volunteer_id = ?",
+            "SELECT COUNT(*) FROM Donations WHERE volunteer_id = ?",
+            "SELECT COUNT(*) FROM Feedback WHERE volunteer_id = ?",
+            "SELECT COUNT(*) FROM Reports WHERE organization_id = ?",
+            "SELECT COUNT(*) FROM Notifications WHERE receiver_id = ?",
+            "SELECT COUNT(*) FROM News WHERE author_id = ?"
+        };
+        try {
+            for (String q : queries) {
+                try (PreparedStatement ps = conn.prepareStatement(q)) {
+                    ps.setInt(1, accountId);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next() && rs.getInt(1) > 0) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return true; // an toàn: coi như có ràng buộc để tránh xóa nhầm
+        }
+        return false;
+    }
+
+    // 7. Xóa account (đã kiểm tra điều kiện ở Service). Xóa Users trước cho chắc.
+    public boolean deleteAccount(int id) {
+        String deleteUser = "DELETE FROM Users WHERE account_id = ?";
+        String deleteAccount = "DELETE FROM Accounts WHERE id = ?";
+        try {
+            conn.setAutoCommit(false);
+            try (PreparedStatement ps1 = conn.prepareStatement(deleteUser)) {
+                ps1.setInt(1, id);
+                ps1.executeUpdate();
+            }
+            int rows;
+            try (PreparedStatement ps2 = conn.prepareStatement(deleteAccount)) {
+                ps2.setInt(1, id);
+                rows = ps2.executeUpdate();
+            }
+            conn.commit();
+            return rows > 0;
+        } catch (SQLException e) {
+            try { conn.rollback(); } catch (SQLException ignore) {}
+            e.printStackTrace();
+            return false;
+        } finally {
+            try { conn.setAutoCommit(true); } catch (SQLException ignore) {}
+        }
+    }
+
+    // 8. Xóa account và toàn bộ dữ liệu liên quan (cascading delete bằng code)
+    public boolean deleteAccountCascade(int id) {
+        String delReportsByEventOrg = "DELETE FROM Reports WHERE feedback_id IN (SELECT id FROM Feedback WHERE event_id IN (SELECT id FROM Events WHERE organization_id = ?))";
+        String delDonationsByEventOrg = "DELETE FROM Donations WHERE event_id IN (SELECT id FROM Events WHERE organization_id = ?)";
+        String delEVByEventOrg = "DELETE FROM Event_Volunteers WHERE event_id IN (SELECT id FROM Events WHERE organization_id = ?)";
+        String delFeedbackByEventOrg = "DELETE FROM Feedback WHERE event_id IN (SELECT id FROM Events WHERE organization_id = ?)";
+        String delEventsByOrg = "DELETE FROM Events WHERE organization_id = ?";
+
+        String delDonationsByVolunteer = "DELETE FROM Donations WHERE volunteer_id = ?";
+        String delEVByVolunteer = "DELETE FROM Event_Volunteers WHERE volunteer_id = ?";
+        String delFeedbackByVolunteer = "DELETE FROM Feedback WHERE volunteer_id = ?";
+
+        String delReportsByOrg = "DELETE FROM Reports WHERE organization_id = ?";
+        String delNewsByAuthor = "DELETE FROM News WHERE author_id = ?";
+        String delNotificationsByReceiver = "DELETE FROM Notifications WHERE receiver_id = ?";
+        String delUserProfile = "DELETE FROM Users WHERE account_id = ?";
+        String delAccount = "DELETE FROM Accounts WHERE id = ?";
+
+        try {
+            conn.setAutoCommit(false);
+
+            // Xóa dữ liệu liên quan tới vai trò organization (nếu có)
+            try (PreparedStatement ps = conn.prepareStatement(delReportsByEventOrg)) { ps.setInt(1, id); ps.executeUpdate(); }
+            try (PreparedStatement ps = conn.prepareStatement(delDonationsByEventOrg)) { ps.setInt(1, id); ps.executeUpdate(); }
+            try (PreparedStatement ps = conn.prepareStatement(delEVByEventOrg)) { ps.setInt(1, id); ps.executeUpdate(); }
+            try (PreparedStatement ps = conn.prepareStatement(delFeedbackByEventOrg)) { ps.setInt(1, id); ps.executeUpdate(); }
+            try (PreparedStatement ps = conn.prepareStatement(delEventsByOrg)) { ps.setInt(1, id); ps.executeUpdate(); }
+
+            // Xóa dữ liệu liên quan tới vai trò volunteer (nếu có)
+            try (PreparedStatement ps = conn.prepareStatement(delReportsByOrg)) { ps.setInt(1, id); ps.executeUpdate(); }
+            try (PreparedStatement ps = conn.prepareStatement(delDonationsByVolunteer)) { ps.setInt(1, id); ps.executeUpdate(); }
+            try (PreparedStatement ps = conn.prepareStatement(delEVByVolunteer)) { ps.setInt(1, id); ps.executeUpdate(); }
+            try (PreparedStatement ps = conn.prepareStatement(delFeedbackByVolunteer)) { ps.setInt(1, id); ps.executeUpdate(); }
+
+            // Các bảng liên quan trực tiếp tới account
+            try (PreparedStatement ps = conn.prepareStatement(delNewsByAuthor)) { ps.setInt(1, id); ps.executeUpdate(); }
+            try (PreparedStatement ps = conn.prepareStatement(delNotificationsByReceiver)) { ps.setInt(1, id); ps.executeUpdate(); }
+            try (PreparedStatement ps = conn.prepareStatement(delUserProfile)) { ps.setInt(1, id); ps.executeUpdate(); }
+
+            int rows;
+            try (PreparedStatement ps = conn.prepareStatement(delAccount)) {
+                ps.setInt(1, id);
+                rows = ps.executeUpdate();
+            }
+
+            conn.commit();
+            return rows > 0;
+        } catch (SQLException e) {
+            try { conn.rollback(); } catch (SQLException ignore) {}
+            e.printStackTrace();
+            return false;
+        } finally {
+            try { conn.setAutoCommit(true); } catch (SQLException ignore) {}
+        }
+    }
+
 }

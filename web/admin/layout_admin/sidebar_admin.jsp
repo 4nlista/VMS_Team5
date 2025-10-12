@@ -27,7 +27,7 @@
         </li>
         <li>
             <a href="<%= request.getContextPath() %>/AdminAccountServlet"
-               class="nav-link text-white <%= currentPath.endsWith("/AdminAccountServlet") ? "active" : "" %>">
+               class="nav-link text-white <%= (currentPath.endsWith("/AdminAccountServlet") || currentPath.endsWith("/admin/accounts_admin.jsp") || currentPath.endsWith("/accounts_admin.jsp")) ? "active" : "" %>">
                 <i class="bi bi-person-lines-fill me-2"></i>
                 Quản lí tài khoản
             </a>

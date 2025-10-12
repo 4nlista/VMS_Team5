@@ -25,6 +25,18 @@
             <!-- Main Content -->
             <div class="main-content p-4">
                 <h1>Quản lí tài khoản</h1>               
+                <c:if test="${param.msg == 'deleted'}">
+                    <div class="alert alert-success alert-dismissible fade show" role="alert" id="delete-success-alert">
+                        Đã xóa tài khoản thành công.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </c:if>
+                <c:if test="${param.msg == 'delete_failed'}">
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        Không thể xóa tài khoản. Có thể là tài khoản quyền admin hoặc đang có dữ liệu liên quan.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </c:if>
                 <!-- Yêu cầu 1: Thêm nút Add Account + Filter + Search -->
                 <div class="d-flex justify-content-between align-items-center mb-3 gap-2 flex-nowrap">
                     <!-- Filter + Search (cùng một form) -->
@@ -104,17 +116,41 @@
                                         <c:choose>
                                             <c:when test="${acc.role == 'admin'}">
                                                 <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Không thể khóa tài khoản quyền admin">
-                                                    <button type="button" class="btn btn-outline-secondary btn-sm btn-icon opacity-50" style="pointer-events: none;" disabled aria-disabled="true">
+                                                    <button type="button" class="btn btn-secondary btn-sm btn-icon opacity-50" style="pointer-events: none;" disabled aria-disabled="true">
                                                         <i class="bi bi-lock"></i>
                                                     </button>
                                                 </span>
                                             </c:when>
                                             <c:otherwise>
                                                 <a href="<%= request.getContextPath() %>/AdminAccountServlet?action=toggle&id=${acc.id}"
-                                                   class="btn ${acc.status ? 'btn-outline-danger' : 'btn-outline-success'} btn-sm btn-icon" 
+                                                   class="btn ${acc.status ? 'btn-info' : 'btn-success'} btn-sm btn-icon" 
                                                    title="${acc.status ? 'Khóa tài khoản' : 'Mở khóa tài khoản'}">
                                                     <i class="bi ${acc.status ? 'bi-lock' : 'bi-unlock'}"></i>
                                                 </a>
+                                            </c:otherwise>
+                                        </c:choose>
+
+                                        <!-- Edit action (always enabled) -->
+                                        <a href="edit_account.jsp?id=${acc.id}" class="btn btn-warning btn-sm btn-icon" title="Chỉnh sửa">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+
+                                        <!-- Delete action -->
+                                        <c:choose>
+                                            <c:when test="${acc.role == 'admin'}">
+                                                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Không thể xóa tài khoản quyền admin">
+                                                    <button type="button" class="btn btn-secondary btn-sm btn-icon opacity-50" style="pointer-events: none;" disabled aria-disabled="true">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </span>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <button type="button" class="btn btn-danger btn-sm btn-icon" title="Xóa tài khoản"
+                                                        data-bs-toggle="modal" data-bs-target="#confirmDeleteModal"
+                                                        data-delete-url="<%= request.getContextPath() %>/AdminAccountServlet?action=delete&id=${acc.id}"
+                                                        data-username="${acc.username}" data-id="${acc.id}">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
                                             </c:otherwise>
                                         </c:choose>
                                     </div>
@@ -189,6 +225,26 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Confirm Delete Modal -->
+            <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title w-100 text-center" id="confirmDeleteLabel">Xác nhận xóa tài khoản</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-center">
+                            Bạn có chắc muốn xóa tài khoản <strong id="delete-username"></strong> (ID: <span id="delete-id"></span>)?<br/>
+                            Hành động này không thể hoàn tác.
+                        </div>
+                        <div class="modal-footer justify-content-center">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                            <a id="confirm-delete-btn" class="btn btn-danger" href="#">Xóa</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
 
@@ -217,6 +273,30 @@
             tooltipTriggerList.forEach(function (tooltipTriggerEl) {
                 new bootstrap.Tooltip(tooltipTriggerEl);
             });
+
+            // Bind confirm delete modal
+            const confirmDeleteModalEl = document.getElementById('confirmDeleteModal');
+            if (confirmDeleteModalEl) {
+                confirmDeleteModalEl.addEventListener('show.bs.modal', event => {
+                    const button = event.relatedTarget;
+                    const url = button.getAttribute('data-delete-url');
+                    const username = button.getAttribute('data-username');
+                    const id = button.getAttribute('data-id');
+                    document.getElementById('delete-username').textContent = username || '';
+                    document.getElementById('delete-id').textContent = id || '';
+                    const confirmBtn = document.getElementById('confirm-delete-btn');
+                    confirmBtn.setAttribute('href', url);
+                });
+            }
+
+            // Tự động ẩn alert thành công sau 3 giây
+            const successAlert = document.getElementById('delete-success-alert');
+            if (successAlert) {
+                setTimeout(() => {
+                    const alert = new bootstrap.Alert(successAlert);
+                    alert.close();
+                }, 3000);
+            }
         </script>
     </body>
 </html>

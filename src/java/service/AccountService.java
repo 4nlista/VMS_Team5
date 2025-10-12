@@ -70,4 +70,13 @@ public class AccountService {
         return accountDAO.findAccountsPaged(normalizedRole, status, trimmedSearch, offset, safePageSize);
     }
 
+    // 6. Xóa account (không cho xóa admin) và toàn bộ dữ liệu liên quan
+    public boolean deleteAccount(int id) {
+        Account acc = accountDAO.getAccountById(id);
+        if (acc == null) return false;
+        if ("admin".equalsIgnoreCase(acc.getRole())) return false;
+        // Thực hiện xóa cascade an toàn trong transaction
+        return accountDAO.deleteAccountCascade(id);
+    }
+
 }
