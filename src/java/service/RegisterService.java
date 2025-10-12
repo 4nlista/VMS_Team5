@@ -55,7 +55,7 @@ public class RegisterService {
 
         // 5. Gửi email xác nhận (tùy chọn)
         String subject = "Xác nhận đăng ký Volunteer System";
-        String body = 
+        String message = 
             """
             <html>
                 <body style='font-family: Arial, sans-serif;'>
@@ -68,7 +68,7 @@ public class RegisterService {
             """.formatted(user.getFull_name(), acc.getUsername());
 
         try {
-            emailService.sendEmail(user.getEmail(), subject, body);
+            emailService.sendEmail(user.getEmail(), subject, message);
         } catch (Exception e) {
             e.printStackTrace();
             return "Lỗi hệ thống!";
