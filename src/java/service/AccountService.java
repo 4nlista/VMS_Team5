@@ -38,6 +38,10 @@ public class AccountService {
             return false;
         }
         boolean newStatus = !acc.isStatus();
+        // Không cho phép khóa tài khoản có role admin
+        if ("admin".equalsIgnoreCase(acc.getRole()) && !newStatus) {
+            return false;
+        }
         return accountDAO.updateAccountStatus(id, newStatus);
     }
 

@@ -101,11 +101,22 @@
                                                 data-role="${acc.role}" data-status="${acc.status}">
                                             <i class="bi bi-eye"></i>
                                         </button>
-                                        <a href="<%= request.getContextPath() %>/AdminAccountServlet?action=toggle&id=${acc.id}"
-                                           class="btn ${acc.status ? 'btn-outline-danger' : 'btn-outline-success'} btn-sm btn-icon" 
-                                           title="${acc.status ? 'Khóa tài khoản' : 'Mở khóa tài khoản'}">
-                                            <i class="bi ${acc.status ? 'bi-lock' : 'bi-unlock'}"></i>
-                                        </a>
+                                        <c:choose>
+                                            <c:when test="${acc.role == 'admin'}">
+                                                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Không thể khóa tài khoản quyền admin">
+                                                    <button type="button" class="btn btn-outline-secondary btn-sm btn-icon opacity-50" style="pointer-events: none;" disabled aria-disabled="true">
+                                                        <i class="bi bi-lock"></i>
+                                                    </button>
+                                                </span>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="<%= request.getContextPath() %>/AdminAccountServlet?action=toggle&id=${acc.id}"
+                                                   class="btn ${acc.status ? 'btn-outline-danger' : 'btn-outline-success'} btn-sm btn-icon" 
+                                                   title="${acc.status ? 'Khóa tài khoản' : 'Mở khóa tài khoản'}">
+                                                    <i class="bi ${acc.status ? 'bi-lock' : 'bi-unlock'}"></i>
+                                                </a>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </div>
 
                                 </td>
@@ -200,6 +211,12 @@
                             : '<span class="badge bg-danger"><i class="bi bi-circle-fill me-1"></i> Inactive</span>';
                 });
             }
+
+            // Khởi tạo Bootstrap tooltip cho các phần tử có data-bs-toggle="tooltip"
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+                new bootstrap.Tooltip(tooltipTriggerEl);
+            });
         </script>
     </body>
 </html>
