@@ -107,12 +107,10 @@
                                 </td>
                                 <td>
                                     <div class="action-icons">
-                                        <button type="button" class="btn btn-primary btn-sm btn-icon" title="Xem chi tiết"
-                                                data-bs-toggle="modal" data-bs-target="#detailModal"
-                                                data-id="${acc.id}" data-username="${acc.username}"
-                                                data-role="${acc.role}" data-status="${acc.status}">
+                                        <a class="btn btn-primary btn-sm btn-icon" title="Xem chi tiết"
+                                           href="<%= request.getContextPath() %>/admin/detail_accounts_admin.jsp?id=${acc.id}">
                                             <i class="bi bi-eye"></i>
-                                        </button>
+                                        </a>
                                         <c:choose>
                                             <c:when test="${acc.role == 'admin'}">
                                                 <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Không thể khóa tài khoản quyền admin">
