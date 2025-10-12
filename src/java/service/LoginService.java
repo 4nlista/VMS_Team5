@@ -31,7 +31,7 @@ public class LoginService {
     // - Nếu sai → trả về null (hoặc URL login fail).
     public String processLogin(String username, String password, HttpSession session) {
         Account acc = loginDAO.checkLogin(username, password);
-        if (acc == null) {
+        if (acc == null || !acc.isStatus()) {
             return "/auth/login.jsp?error=1"; // Login fail
         }
 
@@ -83,7 +83,7 @@ public class LoginService {
     //   - Nếu có action → kiểm tra role có được phép hay không.
     //   - Nếu không có action → fallback về trang theo role (dashboard/admin/org hoặc volunteer)
     public String resolveRedirect(Account acc, HttpSession session, String action) {
-        if (acc == null) {
+        if (acc == null || !acc.isStatus()) {
             return "/auth/login.jsp"; // fallback
         }
         // lấy action ưu tiên: tham số trước, nếu null thì lấy từ session
