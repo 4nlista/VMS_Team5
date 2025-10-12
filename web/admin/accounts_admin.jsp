@@ -113,6 +113,48 @@
                         </c:forEach>
                     </tbody>
                 </table>
+
+                <!-- Pagination -->
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="text-muted small">
+                        Trang ${currentPage} / ${totalPages} · Tổng: ${totalItems}
+                    </div>
+                    <nav aria-label="Account pagination">
+                        <ul class="pagination mb-0">
+                            <li class="page-item ${currentPage <= 1 ? 'disabled' : ''}">
+                                <c:url var="prevUrl" value="AdminAccountServlet">
+                                    <c:param name="role" value="${selectedRole}" />
+                                    <c:param name="status" value="${selectedStatus}" />
+                                    <c:param name="search" value="${searchText}" />
+                                    <c:param name="page" value="${currentPage - 1}" />
+                                </c:url>
+                                <a class="page-link" href="${prevUrl}">Trước</a>
+                            </li>
+
+                            <c:forEach var="p" begin="1" end="${totalPages}">
+                                <c:url var="pUrl" value="AdminAccountServlet">
+                                    <c:param name="role" value="${selectedRole}" />
+                                    <c:param name="status" value="${selectedStatus}" />
+                                    <c:param name="search" value="${searchText}" />
+                                    <c:param name="page" value="${p}" />
+                                </c:url>
+                                <li class="page-item ${p == currentPage ? 'active' : ''}">
+                                    <a class="page-link" href="${pUrl}">${p}</a>
+                                </li>
+                            </c:forEach>
+
+                            <li class="page-item ${currentPage >= totalPages ? 'disabled' : ''}">
+                                <c:url var="nextUrl" value="AdminAccountServlet">
+                                    <c:param name="role" value="${selectedRole}" />
+                                    <c:param name="status" value="${selectedStatus}" />
+                                    <c:param name="search" value="${searchText}" />
+                                    <c:param name="page" value="${currentPage + 1}" />
+                                </c:url>
+                                <a class="page-link" href="${nextUrl}">Sau</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
             </div>
 
             <!-- Detail Modal -->

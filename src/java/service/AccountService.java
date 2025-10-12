@@ -49,4 +49,21 @@ public class AccountService {
         return accountDAO.findAccounts(normalizedRole, status, trimmedSearch);
     }
 
+    // 4. Tổng số account theo tiêu chí để phân trang
+    public int countAccounts(String role, Boolean status, String search) {
+        String normalizedRole = role == null ? null : role.trim().toLowerCase();
+        String trimmedSearch = search == null ? null : search.trim();
+        return accountDAO.countAccounts(normalizedRole, status, trimmedSearch);
+    }
+
+    // 5. Lấy danh sách account theo trang
+    public List<Account> findAccountsPaged(String role, Boolean status, String search, int page, int pageSize) {
+        String normalizedRole = role == null ? null : role.trim().toLowerCase();
+        String trimmedSearch = search == null ? null : search.trim();
+        int safePage = Math.max(1, page);
+        int safePageSize = Math.max(1, pageSize);
+        int offset = (safePage - 1) * safePageSize;
+        return accountDAO.findAccountsPaged(normalizedRole, status, trimmedSearch, offset, safePageSize);
+    }
+
 }
