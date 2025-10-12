@@ -25,12 +25,63 @@ public class AdminAccountServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Lấy danh sách account từ DB
-        List<Account> accounts = accountService.getAllAccounts();
+        String action = request.getParameter("action");
+        if (action == null || action.isEmpty()) {
+            // parse filter params + pagination
+            String role = request.getParameter("role");
+            String statusParam = request.getParameter("status");
+            String search = request.getParameter("search");
+            String pageParam = request.getParameter("page");
+            int page = 1;
+            int pageSize = 5; // yêu cầu: 5 item/trang
+            try {
+                if (pageParam != null) page = Integer.parseInt(pageParam);
+                if (page <= 0) page = 1;
+            } catch (NumberFormatException ignored) {}
 
-        // Gửi qua JSP
-        request.setAttribute("accounts", accounts);
-        request.getRequestDispatcher("/admin/accounts_admin.jsp").forward(request, response);
+            Boolean status = null;
+            if (statusParam != null && !statusParam.isEmpty()) {
+                // expecting "active" or "inactive"
+                if ("active".equalsIgnoreCase(statusParam)) status = true;
+                else if ("inactive".equalsIgnoreCase(statusParam)) status = false;
+            }
+
+            // pagination always applied (filters optional)
+            int totalItems = accountService.countAccounts(role, status, search);
+            int totalPages = (int) Math.ceil(totalItems / (double) pageSize);
+            if (totalPages == 0) totalPages = 1;
+            if (page > totalPages) page = totalPages;
+            List<Account> accounts = accountService.findAccountsPaged(role, status, search, page, pageSize);
+
+            // keep selections
+            request.setAttribute("selectedRole", role);
+            request.setAttribute("selectedStatus", statusParam);
+            request.setAttribute("searchText", search);
+
+            request.setAttribute("accounts", accounts);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("totalPages", totalPages);
+            request.setAttribute("pageSize", pageSize);
+            request.setAttribute("totalItems", totalItems);
+            request.getRequestDispatcher("/admin/accounts_admin.jsp").forward(request, response);
+            return;
+        }
+
+        switch (action) {
+            case "toggle": {
+                String idRaw = request.getParameter("id");
+                try {
+                    int id = Integer.parseInt(idRaw);
+                    accountService.toggleAccountStatus(id);
+                } catch (NumberFormatException ignored) {
+                }
+                response.sendRedirect(request.getContextPath() + "/AdminAccountServlet");
+                break;
+            }
+            default: {
+                response.sendRedirect(request.getContextPath() + "/AdminAccountServlet");
+            }
+        }
     }
 
     @Override
