@@ -34,7 +34,7 @@
 
         </li>
         <li>
-            <a href="<%= request.getContextPath() %>/admin/users_admin.jsp"
+            <a href="<%= request.getContextPath() %>/AdminUserServlet"
                class="nav-link text-white <%= currentPath.endsWith("/users_admin.jsp") ? "active" : "" %>">
                 <i class="bi bi-people me-2"></i>
                 Quản lí người dùng
