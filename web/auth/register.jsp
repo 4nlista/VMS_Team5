@@ -17,9 +17,18 @@
     <body>
         <form action="<%= request.getContextPath() %>/RegisterServlet" method="post">
             <section style="background-color: #9a616d; min-height: 100vh;">
-                <% String error = (String) request.getAttribute("error"); %>
+                <% 
+                    String error = (String) request.getAttribute("error");
+                    model.Account acc = (model.Account) request.getAttribute("acc");
+                    model.User user = (model.User) request.getAttribute("user");
+                %>
+
                 <% if (error != null) { %>
-                <div class="error-message text-danger text-center mt-3"><%= error %></div>
+                <div class="error-message text-danger text-center mt-3">
+                    <script>
+                        alert("<%= error %>");
+                    </script>
+                </div>
                 <% } %>
 
                 <div class="container py-5">
@@ -33,8 +42,7 @@
                                             src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/img1.webp"
                                             alt="register form"
                                             class="img-fluid h-100"
-                                            style="border-radius: 1rem 0 0 1rem; object-fit: cover;"
-                                            />
+                                            style="border-radius: 1rem 0 0 1rem; object-fit: cover;"/>
                                     </div>
 
                                     <!-- Form bên phải -->
@@ -49,11 +57,13 @@
                                             <div class="row mb-3">
                                                 <div class="col-md-6">
                                                     <label class="form-label">Tài khoản</label>
-                                                    <input type="text" name="username" class="form-control" required/>
+                                                    <input type="text" name="username" class="form-control" required
+                                                           value="<%= acc != null ? acc.getUsername() : "" %>"/>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="form-label">Email</label>
-                                                    <input type="email" name="email" class="form-control" required/>
+                                                    <input type="email" name="email" class="form-control" required
+                                                           value="<%= user != null ? user.getEmail() : "" %>"/>
                                                 </div>
                                             </div>
 
@@ -73,11 +83,13 @@
                                             <div class="row mb-3">
                                                 <div class="col-md-6">
                                                     <label class="form-label">Họ tên</label>
-                                                    <input type="text" name="fullName" class="form-control" required />
+                                                    <input type="text" name="fullName" class="form-control" required
+                                                           value="<%= user != null ? user.getFull_name() : "" %>"/>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="form-label">Số điện thoại</label>
-                                                    <input type="text" name="phone" class="form-control"/>
+                                                    <input type="text" name="phone" class="form-control"
+                                                           value="<%= user != null ? user.getPhone() : "" %>"/>
                                                 </div>
                                             </div>
 
@@ -85,11 +97,13 @@
                                             <div class="row mb-3">
                                                 <div class="col-md-6">
                                                     <label class="form-label">Ngày sinh</label>
-                                                    <input type="date" name="dob" class="form-control"/>
+                                                    <input type="date" name="dob" class="form-control"
+                                                           value="<%= user != null && user.getDob() != null ? user.getDob().toString() : "" %>"/>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="form-label">Địa chỉ</label>
-                                                    <input type="text" name="address" class="form-control"/>
+                                                    <input type="text" name="address" class="form-control"
+                                                           value="<%= user != null ? user.getAddress() : "" %>"/>
                                                 </div>
                                             </div>
 
@@ -98,11 +112,13 @@
                                                 <div class="col-md-6">
                                                     <label class="form-label d-block">Giới tính</label>
                                                     <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="gender" value="male"/>
+                                                        <input class="form-check-input" type="radio" name="gender" value="male"
+                                                               <%= user != null && "male".equals(user.getGender()) ? "checked" : "" %>/>
                                                         <label class="form-check-label">Nam</label>
                                                     </div>
                                                     <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="gender" value="female"/>
+                                                        <input class="form-check-input" type="radio" name="gender" value="female"
+                                                               <%= user != null && "female".equals(user.getGender()) ? "checked" : "" %>/>
                                                         <label class="form-check-label">Nữ</label>
                                                     </div>
                                                 </div>
@@ -112,18 +128,19 @@
                                                         <label class="form-label col-12">Vai trò:</label>
                                                         <div class="col-6">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="radio" name="role" id="volunteer" value="volunteer">
+                                                                <input class="form-check-input" type="radio" name="role" id="volunteer" value="volunteer"
+                                                                       <%= acc != null && "volunteer".equals(acc.getRole()) ? "checked" : "" %>>
                                                                 <label class="form-check-label" for="volunteer">Volunteer</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-6">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="radio" name="role" id="organization" value="organization">
+                                                                <input class="form-check-input" type="radio" name="role" id="organization" value="organization"
+                                                                       <%= acc != null && "organization".equals(acc.getRole()) ? "checked" : "" %>>
                                                                 <label class="form-check-label" for="organization">Organization</label>
                                                             </div>
                                                         </div>
                                                     </div>
-
                                                 </div>
                                             </div>
 
@@ -155,5 +172,3 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>
-
-

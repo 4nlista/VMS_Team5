@@ -87,9 +87,11 @@ public class RegisterServlet extends HttpServlet {
 
         // 7️ Xử lý kết quả
         if ("success".equals(result)) {
-                response.sendRedirect("auth/login.jsp");    // chuyển hẳn sang một trang mới (trình duyệt gửi request mới).
+            response.sendRedirect("auth/login.jsp");    // chuyển hẳn sang một trang mới (trình duyệt gửi request mới).
         } else {
             request.setAttribute("error", result);
+            request.setAttribute("acc", acc);
+            request.setAttribute("user", user); // giữ lại dữ liệu nhập
             request.getRequestDispatcher("auth/register.jsp").forward(request, response); //Giữ nguyên request hiện tại, không reload trang
         }
 

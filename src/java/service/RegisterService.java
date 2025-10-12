@@ -36,7 +36,7 @@ public class RegisterService {
             return "Email đã tồn tại!";
         }
         // 3. Kiểm tra phone trùng
-        if (userDAO.isPhoneExists(user.getEmail())) {
+        if (userDAO.isPhoneExists(user.getPhone())) {
             return "Số điện thoại đã tồn tại!";
         }
         // 2. Mã hóa mật khẩu trước khi lưu
