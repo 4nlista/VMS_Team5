@@ -26,32 +26,30 @@
             <div class="main-content p-4">
                 <h1>Quản lí tài khoản</h1>               
                 <!-- Yêu cầu 1: Thêm nút Add Account + Filter + Search -->
-                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-                    <!-- Filter (vai trò, trạng thái) -->
-                    <form action="AdminAccountServlet" method="get" class="d-flex gap-3 flex-wrap" style="flex: 3;">
-                        <select name="role" class="form-select w-25">
+                <div class="d-flex justify-content-between align-items-center mb-3 gap-2 flex-nowrap">
+                    <!-- Filter + Search (cùng một form) -->
+                    <form action="AdminAccountServlet" method="get" class="d-flex align-items-center gap-3 flex-nowrap flex-grow-1" style="flex: 1;">
+                        <select name="role" class="form-select" style="min-width: 180px;">
                             <option value="">-- Vai trò --</option>
-                            <option value="admin">Admin</option>
-                            <option value="user">Organization</option>
-                            <option value="user">Volunteer</option>
+                            <option value="admin" ${'admin' == selectedRole ? 'selected' : ''}>Admin</option>
+                            <option value="organization" ${'organization' == selectedRole ? 'selected' : ''}>Organization</option>
+                            <option value="volunteer" ${'volunteer' == selectedRole ? 'selected' : ''}>Volunteer</option>
                         </select>
 
-                        <select name="status" class="form-select w-25">
+                        <select name="status" class="form-select" style="min-width: 180px;">
                             <option value="">-- Trạng thái --</option>
-                            <option value="active">Active</option>
-                            <option value="inactive">Inactive</option>
+                            <option value="active" ${'active' == selectedStatus ? 'selected' : ''}>Active</option>
+                            <option value="inactive" ${'inactive' == selectedStatus ? 'selected' : ''}>Inactive</option>
                         </select>
 
-                        <button type="submit" class="btn btn-danger">
-                            <i class="bi bi-filter"></i> Filter
-                        </button>
-                        <button type="reset" class="btn btn-secondary">
-                            <i class="bi bi-trash"></i> Reset
-                        </button>
-                    </form>
+                        <input type="text" name="search" class="form-control flex-grow-1" placeholder="Tìm tài khoản..." value="${fn:escapeXml(searchText)}" />
 
-                    <form action="AdminAccountServlet" method="get" class="d-flex" style="flex: 1; justify-content: end;">
-                        <input type="text" name="search" class="form-control w-100" placeholder="Tìm tài khoản..." />
+                        <button type="submit" class="btn btn-danger d-inline-flex align-items-center gap-2 text-nowrap px-3" style="height: 40px;">
+                            <i class="bi bi-filter"></i> Lọc
+                        </button>
+                        <a href="<%= request.getContextPath() %>/AdminAccountServlet" class="btn btn-secondary d-inline-flex align-items-center justify-content-center gap-2 text-nowrap px-4" style="min-width: 140px; height: 40px;">
+                            <i class="bi bi-trash"></i> Khôi phục
+                        </a>
                     </form>
 
                     <a href="add_account.jsp" class="btn btn-primary">
@@ -68,7 +66,7 @@
                                 <a href="?sort=id_desc"><i class="bi bi-caret-down-fill text-white"></i></a>
                             </th>
                             <th>Tài khoản</th>
-                            <th>Mật khẩu</th>
+                            
                             <th>Vai trò</th>
                             <th>Trạng thái</th>
                             <th>Thao Tác</th>
@@ -79,7 +77,7 @@
                             <tr>
                                 <td>${acc.id}</td>
                                 <td>${acc.username}</td>
-                                <td>${acc.password}</td>
+                                
                                 <td>${acc.role}</td>
                                 <td>
                                     <c:choose>
@@ -97,14 +95,16 @@
                                 </td>
                                 <td>
                                     <div class="action-icons">
-                                        <a href="#" class="btn btn-primary btn-sm" title="Xem chi tiết">
+                                        <button type="button" class="btn btn-primary btn-sm btn-icon" title="Xem chi tiết"
+                                                data-bs-toggle="modal" data-bs-target="#detailModal"
+                                                data-id="${acc.id}" data-username="${acc.username}"
+                                                data-role="${acc.role}" data-status="${acc.status}">
                                             <i class="bi bi-eye"></i>
-                                        </a>
-                                        <a href="#" class="btn btn-warning btn-sm" title="Chỉnh sửa">
-                                            <i class="bi bi-pencil-square"></i>
-                                        </a>
-                                        <a href="#" class="btn btn-danger btn-sm" title="Xóa">
-                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                        <a href="<%= request.getContextPath() %>/AdminAccountServlet?action=toggle&id=${acc.id}"
+                                           class="btn ${acc.status ? 'btn-outline-danger' : 'btn-outline-success'} btn-sm btn-icon" 
+                                           title="${acc.status ? 'Khóa tài khoản' : 'Mở khóa tài khoản'}">
+                                            <i class="bi ${acc.status ? 'bi-lock' : 'bi-unlock'}"></i>
                                         </a>
                                     </div>
 
@@ -114,9 +114,50 @@
                     </tbody>
                 </table>
             </div>
+
+            <!-- Detail Modal -->
+            <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="detailModalLabel">Chi tiết tài khoản</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-2"><strong>ID:</strong> <span id="detail-id"></span></div>
+                            <div class="mb-2"><strong>Username:</strong> <span id="detail-username"></span></div>
+                            <div class="mb-2"><strong>Role:</strong> <span id="detail-role"></span></div>
+                            <div class="mb-2"><strong>Status:</strong> <span id="detail-status"></span></div>
+                            <div class="text-muted small">Lưu ý: Email hiển thị tại trang hồ sơ người dùng.</div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            const detailModal = document.getElementById('detailModal');
+            if (detailModal) {
+                detailModal.addEventListener('show.bs.modal', event => {
+                    const button = event.relatedTarget;
+                    const id = button.getAttribute('data-id');
+                    const username = button.getAttribute('data-username');
+                    const role = button.getAttribute('data-role');
+                    const status = button.getAttribute('data-status') === 'true';
+
+                    document.getElementById('detail-id').textContent = id;
+                    document.getElementById('detail-username').textContent = username;
+                    document.getElementById('detail-role').textContent = role;
+                    document.getElementById('detail-status').innerHTML = status
+                            ? '<span class="badge bg-success"><i class="bi bi-circle-fill me-1"></i> Active</span>'
+                            : '<span class="badge bg-danger"><i class="bi bi-circle-fill me-1"></i> Inactive</span>';
+                });
+            }
+        </script>
     </body>
 </html>
