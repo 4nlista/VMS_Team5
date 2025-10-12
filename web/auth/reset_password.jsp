@@ -23,6 +23,11 @@
                 <div class="error-message text-danger text-center"><%= error %></div>
                 <% } %>
 
+                <% String msg = (String) request.getAttribute("msg"); %>
+                <% if (msg != null) { %>
+                <div class="text-success text-center"><%= msg %></div>
+                <% } %>
+
 
                 <div class="container py-5 h-100">
                     <div class="row d-flex justify-content-center align-items-center h-100">

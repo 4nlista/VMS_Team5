@@ -55,7 +55,7 @@ public class AccountDAO {
         return null; // Nếu không tìm thấy account
     }
 
-    // 1.1. Lấy ra danh sách các tài khoản
+    // 1.1. Lấy ra danh sách các tài khoản - dùng để hiển thị dữ liệu 
     public List<Account> getAllAccounts() {
         List<Account> list = new ArrayList<>();
         String sql = "SELECT id, username, password, role, status FROM Accounts";
@@ -77,6 +77,7 @@ public class AccountDAO {
 
     }
 
+    // check email đã tồn tại trong sql ? - dùng cho đăng kí tài khoản
     public boolean isUsernameExists(String username) {
         String sql = "SELECT COUNT(*) FROM Accounts WHERE username = ?";
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -91,6 +92,7 @@ public class AccountDAO {
         return false;
     }
 
+    // đăng kí tài khoản -> sẽ tự động insert vào database
     public int insertAccount(Account account) {
         String sql = "INSERT INTO Accounts (username, password, role, status) VALUES (?, ?, ?, ?)";
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -107,6 +109,43 @@ public class AccountDAO {
             e.printStackTrace();
         }
         return -1;
+    }
+
+    // lấy thông tin username + email . nếu đúng -> trả về Account
+    public Account getAccountByUsernameAndEmail(String username, String email) {
+        String sql = "SELECT a.id, a.username, a.password, a.role, a.status "
+                + "FROM Accounts a JOIN Users u ON a.id = u.account_id "
+                + "WHERE a.username = ? AND u.email = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, username);
+            ps.setString(2, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return new Account(
+                        rs.getInt("id"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getString("role"),
+                        rs.getBoolean("status")
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+// Cập nhật mật khẩu mới (đã mã hóa) ghi mật khẩu random mới vào DB
+    public boolean updatePassword(int accountId, String newPassword) {
+        String sql = "UPDATE Accounts SET password = ? WHERE id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, newPassword);
+            ps.setInt(2, accountId);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 }

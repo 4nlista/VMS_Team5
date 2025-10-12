@@ -75,9 +75,4 @@ public class LoginDAO {
         );
     }
 
-    public static void main(String[] args) {
-        LoginDAO dao = new LoginDAO();
-        Account acc = dao.checkLogin("andeptrai123", "123");
-        System.out.println(acc != null ? "✅ Login thành công" : "❌ Login thất bại");
-    }
 }

@@ -29,6 +29,7 @@ public class UserDAO {
         }
     }
 
+    
     // 1. Kiểm tra email đã tồn tại chưa
     public boolean isEmailExists(String email) {
         String sql = "SELECT COUNT(*) FROM Users WHERE email = ?";
@@ -43,8 +44,9 @@ public class UserDAO {
         }
         return false;
     }
+    
+    
     // 2. Thêm mới user sau khi tạo account
-
     public boolean insertUser(User user) {
         String sql = "INSERT INTO Users (account_id, full_name, dob, gender, phone, email, address, avatar, job_title, bio) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
