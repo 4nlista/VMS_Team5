@@ -29,7 +29,6 @@ public class UserDAO {
         }
     }
 
-    
     // 1. Kiểm tra email đã tồn tại chưa
     public boolean isEmailExists(String email) {
         String sql = "SELECT COUNT(*) FROM Users WHERE email = ?";
@@ -44,9 +43,23 @@ public class UserDAO {
         }
         return false;
     }
-    
-    
-    // 2. Thêm mới user sau khi tạo account
+
+    // 2. Kiểm tra phone đã tồn tại chưa
+    public boolean isPhoneExists(String phone) {
+        String sql = "SELECT COUNT(*) FROM Users WHERE phone = ?";
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, phone);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // 3. Thêm mới user sau khi tạo account
     public boolean insertUser(User user) {
         String sql = "INSERT INTO Users (account_id, full_name, dob, gender, phone, email, address, avatar, job_title, bio) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";

@@ -27,14 +27,18 @@ public class RegisterService {
     }
 
     public String register(Account acc, User user) {
-        // 1. Kiểm tra username/email trùng
+        // 1. Kiểm tra username trùng
         if (accountDAO.isUsernameExists(acc.getUsername())) {
             return "Tên tài khoản đã tồn tại!";
         }
+        // 2. Kiểm tra username trùng
         if (userDAO.isEmailExists(user.getEmail())) {
             return "Email đã tồn tại!";
         }
-
+        // 3. Kiểm tra phone trùng
+        if (userDAO.isPhoneExists(user.getEmail())) {
+            return "Số điện thoại đã tồn tại!";
+        }
         // 2. Mã hóa mật khẩu trước khi lưu
         String hashedPassword = PasswordUtil.hashPassword(acc.getPassword());
         acc.setPassword(hashedPassword);
@@ -55,8 +59,8 @@ public class RegisterService {
 
         // 5. Gửi email xác nhận (tùy chọn)
         String subject = "Xác nhận đăng ký Volunteer System";
-        String body = 
-            """
+        String body
+                = """
             <html>
                 <body style='font-family: Arial, sans-serif;'>
                     <p>Xin chào <b>%s</b>,</p>
