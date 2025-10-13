@@ -16,7 +16,7 @@ public class ChangePasswordService {
     private AccountDAO accountDAO;
 
     public ChangePasswordService() {
-        this.accountDAO = new AccountDAO();
+        accountDAO = new AccountDAO();
     }
 
 //    public String changePassword(int accountId, String currentPassword, String newPassword, String confirmPassword) {

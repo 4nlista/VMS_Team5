@@ -155,9 +155,17 @@ public class AccountDAO {
     public boolean updatePasswordByUser(int accountId, String newPassword) {
         String sql = "UPDATE Accounts SET password = ? WHERE id = ?";
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, newPassword); // mật khẩu đã hash
+            System.out.println("🔹 SQL: " + sql);
+            System.out.println("🔹 newPassword = " + newPassword);
+            System.out.println("🔹 accountId = " + accountId);
+
+            ps.setString(1, newPassword);
             ps.setInt(2, accountId);
-            return ps.executeUpdate() > 0;
+
+            int rowsAffected = ps.executeUpdate();            
+            System.out.println("🔹 Rows affected = " + rowsAffected);
+
+            return rowsAffected > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -167,7 +175,7 @@ public class AccountDAO {
     // Lấy hash mật khẩu hiện tại từ DB theo accountId
     public String getPasswordHashById(int accountId) {
         String sql = "SELECT password FROM Accounts WHERE id = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, accountId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -179,9 +187,7 @@ public class AccountDAO {
         }
         return null;
     }
-    
-    
-    
+
     public static void main(String[] args) {
         AccountDAO dao = new AccountDAO();
 
