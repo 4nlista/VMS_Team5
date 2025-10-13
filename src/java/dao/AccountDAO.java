@@ -153,7 +153,7 @@ public class AccountDAO {
     // đổi mật khẩu của từng tài khoản
     public boolean updatePasswordByUser(int accountId, String newPassword) {
         String sql = "UPDATE Accounts SET password = ? WHERE id = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, newPassword); // mật khẩu đã hash
             ps.setInt(2, accountId);
             return ps.executeUpdate() > 0;
