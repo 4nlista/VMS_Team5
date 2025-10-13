@@ -148,10 +148,8 @@ public class AccountDAO {
         }
         return false;
     }
-   
-    
+
     // ----------------- Đổi mật khẩu -----------------
-    
     // đổi mật khẩu của từng tài khoản
     public boolean updatePasswordByUser(int accountId, String newPassword) {
         String sql = "UPDATE Accounts SET password = ? WHERE id = ?";
@@ -163,6 +161,22 @@ public class AccountDAO {
             e.printStackTrace();
         }
         return false;
+    }
+
+    // Lấy hash mật khẩu hiện tại từ DB theo accountId
+    public String getPasswordHashById(int accountId) {
+        String sql = "SELECT password FROM Accounts WHERE id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, accountId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("password");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

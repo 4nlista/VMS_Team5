@@ -20,6 +20,7 @@ public class ChangePasswordService {
     }
 
     public String changePassword(int accountId, String currentPassword, String newPassword, String confirmPassword) {
+
         try {
             // 1. Lấy mật khẩu hiện tại từ DB
             String currentPasswordHash = accountDAO.getPasswordHashById(accountId);
@@ -28,17 +29,17 @@ public class ChangePasswordService {
             }
 
             // 2. Kiểm tra mật khẩu cũ
-            if (!PasswordUtil.hash(currentPassword).equals(currentPasswordHash)) {
+            if (!PasswordUtil.hashPassword(currentPassword).equals(currentPasswordHash)) {
                 return "Mật khẩu hiện tại không đúng.";
             }
 
-            // 3. Kiểm tra confirm
+            // 3. Kiểm tra confirm password
             if (!newPassword.equals(confirmPassword)) {
                 return "Xác nhận mật khẩu không khớp.";
             }
 
-            // 4. Hash mật khẩu mới và update
-            String newPasswordHash = PasswordUtil.hash(newPassword);
+            // 4. Hash mật khẩu mới và update DB
+            String newPasswordHash = PasswordUtil.hashPassword(newPassword);
             boolean updated = accountDAO.updatePasswordByUser(accountId, newPasswordHash);
             if (!updated) {
                 return "Đổi mật khẩu thất bại, thử lại.";
@@ -46,6 +47,7 @@ public class ChangePasswordService {
 
             // 5. Thành công
             return null;
+
         } catch (Exception e) {
             e.printStackTrace();
             return "Có lỗi xảy ra, thử lại sau.";
