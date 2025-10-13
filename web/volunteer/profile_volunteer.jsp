@@ -30,7 +30,7 @@
 
         <!-- Navbar -->
         <jsp:include page="/layout/navbar.jsp" />
-        
+
         <div class="page-content container mt-5 pt-5">
             <h1 class="text-center">Hồ sơ cá nhân _[ <%= username %> ]_ </h1>
             <!-- Nơi hiển thị dữ liệu khác -->
@@ -54,12 +54,12 @@
                                 </div>
 
                                 <!-- Old Password -->
-                                
-                                 <div class="mb-2">
+
+                                <div class="mb-2">
                                     <label class="form-label">Tài khoản</label>
                                     <input type="text" class="form-control">
                                 </div>
-                                
+
                                 <div class="mb-2">
                                     <label class="form-label">Mật khẩu hiện tại</label>
                                     <input type="password" class="form-control">
@@ -70,14 +70,24 @@
                                     <label class="form-label">Mật khẩu mới</label>
                                     <input type="password" class="form-control">
                                 </div>
-                                
+
                                 <div class="mb-2">
                                     <label class="form-label">Xác nhận mật khẩu</label>
                                     <input type="password" class="form-control">
                                 </div>
 
                                 <!-- Change Password -->
-                                <button class="btn btn-primary w-100">Đổi mật khẩu </button>
+<!--                                <form action="<%= request.getContextPath() %>/ChangePasswordServlet" method="get">
+                                    <button class="btn btn-primary w-100">
+                                        <a class="btn btn-primary w-100" href="<%= request.getContextPath() %>/auth/change_password_volunteer.jsp">
+                                            Đổi mật khẩu
+                                        </a> 
+                                    </button>
+                                </form>-->
+
+                                <a class="btn btn-primary w-100" href="<%= request.getContextPath() %>/volunteer/change_password_volunteer.jsp">
+                                    Đổi mật khẩu
+                                </a>
                             </div>
 
                             <!-- Cột B (7 phần) -->
@@ -162,7 +172,7 @@
         </div>
 
 
-     
+
         <jsp:include page="/layout/footer.jsp" />
         <jsp:include page="/layout/loader.jsp" />
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
