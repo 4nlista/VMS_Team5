@@ -111,6 +111,7 @@ public class AccountDAO {
         return -1;
     }
 
+    // -------- Quên mật khẩu -----------
     // lấy thông tin username + email . nếu đúng -> trả về Account
     public Account getAccountByUsernameAndEmail(String username, String email) {
         String sql = "SELECT a.id, a.username, a.password, a.role, a.status "
@@ -135,14 +136,30 @@ public class AccountDAO {
         return null;
     }
 
-// Cập nhật mật khẩu mới (đã mã hóa) ghi mật khẩu random mới vào DB
-    public boolean updatePassword(int accountId, String newPassword) {
+    // Cập nhật mật khẩu mới được random (đã mã hóa) ghi mật khẩu random mới vào DB
+    public boolean updatePasswordRandom(int accountId, String newPassword) {
         String sql = "UPDATE Accounts SET password = ? WHERE id = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, newPassword);
             ps.setInt(2, accountId);
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+   
+    
+    // ----------------- Đổi mật khẩu -----------------
+    
+    // đổi mật khẩu của từng tài khoản
+    public boolean updatePasswordByUser(int accountId, String newPassword) {
+        String sql = "UPDATE Accounts SET password = ? WHERE id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, newPassword); // mật khẩu đã hash
+            ps.setInt(2, accountId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;

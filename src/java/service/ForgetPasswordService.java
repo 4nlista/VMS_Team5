@@ -28,7 +28,7 @@ public class ForgetPasswordService {
         String hashed = PasswordUtil.hashPassword(newPass);
 
         // Cập nhật DB
-        if (!accountDAO.updatePassword(acc.getId(), hashed)) {
+        if (!accountDAO.updatePasswordRandom(acc.getId(), hashed)) {
             return false;
         }
 
