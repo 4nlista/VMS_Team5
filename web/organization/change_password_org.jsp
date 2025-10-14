@@ -14,31 +14,50 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
         <link href="<%= request.getContextPath() %>/organization/css/org.css" rel="stylesheet" />
     </head>
-    <body>
+     <body>
         <div class="content-container">
-            <%
-                     Object sessionId = session.getId();
-                     String fullname = (String) session.getAttribute("fullname");
-                     if (fullname == null) {
-                         fullname = "Khách";
-                     }
-            %>
 
             <!-- Sidebar -->
             <jsp:include page="layout_org/sidebar_org.jsp" />
 
-
             <!-- Main Content -->
             <div class="main-content">
-                <h1>Chào mừng <%= fullname %> đến trang người tổ chức!</h1>
-                <h4>Màn hình đổi mật khẩu.</h4>
+                <div class="container mt-5">
+                    <h2 class="mb-4 text-center">Trang đổi mật khẩu</h2>
 
-                <form action="<%= request.getContextPath() %>/LogoutServlet" method="get">
-                    <button type="submit">Logout</button>
-                </form>
+                    <% String error = (String) request.getAttribute("error"); %>
+                    <% String success = (String) request.getAttribute("success"); %>
+
+                    <% if (error != null) { %>
+                        <div class="alert alert-danger"><%= error %></div>
+                    <% } %>
+                    <% if (success != null) { %>
+                        <div class="alert alert-success"><%= success %></div>
+                    <% } %>
+
+                    <form action="<%= request.getContextPath() %>/ChangePasswordServlet" method="post" class="col-md-6 offset-md-3">
+                        <div class="mb-3">
+                            <label for="currentPassword" class="form-label">Mật khẩu hiện tại</label>
+                            <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="newPassword" class="form-label">Mật khẩu mới</label>
+                            <input type="password" class="form-control" id="newPassword" name="newPassword" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Xác nhận mật khẩu mới</label>
+                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                        </div>
+
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary">Đổi mật khẩu</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>

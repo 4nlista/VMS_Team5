@@ -100,7 +100,7 @@
 .main-content {
     flex-grow: 1;
     padding: 2rem 3rem;
-    background-color: #FDF4F5; /* Màu nền sáng cho main content */
+    background-color: whitesmoke; /* Màu nền sáng cho main content */
     color: #333; /* Màu chữ tối cho dễ đọc */
 }
 
@@ -119,4 +119,22 @@
 
 .main-content button:hover {
     background-color: #b02a37;
+}
+
+.notification {
+    font-size: 1.6rem;
+    color: #333;
+    cursor: pointer;
+    position: relative;
+}
+
+.notification .badge {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background: red;
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 50%;
 }

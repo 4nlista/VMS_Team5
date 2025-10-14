@@ -52,14 +52,7 @@
                                     <label class="form-label">Upload Photo</label>
                                     <input type="file" class="form-control">
                                 </div>
-
-
-<!--                                <form action="<%= request.getContextPath() %>/ChangePasswordServlet" method="post">
-                                    <button type="submit" class="btn btn-primary w-100">
-                                        Đổi mật khẩu
-                                    </button>
-                                </form>-->
-
+                                
                                 <form action="<%= request.getContextPath() %>/volunteer/change_password_volunteer.jsp" method="get">
                                     <button type="submit" class="btn btn-primary w-100">Đổi mật khẩu</button>
                                 </form>
@@ -118,12 +111,9 @@
                                             <label class="form-label">Số điện thoại</label>
                                             <input type="text" class="form-control" value="0123456789">
                                         </div>
-
-
                                     </div>
 
                                     <hr class="my-4">
-
                                     <h5 class="mb-3">Giới thiệu bản thân</h5>
                                     <!-- Full width row -->
                                     <div class="mb-3">

@@ -60,7 +60,7 @@ public class ChangePasswordServlet extends HttpServlet {
                     request.getRequestDispatcher("/auth/change_password_admin.jsp").forward(request, response);
                     break;
                 case "organization":
-                    request.getRequestDispatcher("/organization/change_password_organization.jsp").forward(request, response);
+                    request.getRequestDispatcher("/organization/change_password_org.jsp").forward(request, response);
                     break;
                 default:
                     request.getRequestDispatcher("/auth/login.jsp").forward(request, response);
