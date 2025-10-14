@@ -27,6 +27,22 @@
                     <% if (error != null) { %>
                     <div class="alert alert-danger"><%= error %></div>
                     <% } %>
+                    
+                    <!--                hiển thị thông báo thành công-->
+                    <% String success = (String) request.getAttribute("success"); %>
+                    <% if (success != null) { %>
+                    <div class="alert alert-success"><%= success %></div>
+                    <script>
+                        setTimeout(function () {
+                            window.location.href = '<%= request.getContextPath() %>/auth/login.jsp';
+                        }, 2000);
+                    </script>
+                    <style>
+                        form {
+                            display: none;
+                        }
+                    </style>
+                    <% } %>
 
                     <form action="<%= request.getContextPath() %>/ChangePasswordServlet" method="post">
                         <div class="mb-3">
@@ -53,7 +69,7 @@
             </div>
         </div>
     </div>
-    
+
     <jsp:include page="/layout/footer.jsp" />
     <jsp:include page="/layout/loader.jsp" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

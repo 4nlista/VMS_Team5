@@ -31,8 +31,21 @@
                     <% if (error != null) { %>
                     <div class="alert alert-danger"><%= error %></div>
                     <% } %>
+
+<!--                hiển thị thông báo thành công-->
+                    <% String success = (String) request.getAttribute("success"); %>
                     <% if (success != null) { %>
                     <div class="alert alert-success"><%= success %></div>
+                    <script>
+                        setTimeout(function () {
+                            window.location.href = '<%= request.getContextPath() %>/auth/login.jsp';
+                        }, 2000);
+                    </script>
+                    <style>
+                        form {
+                            display: none;
+                        }
+                    </style>
                     <% } %>
 
                     <form action="<%= request.getContextPath() %>/ChangePasswordServlet" method="post" class="col-md-6 offset-md-3">

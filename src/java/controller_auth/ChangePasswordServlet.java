@@ -27,13 +27,6 @@ public class ChangePasswordServlet extends HttpServlet {
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
 
-        // 🟢 Thêm log kiểm tra session
-        System.out.println("==== [DEBUG] SESSION CHECK ====");
-        System.out.println("Session ID: " + request.getSession().getId());
-        System.out.println("accountId in session: " + request.getSession().getAttribute("accountId"));
-        System.out.println("role in session: " + request.getSession().getAttribute("role"));
-        System.out.println("================================");
-
         String currentPassword = request.getParameter("currentPassword");
         String newPassword = request.getParameter("newPassword");
         String confirmPassword = request.getParameter("confirmPassword");
@@ -69,8 +62,24 @@ public class ChangePasswordServlet extends HttpServlet {
             return;
         }
 
-        System.out.println("Đổi mật khẩu thành công! Redirect về login.jsp");
-        response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
+        //khi đổi thành công, servlet sẽ forward lại trang đổi mật khẩu tương ứng với role, 
+        //truyền thêm biến success để JSP hiển thị thông báo rồi tự động redirect về trang login.
+        request.setAttribute("success", "Đổi mật khẩu thành công! Bạn sẽ được chuyển hướng trong giây lát.");
+        switch (role) {
+            case "volunteer":
+                request.getRequestDispatcher("/volunteer/change_password_volunteer.jsp").forward(request, response);
+                break;
+            case "admin":
+                request.getRequestDispatcher("/auth/change_password_admin.jsp").forward(request, response);
+                break;
+            case "organization":
+                request.getRequestDispatcher("/organization/change_password_org.jsp").forward(request, response);
+                break;
+            default:
+                request.getRequestDispatcher("/auth/login.jsp").forward(request, response);
+                break;
+        }
+
     }
 
 }

@@ -14,7 +14,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
         <link href="<%= request.getContextPath() %>/organization/css/org.css" rel="stylesheet" />
     </head>
-     <body>
+    <body>
         <div class="content-container">
 
             <!-- Sidebar -->
@@ -29,10 +29,22 @@
                     <% String success = (String) request.getAttribute("success"); %>
 
                     <% if (error != null) { %>
-                        <div class="alert alert-danger"><%= error %></div>
+                    <div class="alert alert-danger"><%= error %></div>
                     <% } %>
+
+                    <!--                hiển thị thông báo thành công-->
                     <% if (success != null) { %>
-                        <div class="alert alert-success"><%= success %></div>
+                    <div class="alert alert-success"><%= success %></div>
+                    <script>
+                        setTimeout(function () {
+                            window.location.href = '<%= request.getContextPath() %>/auth/login.jsp';
+                        }, 2000);
+                    </script>
+                    <style>
+                        form {
+                            display: none;
+                        }
+                    </style>
                     <% } %>
 
                     <form action="<%= request.getContextPath() %>/ChangePasswordServlet" method="post" class="col-md-6 offset-md-3">

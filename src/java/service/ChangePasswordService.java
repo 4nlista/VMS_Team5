@@ -21,18 +21,12 @@ public class ChangePasswordService {
 
     public String changePassword(int accountId, String currentPassword, String newPassword, String confirmPassword) {
         try {
-            System.out.println("=== [Service] ChangePasswordService called ===");
-            System.out.println("Account ID: " + accountId);
-            System.out.println("Current password (plain): " + currentPassword);
-            System.out.println("New password (plain): " + newPassword);
-            System.out.println("Confirm password (plain): " + confirmPassword);
-
             // 1. Lấy mật khẩu hiện tại từ DB
             String currentPasswordHash = accountDAO.getPasswordHashById(accountId);
             System.out.println("Current password hash in DB: " + currentPasswordHash);
 
             if (currentPasswordHash == null) {
-                System.out.println("⚠️ Không tìm thấy tài khoản trong DB");
+                System.out.println("Không tìm thấy tài khoản trong DB");
                 return "Tài khoản không tồn tại.";
             }
 
@@ -41,7 +35,7 @@ public class ChangePasswordService {
                     || PasswordUtil.hashPassword(currentPassword).equals(currentPasswordHash);
             
             if (!isMatch) {
-                System.out.println("❌ Mật khẩu cũ không khớp (đã kiểm tra cả plain và hash)!");
+                System.out.println("Mật khẩu cũ không khớp (đã kiểm tra cả plain và hash)!");
                 return "Mật khẩu hiện tại không đúng.";
             }
 
@@ -59,11 +53,11 @@ public class ChangePasswordService {
             System.out.println("Update result from DAO: " + updated);
 
             if (!updated) {
-                System.out.println("❌ Update thất bại!");
+                System.out.println("Update thất bại!");
                 return "Đổi mật khẩu thất bại, thử lại.";
             }
 
-            System.out.println("✅ Đổi mật khẩu thành công!");
+            System.out.println("Đổi mật khẩu thành công!");
             return null;
 
         } catch (Exception e) {
