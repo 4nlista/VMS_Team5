@@ -39,7 +39,7 @@ public class ChangePasswordService {
             // 2. Kiểm tra mật khẩu cũ
             boolean isMatch = currentPassword.equals(currentPasswordHash)
                     || PasswordUtil.hashPassword(currentPassword).equals(currentPasswordHash);
-
+            
             if (!isMatch) {
                 System.out.println("❌ Mật khẩu cũ không khớp (đã kiểm tra cả plain và hash)!");
                 return "Mật khẩu hiện tại không đúng.";
