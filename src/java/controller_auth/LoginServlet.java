@@ -42,6 +42,8 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
         HttpSession session = request.getSession();
 
+
+
         // Gọi service xử lý login
         String redirectUrl = loginService.processLogin(username, password, session);
 
