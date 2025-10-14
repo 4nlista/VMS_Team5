@@ -33,7 +33,7 @@ public class ForgetPasswordService {
         }
 
         // Gửi email
-        String subject = "Mật khẩu mới của bạn";
+        String subject = "Your new password: ";
         String message = "<p>Mật khẩu mới của bạn là: <b>" + newPass + "</b></p>"
                 + "<p>Vui lòng đăng nhập và đổi lại mật khẩu.</p>";
         return emailService.sendEmail(email, subject, message);

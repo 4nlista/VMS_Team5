@@ -58,7 +58,7 @@ public class RegisterService {
         }
 
         // 5. Gửi email xác nhận (tùy chọn)
-        String subject = "Xác nhận đăng ký Volunteer System";
+        String subject = "Register Accounts System";
         String body
                 = """
             <html>
@@ -66,10 +66,11 @@ public class RegisterService {
                     <p>Xin chào <b>%s</b>,</p>
                     <p>Bạn đã đăng ký tài khoản thành công.</p>
                     <p>Tên đăng nhập: <b>%s</b></p>
+                    <p>Vai trò: <b>%s</b></p>
                     <p>Cảm ơn bạn đã tham gia hệ thống!</p>
                  </body>
             </html>
-            """.formatted(user.getFull_name(), acc.getUsername());
+            """.formatted(user.getFull_name(), acc.getUsername(), acc.getRole());
 
         try {
             emailService.sendEmail(user.getEmail(), subject, body);
