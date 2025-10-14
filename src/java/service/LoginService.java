@@ -37,6 +37,9 @@ public class LoginService {
 
         session.setAttribute("account", acc);
 
+        session.setAttribute("accountId", acc.getId());
+        session.setAttribute("role", acc.getRole());
+
         String role = acc.getRole() == null ? "" : acc.getRole().toLowerCase();
 
         // Admin/Organization → luôn về dashboard, không xét redirectAfterLogin

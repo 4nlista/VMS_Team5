@@ -37,11 +37,11 @@ public class ChangePasswordService {
             }
 
             // 2. Kiểm tra mật khẩu cũ
-            String inputHash = PasswordUtil.hashPassword(currentPassword);
-            System.out.println("Hashed current password (input): " + inputHash);
+            boolean isMatch = currentPassword.equals(currentPasswordHash)
+                    || PasswordUtil.hashPassword(currentPassword).equals(currentPasswordHash);
 
-            if (!currentPasswordHash.equals(inputHash)) {
-                System.out.println("❌ Mật khẩu cũ không khớp!");
+            if (!isMatch) {
+                System.out.println("❌ Mật khẩu cũ không khớp (đã kiểm tra cả plain và hash)!");
                 return "Mật khẩu hiện tại không đúng.";
             }
 
@@ -68,7 +68,7 @@ public class ChangePasswordService {
 
         } catch (Exception e) {
             e.printStackTrace();
-            return "Có lỗi xảy ra, thử lại sau.";
+            return "Có lỗi xảy ra, thử lại sau nhé.";
         }
     }
 

@@ -54,10 +54,14 @@
                                 </div>
 
 
-                                <form action="<%= request.getContextPath() %>/ChangePasswordServlet" method="post">
+<!--                                <form action="<%= request.getContextPath() %>/ChangePasswordServlet" method="post">
                                     <button type="submit" class="btn btn-primary w-100">
                                         Đổi mật khẩu
                                     </button>
+                                </form>-->
+
+                                <form action="<%= request.getContextPath() %>/volunteer/change_password_volunteer.jsp" method="get">
+                                    <button type="submit" class="btn btn-primary w-100">Đổi mật khẩu</button>
                                 </form>
                             </div>
 

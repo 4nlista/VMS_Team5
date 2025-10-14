@@ -54,13 +54,13 @@ public class ChangePasswordServlet extends HttpServlet {
             request.setAttribute("error", errorMsg);
             switch (role) {
                 case "volunteer":
-                    request.getRequestDispatcher("/auth/change_password_volunteer.jsp").forward(request, response);
+                    request.getRequestDispatcher("/volunteer/change_password_volunteer.jsp").forward(request, response);
                     break;
                 case "admin":
                     request.getRequestDispatcher("/auth/change_password_admin.jsp").forward(request, response);
                     break;
                 case "organization":
-                    request.getRequestDispatcher("/auth/change_password_organization.jsp").forward(request, response);
+                    request.getRequestDispatcher("/organization/change_password_organization.jsp").forward(request, response);
                     break;
                 default:
                     request.getRequestDispatcher("/auth/login.jsp").forward(request, response);
