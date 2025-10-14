@@ -53,41 +53,12 @@
                                     <input type="file" class="form-control">
                                 </div>
 
-                                <!-- Old Password -->
 
-                                <div class="mb-2">
-                                    <label class="form-label">Tài khoản</label>
-                                    <input type="text" class="form-control">
-                                </div>
-
-                                <div class="mb-2">
-                                    <label class="form-label">Mật khẩu hiện tại</label>
-                                    <input type="password" class="form-control">
-                                </div>
-
-                                <!-- New Password -->
-                                <div class="mb-2">
-                                    <label class="form-label">Mật khẩu mới</label>
-                                    <input type="password" class="form-control">
-                                </div>
-
-                                <div class="mb-2">
-                                    <label class="form-label">Xác nhận mật khẩu</label>
-                                    <input type="password" class="form-control">
-                                </div>
-
-                                <!-- Change Password -->
-<!--                                <form action="<%= request.getContextPath() %>/ChangePasswordServlet" method="get">
-                                    <button class="btn btn-primary w-100">
-                                        <a class="btn btn-primary w-100" href="<%= request.getContextPath() %>/auth/change_password_volunteer.jsp">
-                                            Đổi mật khẩu
-                                        </a> 
+                                <form action="<%= request.getContextPath() %>/ChangePasswordServlet" method="post">
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        Đổi mật khẩu
                                     </button>
-                                </form>-->
-
-                                <a class="btn btn-primary w-100" href="<%= request.getContextPath() %>/volunteer/change_password_volunteer.jsp">
-                                    Đổi mật khẩu
-                                </a>
+                                </form>
                             </div>
 
                             <!-- Cột B (7 phần) -->
