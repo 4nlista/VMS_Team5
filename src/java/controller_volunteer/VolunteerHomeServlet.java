@@ -10,28 +10,34 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import model.Account;
 import service.AccountService;
+import service.SumDisplayService;
 
 @WebServlet(name = "VolunteerHomeServlet", urlPatterns = {"/VolunteerHomeServlet"})
 
 public class VolunteerHomeServlet extends HttpServlet {
 
     private AccountService accountService;
+    private SumDisplayService sumService;
 
     @Override
     public void init() {
         accountService = new AccountService();
+        sumService = new SumDisplayService();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        double totalDonations = sumService.getTotalDonations();
+        
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("account") == null) {
             // Nếu session không hợp lệ, điều hướng về login
             response.sendRedirect(request.getContextPath() + "/LoginServlet");
             return;
         }
+        
 
         Account acc = (Account) session.getAttribute("account");
         acc = accountService.getAccountById(acc.getId());  // Lấy lại từ DB cho chắc chắn
@@ -44,7 +50,8 @@ public class VolunteerHomeServlet extends HttpServlet {
         // Lưu fullname vào session
         session.setAttribute("username", acc.getUsername());
         // Forward đến JSP, không redirect
-        request.getRequestDispatcher("/volunteer/home_volunteer.jsp").forward(request, response);
+        request.setAttribute("totalDonations", totalDonations);
+        request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 
     @Override

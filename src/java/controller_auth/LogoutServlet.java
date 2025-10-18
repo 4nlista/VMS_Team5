@@ -28,7 +28,7 @@ public class LogoutServlet extends HttpServlet {
         response.setDateHeader("Expires", 0);  // Expiration date set to 0
 
         // Sau khi logout, điều hướng về login page
-        response.sendRedirect(request.getContextPath() + "/index.jsp");
+        response.sendRedirect(request.getContextPath() + "/home");
     }
 
     @Override

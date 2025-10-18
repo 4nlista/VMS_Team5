@@ -8,8 +8,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
-import model.Account;
-import service.AccountService;
 import service.LoginService;
 
 @WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet"})

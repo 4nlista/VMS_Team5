@@ -59,7 +59,7 @@
             <ul class="navbar-nav ml-auto">
                 <% if (acc == null) { %>
                 <li class="nav-item">
-                    <a href="<%= request.getContextPath() %>/index.jsp" class="nav-link <%= currentPage.contains("index.jsp") ? "active" : "" %>">Trang Chủ</a>
+                    <a href="<%= request.getContextPath() %>/home" class="nav-link <%= currentPage.contains("home") ? "active" : "" %>">Trang Chủ</a>
                 </li>
 
 

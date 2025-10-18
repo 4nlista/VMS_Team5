@@ -13,7 +13,7 @@
                 <div class="block-18 color-1 align-items-stretch">
                     <div class="text">
                         <span>Quỹ đóng góp từ thiện của tổ chức</span>
-                        <strong class="number" data-number="26550000">0</strong>
+                        <strong class="number" data-number="${totalDonations}"/></strong>
                         <span>Bảo vệ môi trường và giúp đỡ những hoàn cảnh khó khăn.</span>
                     </div>
                 </div>
