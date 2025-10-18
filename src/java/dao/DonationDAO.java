@@ -15,7 +15,7 @@ import utils.DBContext;
  */
 public class DonationDAO {
 
-    private java.sql.Connection conn;
+    private Connection conn;
 
     public DonationDAO() {
         try {
