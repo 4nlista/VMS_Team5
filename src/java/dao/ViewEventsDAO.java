@@ -28,21 +28,21 @@ public class ViewEventsDAO {
             e.printStackTrace();
         }
     }
-    public List<Event> getAllEvents() {
-        List<Event> list = new ArrayList<>();
-        String sql = "SELECT id, name, description, date, location, image FROM event";
-        try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                rs.setId(rs.getInt("id"));
-                rs.setName(rs.getString("name"));
-                rs.setDescription(rs.getString("description"));
-                rs.setDate(rs.getDate("date"));
-                rs.setLocation(rs.getString("location"));
-                rs.setImage(rs.getString("image"));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
+//    public List<Event> getAllEvents() {
+//        List<Event> list = new ArrayList<>();
+//        String sql = "SELECT id, name, description, date, location, image FROM event";
+//        try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+//            while (rs.next()) {
+//                rs.setId(rs.getInt("id"));
+//                rs.setName(rs.getString("name"));
+//                rs.setDescription(rs.getString("description"));
+//                rs.setDate(rs.getDate("date"));
+//                rs.setLocation(rs.getString("location"));
+//                rs.setImage(rs.getString("image"));
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return list;
+//    }
 }

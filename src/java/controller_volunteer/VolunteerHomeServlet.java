@@ -29,7 +29,7 @@ public class VolunteerHomeServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        double totalDonations = sumService.getTotalDonations();
+        double totalDonationSystem = sumService.getTotalDonations();
         
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("account") == null) {
@@ -50,7 +50,7 @@ public class VolunteerHomeServlet extends HttpServlet {
         // Lưu fullname vào session
         session.setAttribute("username", acc.getUsername());
         // Forward đến JSP, không redirect
-        request.setAttribute("totalDonations", totalDonations);
+        request.setAttribute("totalDonationSystem", totalDonationSystem);
         request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 

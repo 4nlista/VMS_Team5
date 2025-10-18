@@ -30,8 +30,8 @@ public class GuessHomeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        double totalDonations = sumService.getTotalDonations();
-        request.setAttribute("totalDonations", totalDonations);
+        double totalDonationSystem = sumService.getTotalDonations();
+        request.setAttribute("totalDonationSystem", totalDonationSystem);
         request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 
