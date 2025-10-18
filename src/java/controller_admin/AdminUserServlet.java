@@ -1,6 +1,6 @@
 package controller_admin;
 
-import dao.UserDAO;
+import service.AdminUserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -17,10 +17,39 @@ public class AdminUserServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 		    throws ServletException, IOException {
-		UserDAO dao = new UserDAO();
-		List<User> users = dao.getAllUsers();
-		request.setAttribute("users", users);
-		request.getRequestDispatcher("/admin/users_admin.jsp").forward(request, response);
+
+		int page = 1;
+		String pageParam = request.getParameter("page");
+		if (pageParam != null) {
+			try {
+				page = Integer.parseInt(pageParam);
+			} catch (NumberFormatException ignored) {
+			}
+		}
+		
+		String role = request.getParameter("role");
+		String search = request.getParameter("search");
+		String sort = request.getParameter("sort");
+
+		try {
+			AdminUserService service = new AdminUserService();
+
+			List<User> users = service.getUsersByPage(page, role, search, sort);
+			int totalPages = service.getTotalPages(role, search);
+
+			request.setAttribute("users", users);
+			request.setAttribute("currentPage", page);
+			request.setAttribute("totalPages", totalPages);
+			
+			request.setAttribute("currentRole", role == null ? "" : role);
+			request.setAttribute("currentSearch", search == null ? "" : search);
+			request.setAttribute("currentSort", sort == null ? "" : sort);
+
+			request.getRequestDispatcher("/admin/manage_user_admin.jsp").forward(request, response);
+
+		} catch (Exception e) {
+			throw new ServletException("Error loading users", e);
+		}
 	}
 
 	@Override

@@ -3,7 +3,7 @@
  */
 package controller_admin;
 
-import dao.UserDAO;
+import dao.AdminUserDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -19,7 +19,7 @@ import model.User;
 @WebServlet(name = "AdminUserDetailServlet", urlPatterns = {"/AdminUserDetailServlet"})
 public class AdminUserDetailServlet extends HttpServlet {
 
-	private UserDAO userDAO = new UserDAO();
+	private AdminUserDAO userDAO = new AdminUserDAO();
 
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 		    throws ServletException, IOException {
@@ -30,7 +30,7 @@ public class AdminUserDetailServlet extends HttpServlet {
 		    throws ServletException, IOException {
 		try {
 			int id = Integer.parseInt(request.getParameter("id"));
-			User user = userDAO.getUserById(id);
+			User user = userDAO.getUserDetailById(id);
 
 			if (user == null) {
 				response.sendRedirect("AdminUserServlet?error=UserNotFound");
@@ -38,7 +38,7 @@ public class AdminUserDetailServlet extends HttpServlet {
 			}
 
 			request.setAttribute("user", user);
-			request.getRequestDispatcher("/admin/user_detail.jsp").forward(request, response);
+			request.getRequestDispatcher("/admin/detail_user_admin.jsp").forward(request, response);
 
 		} catch (Exception e) {
 			e.printStackTrace();
