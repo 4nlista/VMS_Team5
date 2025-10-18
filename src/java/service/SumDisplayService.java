@@ -4,10 +4,16 @@
  */
 package service;
 
+import dao.DonationDAO;
+
 /**
  *
  * @author ADDMIN
  */
 public class SumDisplayService {
-    
+    private DonationDAO donationDAO = new DonationDAO();
+
+    public double getTotalDonations() {
+        return donationDAO.getTotalDonationAmount();
+    }
 }

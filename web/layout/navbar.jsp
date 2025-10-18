@@ -57,9 +57,17 @@
                 String currentPage = request.getRequestURI();
             %>
             <ul class="navbar-nav ml-auto">
+                <% if (acc == null) { %>
                 <li class="nav-item">
                     <a href="<%= request.getContextPath() %>/index.jsp" class="nav-link <%= currentPage.contains("index.jsp") ? "active" : "" %>">Trang Chủ</a>
                 </li>
+
+
+                <% } else { %>
+                <li class="nav-item">
+                    <a href="<%= request.getContextPath() %>/VolunteerHomeServlet" class="nav-link <%= currentPage.contains("VolunteerHomeServlet") ? "active" : "" %>">Trang Chủ</a>
+                </li>
+                <% } %>
                 <!-- Chỉ hiện khi chưa login -->
                 <% if (acc == null) { %>
                 <li class="nav-item">
@@ -97,7 +105,7 @@
                 </li>
 
                 <% if (acc != null) { %>
-                
+
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle <%= currentPage.contains("/volunteer/history_volunteer.jsp") ? "active" : "" %>" 
                        href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
