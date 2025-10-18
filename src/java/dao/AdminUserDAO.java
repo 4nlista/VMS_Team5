@@ -13,6 +13,7 @@ import model.Account;
 import model.User;
 import utils.DBContext;
 import java.sql.SQLException;
+import java.sql.Date;
 
 /**
  *
@@ -25,7 +26,7 @@ public class AdminUserDAO {
 	public AdminUserDAO() {
 		try {
 			DBContext db = new DBContext();
-			this.conn = db.getConnection(); // lấy connection từ DBContext
+			this.conn = db.getConnection();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -90,8 +91,8 @@ public class AdminUserDAO {
 
 	//To update user detail as an admin
 	public boolean updateUser(int id, String username, String fullName, String gender, String phone,
-		    String email, String address, String jobTitle, String bio) {
-		String updateUserSql = "UPDATE Users SET full_name=?, gender=?, phone=?, email=?, address=?, job_title=?, bio=? WHERE id=?";
+		    String email, String address, String jobTitle, String bio, Date dob) {
+		String updateUserSql = "UPDATE Users SET full_name=?, gender=?, phone=?, email=?, address=?, job_title=?, bio=?, dob=? WHERE id=?";
 		String updateAccountSql = "UPDATE Accounts SET username=? WHERE id=(SELECT account_id FROM Users WHERE id=?)";
 		try {
 			conn.setAutoCommit(false); // start transaction
@@ -105,7 +106,12 @@ public class AdminUserDAO {
 				psUser.setString(5, address);
 				psUser.setString(6, jobTitle);
 				psUser.setString(7, bio);
-				psUser.setInt(8, id);
+				if (dob != null) {
+					psUser.setDate(8, dob);
+				} else {
+					psUser.setNull(8, java.sql.Types.DATE);
+				}
+				psUser.setInt(9, id);
 				psUser.executeUpdate();
 			}
 

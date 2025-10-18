@@ -11,10 +11,15 @@
     <head>
         <title>Edit User</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <style>
+            .field-error { font-size: 0.9rem; color: #b02a37; margin-top: .25rem; }
+        </style>
     </head>
     <body class="p-4">
 
         <a href="AdminUserServlet" class="btn btn-secondary mb-3">← Back to User List</a>
+        
+        
 
         <div class="card mx-auto shadow-lg border-0" style="max-width: 750px;">
             <div class="card-header bg-dark text-white text-center py-3 rounded-top">
@@ -77,8 +82,13 @@
                                             <input type="text" name="address" class="form-control form-control-sm" value="${user.address}">
                                         </div>
                                         <div class="col-md-6">
+                                            <label class="form-label small text-muted">Phone</label>
+                                            <input type="text" name="phone" class="form-control form-control-sm" value="${user.phone}">
+                                        </div>
+                                        
+                                        <div class="col-md-12 mt-3">
                                             <label class="form-label small text-muted">Email</label>
-                                            <input type="email" name="email" class="form-control form-control-sm" value="${user.email}" readonly>
+                                            <input type="email" name="email" class="form-control form-control-sm" value="${user.email}">
                                         </div>
                                     </div>
 
