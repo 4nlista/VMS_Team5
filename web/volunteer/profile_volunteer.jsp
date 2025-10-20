@@ -6,6 +6,7 @@
 
 <%@page contentType="text/html; charset=UTF-8" language="java" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 
 <!DOCTYPE html>
@@ -82,76 +83,78 @@
 
                             <!-- Cột B (7 phần) -->
                             <div class="col-md-9">
-                                <form>
-                                    <h5 class="mb-3">Thông tin cá nhân</h5>
-                                    <div class="row g-3">
-                                        <!-- Row 1 -->
-                                        <div class="col-md-6">
-                                            <label class="form-label">ID</label>
-                                            <input type="text" class="form-control" value="Xxx">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label">Họ và tên</label>
-                                            <input type="text" class="form-control" value="Nguyễn Văn A">
-                                        </div>
+                                <form action="${pageContext.request.contextPath}/VolunteerProfileServlet" method="post">
+    <input type="hidden" name="accountId" value="${user.accountId}">
 
-                                        <!-- Row 2 -->
-                                        <div class="col-md-6">
-                                            <label class="form-label">Nickname</label>
-                                            <input type="text" class="form-control" value="Gene.r">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label">Giới tính</label>
-                                            <select class="form-select">
-                                                <option selected>Giới tính</option>
-                                                <option>Nam</option>
-                                                <option>Nữ</option>
-                                            </select>
-                                        </div>
+    <h5 class="mb-3">Thông tin cá nhân</h5>
+    <div class="row g-3">
+        <!-- ID -->
+        <div class="col-md-6">
+            <label class="form-label">ID</label>
+            <input type="text" class="form-control" value="${user.accountId}" disabled>
+        </div>
 
-                                        <!-- Row 3 -->
-                                        <div class="col-md-6">
-                                            <label class="form-label">Ngày sinh</label>
-                                            <input type="date" class="form-control" value="20-09-2004">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label">Địa chỉ</label>
-                                            <input type="text" class="form-control" value="Hải phòng">
-                                        </div>
-                                    </div>
+        <!-- Họ và tên -->
+        <div class="col-md-6">
+            <label class="form-label">Họ và tên</label>
+            <input type="text" class="form-control" name="full_name" value="${user.fullName}">
+        </div>
 
-                                    <hr class="my-4">
+        <!-- Nickname -->
+        <div class="col-md-6">
+            <label class="form-label">Nickname</label>
+            <input type="text" class="form-control" name="job_title" value="${user.jobTitle}">
+        </div>
 
-                                    <h5 class="mb-3">Thông tin liên hệ</h5>
-                                    <div class="row g-3">
-                                        <!-- Row 4 -->
-                                        <div class="col-md-6">
-                                            <label class="form-label">Email</label>
-                                            <input type="email" class="form-control" value="volunteerX@gmail.com">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label">Số điện thoại</label>
-                                            <input type="text" class="form-control" value="0123456789">
-                                        </div>
+        <!-- Giới tính -->
+        <div class="col-md-6">
+            <label class="form-label">Giới tính</label>
+            <select class="form-select" name="gender">
+    <option value="">Chọn giới tính</option>
+   <option value="Nam" ${user.gender eq 'Nam' ? 'selected' : ''}>Nam</option>
+<option value="Nữ" ${user.gender eq 'Nữ' ? 'selected' : ''}>Nữ</option>
+</select>
+        </div>
 
+        <!-- Ngày sinh -->
+        <div class="col-md-6">
+            <label class="form-label">Ngày sinh</label>
+         <input type="date" class="form-control" name="dob"
+       value="<fmt:formatDate value='${user.dob}' pattern='yyyy-MM-dd'/>">
+        </div>
 
-                                    </div>
+        <!-- Địa chỉ -->
+        <div class="col-md-6">
+            <label class="form-label">Địa chỉ</label>
+            <input type="text" class="form-control" name="address" value="${user.address}">
+        </div>
+    </div>
 
-                                    <hr class="my-4">
+    <hr class="my-4">
 
-                                    <h5 class="mb-3">Giới thiệu bản thân</h5>
-                                    <!-- Full width row -->
-                                    <div class="mb-3">
-                                        <textarea class="form-control" rows="4">
-                                            Albert Einstein was a German mathematician and physicist 
-                                            who developed the special and general theories of relativity...
-                                        </textarea>
-                                    </div>
+    <h5 class="mb-3">Thông tin liên hệ</h5>
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" name="email" value="${user.email}">
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Số điện thoại</label>
+            <input type="text" class="form-control" name="phone" value="${user.phone}">
+        </div>
+    </div>
 
-                                    <div class="text-end">
-                                        <button type="submit" class="btn btn-success">Lưu cập nhật</button>
-                                    </div>
-                                </form>
+    <hr class="my-4">
+
+    <h5 class="mb-3">Giới thiệu bản thân</h5>
+    <div class="mb-3">
+        <textarea class="form-control" rows="4" name="bio">${user.bio}</textarea>
+    </div>
+
+    <div class="text-end">
+        <button type="submit" class="btn btn-success">Lưu cập nhật</button>
+    </div>
+</form>
                             </div>
 
                         </div>

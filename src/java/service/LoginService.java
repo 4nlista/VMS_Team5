@@ -34,7 +34,8 @@ public class LoginService {
             return "/auth/login.jsp?error=1"; // Login fail
         }
 
-        session.setAttribute("account", acc);
+         session.setAttribute("account", acc);
+         session.setAttribute("accountId", acc.getId());
 
         String role = acc.getRole() == null ? "" : acc.getRole().toLowerCase();
 
