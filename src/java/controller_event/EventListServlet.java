@@ -1,4 +1,4 @@
-package controller_volunteer;
+package controller_event;
 
 import dao.EventDAO;
 import jakarta.servlet.ServletException;
@@ -19,7 +19,7 @@ public class EventListServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        List<Event> events = eventDAO.getAllAvailableEvents();
+        List<Event> events = eventDAO.getAllEvents();
         request.setAttribute("events", events);
 
         request.getRequestDispatcher("detail_event_volunteer.jsp").forward(request, response);

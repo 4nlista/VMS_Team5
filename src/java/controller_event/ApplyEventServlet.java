@@ -1,4 +1,4 @@
-package controller_volunteer;
+package controller_event;
 
 import dao.EventVolunteerDAO;
 import jakarta.servlet.ServletException;

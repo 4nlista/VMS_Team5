@@ -9,21 +9,23 @@ public class Event {
     private Date startDate;
     private Date endDate;
     private String location;
-    private String status;
+    private int organizationId;
+    private String status; // active / inactive / finished / etc.
 
     public Event() {}
 
-    public Event(int id, String name, String description, Date startDate, Date endDate, String location, String status) {
+    public Event(int id, String name, String description, Date startDate, Date endDate, String location, int organizationId, String status) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
         this.location = location;
+        this.organizationId = organizationId;
         this.status = status;
     }
 
-    // Getter & Setter
+    // Getters & setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
@@ -41,6 +43,9 @@ public class Event {
 
     public String getLocation() { return location; }
     public void setLocation(String location) { this.location = location; }
+
+    public int getOrganizationId() { return organizationId; }
+    public void setOrganizationId(int organizationId) { this.organizationId = organizationId; }
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
