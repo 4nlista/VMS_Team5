@@ -236,7 +236,7 @@ public class AdminUserDAO {
 			whereClauses.add("a.role = ?");
 		}
 		if (search != null && !search.trim().isEmpty()) {
-			whereClauses.add("a.username LIKE ?");
+			whereClauses.add("u.full_name LIKE ?");
 		}
 
 		if (!whereClauses.isEmpty()) {
@@ -300,7 +300,7 @@ public class AdminUserDAO {
 			whereClauses.add("a.role = ?");
 		}
 		if (search != null && !search.trim().isEmpty()) {
-			whereClauses.add("a.username LIKE ?");
+			whereClauses.add("a.full_name LIKE ?");
 		}
 
 		if (!whereClauses.isEmpty()) {
