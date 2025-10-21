@@ -48,22 +48,22 @@ public class VolunteerProfileServlet extends HttpServlet {
 
         // 🔹 Cập nhật dữ liệu mới từ form
         user.setFullName(request.getParameter("full_name"));
-user.setPhone(request.getParameter("phone"));
-user.setEmail(request.getParameter("email"));
-user.setAddress(request.getParameter("address"));
-user.setJobTitle(request.getParameter("job_title"));
-user.setBio(request.getParameter("bio"));
-user.setGender(request.getParameter("gender"));
+        user.setPhone(request.getParameter("phone"));
+        user.setEmail(request.getParameter("email"));
+        user.setAddress(request.getParameter("address"));
+        user.setJobTitle(request.getParameter("job_title"));
+        user.setBio(request.getParameter("bio"));
+        user.setGender(request.getParameter("gender"));
 
-String dobStr = request.getParameter("dob");
-if (dobStr != null && !dobStr.isEmpty()) {
-    try {
-        java.sql.Date dob = java.sql.Date.valueOf(dobStr);
-        user.setDob(dob);
-    } catch (IllegalArgumentException e) {
-        e.printStackTrace();
-    }
-}
+        String dobStr = request.getParameter("dob");
+        if (dobStr != null && !dobStr.isEmpty()) {
+            try {
+                java.sql.Date dob = java.sql.Date.valueOf(dobStr);
+                user.setDob(dob);
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            }
+        }
 
         boolean success = userDAO.updateUser(user);
 

@@ -83,7 +83,7 @@
                         <a class="dropdown-item <%= currentPage.contains("causes.jsp") ? "active" : "" %>" href="<%= request.getContextPath() %>/causes.jsp">Hoạt động</a>
                         <a class="dropdown-item <%= currentPage.contains("blog.jsp") ? "active" : "" %>" href="<%= request.getContextPath() %>/blog.jsp">Bài viết</a>
                         <a class="dropdown-item <%= currentPage.contains("gallery.jsp") ? "active" : "" %>" href="<%= request.getContextPath() %>/gallery.jsp">Hình ảnh</a>
-                        <a class="dropdown-item <%= currentPage.contains("event.jsp") ? "active" : "" %>" href="<%= request.getContextPath() %>/event.jsp">Sự kiện</a>
+                        <a class="dropdown-item <%= currentPage.contains("event.jsp") ? "active" : "" %>" href="<%= request.getContextPath() %>/EventListServlet">Sự kiện</a>
                     </div>
                 </li>
                 <!-- End Dropdown Khám phá -->

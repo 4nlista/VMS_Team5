@@ -1,4 +1,4 @@
-package controller_event;
+package controller_volunteer;
 
 import dao.EventDAO;
 import jakarta.servlet.ServletException;
@@ -10,9 +10,8 @@ import java.io.IOException;
 import java.util.List;
 import model.Event;
 
-@WebServlet(name = "VolunteerEventListServlet", urlPatterns = {"/VolunteerEventListServlet"})
+@WebServlet("/EventListServlet")
 public class EventListServlet extends HttpServlet {
-
     private EventDAO eventDAO = new EventDAO();
 
     @Override
@@ -21,7 +20,6 @@ public class EventListServlet extends HttpServlet {
 
         List<Event> events = eventDAO.getAllEvents();
         request.setAttribute("events", events);
-
-        request.getRequestDispatcher("detail_event_volunteer.jsp").forward(request, response);
+        request.getRequestDispatcher("event.jsp").forward(request, response);
     }
 }
