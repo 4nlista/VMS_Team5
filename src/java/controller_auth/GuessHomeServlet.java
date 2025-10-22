@@ -16,7 +16,6 @@ import service.SumDisplayService;
  *
  * @author ADDMIN
  */
-//@WebServlet(name = "GuessHomeServlet", urlPatterns = {"/guess"})
 @WebServlet("/home")
 public class GuessHomeServlet extends HttpServlet {
 
@@ -31,6 +30,7 @@ public class GuessHomeServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         double totalDonationSystem = sumService.getTotalDonations();
+        
         request.setAttribute("totalDonationSystem", totalDonationSystem);
         request.getRequestDispatcher("index.jsp").forward(request, response);
     }

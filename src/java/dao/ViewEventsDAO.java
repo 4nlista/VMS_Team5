@@ -28,21 +28,104 @@ public class ViewEventsDAO {
             e.printStackTrace();
         }
     }
-//    public List<Event> getAllEvents() {
-//        List<Event> list = new ArrayList<>();
-//        String sql = "SELECT id, name, description, date, location, image FROM event";
-//        try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
-//            while (rs.next()) {
-//                rs.setId(rs.getInt("id"));
-//                rs.setName(rs.getString("name"));
-//                rs.setDescription(rs.getString("description"));
-//                rs.setDate(rs.getDate("date"));
-//                rs.setLocation(rs.getString("location"));
-//                rs.setImage(rs.getString("image"));
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return list;
-//    }
+
+    // Lấy danh sách sự kiện đang active để hiển thị lên jsp
+    // Lấy danh sách sự kiện đang active để hiển thị lên JSP
+    public List<Event> getActiveEvents() {
+        List<Event> list = new ArrayList<>();
+        String sql = """
+    SELECT e.*, 
+           u.full_name AS organization_name, 
+           c.name AS category_name
+    FROM Events e
+    JOIN Accounts a ON e.organization_id = a.id
+    JOIN Users u ON a.id = u.account_id
+    JOIN Categories c ON e.category_id = c.category_id
+    WHERE e.status = 'active'
+""";
+        try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Event e = new Event(
+                        rs.getInt("id"),
+                        rs.getString("title"),
+                        rs.getString("description"),
+                        rs.getTimestamp("start_date"),
+                        rs.getTimestamp("end_date"),
+                        rs.getString("location"),
+                        rs.getInt("needed_volunteers"),
+                        rs.getString("status"),
+                        rs.getInt("organization_id"),
+                        rs.getInt("category_id"),
+                        rs.getDouble("total_donation"),
+                        rs.getString("organization_name"),
+                        rs.getString("category_name")
+                );
+                list.add(e);
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return list;
+    }
+
+    //cú pháp phân trang
+    public List<Event> getActiveEventsPaged(int offset, int limit) {
+        List<Event> list = new ArrayList<>();
+        String sql = """
+        SELECT e.*, 
+               u.full_name AS organization_name, 
+               c.name AS category_name
+        FROM Events e
+        JOIN Accounts a ON e.organization_id = a.id
+        JOIN Users u ON a.id = u.account_id
+        JOIN Categories c ON e.category_id = c.category_id
+        WHERE e.status = 'active'
+        ORDER BY e.start_date DESC
+        OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
+    """;
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, offset);
+            ps.setInt(2, limit);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Event e = new Event(
+                            rs.getInt("id"),
+                            rs.getString("title"),
+                            rs.getString("description"),
+                            rs.getTimestamp("start_date"),
+                            rs.getTimestamp("end_date"),
+                            rs.getString("location"),
+                            rs.getInt("needed_volunteers"),
+                            rs.getString("status"),
+                            rs.getInt("organization_id"),
+                            rs.getInt("category_id"),
+                            rs.getDouble("total_donation"),
+                            rs.getString("organization_name"),
+                            rs.getString("category_name")
+                    );
+                    list.add(e);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return list;
+    }
+
+    //tính tổng event đang hoạt động nhằm chia trang
+    public int getTotalActiveEvents() {
+        String sql = "SELECT COUNT(*) FROM Events WHERE status = 'active'";
+        try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return 0;
+    }
+
 }

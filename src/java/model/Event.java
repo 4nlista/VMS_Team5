@@ -22,11 +22,13 @@ public class Event {
     private int organizationId;             // ID tổ chức
     private Integer categoryId;             // ID danh mục (có thể null)
     private double totalDonation;
+    private String organizationName;
+    private String categoryName;
 
     public Event() {
     }
 
-    public Event(int id, String title, String description, Date startDate, Date endDate, String location, int neededVolunteers, String status, int organizationId, Integer categoryId, double totalDonation) {
+    public Event(int id, String title, String description, Date startDate, Date endDate, String location, int neededVolunteers, String status, int organizationId, Integer categoryId, double totalDonation, String organizationName, String categoryName) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -38,6 +40,8 @@ public class Event {
         this.organizationId = organizationId;
         this.categoryId = categoryId;
         this.totalDonation = totalDonation;
+        this.organizationName = organizationName;
+        this.categoryName = categoryName;
     }
 
     public int getId() {
@@ -127,5 +131,22 @@ public class Event {
     public void setTotalDonation(double totalDonation) {
         this.totalDonation = totalDonation;
     }
+
+    public String getOrganizationName() {
+        return organizationName;
+    }
+
+    public void setOrganizationName(String organizationName) {
+        this.organizationName = organizationName;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
     
 }
