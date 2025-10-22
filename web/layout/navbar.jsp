@@ -68,12 +68,14 @@
                     <a href="<%= request.getContextPath() %>/VolunteerHomeServlet" class="nav-link <%= currentPage.contains("VolunteerHomeServlet") ? "active" : "" %>">Trang Chủ</a>
                 </li>
                 <% } %>
+
+
                 <!-- Chỉ hiện khi chưa login -->
                 <% if (acc == null) { %>
                 <li class="nav-item">
                     <a href="<%= request.getContextPath() %>/about.jsp" class="nav-link <%= currentPage.contains("about.jsp") ? "active" : "" %>">Giới thiệu</a>
                 </li>
-                <% } %>
+                <% }  %>
 
 
 
@@ -104,8 +106,8 @@
                     <a href="<%= request.getContextPath() %>/contact.jsp" class="nav-link <%= currentPage.contains("contact.jsp") ? "active" : "" %>">Liên hệ</a>
                 </li>
 
+                <!--nếu đăng nhập , tạo session thì mới hiển thị lịch sử giao dịch + lịch sử sự kiện-->
                 <% if (acc != null) { %>
-
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle <%= currentPage.contains("/volunteer/history_volunteer.jsp") ? "active" : "" %>" 
                        href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -130,8 +132,8 @@
                         Đăng xuất
                     </a>
                 </li>
+<!--                nếu có thì hiển thị đăng xuất / nếu không thì thay bằng đăng nhập-->
                 <% } else { %>
-
                 <li class="nav-item" style="align-content: center">
                     <a href="<%= request.getContextPath() %>/LoginServlet" 
                        class="nav-link btn btn-outline-secondary" 
