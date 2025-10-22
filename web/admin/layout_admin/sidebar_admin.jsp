@@ -41,8 +41,8 @@
             </a>
         </li>
         <li>
-            <a href="<%= request.getContextPath() %>/admin/events_admin.jsp"
-               class="nav-link text-white <%= currentPath.endsWith("/events_admin.jsp") ? "active" : "" %>">
+            <a href="<%= request.getContextPath() %>/ListEventsServlet"
+               class="nav-link text-white <%= currentPath.endsWith("/ListEventsServlet") ? "active" : "" %>">
                 <i class="bi bi-calendar-event me-2"></i>
                 Thống kê sự kiện
             </a>

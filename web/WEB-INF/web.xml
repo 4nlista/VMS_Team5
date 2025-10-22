@@ -1,32 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
-         version="6.0">
+<web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
     <filter>
         <filter-name>CheckAuth</filter-name>
         <filter-class>filter.CheckAuth</filter-class>
     </filter>
-
     <filter-mapping>
         <filter-name>CheckAuth</filter-name>
         <url-pattern>/admin/*</url-pattern>
     </filter-mapping>
-
     <filter-mapping>
         <filter-name>CheckAuth</filter-name>
         <url-pattern>/organization/*</url-pattern>
     </filter-mapping>
-    
     <filter-mapping>
         <filter-name>CheckAuth</filter-name>
         <url-pattern>/volunteer/*</url-pattern>
     </filter-mapping>
-
-    
+    <servlet>
+        <servlet-name>ListEventsServlet</servlet-name>
+        <servlet-class>controller_organization.ListEventsServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SaveEventServlet</servlet-name>
+        <servlet-class>controller_organization.SaveEventServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ManageVolunteerServlet</servlet-name>
+        <servlet-class>controller_organization.ManageVolunteerServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CreateEventServlet</servlet-name>
+        <servlet-class>controller_organization.CreateEventServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteEventServlet</servlet-name>
+        <servlet-class>controller_organization.DeleteEventServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateEvenServlet</servlet-name>
+        <servlet-class>controller_organization.UpdateEvenServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ViewEventServlet</servlet-name>
+        <servlet-class>controller_organization.ViewEventServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ListEventsServlet</servlet-name>
+        <url-pattern>/ListEventsServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SaveEventServlet</servlet-name>
+        <url-pattern>/SaveEventServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ManageVolunteerServlet</servlet-name>
+        <url-pattern>/ManageVolunteerServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreateEventServlet</servlet-name>
+        <url-pattern>/CreateEventServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteEventServlet</servlet-name>
+        <url-pattern>/DeleteEventServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateEvenServlet</servlet-name>
+        <url-pattern>/UpdateEvenServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewEventServlet</servlet-name>
+        <url-pattern>/ViewEventServlet</url-pattern>
+    </servlet-mapping>
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
-
 </web-app>
