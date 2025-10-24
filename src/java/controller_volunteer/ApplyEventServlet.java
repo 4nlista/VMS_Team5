@@ -13,7 +13,7 @@ import model.User;
 public class ApplyEventServlet extends HttpServlet {
 
     private EventVolunteerDAO eventVolunteerDAO = new EventVolunteerDAO();
-    private UserDAO userDAO = new UserDAO(); // ✅ thêm DAO lấy thông tin volunteer
+    private UserDAO userDAO = new UserDAO(); // 
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -21,7 +21,6 @@ public class ApplyEventServlet extends HttpServlet {
 
         HttpSession session = request.getSession();
         Integer accountId = (Integer) session.getAttribute("accountId");
-
 
         if (accountId == null) {
             response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
@@ -31,15 +30,13 @@ public class ApplyEventServlet extends HttpServlet {
         try {
             int eventId = Integer.parseInt(request.getParameter("eventId"));
 
-      
             User user = userDAO.getUserByAccountId(accountId);
             if (user == null) {
-                request.setAttribute("message", "Không tìm thấy thông tin volunteer!");
-                request.getRequestDispatcher("/volunteer/apply_event_volunteer.jsp").forward(request, response);
+                session.setAttribute("applyMessage", "Không tìm thấy thông tin volunteer!");
+                response.sendRedirect("volunteer/apply_event_volunteer.jsp");
                 return;
             }
 
-    
             EventVolunteer ev = new EventVolunteer();
             ev.setEventId(eventId);
             ev.setVolunteerId(accountId);
@@ -47,22 +44,19 @@ public class ApplyEventServlet extends HttpServlet {
             boolean success = eventVolunteerDAO.applyForEvent(ev);
 
             if (success) {
-                request.setAttribute("message", "Đã gửi yêu cầu tham gia sự kiện thành công!");
+                session.setAttribute("applyMessage", "Đã gửi yêu cầu tham gia sự kiện thành công!");
             } else {
-                request.setAttribute("message", "️Bạn đã apply sự kiện này rồi hoặc có lỗi xảy ra!");
+                session.setAttribute("applyMessage", "️Bạn đã apply sự kiện này rồi hoặc có lỗi xảy ra!");
             }
 
-          
-            request.setAttribute("user", user);
-            request.setAttribute("eventId", eventId);
-
-
-            request.getRequestDispatcher("/volunteer/apply_event_volunteer.jsp").forward(request, response);
+    
+            response.sendRedirect("volunteer/apply_event_volunteer.jsp");
 
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("message", "Lỗi hệ thống khi apply sự kiện!");
-            request.getRequestDispatcher("volunteer/apply_event_volunteer.jsp").forward(request, response);
+            session.setAttribute("applyMessage", "Lỗi hệ thống khi apply sự kiện!");
+            response.sendRedirect("volunteer/apply_event_volunteer.jsp");
         }
     }
+
 }

@@ -65,7 +65,7 @@
                 <div class="col-md-6">
                     <div class="card border shadow-sm">
                         <div class="card-body">
-                            <form action="applyEvent" method="post">
+                            <form action="ApplyEventServlet" method="post">
                                 <div class="row">
                                     <div class="col-md-6 mb-2">
                                         <label class="form-label fw-bold">ID</label>
@@ -73,18 +73,18 @@
                                     </div>
                                     <div class="col-md-6 mb-2">
                                         <label class="form-label fw-bold">Họ và tên</label>
-                                        <input type="text" name="fullName" class="form-control" value="<%= session.getAttribute("fullName") %>" readonly>
+                                        <input type="text" name="fullName" class="form-control" value="${user.fullName}" readonly>
                                     </div>
                                 </div>
 
                                 <div class="row">
                                     <div class="col-md-6 mb-2">
                                         <label class="form-label fw-bold">Email</label>
-                                        <input type="email" name="email" class="form-control" value="<%= session.getAttribute("email") %>" readonly>
+                                        <input type="email" name="email" class="form-control" value="${user.email}" readonly>
                                     </div>
                                     <div class="col-md-6 mb-2">
                                         <label class="form-label fw-bold">Số điện thoại</label>
-                                        <input type="tel" name="phone" class="form-control" value="<%= session.getAttribute("phone") %>" readonly>
+                                        <input type="tel" name="phone" class="form-control" value="${user.phone}" readonly>
                                     </div>
                                 </div>
 
@@ -116,10 +116,41 @@
                 </div>
             </div>
         </div>
+        <!-- Modal hiển thị thông báo -->
+        <div class="modal fade" id="applyModal" tabindex="-1" aria-labelledby="applyModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-success text-white">
+                        <h5 class="modal-title" id="applyModalLabel">Thông báo</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <i class="bi bi-check-circle-fill text-success fs-1 mb-3"></i>
+                        <p class="fw-bold fs-5" id="applyMessage"></p>
+                    </div>
+                    <a href="<%= request.getContextPath() %>/EventListServlet" class="btn btn-primary">
+                        Quay lại danh sách sự kiện
+                    </a>
+                </div>
+            </div>
+        </div>
 
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+            <% 
+                String applyMessage = (String) session.getAttribute("applyMessage");
+                if (applyMessage != null) { 
+            %>
+                var message = "<%= applyMessage %>";
+                document.getElementById("applyMessage").textContent = message;
 
+                var modal = new bootstrap.Modal(document.getElementById('applyModal'));
+                modal.show();
 
-
+            <% session.removeAttribute("applyMessage"); %><!-- Xóa để reload không hiện lại -->
+            <% } %>
+            });
+        </script>
 
 
 
