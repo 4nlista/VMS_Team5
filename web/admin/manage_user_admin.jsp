@@ -45,10 +45,10 @@
                     </form>
 
                     <form action="AdminUserServlet" method="get" class="d-flex" style="flex: 1; justify-content: end;">
-                        <input type="text" name="search" class="form-control w-100" placeholder="Find username" value="${fn:escapeXml(currentSearch)}"/>
+                        <input type="text" name="search" class="form-control w-100" placeholder="Họ tên" value="${fn:escapeXml(currentSearch)}"/>
                         <input type="hidden" name="role" value="${fn:escapeXml(currentRole)}" />
                         <input type="hidden" name="sort" value="${fn:escapeXml(currentSort)}" />
-                        <button type="submit" class="btn btn-outline-primary ms-2">Search</button>
+                        <button type="submit" class="btn btn-primary ms-2">Search</button>
                     </form>
                 </div>
 

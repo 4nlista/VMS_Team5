@@ -21,9 +21,10 @@ import java.util.Map;
  */
 public class AdminUserService {
 
-	private final AdminUserDAO userDAO = new AdminUserDAO();
-	private final int pageSize = 6; // configurable if needed
-	// Returns true if update succeeded; if false, request will have "errors" Map<String,String>
+    private final AdminUserDAO userDAO = new AdminUserDAO();
+    private final int pageSize = 6; // configurable if needed
+    // Returns true if update succeeded; if false, request will have "errors" Map<String,String>
+
     public boolean adminUserEdit(HttpServletRequest request) {
         Map<String, String> errors = new HashMap<>();
 
@@ -75,6 +76,8 @@ public class AdminUserService {
             errors.put("phone", "Phone number cannot be empty.");
         } else if (!phone.matches("^[0-9]+$")) {
             errors.put("phone", "Phone number must contain digits only.");
+        } else if (phone.length() < 10 || phone.length() > 11) {
+            errors.put("phone", "Phone number must be between 10 and 11 digits.");
         }
 
         // Email
@@ -83,6 +86,8 @@ public class AdminUserService {
         } else if (!email.matches("^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
                 + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$")) {
             errors.put("email", "Invalid email format.");
+        } else if (email.length() > 100) {
+            errors.put("email", "Email must not exceed 100 characters.");
         }
 
         // Address
@@ -118,6 +123,8 @@ public class AdminUserService {
 
             if (localDate == null) {
                 errors.put("dob", "Invalid date of birth.");
+            } else if (localDate.isAfter(LocalDate.now())) {
+                errors.put("dob", "Date of birth cannot be in the future.");
             } else {
                 dob = java.sql.Date.valueOf(localDate);
             }
@@ -161,30 +168,30 @@ public class AdminUserService {
         return (s == null) ? null : s.trim();
     }
 
-	//Pagination logic
-	public List<User> getUsersByPage(int page) throws SQLException {
-		if (page < 1) {
-			page = 1;
-		}
-		return userDAO.getAllUsersWithPagination(page, pageSize);
-	}
+    //Pagination logic
+    public List<User> getUsersByPage(int page) throws SQLException {
+        if (page < 1) {
+            page = 1;
+        }
+        return userDAO.getAllUsersWithPagination(page, pageSize);
+    }
 
-	//For filter
-	public List<User> getUsersByPage(int page, String role, String search, String sort) throws SQLException {
-		if (page < 1) {
-			page = 1;
-		}
-		return userDAO.getUsersWithFiltersAndPagination(page, pageSize, role, search, sort);
-	}
+    //For filter
+    public List<User> getUsersByPage(int page, String role, String search, String sort) throws SQLException {
+        if (page < 1) {
+            page = 1;
+        }
+        return userDAO.getUsersWithFiltersAndPagination(page, pageSize, role, search, sort);
+    }
 
-	public int getTotalPages() throws SQLException {
-		int totalUsers = userDAO.getTotalUserCount();
-		return (int) Math.ceil((double) totalUsers / pageSize);
-	}
+    public int getTotalPages() throws SQLException {
+        int totalUsers = userDAO.getTotalUserCount();
+        return (int) Math.ceil((double) totalUsers / pageSize);
+    }
 
-	//For filter
-	public int getTotalPages(String role, String search) throws SQLException {
-		int totalUsers = userDAO.getFilteredUserCount(role, search);
-		return (int) Math.ceil((double) totalUsers / pageSize);
-	}
+    //For filter
+    public int getTotalPages(String role, String search) throws SQLException {
+        int totalUsers = userDAO.getFilteredUserCount(role, search);
+        return (int) Math.ceil((double) totalUsers / pageSize);
+    }
 }
