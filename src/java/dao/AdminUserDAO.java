@@ -142,7 +142,7 @@ public class AdminUserDAO {
 
 	//Full user details based on their id
 	public User getUserDetailById(int id) {
-		String sql = "SELECT u.id AS id, a.id AS account_id, a.role, a.username, u.full_name, u.gender, u.phone, u.email, u.address, u.avatar, u.job_title, u.bio, u.dob "
+		String sql = "SELECT u.id AS id, a.id AS account_id, a.role, a.username, u.full_name, u.gender, u.phone, u.email, u.address, u.avatar, u.job_title, u.bio, u.dob, a.created_at "
 			    + "FROM Users u JOIN Accounts a ON u.account_id = a.id WHERE u.id = ?";
 		try (PreparedStatement ps = conn.prepareStatement(sql)) {
 			ps.setInt(1, id);
@@ -151,6 +151,8 @@ public class AdminUserDAO {
 					Account acc = new Account();
 					acc.setUsername(rs.getString("username"));
 					acc.setRole(rs.getString("role"));
+					java.sql.Timestamp createdAt = rs.getTimestamp("created_at");
+					acc.setCreatedAt(createdAt);
 					return new User(
 						    rs.getInt("id"),
 						    rs.getInt("account_id"),
