@@ -36,7 +36,15 @@ public class VolunteerProfileServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
 
-        int accountId = Integer.parseInt(request.getParameter("accountId"));
+        // 🔹 Lấy accountId từ session, KHÔNG lấy id từ form để tránh bị sửa ID
+        HttpSession session = request.getSession();
+        Integer accountId = (Integer) session.getAttribute("accountId");
+
+        if (accountId == null) {
+            response.sendRedirect(request.getContextPath() + "/LoginServlet");
+            return;
+        }
+
         User user = userDAO.getUserByAccountId(accountId);
 
         if (user == null) {
@@ -56,7 +64,7 @@ public class VolunteerProfileServlet extends HttpServlet {
         String dobStr = request.getParameter("dob");
 
         // 🔹 Validate dữ liệu nhập vào
-        String errorMsg = validateProfile(fullName, email, phone, dobStr);
+        String errorMsg = validateProfile(fullName, email, phone, address, jobTitle, gender, dobStr);
         if (errorMsg != null) {
             request.setAttribute("error", errorMsg);
             request.setAttribute("user", user);
@@ -85,18 +93,34 @@ public class VolunteerProfileServlet extends HttpServlet {
     }
 
     /**
-     *
+     * Validate dữ liệu người dùng nhập vào
      */
-    private String validateProfile(String fullName, String email, String phone, String dobStr) {
+    private String validateProfile(String fullName, String email, String phone,
+                                   String address, String jobTitle, String gender, String dobStr) {
+
         if (fullName == null || fullName.trim().isEmpty()) {
             return "Họ và tên không được để trống!";
         }
-        if (email == null || !email.matches("^[\\w.%+-]+@[\\w.-]+\\.[A-Za-z]{2,6}$")) {
+        if (email == null || email.trim().isEmpty()) {
+            return "Email không được để trống!";
+        }
+        if (!email.matches("^[\\w.%+-]+@[\\w.-]+\\.[A-Za-z]{2,6}$")) {
             return "Email không hợp lệ!";
         }
-        if (phone != null && !phone.matches("^\\d{9,11}$")) {
-            return "Số điện thoại chỉ gồm 9-11 chữ số!";
+        if (phone == null || phone.trim().isEmpty()) {
+            return "Số điện thoại không được để trống!";
         }
+        if (!phone.matches("^\\d{9,11}$")) {
+            return "Số điện thoại chỉ gồm 9–11 chữ số!";
+        }
+        if (address == null || address.trim().isEmpty()) {
+            return "Địa chỉ không được để trống!";
+        }
+
+        if (gender == null || gender.trim().isEmpty()) {
+            return "Vui lòng chọn giới tính!";
+        }
+
         if (dobStr != null && !dobStr.isEmpty()) {
             try {
                 java.sql.Date dob = java.sql.Date.valueOf(dobStr);
@@ -107,6 +131,7 @@ public class VolunteerProfileServlet extends HttpServlet {
                 return "Ngày sinh không hợp lệ!";
             }
         }
-        return null; // 
+
+        return null; 
     }
 }

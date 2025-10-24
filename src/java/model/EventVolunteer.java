@@ -13,16 +13,13 @@ public class EventVolunteer {
 
     public EventVolunteer() {}
 
-    public EventVolunteer(int id, int eventId, int volunteerId, Date applyDate, String status, int hours, String note) {
-        this.id = id;
+    public EventVolunteer(int eventId, int volunteerId, String status) {
         this.eventId = eventId;
         this.volunteerId = volunteerId;
-        this.applyDate = applyDate;
         this.status = status;
-        this.hours = hours;
-        this.note = note;
     }
 
+    // Getters và Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
@@ -43,4 +40,4 @@ public class EventVolunteer {
 
     public String getNote() { return note; }
     public void setNote(String note) { this.note = note; }
-} 
+}
