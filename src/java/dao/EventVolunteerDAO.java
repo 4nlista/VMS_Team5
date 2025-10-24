@@ -69,7 +69,7 @@ public class EventVolunteerDAO {
         return list;
     }
 
-    // 🧩 3️⃣: Hủy apply (nếu cần)
+
     public boolean cancelParticipation(int eventId, int volunteerId) {
         String sql = "DELETE FROM Event_Volunteers WHERE event_id = ? AND volunteer_id = ?";
         try (Connection conn = DBContext.getConnection();
@@ -83,7 +83,7 @@ public class EventVolunteerDAO {
         return false;
     }
 
-    // 🧩 4️⃣: Admin/Org cập nhật trạng thái (approve/reject)
+
     public boolean updateStatus(int id, String status) {
         String sql = "UPDATE Event_Volunteers SET status = ? WHERE id = ?";
         try (Connection conn = DBContext.getConnection();

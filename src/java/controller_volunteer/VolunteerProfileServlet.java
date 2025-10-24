@@ -63,7 +63,7 @@ public class VolunteerProfileServlet extends HttpServlet {
         String gender = request.getParameter("gender");
         String dobStr = request.getParameter("dob");
 
-        // 🔹 Validate dữ liệu nhập vào
+     
         String errorMsg = validateProfile(fullName, email, phone, address, jobTitle, gender, dobStr);
         if (errorMsg != null) {
             request.setAttribute("error", errorMsg);
@@ -72,7 +72,7 @@ public class VolunteerProfileServlet extends HttpServlet {
             return;
         }
 
-        // 🔹 Gán lại giá trị hợp lệ
+ 
         user.setFullName(fullName);
         user.setPhone(phone);
         user.setEmail(email);

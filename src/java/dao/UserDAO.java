@@ -13,7 +13,7 @@ import utils.DBContext;
 
 public class UserDAO {
 
-    // 🔹 Lấy thông tin user bằng account_id
+
     public User getUserByAccountId(int accountId) {
         User user = null;
         String sql = "SELECT * FROM Users WHERE account_id = ?";
@@ -46,7 +46,7 @@ public class UserDAO {
         return user;
     }
 
-    // 🔹 Cập nhật thông tin user
+
     public boolean updateUser(User user) {
         String sql = "UPDATE Users "
                    + "SET full_name=?, dob=?, gender=?, phone=?, email=?, "

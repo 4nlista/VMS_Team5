@@ -27,7 +27,7 @@ public class LoginDAO {
         }
     }
 
-    // 1. Kiểm tra đăng nhập (username và password) 
+    //  Kiểm tra đăng nhập (username và password) 
     public Account checkLogin(String username, String password) {
         String sql = "SELECT id, username, password, role, status "
                 + "FROM Accounts WHERE username = ? AND password = ?";

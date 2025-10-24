@@ -83,9 +83,12 @@
                                                 </a>
                                             </p>
                                             <p class="mb-0">
-                                                <a href="${pageContext.request.contextPath}/volunteer/apply_event_volunteer.jsp">
+                                            <form action="${pageContext.request.contextPath}/ApplyEventServlet" method="post" style="display:inline;">
+                                                <input type="hidden" name="eventId" value="${e.id}">
+                                                <button type="submit" class="btn btn-link p-0 m-0 align-baseline">
                                                     Join <i class="ion-ios-person-add"></i>
-                                                </a>
+                                                </button>
+                                            </form>
                                             </p>
                                         </div>
                                     </div>
