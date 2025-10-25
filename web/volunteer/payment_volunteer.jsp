@@ -33,16 +33,8 @@
                                         <input type="text" name="fullname" class="form-control" required>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label">Email</label>
-                                        <input type="email" name="email" class="form-control" required>
-                                    </div>
-                                    <div class="col-md-6">
                                         <label class="form-label">Số điện thoại</label>
                                         <input type="text" name="phone" class="form-control" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">Địa chỉ</label>
-                                        <input type="text" name="address" class="form-control" required>
                                     </div>
                                 </div>
 
@@ -93,8 +85,14 @@
                                     <input type="number" class="form-control" name="amount" min="10000" required>
                                 </div>
 
+                                <h5 class="mb-3">Ghi chú</h5>
+                                <div class="mb-3">
+                                    <input type="text" class="form-control" name="note" required>
+                                </div>
+
                                 <div class="text-end">
-                                    <button type="submit" class="btn btn-success btn-lg">Xác nhận thanh toán</button>
+                                    <button type="submit" class="btn btn-success btn-lg mr-2">Xác nhận thanh toán</button>
+                                     <a href="<%= request.getContextPath() %>/VolunteerHomeServlet" class="btn btn-secondary btn-lg">Hủy</a>
                                 </div>
                             </form>
                         </div>
