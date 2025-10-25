@@ -10,8 +10,10 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 import model.Account;
+import model.Donation;
 import model.Event;
 import service.AccountService;
+import service.DisplayDonateService;
 import service.DisplayEventService;
 import service.SumDisplayService;
 
@@ -22,18 +24,21 @@ public class VolunteerHomeServlet extends HttpServlet {
     private AccountService accountService;
     private SumDisplayService sumService;
     private DisplayEventService eventService;
+    private DisplayDonateService donateService;
 
     @Override
     public void init() {
         accountService = new AccountService();
         sumService = new SumDisplayService();
         eventService = new DisplayEventService();
+        donateService = new DisplayDonateService();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         List<Event> lastEvents = eventService.getLatestActivePublicEvents();
+        List<Donation> topDonates = donateService.getTop3UserDonation();
         double totalDonationSystem = sumService.getTotalDonations();
 
         HttpSession session = request.getSession(false);
@@ -53,10 +58,10 @@ public class VolunteerHomeServlet extends HttpServlet {
         // Lưu fullname vào session
         session.setAttribute("username", acc.getUsername());
         // Forward đến JSP, không redirect
-        
-        
+
         request.setAttribute("totalDonationSystem", totalDonationSystem);
         request.setAttribute("lastEvents", eventService.getLatestActivePublicEvents());
+        request.setAttribute("topDonates", donateService.getTop3UserDonation());
         request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 
