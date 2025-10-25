@@ -19,6 +19,7 @@ public class Event {
     private String location;                // Địa điểm
     private int neededVolunteers;           // Số lượng tình nguyện viên cần
     private String status;                  // Trạng thái (active, inactive, closed)
+    private String visibility;
     private int organizationId;             // ID tổ chức
     private Integer categoryId;             // ID danh mục (có thể null)
     private double totalDonation;
@@ -28,7 +29,7 @@ public class Event {
     public Event() {
     }
 
-    public Event(int id, String title, String description, Date startDate, Date endDate, String location, int neededVolunteers, String status, int organizationId, Integer categoryId, double totalDonation, String organizationName, String categoryName) {
+    public Event(int id, String title, String description, Date startDate, Date endDate, String location, int neededVolunteers, String status, String visibility, int organizationId, Integer categoryId, double totalDonation, String organizationName, String categoryName) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -37,6 +38,7 @@ public class Event {
         this.location = location;
         this.neededVolunteers = neededVolunteers;
         this.status = status;
+        this.visibility = visibility;
         this.organizationId = organizationId;
         this.categoryId = categoryId;
         this.totalDonation = totalDonation;
@@ -108,6 +110,14 @@ public class Event {
         this.status = status;
     }
 
+    public String getVisibility() {
+        return visibility;
+    }
+
+    public void setVisibility(String visibility) {
+        this.visibility = visibility;
+    }
+
     public int getOrganizationId() {
         return organizationId;
     }
@@ -147,6 +157,8 @@ public class Event {
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
     }
+
+    
 
     
 }

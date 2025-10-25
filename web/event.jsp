@@ -13,7 +13,6 @@
         <%@ include file="layout/header.jsp" %>
     </head>
     <body>
-
         <!-- Navbar -->
         <%@ include file="layout/navbar.jsp" %>
 
@@ -29,7 +28,6 @@
             </div>
         </div>
 
-
         <section class="ftco-section">
             <div class="container">
                 <div class="row">
@@ -42,7 +40,7 @@
                                         <div><a href="#">Người tổ chức: <b><i>${e.organizationName}</i></b></a></div>
                                     </div>
                                     <h3 class="heading mb-1"><a href="#">${e.title}</a></h3>
-                                    <p class="text-muted mb-3"><i>Loại sự kiện: ${e.categoryName}</i></p>
+                                    <p class="text-muted mb-1"><i>Loại sự kiện: ${e.categoryName}</i></p>
                                     <p class="time-loc">
                                         <span class="mr-2"><i class="icon-clock-o"></i> Bắt đầu: ${e.startDate}</span><br/>
                                         <span class="mr-2"><i class="icon-clock-o"></i> Kết thúc: ${e.endDate}</span><br/>
@@ -52,12 +50,12 @@
                                     <div class="d-flex justify-content-between mt-auto">
                                         <p class="mb-0">
                                             <a href="${pageContext.request.contextPath}/volunteer/apply_event_volunteer.jsp">
-                                                Join Event <i class="ion-ios-arrow-forward"></i>
+                                                Tham gia sự kiện <i class="ion-ios-arrow-forward"></i>
                                             </a>
                                         </p>
                                         <p class="mb-0">
                                             <a href="${pageContext.request.contextPath}/volunteer/payment_volunteer.jsp">
-                                                Donate <i class="ion-ios-add-circle"></i>
+                                                Ủng hộ <i class="ion-ios-add-circle"></i>
                                             </a>
                                         </p>
                                     </div>
@@ -66,10 +64,6 @@
                         </div>
                     </c:forEach>
                 </div>
-
-
-
-
 
                 <div class="row mt-5">
                     <div class="col text-center">
@@ -106,7 +100,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </section>
 

@@ -10,6 +10,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
+import model.Event;
+import service.DisplayEventService;
 import service.SumDisplayService;
 
 /**
@@ -20,18 +23,23 @@ import service.SumDisplayService;
 public class GuessHomeServlet extends HttpServlet {
 
     private SumDisplayService sumService;
+    private DisplayEventService eventService;
 
     @Override
     public void init() {
         sumService = new SumDisplayService();
+        eventService = new DisplayEventService();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         double totalDonationSystem = sumService.getTotalDonations();
+        // lấy danh sách event đang hoạt động công khai (đã phân trang)
+        List<Event> lastEvents = eventService.getLatestActivePublicEvents();
         
         request.setAttribute("totalDonationSystem", totalDonationSystem);
+        request.setAttribute("lastEvents", eventService.getLatestActivePublicEvents());
         request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 

@@ -37,12 +37,14 @@ public class GuessEventServlet extends HttpServlet {
         }
 
         int offset = (page - 1) * limit;
+        // lấy danh sách event đang hoạt động công khai (đã phân trang)
         List<Event> events = displayService.getActiveEventsPaged(offset, limit);
+        //Tính tổng số event 
         int totalEvents = displayService.getTotalActiveEvents();
         int totalPages = (int) Math.ceil((double) totalEvents / limit);
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
-        request.setAttribute("events", displayService.getActiveEvents());
+        request.setAttribute("events", displayService.getActiveEventsPaged(offset, limit));
         request.getRequestDispatcher("event.jsp").forward(request, response);
     }
 
