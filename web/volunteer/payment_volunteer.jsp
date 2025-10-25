@@ -92,7 +92,7 @@
 
                                 <div class="text-end">
                                     <button type="submit" class="btn btn-success btn-lg mr-2">Xác nhận thanh toán</button>
-                                     <a href="<%= request.getContextPath() %>/VolunteerHomeServlet" class="btn btn-secondary btn-lg">Hủy</a>
+                                    <a href="<%= request.getContextPath() %>/VolunteerHomeServlet" class="btn btn-secondary btn-lg">Hủy</a>
                                 </div>
                             </form>
                         </div>
