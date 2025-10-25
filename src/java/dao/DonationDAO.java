@@ -29,7 +29,7 @@ public class DonationDAO {
     // truy vấn tổng tiền donation trong database
     public double getTotalDonationAmount() {
         double total = 0;
-        String sql = "SELECT SUM(amount) FROM Donations";
+        String sql = "select SUM(amount) as total_success from Donations where status = 'success'";
         try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
                 total = rs.getDouble(1);
@@ -39,7 +39,5 @@ public class DonationDAO {
         }
         return total;
     }
-
-
 
 }

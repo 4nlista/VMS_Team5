@@ -30,7 +30,6 @@ public class ViewEventsDAO {
     }
 
     // Lấy danh sách sự kiện đang active để hiển thị lên jsp
-    // Lấy danh sách sự kiện đang active để hiển thị lên JSP
     public List<Event> getActiveEvents() {
         List<Event> list = new ArrayList<>();
         String sql = """
