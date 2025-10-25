@@ -21,7 +21,7 @@ public class ChangePasswordService {
 
     public String changePassword(int accountId, String currentPassword, String newPassword, String confirmPassword) {
         try {
-            // 1. Lấy mật khẩu hiện tại từ DB
+            // 1. Lấy mật khẩu hiện tại từ database
             String currentPasswordHash = accountDAO.getPasswordHashById(accountId);
             System.out.println("Current password hash in DB: " + currentPasswordHash);
 
@@ -35,7 +35,7 @@ public class ChangePasswordService {
                     || PasswordUtil.hashPassword(currentPassword).equals(currentPasswordHash);
             
             if (!isMatch) {
-                System.out.println("Mật khẩu cũ không khớp (đã kiểm tra cả plain và hash)!");
+                System.out.println("Mật khẩu cũ không khớp (đã kiểm tra cả text và hash)!");
                 return "Mật khẩu hiện tại không đúng.";
             }
 
@@ -45,7 +45,7 @@ public class ChangePasswordService {
                 return "Xác nhận mật khẩu không khớp.";
             }
 
-            // 4. Hash mật khẩu mới và update DB
+            // 4. Hash mật khẩu mới và update database
             String newPasswordHash = PasswordUtil.hashPassword(newPassword);
             System.out.println("New password hash: " + newPasswordHash);
 

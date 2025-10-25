@@ -12,10 +12,10 @@ import model.Event;
  *
  * @author Admin
  */
-// dùng để phân trang
+// dùng để phân trang sự kiện ở giao diện Guest hay Volunteer
 public class PageEventService {
 
-    private static final int RECORDS_PER_PAGE = 3; // số event mỗi trang
+    private int RECORDS_PER_PAGE = 3; // số event mỗi trang
     private ViewEventsDAO viewEventDAO = new ViewEventsDAO();
 
     // Lấy danh sách event theo trang
