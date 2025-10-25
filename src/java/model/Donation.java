@@ -15,7 +15,7 @@ public class Donation {
     private int id;
     private int eventId;
     private int volunteerId;
-    private BigDecimal amount;
+    private double amount;
     private Date donateDate;
     private String status;
     private String paymentMethod;
@@ -28,13 +28,13 @@ public class Donation {
     private String eventTitle;              // tiêu đề sự kiện
 
     // Thống kê
-    private BigDecimal totalAmountDonated;  // tổng số tiền donate của mỗi cá nhân
+    private double totalAmountDonated;  // tổng số tiền donate của mỗi cá nhân
     private int numberOfEventsDonated; // số lượng sự kiện donate của mỗi cá nhân
 
     public Donation() {
     }
 
-    public Donation(int id, int eventId, int volunteerId, BigDecimal amount, Date donateDate, String status, String paymentMethod, String qrCode, String note, String volunteerUsername, String volunteerFullName, String eventTitle, BigDecimal totalAmountDonated, int numberOfEventsDonated) {
+    public Donation(int id, int eventId, int volunteerId, double amount, Date donateDate, String status, String paymentMethod, String qrCode, String note, String volunteerUsername, String volunteerFullName, String eventTitle, double totalAmountDonated, int numberOfEventsDonated) {
         this.id = id;
         this.eventId = eventId;
         this.volunteerId = volunteerId;
@@ -75,11 +75,11 @@ public class Donation {
         this.volunteerId = volunteerId;
     }
 
-    public BigDecimal getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(BigDecimal amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 
@@ -147,11 +147,11 @@ public class Donation {
         this.eventTitle = eventTitle;
     }
 
-    public BigDecimal getTotalAmountDonated() {
+    public double getTotalAmountDonated() {
         return totalAmountDonated;
     }
 
-    public void setTotalAmountDonated(BigDecimal totalAmountDonated) {
+    public void setTotalAmountDonated(double totalAmountDonated) {
         this.totalAmountDonated = totalAmountDonated;
     }
 
@@ -162,7 +162,8 @@ public class Donation {
     public void setNumberOfEventsDonated(int numberOfEventsDonated) {
         this.numberOfEventsDonated = numberOfEventsDonated;
     }
-    
+
+   
     
 
     
