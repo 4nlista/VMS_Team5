@@ -20,9 +20,12 @@ import java.sql.Date;
  * @author Admin
  */
 public class AdminUserDAO {
-
+	
 	private Connection conn;
 
+	/**
+	 *	Get connection from database
+	 */
 	public AdminUserDAO() {
 		try {
 			DBContext db = new DBContext();
@@ -32,6 +35,11 @@ public class AdminUserDAO {
 		}
 	}
 
+	/**
+	 * Returns an user according to the inputted id . This method is used to view list of users and their basic information.
+	 * @param id The inputted id to specify which user to get from the database.
+	 * @return The id-specified user and their other information such as account id, role, username, full name, gender and avatar.
+	 */
 	public User getUserById(int id) {
 		String sql = "SELECT u.id AS id, a.id AS account_id, a.role, a.username, u.full_name, u.gender, u.avatar "
 			    + "FROM Users u JOIN Accounts a ON u.account_id = a.id WHERE u.id = ?";
@@ -58,6 +66,10 @@ public class AdminUserDAO {
 		return null;
 	}
 
+	/**
+	 * Get a list of all current user from the database. This method gives a list of all user while also showing more details about them.
+	 * @return The list of all users and their details including id, role, username, full name, gender, phone, email, address, avatar, job, bio and date of birth.
+	 */
 	public List<User> getAllUsers() {
 		List<User> list = new ArrayList<>();
 		String sql = "SELECT u.id AS id, a.id AS account_id, a.role, a.username, u.full_name, u.gender, u.phone, u.email, u.address, u.avatar, u.job_title, u.bio, u.dob "
@@ -89,7 +101,20 @@ public class AdminUserDAO {
 		return list;
 	}
 
-	//To update user detail as an admin
+	/**
+	 * The method used to update user detail as an admin.The method will take in the parameters and modify them.
+	 * @param id The id of the user
+	 * @param username
+	 * @param fullName
+	 * @param gender
+	 * @param phone
+	 * @param email
+	 * @param address
+	 * @param jobTitle
+	 * @param bio
+	 * @param dob
+	 * @return true if the method successfully update the user, false otherwise.
+	 */
 	public boolean updateUser(int id, String username, String fullName, String gender, String phone,
 		    String email, String address, String jobTitle, String bio, Date dob) {
 		String updateUserSql = "UPDATE Users SET full_name=?, gender=?, phone=?, email=?, address=?, job_title=?, bio=?, dob=? WHERE id=?";
@@ -136,11 +161,16 @@ public class AdminUserDAO {
 			} catch (SQLException ignored) {
 			}
 		}
-
 		return false;
 	}
 
 	//Full user details based on their id
+
+	/**
+	 * Quite the same as getUserById, this method gets user by id, but with even more details.
+	 * @param id The inputted user id.
+	 * @return The user and their details.
+	 */
 	public User getUserDetailById(int id) {
 		String sql = "SELECT u.id AS id, a.id AS account_id, a.role, a.username, u.full_name, u.gender, u.phone, u.email, u.address, u.avatar, u.job_title, u.bio, u.dob, a.created_at "
 			    + "FROM Users u JOIN Accounts a ON u.account_id = a.id WHERE u.id = ?";
@@ -175,7 +205,12 @@ public class AdminUserDAO {
 		return null;
 	}
 
-	//Get user list but now has paging logic
+	/**
+	 * Get a list of all user and their basic information, now with pagination logic.
+	 * @param page Page number.
+	 * @param pageSize The number of users show per page.
+	 * @return A list of user per page.
+	 */
 	public List<User> getAllUsersWithPagination(int page, int pageSize) {
 		List<User> list = new ArrayList<>();
 		String sql = "SELECT u.id, a.id as account_id, a.role, a.username, u.full_name, u.gender, u.avatar\n"
@@ -210,7 +245,10 @@ public class AdminUserDAO {
 		return list;
 	}
 
-	//Get the count of all user
+	/**
+	 * This method will get the count of all current users in the database. Used to evaluate the number of pages.
+	 * @return The total count of all users.
+	 */
 	public int getTotalUserCount() {
 		String sql = "SELECT COUNT(*) FROM Users";
 		try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -224,7 +262,15 @@ public class AdminUserDAO {
 		return 0;
 	}
 
-	//Get userlist for filter
+	/**
+	 * A method that gets a list of all user, with pagination logic while also handling the filter.
+	 * @param page Page number.
+	 * @param pageSize The number of users per page.
+	 * @param role Get the inputted role for filtering by role.
+	 * @param search Get the inputted search string for searching with full name.
+	 * @param sort For use with ascending/descending order.
+	 * @return The list of user with pagination and filter logic.
+	 */
 	public List<User> getUsersWithFiltersAndPagination(int page, int pageSize, String role, String search, String sort) {
 		List<User> list = new ArrayList<>();
 
@@ -292,6 +338,13 @@ public class AdminUserDAO {
 	}
 
 	//Return the filtered usercount
+
+	/**
+	 * Identical to getTotalUserCount, but now with applied filter.
+	 * @param role Which role to count.
+	 * @param search What name to search.
+	 * @return The number of users match the criteria.
+	 */
 	public int getFilteredUserCount(String role, String search) {
 		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT COUNT(*) ");
