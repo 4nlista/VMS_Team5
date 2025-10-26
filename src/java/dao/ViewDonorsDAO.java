@@ -187,4 +187,69 @@ public class ViewDonorsDAO {
         return list;
     }
 
+    public List<Donation> getDonorsPaged(int offset, int limit) {
+        List<Donation> list = new ArrayList<>();
+        String sql = """
+                    SELECT d.event_id,
+                           d.volunteer_id,
+                           SUM(d.amount) AS amount,
+                           MAX(d.donate_date) AS donate_date,
+                           u.full_name AS volunteer_name,
+                           MAX(d.id) AS id
+                    FROM Donations d
+                    JOIN Accounts a ON d.volunteer_id = a.id
+                    JOIN Users u ON a.id = u.account_id
+                    WHERE d.status = 'success'
+                    GROUP BY d.event_id, d.volunteer_id, u.full_name
+                    ORDER BY donate_date DESC
+                    OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
+                """;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, offset);
+            ps.setInt(2, limit);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Donation d = new Donation(
+                            rs.getInt("id"),
+                            rs.getInt("event_id"),
+                            rs.getInt("volunteer_id"),
+                            rs.getDouble("amount"),
+                            rs.getTimestamp("donate_date"),
+                            rs.getString("status"),
+                            rs.getString("payment_method"),
+                            rs.getString("qr_code"),
+                            rs.getString("note"),
+                            rs.getString("volunteer_username"),
+                            rs.getString("volunteer_name"),
+                            rs.getString("event_title"),
+                            rs.getDouble("total_amount"),
+                            rs.getInt("event_title")
+                    );
+                    list.add(d);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return list;
+    }
+
+    //tính tổng News đã đăng để chia trang
+    public int getTotalDonors() {
+        String sql = "SELECT COUNT(*) FROM ( "
+                + "  SELECT volunteer_id "
+                + "  FROM Donations "
+                + "  WHERE status = 'success' AND event_id = ? "
+                + "  GROUP BY volunteer_id "
+                + ") AS t";
+        try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return 0;
+    }
+
 }

@@ -4,10 +4,15 @@
  */
 package service;
 
+import dao.ViewDonorsDAO;
+
 /**
  *
  * @author ADDMIN
  */
 public class PageDonorService {
+    private int RECORDS_PER_PAGE = 3; // số event mỗi trang
+    private ViewDonorsDAO viewDonorsDAO = new ViewDonorsDAO();
+    
     
 }

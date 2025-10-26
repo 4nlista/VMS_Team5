@@ -114,7 +114,7 @@ public class ViewEventsDAO {
         return list;
     }
 
-    //cú pháp phân trang
+    //cú pháp phân trang sự kiện
     public List<Event> getActiveEventsPaged(int offset, int limit) {
         List<Event> list = new ArrayList<>();
         String sql = """

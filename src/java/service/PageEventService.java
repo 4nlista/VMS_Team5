@@ -12,7 +12,7 @@ import model.Event;
  *
  * @author Admin
  */
-// dùng để phân trang sự kiện ở giao diện Guest hay Volunteer
+// dùng để phân trang sự kiện ở giao diện Guess hay Volunteer
 public class PageEventService {
 
     private int RECORDS_PER_PAGE = 3; // số event mỗi trang

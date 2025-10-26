@@ -13,12 +13,13 @@ import model.New;
  * @author ADDMIN
  */
 public class DisplayNewService {
-     private NewDAO newsDAO;
+
+    private NewDAO newsDAO;
 
     public DisplayNewService() {
         newsDAO = new NewDAO();
     }
-    
+
     // trả về danh sách các bài viết đang published [đã xuất bản]
     public List<New> getAllPostNews() {
         return newsDAO.getAllPostNews();
@@ -28,6 +29,15 @@ public class DisplayNewService {
     public List<New> getTop3PostNews() {
         return newsDAO.getTop3PostNews();
     }
-    
-    
+
+    // trả về danh sách phân trang
+    public List<New> getActiveNewsPaged(int offset, int limit) {
+        return newsDAO.getPublishNewsPaged(offset, limit);
+    }
+
+    // tính tổng số trang
+    public int getTotalActiveNews() {
+        return newsDAO.getTotalPublishNews();
+    }
+
 }

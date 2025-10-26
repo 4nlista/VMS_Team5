@@ -114,15 +114,45 @@ public class NewDAO {
         }
         return list;
     }
-    
-    
-    
-    
+
     public List<New> getPublishNewsPaged(int offset, int limit) {
         List<New> list = new ArrayList<>();
+        String sql = """
+                    SELECT n.*, 
+                           u.full_name AS organization_name
+                    FROM News n
+                    JOIN Accounts a ON n.organization_id = a.id
+                    JOIN Users u ON a.id = u.account_id
+                    WHERE n.status = 'published'
+                    ORDER BY n.created_at DESC
+                    OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
+                    """;
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, offset);
+            ps.setInt(2, limit);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    New n = new New(
+                            rs.getInt("id"),
+                            rs.getString("title"),
+                            rs.getString("content"),
+                            rs.getString("images"),
+                            rs.getTimestamp("created_at"),
+                            rs.getTimestamp("updated_at"),
+                            rs.getInt("organization_id"),
+                            rs.getString("status"),
+                            rs.getString("organization_name")
+                    );
+                    list.add(n);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
         return list;
     }
-    
+
     //tính tổng News đã đăng để chia trang
     public int getTotalPublishNews() {
         String sql = "SELECT COUNT(*) FROM News WHERE status = 'published'";

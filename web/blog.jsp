@@ -46,7 +46,7 @@
                                         <div>
                                             <strong class="text-success">Ngày đăng:</strong>
                                             <a href="#">
-                                                 
+
                                                 <fmt:formatDate value="${e.createdAt}" pattern="dd/MM/yyyy HH:mm" />
                                             </a>
                                             <br/>
@@ -68,21 +68,42 @@
                     </c:forEach>
 
                 </div>
-                <!--                    <div class="row mt-5">
-                                        <div class="col text-center">
-                                            <div class="block-27">
-                                                <ul>
-                                                    <li><a href="#">&lt;</a></li>
-                                                    <li class="active"><span>1</span></li>
-                                                    <li><a href="#">2</a></li>
-                                                    <li><a href="#">3</a></li>
-                                                    <li><a href="#">4</a></li>
-                                                    <li><a href="#">5</a></li>
-                                                    <li><a href="#">&gt;</a></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>-->
+                <div class="row mt-5">
+                    <div class="col text-center">
+                        <div class="block-27">
+                            <ul>
+                                <!-- Nút Previous -->
+                                <c:if test="${currentPage > 1}">
+                                    <li><a href="GuessNewServlet?page=${currentPage - 1}">&lt;</a></li>
+                                    </c:if>
+                                    <c:if test="${currentPage == 1}">
+                                    <li class="disabled"><span>&lt;</span></li>
+                                    </c:if>
+
+                                <!-- Danh sách số trang -->
+                                <c:forEach begin="1" end="${totalPages}" var="i">
+                                    <c:choose>
+                                        <c:when test="${i == currentPage}">
+                                            <li class="active"><span>${i}</span></li>
+                                                </c:when>
+                                                <c:otherwise>
+                                            <li><a href="GuessNewServlet?page=${i}">${i}</a></li>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </c:forEach>
+
+                                <!-- Nút Next -->
+                                <c:if test="${currentPage < totalPages}">
+                                    <li><a href="GuessNewServlet?page=${currentPage + 1}">&gt;</a></li>
+                                    </c:if>
+                                    <c:if test="${currentPage == totalPages}">
+                                    <li class="disabled"><span>&gt;</span></li>
+                                    </c:if>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </section>
         <%@ include file="layout/footer.jsp" %>

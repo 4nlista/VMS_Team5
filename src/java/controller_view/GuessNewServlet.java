@@ -21,7 +21,7 @@ import service.DisplayNewService;
  */
 @WebServlet(name = "GuessNewServlet", urlPatterns = {"/GuessNewServlet"})
 public class GuessNewServlet extends HttpServlet {
-    
+
     private DisplayNewService displayNewService;
 
     @Override
@@ -32,6 +32,26 @@ public class GuessNewServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        int page = 1; // mặc định là trang đầu
+        int limit = 3; // số new mỗi trang
+        String pageParam = request.getParameter("page");
+        if (pageParam != null) {
+            try {
+                page = Integer.parseInt(pageParam);
+            } catch (NumberFormatException e) {
+                page = 1;
+            }
+        }
+
+        int offset = (page - 1) * limit;
+        // lấy danh sách event đang hoạt động công khai (đã phân trang)
+        List<New> listNews = displayNewService.getActiveNewsPaged(offset, limit);
+        //Tính tổng số event 
+        int totalEvents = displayNewService.getTotalActiveNews();
+        int totalPages = (int) Math.ceil((double) totalEvents / limit);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
+
         List<New> allNews = displayNewService.getAllPostNews();
         request.setAttribute("allNews", displayNewService.getAllPostNews());
         request.getRequestDispatcher("blog.jsp").forward(request, response);
