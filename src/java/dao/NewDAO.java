@@ -100,8 +100,8 @@ public class NewDAO {
                         rs.getString("title"),
                         rs.getString("content"),
                         rs.getString("images"),
-                        rs.getTimestamp("create_at"),
-                        rs.getTimestamp("update_at"),
+                        rs.getTimestamp("created_at"),
+                        rs.getTimestamp("updated_at"),
                         rs.getInt("organization_id"),
                         rs.getString("status"),
                         rs.getString("organization_name")

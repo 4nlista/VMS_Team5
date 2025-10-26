@@ -13,8 +13,10 @@ import java.io.IOException;
 import java.util.List;
 import model.Donation;
 import model.Event;
+import model.New;
 import service.DisplayDonateService;
 import service.DisplayEventService;
+import service.DisplayNewService;
 import service.SumDisplayService;
 
 /**
@@ -27,6 +29,7 @@ public class GuessHomeServlet extends HttpServlet {
     private SumDisplayService sumService;
     private DisplayEventService eventService;
     private DisplayDonateService donateService;
+    private DisplayNewService displayNewService;
     
 
     @Override
@@ -34,6 +37,7 @@ public class GuessHomeServlet extends HttpServlet {
         sumService = new SumDisplayService();
         eventService = new DisplayEventService();
         donateService = new DisplayDonateService();
+        displayNewService = new DisplayNewService();
     }
 
     @Override
@@ -43,10 +47,12 @@ public class GuessHomeServlet extends HttpServlet {
         // lấy danh sách event đang hoạt động công khai (đã phân trang)
         List<Event> lastEvents = eventService.getLatestActivePublicEvents();
         List<Donation> topDonates = donateService.getTop3UserDonation();
+        List<New> allNews = displayNewService.getTop3PostNews();
         
         request.setAttribute("totalDonationSystem", totalDonationSystem);
         request.setAttribute("lastEvents", eventService.getLatestActivePublicEvents());
         request.setAttribute("topDonates", donateService.getTop3UserDonation());
+        request.setAttribute("allNews", displayNewService.getTop3PostNews());
         request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 

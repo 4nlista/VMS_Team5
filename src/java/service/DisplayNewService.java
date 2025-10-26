@@ -25,7 +25,7 @@ public class DisplayNewService {
     }
 
     // trả về danh sách 3 bài viết mới nhất đang published [đã xuất bản]
-    public List<New> getLatestActivePublicEvents() {
+    public List<New> getTop3PostNews() {
         return newsDAO.getTop3PostNews();
     }
     

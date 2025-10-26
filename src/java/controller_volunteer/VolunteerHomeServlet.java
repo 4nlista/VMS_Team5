@@ -1,9 +1,5 @@
 
 
-
-
-
-
 package controller_volunteer;
 
 import jakarta.servlet.ServletException;
@@ -18,19 +14,21 @@ import java.util.List;
 import model.Account;
 import model.Donation;
 import model.Event;
+import model.New;
 import service.AccountService;
 import service.DisplayDonateService;
 import service.DisplayEventService;
+import service.DisplayNewService;
 import service.SumDisplayService;
 
 @WebServlet(name = "VolunteerHomeServlet", urlPatterns = {"/VolunteerHomeServlet"})
-
 public class VolunteerHomeServlet extends HttpServlet {
 
     private AccountService accountService;
     private SumDisplayService sumService;
     private DisplayEventService eventService;
     private DisplayDonateService donateService;
+    private DisplayNewService displayNewService;
 
     @Override
     public void init() {
@@ -38,6 +36,7 @@ public class VolunteerHomeServlet extends HttpServlet {
         sumService = new SumDisplayService();
         eventService = new DisplayEventService();
         donateService = new DisplayDonateService();
+        displayNewService = new DisplayNewService();
     }
 
     @Override
@@ -45,6 +44,8 @@ public class VolunteerHomeServlet extends HttpServlet {
             throws ServletException, IOException {
         List<Event> lastEvents = eventService.getLatestActivePublicEvents();
         List<Donation> topDonates = donateService.getTop3UserDonation();
+        List<New> allNews = displayNewService.getAllPostNews();
+        
         double totalDonationSystem = sumService.getTotalDonations();
 
         HttpSession session = request.getSession(false);
@@ -67,7 +68,8 @@ public class VolunteerHomeServlet extends HttpServlet {
 
         request.setAttribute("totalDonationSystem", totalDonationSystem);
         request.setAttribute("lastEvents", eventService.getLatestActivePublicEvents());
-        request.setAttribute("topDonates", donateService.getTop3UserDonation());    
+        request.setAttribute("topDonates", donateService.getTop3UserDonation()); 
+        request.setAttribute("allNews", displayNewService.getTop3PostNews());
         request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 
