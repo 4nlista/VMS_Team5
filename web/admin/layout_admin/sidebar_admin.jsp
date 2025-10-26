@@ -18,7 +18,7 @@
             </a>
         </li>
         <li>
-            <a href="<%= request.getContextPath() %>/admin/profile_admin.jsp"
+            <a href="<%= request.getContextPath() %>/AdminProfileServlet?id=1"
                class="nav-link text-white <%= currentPath.endsWith("/profile_admin.jsp") ? "active" : "" %>">
                 <i class="bi bi-person-circle me-2"></i>
                 Hồ sơ cá nhân

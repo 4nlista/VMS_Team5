@@ -4,7 +4,10 @@
     Author     : Admin
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -12,99 +15,122 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
         <link href="<%= request.getContextPath() %>/admin/css/admin.css" rel="stylesheet" />
+        <link href="<%= request.getContextPath() %>/admin/css/user_admin.css" rel="stylesheet" />
     </head>
     <body>
         <div class="content-container">
             <!-- Sidebar -->
             <jsp:include page="layout_admin/sidebar_admin.jsp" />
 
-            <!-- Main Content -->
+            <!-- Main Content (centered) -->
             <div class="main-content">
-                <div class="main-content container  pt-4">
-                    <h1 class="text-center mb-4">Hồ sơ quản trị viên</h1>
-                    <div class="profile-card shadow-sm p-4 bg-white rounded">
-                        <div class="row">
-                            <!-- Cột trái: Avatar + đổi mật khẩu -->
-                            <div class="col-md-3 border-end">
-                                <!-- Avatar -->
-                                <div class="text-center mb-4">
-                                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
-                                         class="img-fluid rounded-circle border p-2"
-                                         style="width: 150px; height: 150px;"
-                                         alt="Avatar Admin" />
-                                </div>
+                <div class="container-detail shadow-sm bg-white rounded">
+                    <div class="row g-0">
+                        <!-- LEFT: Avatar -->
+                        <div class="col-md-3 profile-left p-4 text-center">
+                            <img src="${not empty user.avatar ? user.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}"
+                                 class="rounded-circle avatar-lg mb-3 border p-2" alt="Avatar" />
+                            <div class="fw-semibold">${fn:escapeXml(user.full_name)}</div>
+                            <div class="text-muted small">${user.account.username}</div>
+                        </div>
 
-                                <!-- Đổi mật khẩu -->
-                                <h6 class="fw-bold mb-3 text-center">Đổi mật khẩu</h6>
-                                <div class="mb-2">
-                                    <label class="form-label">Mật khẩu hiện tại</label>
-                                    <input type="password" class="form-control">
+                        <!-- RIGHT: All fields  -->
+                        <div class="col-md-9 p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div>
+                                    <h5 class="fw-bold mb-0">Admin profile</h5>
+                                    <small class="text-muted">Viewing <strong>${user.account.username}</strong>'s account</small>
                                 </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Mật khẩu mới</label>
-                                    <input type="password" class="form-control">
+                                <div>
+                                    <a href="AdminProfileEditServlet?id=1" class="btn btn-sm btn-warning">✎ Edit</a>
                                 </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Xác nhận mật khẩu</label>
-                                    <input type="password" class="form-control">
-                                </div>
-                                <button class="btn btn-primary w-100">Cập nhật</button>
                             </div>
 
-                            <!-- Cột phải: Thông tin admin -->
-                            <div class="col-md-9 ps-4">
-                                <form>
-                                    <h5 class="mb-3 fw-bold">Thông tin cá nhân</h5>
-                                    <div class="row g-3">
-                                        <!-- Row 1 -->
-                                        <div class="col-md-6">
-                                            <label class="form-label">ID</label>
-                                            <input type="text" class="form-control" value="A001" readonly>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label">Họ và tên</label>
-                                            <input type="text" class="form-control" value="Nguyễn Văn Admin" readonly>
-                                        </div>
-
-                                        <!-- Row 2 -->
-                                        <div class="col-md-6">
-                                            <label class="form-label">Vai trò</label>
-                                            <input type="text" class="form-control fw-bold text-danger" value="Admin" readonly>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label">Email</label>
-                                            <input type="email" class="form-control" value="admin@system.com" readonly>
-                                        </div>
-
-                                        <!-- Row 3 -->
-                                        <div class="col-md-6">
-                                            <label class="form-label">Số điện thoại</label>
-                                            <input type="text" class="form-control" value="0123456789" readonly>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label">Địa chỉ</label>
-                                            <input type="text" class="form-control" value="Hà Nội, Việt Nam" readonly>
-                                        </div>
+                            <form>
+                                <div class="row g-2">
+                                    <div class="col-md-6">
+                                        <label class="form-label">ID</label>
+                                        <input type="text" class="form-control form-control-sm" value="${user.id}" readonly>
                                     </div>
 
-                                    <hr class="my-4">
-
-                                    <h5 class="mb-3 fw-bold">Giới thiệu</h5>
-                                    <div class="mb-3">
-                                        <textarea class="form-control" rows="4" readonly>
-                                        Quản trị viên hệ thống, 
-                                        chịu trách nhiệm quản lý tài khoản, 
-                                        sự kiện và toàn bộ hệ thống.
-                                        </textarea>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Username</label>
+                                        <input type="text" class="form-control form-control-sm" value="${user.account.username}" readonly>
                                     </div>
-                                </form>
-                            </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label">Full Name</label>
+                                        <input type="text" class="form-control form-control-sm" value="${fn:escapeXml(user.full_name)}" readonly>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label">Job Title</label>
+                                        <input type="text" class="form-control form-control-sm" value="${fn:escapeXml(user.job_title)}" readonly>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label">Gender</label>
+                                        <input type="text" class="form-control form-control-sm" value="${user.gender}" readonly>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label">Date of Birth</label>
+                                        <c:choose>
+                                            <c:when test="${not empty user.dob}">
+                                                <fmt:formatDate value="${user.dob}" pattern="yyyy-MM-dd" var="dobFmt" />
+                                                <input type="text" class="form-control form-control-sm" value="${dobFmt}" readonly>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <input type="text" class="form-control form-control-sm" value="N/A" readonly>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label">Address</label>
+                                        <input type="text" class="form-control form-control-sm" value="${fn:escapeXml(user.address)}" readonly>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label">Phone number</label>
+                                        <input type="text" class="form-control form-control-sm" value="${user.phone}" readonly>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label class="form-label">Email</label>
+                                        <input type="email" class="form-control form-control-sm" value="${user.email}" readonly>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label">Role</label>
+                                        <input type="text" class="form-control form-control-sm fw-bold text-danger" value="${user.account.role}" readonly>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label">Account created at</label>
+                                        <c:choose>
+                                            <c:when test="${not empty user.account.createdAt}">
+                                                <fmt:formatDate value="${user.account.createdAt}" pattern="HH:mm:ss / dd-MM-yyyy" var="acctCreated"/>
+                                                <input type="text" class="form-control form-control-sm" value="${acctCreated}" readonly>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <input type="text" class="form-control form-control-sm" value="N/A" readonly>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
+
+                                    <div class="col-12 mt-2">
+                                        <label class="form-label">Bio</label>
+                                        <textarea class="form-control form-control-sm" style="resize:none;"rows="6" readonly>${fn:escapeXml(user.bio)}</textarea>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="<%= request.getContextPath() %>/admin/js/detail_user_admin.js"></script>
     </body>
 </html>
