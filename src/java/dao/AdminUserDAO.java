@@ -16,7 +16,7 @@ import java.sql.SQLException;
 import java.sql.Date;
 
 /**
- *
+ * DAO for admin user management.
  * @author Admin
  */
 public class AdminUserDAO {

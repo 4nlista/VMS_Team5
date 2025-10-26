@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
+ * Handling servlet logic for Admin user management.
  * @author Mirinae
  */
 public class AdminUserService {
@@ -25,6 +25,15 @@ public class AdminUserService {
 	private final int pageSize = 6; // configurable if needed
 	// Returns true if update succeeded; if false, request will have "errors" Map<String,String>
 
+	/**
+	 * Handles the validation and update process for editing an admin user's information.
+	 * It will retrieve form parameters using {@link HttpServletRequest} and validate the user inputs.
+	 * If validation fails, it will send back the original inputs.
+	 * If validation passes, it will send the new validated inputs.
+	 * @param request the {@link HttpServletRequest} containing the form data and used to attach validation errors
+	 * @return {@code true} if the user information was successfully validated and updated;
+	 *		{@code false} if validation failed or the update could not be completed
+	 */
 	public boolean adminUserEdit(HttpServletRequest request) {
 		Map<String, String> errors = new HashMap<>();
 
@@ -176,11 +185,21 @@ public class AdminUserService {
 		}
 	}
 
+	/**
+	 * Safely trims a string by removing leading and trailing whitespace.
+	 * @param s The inputted string. The string itself can be null.
+	 * @return The trimmed string, or null (instead of throwing a NullPointerException) if the inputted string were null.
+	 */
 	private String safeTrim(String s) {
 		return (s == null) ? null : s.trim();
 	}
 
-	//Pagination logic
+	/**
+	 * Get list of all users based on the page number.
+	 * @param page The page number. If it's somehow less than 1, it will be set to 1.
+	 * @return List of all users in a page based on the page number.
+	 * @throws SQLException
+	 */
 	public List<User> getUsersByPage(int page) throws SQLException {
 		if (page < 1) {
 			page = 1;
@@ -188,7 +207,15 @@ public class AdminUserService {
 		return userDAO.getAllUsersWithPagination(page, pageSize);
 	}
 
-	//For filter
+	/**
+	 * Get list of all users based on the page number, now with filter support.
+	 * @param page The specified page number, if it's less than 1, set to 1.
+	 * @param role The role for filtering purpose.
+	 * @param search Who to search for.
+	 * @param sort What kind of sort, asc or desc?
+	 * @return The list of user per page, with filter.
+	 * @throws SQLException
+	 */
 	public List<User> getUsersByPage(int page, String role, String search, String sort) throws SQLException {
 		if (page < 1) {
 			page = 1;
@@ -196,12 +223,23 @@ public class AdminUserService {
 		return userDAO.getUsersWithFiltersAndPagination(page, pageSize, role, search, sort);
 	}
 
+	/**
+	 * Method to get the current total number of pages.
+	 * @return The number of total pages.
+	 * @throws SQLException
+	 */
 	public int getTotalPages() throws SQLException {
 		int totalUsers = userDAO.getTotalUserCount();
 		return (int) Math.ceil((double) totalUsers / pageSize);
 	}
 
-	//For filter
+	/**
+	 * Get the total number of page, based on filter.
+	 * @param role The role to filter.
+	 * @param search The name to filter.
+	 * @return The number of page, with filter.
+	 * @throws SQLException
+	 */
 	public int getTotalPages(String role, String search) throws SQLException {
 		int totalUsers = userDAO.getFilteredUserCount(role, search);
 		return (int) Math.ceil((double) totalUsers / pageSize);
