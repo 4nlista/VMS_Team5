@@ -14,30 +14,30 @@
         <meta charset="UTF-8">
         <title>Hồ sơ tổ chức</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+        <link href="<%= request.getContextPath() %>/organization/css/org.css" rel="stylesheet" />
 
         <style>
             body {
-                background-color: #111;
+                background-color: #181a1b;
                 color: #f8f9fa;
                 display: flex;
                 margin: 0;
                 font-family: 'Segoe UI', sans-serif;
             }
 
-            /* Sidebar luôn cố định bên trái */
+            /* KHÔNG định nghĩa màu nền cho sidebar ở đây — để giữ giao diện gốc */
             .sidebar-container {
-                width: 240px;
+                width: 260px;
                 position: fixed;
                 top: 0;
                 left: 0;
                 height: 100vh;
-                background-color: #000;
-                border-right: 1px solid #333;
-                padding: 15px;
+                padding: 0;
                 z-index: 10;
             }
 
-            /* Nội dung chính nằm bên phải, không che sidebar */
+            /* Giữ layout của main content — đẩy sang phải 260px */
             .main-content {
                 margin-left: 260px;
                 padding: 30px;
@@ -47,12 +47,10 @@
                 transition: all 0.3s;
             }
 
-            /* Giới hạn khung form nhỏ hơn một chút */
+            /* Card thông tin tổ chức */
             .profile-card {
-                max-width: 950px;
+                max-width: 850px;
                 margin: 0 auto;
-                transform: scale(0.95);
-                transform-origin: top left;
                 background-color: #1f1f1f;
                 color: #f8f9fa;
                 border: 1px solid #333;
@@ -90,6 +88,7 @@
                 font-size: 1.8rem;
                 font-weight: 600;
             }
+
         </style>
     </head>
     <body>
@@ -178,8 +177,8 @@
                                 </div>
 
                                 <div class="mt-3">
-                                    <button type="submit" class="btn btn-primary me-2">💾 Lưu hồ sơ</button>
-                                    <a href="<%= request.getContextPath() %>/OrganizationHomeServlet" class="btn btn-secondary">🏠 Trang chủ</a>
+                                    <button type="submit" class="btn btn-primary me-2">Lưu hồ sơ</button>
+                                    <a href="<%= request.getContextPath() %>/OrganizationHomeServlet" class="btn btn-secondary">Trang chủ</a>
                                 </div>
                             </div>
                         </div>
@@ -190,24 +189,24 @@
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script>
-            function previewAvatar(evt) {
-                const [file] = evt.target.files;
-                if (file) {
-                    document.getElementById('avatarPreview').src = URL.createObjectURL(file);
-                }
-            }
-            function previewUrl(val) {
-                if (val && val.trim() !== '') {
-                    document.getElementById('avatarPreview').src = val;
-                }
-            }
-            // auto hide message
-            const msg = document.getElementById('msg');
-            if (msg)
-                setTimeout(() => {
-                    const bs = bootstrap.Alert.getOrCreateInstance(msg);
-                    bs.close();
-                }, 3000);
+                                        function previewAvatar(evt) {
+                                            const [file] = evt.target.files;
+                                            if (file) {
+                                                document.getElementById('avatarPreview').src = URL.createObjectURL(file);
+                                            }
+                                        }
+                                        function previewUrl(val) {
+                                            if (val && val.trim() !== '') {
+                                                document.getElementById('avatarPreview').src = val;
+                                            }
+                                        }
+                                        // auto hide message
+                                        const msg = document.getElementById('msg');
+                                        if (msg)
+                                            setTimeout(() => {
+                                                const bs = bootstrap.Alert.getOrCreateInstance(msg);
+                                                bs.close();
+                                            }, 3000);
         </script>
     </body>
 </html>
