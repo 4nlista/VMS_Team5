@@ -19,7 +19,10 @@
         </li>
         <li>
             <a href="<%= request.getContextPath() %>/AdminProfileServlet?id=1"
-               class="nav-link text-white <%= currentPath.endsWith("/profile_admin.jsp") ? "active" : "" %>">
+               class="nav-link text-white <%= ( 
+                         currentPath.contains("/profile_admin.jsp") || 
+                         currentPath.contains("/profile_edit_admin.jsp")
+                         ) ? "active" : "" %>">
                 <i class="bi bi-person-circle me-2"></i>
                 Hồ sơ cá nhân
             </a>
@@ -35,7 +38,11 @@
         </li>
         <li>
             <a href="<%= request.getContextPath() %>/AdminUserServlet"
-               class="nav-link text-white <%= currentPath.endsWith("/users_admin.jsp") ? "active" : "" %>">
+               class="nav-link text-white <%= (
+       currentPath.contains("detail_user_admin.jsp") ||
+       currentPath.contains("edit_user_admin.jsp") ||
+       currentPath.endsWith("manage_user_admin.jsp")
+   ) ? "active" : "" %>">
                 <i class="bi bi-people me-2"></i>
                 Quản lí người dùng
             </a>
