@@ -5,6 +5,17 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page import="dao.UserDAO, model.User" %>
+<%
+    Integer accountId = (Integer) session.getAttribute("accountId");
+    User user = null;
+
+    if (accountId != null) {
+        UserDAO userDAO = new UserDAO();
+        user = userDAO.getUserByAccountId(accountId);
+        request.setAttribute("user", user);
+    }
+%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -65,7 +76,7 @@
                 <div class="col-md-6">
                     <div class="card border shadow-sm">
                         <div class="card-body">
-                            <form action="ApplyEventServlet" method="post">
+                            <form action="${pageContext.request.contextPath}/ApplyEventServlet" method="post">
                                 <div class="row">
                                     <div class="col-md-6 mb-2">
                                         <label class="form-label fw-bold">ID</label>
@@ -116,43 +127,48 @@
                 </div>
             </div>
         </div>
-        <!-- Modal hiển thị thông báo -->
-        <div class="modal fade" id="applyModal" tabindex="-1" aria-labelledby="applyModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header bg-success text-white">
-                        <h5 class="modal-title" id="applyModalLabel">Thông báo</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
-                    </div>
-                    <div class="modal-body text-center">
-                        <i class="bi bi-check-circle-fill text-success fs-1 mb-3"></i>
-                        <p class="fw-bold fs-5" id="applyMessage"></p>
-                    </div>
-                    <a href="<%= request.getContextPath() %>/EventListServlet" class="btn btn-primary">
-                        Quay lại danh sách sự kiện
-                    </a>
-                </div>
+<%
+    String applyMessage = (String) session.getAttribute("applyMessage");
+    Boolean justApplied = (Boolean) session.getAttribute("justApplied");
+
+    boolean shouldShow = (applyMessage != null && justApplied != null && justApplied);
+
+    // Xóa flag sau khi đã hiển thị (để refresh lại không còn popup)
+    if (shouldShow) {
+        session.removeAttribute("applyMessage");
+        session.removeAttribute("justApplied");
+    }
+%>
+<!-- Popup hiển thị thông báo sau khi đăng ký -->
+<div class="modal fade" id="applyModal" tabindex="-1" aria-labelledby="applyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="applyModalLabel">Thông báo</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <p id="applyMessage" class="fw-semibold"></p>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
             </div>
         </div>
+    </div>
+</div>
 
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-            <% 
-                String applyMessage = (String) session.getAttribute("applyMessage");
-                if (applyMessage != null) { 
-            %>
-                var message = "<%= applyMessage %>";
-                document.getElementById("applyMessage").textContent = message;
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-                var modal = new bootstrap.Modal(document.getElementById('applyModal'));
-                modal.show();
-
-            <% session.removeAttribute("applyMessage"); %><!-- Xóa để reload không hiện lại -->
-            <% } %>
-            });
-        </script>
-
-
+<script>
+    <% if (shouldShow) { %>
+    document.addEventListener("DOMContentLoaded", function () {
+        var msg = "<%= applyMessage.replace("\"", "\\\"") %>";
+        document.getElementById("applyMessage").textContent = msg;
+        var modal = new bootstrap.Modal(document.getElementById('applyModal'));
+        modal.show();
+    });
+    <% } %>
+</script>
 
 
         <jsp:include page="/layout/footer.jsp" />

@@ -13,7 +13,7 @@ import model.User;
 public class ApplyEventServlet extends HttpServlet {
 
     private EventVolunteerDAO eventVolunteerDAO = new EventVolunteerDAO();
-    private UserDAO userDAO = new UserDAO(); // 
+    private UserDAO userDAO = new UserDAO();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -29,34 +29,33 @@ public class ApplyEventServlet extends HttpServlet {
 
         try {
             int eventId = Integer.parseInt(request.getParameter("eventId"));
-
             User user = userDAO.getUserByAccountId(accountId);
+
             if (user == null) {
                 session.setAttribute("applyMessage", "Không tìm thấy thông tin volunteer!");
-                response.sendRedirect("volunteer/apply_event_volunteer.jsp");
+                response.sendRedirect(request.getContextPath() + "/volunteer/apply_event_volunteer.jsp?eventId=" + eventId);
                 return;
             }
 
             EventVolunteer ev = new EventVolunteer();
             ev.setEventId(eventId);
             ev.setVolunteerId(accountId);
+            ev.setStatus("pending"); // quan trọng: mặc định khi apply là pending
 
             boolean success = eventVolunteerDAO.applyForEvent(ev);
 
             if (success) {
-                session.setAttribute("applyMessage", "Đã gửi yêu cầu tham gia sự kiện thành công!");
+                session.setAttribute("applyMessage", "🎉 Đã gửi yêu cầu tham gia sự kiện thành công!");
             } else {
-                session.setAttribute("applyMessage", "️Bạn đã apply sự kiện này rồi hoặc có lỗi xảy ra!");
+                session.setAttribute("applyMessage", "⚠️ Bạn đã apply sự kiện này rồi hoặc có lỗi xảy ra!");
             }
-
-    
-            response.sendRedirect("volunteer/apply_event_volunteer.jsp");
+            session.setAttribute("justApplied", true); // ✅ đánh dấu người này vừa apply
+            response.sendRedirect(request.getContextPath() + "/volunteer/apply_event_volunteer.jsp?eventId=" + eventId);
 
         } catch (Exception e) {
             e.printStackTrace();
-            session.setAttribute("applyMessage", "Lỗi hệ thống khi apply sự kiện!");
-            response.sendRedirect("volunteer/apply_event_volunteer.jsp");
+            session.setAttribute("applyMessage", "❌ Lỗi hệ thống khi apply sự kiện!");
+            response.sendRedirect(request.getContextPath() + "/volunteer/apply_event_volunteer.jsp");
         }
     }
-
 }
