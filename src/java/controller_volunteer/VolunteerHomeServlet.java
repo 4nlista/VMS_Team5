@@ -1,3 +1,9 @@
+
+
+
+
+
+
 package controller_volunteer;
 
 import jakarta.servlet.ServletException;
@@ -61,10 +67,7 @@ public class VolunteerHomeServlet extends HttpServlet {
 
         request.setAttribute("totalDonationSystem", totalDonationSystem);
         request.setAttribute("lastEvents", eventService.getLatestActivePublicEvents());
-        request.setAttribute("topDonates", donateService.getTop3UserDonation());
-        request.getRequestDispatcher("index.jsp").forward(request, response);
-        
-        
+        request.setAttribute("topDonates", donateService.getTop3UserDonation());    
         request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 

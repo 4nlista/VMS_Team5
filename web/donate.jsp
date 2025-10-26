@@ -3,10 +3,10 @@
     Created on : Sep 16, 2025, 2:53:25 PM
     Author     : Admin
 --%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -33,7 +33,7 @@
         <section class="ftco-section bg-light">
             <div class="container">
                 <div class="row">
-                    <c:forEach var="e" items="${topDonates}"  >
+                    <c:forEach var="e" items="${allDonates}"  >
                         <div class="col-lg-4 d-flex mb-sm-4 ftco-animate">
                             <div class="staff">
                                 <div class="d-flex mb-4">
@@ -64,7 +64,6 @@
 
         <!-- Offer -->
         <%@ include file="layout/offer.jsp" %>
-
         <%@ include file="layout/footer.jsp" %>
         <%@ include file="layout/loader.jsp" %>
 

@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller_auth;
+package controller_view;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -32,8 +32,8 @@ public class GuessDonateServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        List<Donation> topDonates = displayDonateService.getAllUserDonation();
-        request.setAttribute("topDonates", displayDonateService.getAllUserDonation());
+        List<Donation> allDonates = displayDonateService.getAllUserDonation();
+        request.setAttribute("allDonates", displayDonateService.getAllUserDonation());
         request.getRequestDispatcher("donate.jsp").forward(request, response);
     }
 

@@ -16,7 +16,7 @@
             </div>
         </div>
         <div class="row">
-            <c:forEach var="e" items="${topDonates}"  >
+            <c:forEach var="e" items="${topDonates}">
                 <div class="col-lg-4 d-flex mb-sm-4 ftco-animate">
                     <div class="staff">
                         <div class="d-flex mb-4">
