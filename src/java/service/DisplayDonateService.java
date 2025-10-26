@@ -12,6 +12,7 @@ import model.Donation;
  *
  * @author ADDMIN
  */
+// hiển thị danh sách người donate
 public class DisplayDonateService {
 
     private ViewUserDonationDAO viewUserDonationDAO;
@@ -23,5 +24,10 @@ public class DisplayDonateService {
     // trả về danh sách 3 sự kiện mới nhất
     public List<Donation> getTop3UserDonation() {
         return viewUserDonationDAO.getTop3UserDonation();
+    }
+    
+    // trả về danh sách những người donate + tổng số sự kiện họ donate
+    public List<Donation> getAllUserDonation() {
+        return viewUserDonationDAO.getAllUserDonation();
     }
 }
