@@ -32,7 +32,7 @@ public class GuessDonateServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        List<Donation> allDonation = displayDonateService.getAllUserDonation();
+        List<Donation> topDonates = displayDonateService.getAllUserDonation();
         request.setAttribute("topDonates", displayDonateService.getAllUserDonation());
         request.getRequestDispatcher("donate.jsp").forward(request, response);
     }

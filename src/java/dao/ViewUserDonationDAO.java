@@ -176,6 +176,7 @@ public class ViewUserDonationDAO {
 
                 list.add(d);
             }
+            System.out.println("Danh sách" + list.size());
         } catch (Exception ex) {
             ex.printStackTrace();
         }

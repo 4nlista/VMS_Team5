@@ -63,6 +63,9 @@ public class VolunteerHomeServlet extends HttpServlet {
         request.setAttribute("lastEvents", eventService.getLatestActivePublicEvents());
         request.setAttribute("topDonates", donateService.getTop3UserDonation());
         request.getRequestDispatcher("index.jsp").forward(request, response);
+        
+        
+        request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 
     @Override

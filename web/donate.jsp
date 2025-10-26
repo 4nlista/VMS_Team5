@@ -5,6 +5,8 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -12,7 +14,6 @@
         <%@ include file="layout/header.jsp" %>
     </head>
     <body>
-
         <!-- Navbar -->
         <%@ include file="layout/navbar.jsp" %>
 
@@ -32,107 +33,33 @@
         <section class="ftco-section bg-light">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-4 d-flex mb-sm-4 ftco-animate">
-                        <div class="staff">
-                            <div class="d-flex mb-4">
-                                <div class="img" style="background-image: url(images/person_1.jpg);"></div>
-                                <div class="info ml-4">
-                                    <h3><a href="teacher-single.html">Ivan Jacobson</a></h3>
-                                    <span class="position">Donated Just now</span>
-                                    <div class="text">
-                                        <p>Donated <span>$300</span> for <a href="<%=request.getContextPath()%>/volunteer/payment_volunteer.jsp">Children Needs Food</a></p>
+                    <c:forEach var="e" items="${topDonates}"  >
+                        <div class="col-lg-4 d-flex mb-sm-4 ftco-animate">
+                            <div class="staff">
+                                <div class="d-flex mb-4">
+                                    <div class="img" style="background-image: url(images/person_1.jpg);"></div>
+                                    <div class="info ml-5">
+                                        <h3><a href="teacher-single.html">${e.volunteerFullName}</a></h3>
+                                        <span class="position" style="color: black">
+                                            Mã ID:  ${e.volunteerId}
+                                        </span>
+                                        <div class="text">
+                                            <p>
+                                                Đã tài trợ 
+                                                <span>
+                                                    <fmt:formatNumber value="${e.totalAmountDonated}" type="number" groupingUsed="true"/>
+                                                </span>VNĐ 
+                                                <br/>
+                                                Cho <a href="<%=request.getContextPath()%>/volunteer/payment_volunteer.jsp">${e.numberOfEventsDonated}</a> sự kiện
+                                            </p>
+                                        </div>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-lg-4 d-flex mb-sm-4 ftco-animate">
-                        <div class="staff">
-                            <div class="d-flex mb-4">
-                                <div class="img" style="background-image: url(images/person_2.jpg);"></div>
-                                <div class="info ml-4">
-                                    <h3><a href="teacher-single.html">Ivan Jacobson</a></h3>
-                                    <span class="position">Donated Just now</span>
-                                    <div class="text">
-                                        <p>Donated <span>$150</span> for <a href="<%=request.getContextPath()%>/volunteer/payment_volunteer.jsp">Children Needs Food</a></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 d-flex mb-sm-4 ftco-animate">
-                        <div class="staff">
-                            <div class="d-flex mb-4">
-                                <div class="img" style="background-image: url(images/person_3.jpg);"></div>
-                                <div class="info ml-4">
-                                    <h3><a href="teacher-single.html">Ivan Jacobson</a></h3>
-                                    <span class="position">Donated Just now</span>
-                                    <div class="text">
-                                        <p>Donated <span>$250</span> for <a href="<%=request.getContextPath()%>/volunteer/payment_volunteer.jsp"</a></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 d-flex mb-sm-4 ftco-animate">
-                        <div class="staff">
-                            <div class="d-flex mb-4">
-                                <div class="img" style="background-image: url(images/person_4.jpg);"></div>
-                                <div class="info ml-4">
-                                    <h3><a href="teacher-single.html">Ivan Jacobson</a></h3>
-                                    <span class="position">Donated Just now</span>
-                                    <div class="text">
-                                        <p>Donated <span>$300</span> for <a href="<%=request.getContextPath()%>/volunteer/payment_volunteer.jsp">Children Needs Food</a></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 d-flex mb-sm-4 ftco-animate">
-                        <div class="staff">
-                            <div class="d-flex mb-4">
-                                <div class="img" style="background-image: url(images/person_5.jpg);"></div>
-                                <div class="info ml-4">
-                                    <h3><a href="teacher-single.html">Ivan Jacobson</a></h3>
-                                    <span class="position">Donated Just now</span>
-                                    <div class="text">
-                                        <p>Donated <span>$150</span> for <a href="<%=request.getContextPath()%>/volunteer/payment_volunteer.jsp">Children Needs Food</a></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 d-flex mb-sm-4 ftco-animate">
-                        <div class="staff">
-                            <div class="d-flex mb-4">
-                                <div class="img" style="background-image: url(images/person_6.jpg);"></div>
-                                <div class="info ml-4">
-                                    <h3><a href="teacher-single.html">Ivan Jacobson</a></h3>
-                                    <span class="position">Donated Just now</span>
-                                    <div class="text">
-                                        <p>Donated <span>$250</span> for <a href="<%=request.getContextPath()%>/volunteer/payment_volunteer.jsp">Children Needs Food</a></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    </c:forEach>
                 </div>
-                <div class="row mt-5">
-                    <div class="col text-center">
-                        <div class="block-27">
-                            <ul>
-                                <li><a href="#">&lt;</a></li>
-                                <li class="active"><span>1</span></li>
-                                <li><a href="#">2</a></li>
-                                <li><a href="#">3</a></li>
-                                <li><a href="#">4</a></li>
-                                <li><a href="#">5</a></li>
-                                <li><a href="#">&gt;</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </section>
 
         <!-- Offer -->
