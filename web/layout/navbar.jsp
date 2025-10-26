@@ -78,7 +78,7 @@
                 <!-- Dropdown Khám phá -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle <%= (currentPage.contains("causes.jsp") 
-                                                            || currentPage.contains("blog.jsp") 
+                                                            || currentPage.contains("GuessNewServlet") 
                                                             || currentPage.contains("gallery.jsp") 
                                                             || currentPage.contains("GuessEventServlet")) 
                                                             ? "active" : "" %>" 
@@ -87,7 +87,12 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="exploreDropdown">
                         <a class="dropdown-item <%= currentPage.contains("causes.jsp") ? "active" : "" %>" href="<%= request.getContextPath() %>/causes.jsp">Hoạt động</a>
-                        <a class="dropdown-item <%= currentPage.contains("blog.jsp") ? "active" : "" %>" href="<%= request.getContextPath() %>/blog.jsp">Bài viết</a>
+                        
+                        
+                        
+                        <a class="dropdown-item <%= currentPage.contains("GuessNewServlet") ? "active" : "" %>" href="<%= request.getContextPath() %>/GuessNewServlet">Bài viết</a>
+                        
+                        
                         <a class="dropdown-item <%= currentPage.contains("gallery.jsp") ? "active" : "" %>" href="<%= request.getContextPath() %>/gallery.jsp">Hình ảnh</a>
                         <a class="dropdown-item <%= currentPage.contains("event.jsp") ? "active" : "" %>" href="<%= request.getContextPath() %>/GuessEventServlet">Sự kiện</a>
                     </div>
