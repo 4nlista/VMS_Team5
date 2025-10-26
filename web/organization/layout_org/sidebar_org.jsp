@@ -25,8 +25,8 @@
                 </a>
             </li>
             <li>
-                <a href="<%= request.getContextPath() %>/organization/profile_org.jsp"
-                   class="nav-link text-white <%= currentPath.endsWith("/profile_org.jsp") ? "active" : "" %>">
+                <a href="<%= request.getContextPath() %>/organization/profile"
+                   class="nav-link text-white <%= currentPath.endsWith("/organization/profile") ? "active" : "" %>">
                     <i class="bi bi-person-circle me-2"></i>
                     Hồ sơ cá nhân
                 </a>
