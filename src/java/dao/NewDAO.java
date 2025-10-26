@@ -114,5 +114,26 @@ public class NewDAO {
         }
         return list;
     }
+    
+    
+    
+    
+    public List<New> getPublishNewsPaged(int offset, int limit) {
+        List<New> list = new ArrayList<>();
+        return list;
+    }
+    
+    //tính tổng News đã đăng để chia trang
+    public int getTotalPublishNews() {
+        String sql = "SELECT COUNT(*) FROM News WHERE status = 'published'";
+        try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return 0;
+    }
 
 }

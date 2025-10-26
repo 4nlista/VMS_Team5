@@ -4,7 +4,7 @@
  */
 package service;
 
-import dao.ViewUserDonationDAO;
+import dao.ViewDonorsDAO;
 import java.util.List;
 import model.Donation;
 
@@ -15,10 +15,10 @@ import model.Donation;
 // hiển thị danh sách người donate
 public class DisplayDonateService {
 
-    private ViewUserDonationDAO viewUserDonationDAO;
+    private ViewDonorsDAO viewUserDonationDAO;
 
     public DisplayDonateService() {
-        viewUserDonationDAO = new ViewUserDonationDAO();
+        viewUserDonationDAO = new ViewDonorsDAO();
     }
 
     // trả về danh sách 3 sự kiện mới nhất

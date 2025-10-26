@@ -17,11 +17,11 @@ import utils.DBContext;
  *
  * @author ADDMIN
  */
-public class ViewUserDonationDAO {
+public class ViewDonorsDAO {
 
     private Connection conn;
 
-    public ViewUserDonationDAO() {
+    public ViewDonorsDAO() {
         try {
             DBContext db = new DBContext();
             this.conn = db.getConnection(); // lấy connection từ DBContext
