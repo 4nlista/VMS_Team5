@@ -38,11 +38,11 @@
                         <div class="col-md-9 p-4">
                             <div class="d-flex justify-content-between align-items-start mb-3">
                                 <div>
-                                    <h5 class="fw-bold mb-0">Admin profile</h5>
-                                    <small class="text-muted">Viewing <strong>${user.account.username}</strong>'s account</small>
+                                    <h5 class="fw-bold mb-0">Hồ sơ quản trị viên</h5>
+<!--                                    <small class="text-muted">Xem <strong>${user.account.username}</strong>'s account</small>-->
                                 </div>
                                 <div>
-                                    <a href="AdminProfileEditServlet?id=1" class="btn btn-sm btn-warning">✎ Edit</a>
+                                    <a href="AdminProfileEditServlet?id=1" class="btn btn-sm btn-warning">Chỉnh sửa</a>
                                 </div>
                             </div>
 
@@ -54,27 +54,27 @@
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label class="form-label">Username</label>
+                                        <label class="form-label">Tài khoản</label>
                                         <input type="text" class="form-control form-control-sm" value="${user.account.username}" readonly>
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label class="form-label">Full Name</label>
+                                        <label class="form-label">Họ tên</label>
                                         <input type="text" class="form-control form-control-sm" value="${fn:escapeXml(user.full_name)}" readonly>
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label class="form-label">Job Title</label>
+                                        <label class="form-label">Nghề nghiệp</label>
                                         <input type="text" class="form-control form-control-sm" value="${fn:escapeXml(user.job_title)}" readonly>
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label class="form-label">Gender</label>
+                                        <label class="form-label">Giới tính</label>
                                         <input type="text" class="form-control form-control-sm" value="${user.gender}" readonly>
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label class="form-label">Date of Birth</label>
+                                        <label class="form-label">Ngày sinh</label>
                                         <c:choose>
                                             <c:when test="${not empty user.dob}">
                                                 <fmt:formatDate value="${user.dob}" pattern="yyyy-MM-dd" var="dobFmt" />
@@ -87,27 +87,31 @@
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label class="form-label">Address</label>
+                                        <label class="form-label">Địa chỉ</label>
                                         <input type="text" class="form-control form-control-sm" value="${fn:escapeXml(user.address)}" readonly>
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label class="form-label">Phone number</label>
+                                        <label class="form-label">Số điện thoại</label>
                                         <input type="text" class="form-control form-control-sm" value="${user.phone}" readonly>
                                     </div>
 
-                                    <div class="col-12">
+                                    <div class="col-md-6">
                                         <label class="form-label">Email</label>
                                         <input type="email" class="form-control form-control-sm" value="${user.email}" readonly>
                                     </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Trạng thái</label>
+                                        <input type="text" class="form-control form-control-sm fw-bold text-success" value="${user.account.status}" readonly>
+                                    </div>
 
                                     <div class="col-md-6">
-                                        <label class="form-label">Role</label>
+                                        <label class="form-label">Vai trò</label>
                                         <input type="text" class="form-control form-control-sm fw-bold text-danger" value="${user.account.role}" readonly>
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label class="form-label">Account created at</label>
+                                        <label class="form-label">Thời gian tạo</label>
                                         <c:choose>
                                             <c:when test="${not empty user.account.createdAt}">
                                                 <fmt:formatDate value="${user.account.createdAt}" pattern="HH:mm:ss / dd-MM-yyyy" var="acctCreated"/>
@@ -120,7 +124,7 @@
                                     </div>
 
                                     <div class="col-12 mt-2">
-                                        <label class="form-label">Bio</label>
+                                        <label class="form-label">Giới thiệu</label>
                                         <textarea class="form-control form-control-sm" style="resize:none;"rows="6" readonly>${fn:escapeXml(user.bio)}</textarea>
                                     </div>
                                 </div>

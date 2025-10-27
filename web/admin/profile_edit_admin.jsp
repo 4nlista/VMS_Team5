@@ -21,7 +21,7 @@
             <jsp:include page="layout_admin/sidebar_admin.jsp" />
             <div class="card mx-auto shadow-sm border-0" style= "margin-top: 15px">
                 <div class="card-header bg-dark text-white text-center py-1 rounded-top">
-                    <h6 class="mb-0"><i class="bi bi-person-circle me-1"></i>Editing ${user.account.username}'s account</h6>
+                    <h6 class="mb-0"><i class="bi bi-person-circle me-1"></i>Chỉnh sửa tài khoản ${user.account.username}</h6>
                 </div>
                 <form action="AdminProfileEditServlet" method="post" class="mt-1">
                     <div class="card-body bg-light py-1">
@@ -40,7 +40,7 @@
 
                                     <!-- Info -->
                                     <div class="col-md-9 ps-md-2 mt-1 mt-md-0">
-                                        <h6 class="fw-bold mb-1 text-dark">Editing user detail</h6>
+                                        <h6 class="fw-bold mb-1 text-dark">Chỉnh sửa chi tiết</h6>
 
                                         <div class="row g-1">
                                             <!-- Hidden ensures the value is actually submitted -->
@@ -51,7 +51,7 @@
 
                                             <!-- Row 1 -->
                                             <div class="col-md-6 position-relative">
-                                                <label class="fw-bold form-label small text-muted mb-0">Full Name</label>
+                                                <label class="fw-bold form-label small text-muted mb-0">Họ tên</label>
                                                 <div class="error-container" style="height: 1rem; position: relative;">
                                                     <span class="field-error small text-danger"
                                                           style="${empty errors['full_name'] ? 'opacity: 0;' : ''}">
@@ -63,7 +63,7 @@
                                             </div>
 
                                             <div class="col-md-6 position-relative">
-                                                <label class="fw-bold form-label small text-muted mb-0">Occupation</label>
+                                                <label class="fw-bold form-label small text-muted mb-0">Nghề nghiệp</label>
                                                 <div class="error-container" style="height: 1rem; position: relative;">
                                                     <span class="field-error small text-danger"
                                                           style="${empty errors['job_title'] ? 'opacity: 0;' : ''}">
@@ -76,14 +76,14 @@
 
                                             <!-- Row 2 -->
                                             <div class="col-md-6">
-                                                <label class="fw-bold form-label small text-muted mb-3">Gender</label>
+                                                <label class="fw-bold form-label small text-muted mb-3">Giới tính</label>
                                                 <select name="gender" class="form-select form-select-sm">
-                                                    <option value="male" ${user.gender == 'male' ? 'selected' : ''}>Male</option>
-                                                    <option value="female" ${user.gender == 'female' ? 'selected' : ''}>Female</option>
+                                                    <option value="male" ${user.gender == 'male' ? 'selected' : ''}>Nam</option>
+                                                    <option value="female" ${user.gender == 'female' ? 'selected' : ''}>Nữ</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-6">
-                                                <label class="fw-bold form-label small text-muted mb-3">Date of Birth</label>
+                                                <label class="fw-bold form-label small text-muted mb-3">Ngày sinh</label>
                                                 <input type="date" name="dob" class="form-control form-control-sm"
                                                        value="${not empty param.dob ? param.dob : user.dob}">
                                                 <c:if test="${not empty errors.dob}">
@@ -93,7 +93,7 @@
 
                                                 <!-- Row 3 -->
                                             <div class="col-md-6 position-relative">
-                                                <label class="fw-bold form-label small text-muted mb-0">Address</label>
+                                                <label class="fw-bold form-label small text-muted mb-0">Địa chỉ</label>
                                                 <div class="error-container" style="height: 1rem; position: relative;">
                                                     <span class="field-error small text-danger"
                                                           style="${empty errors['address'] ? 'opacity: 0;' : ''}">
@@ -105,7 +105,7 @@
                                             </div>
 
                                             <div class="col-md-6 position-relative">
-                                                <label class="fw-bold form-label small text-muted mb-0">Phone</label>
+                                                <label class="fw-bold form-label small text-muted mb-0">Số điện thoại</label>
                                                 <div class="error-container" style="height: 1rem; position: relative;">
                                                     <span class="field-error small text-danger"
                                                           style="${empty errors['phone'] ? 'opacity: 0;' : ''}">
@@ -131,17 +131,17 @@
                                             
                                             <!-- Row 5 -->
                                         <hr class="my-1">
-                                        <h6 class="fw-bold text-dark mb-3 mt-3">Bio</h6>
-                                        <textarea class="form-control form-control-sm" style="resize:none;"name="bio" rows="9">${user.bio}</textarea>
+                                        <h6 class="fw-bold text-dark mb-3 mt-3">Giới thiệu</h6>
+                                        <textarea class="form-control form-control-sm" style="resize:none;"name="bio" rows="6">${user.bio}</textarea>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="text-center mt-1 mt-2">
                                 <a href="AdminProfileServlet?id=1" class="btn btn-warning btn-sm px-2 rounded-pill shadow-sm">
-                                    ✕ Discard Changes
+                                    Quay lại
                                 </a>
-                                <button type="submit" class="btn btn-success btn-sm px-2 rounded-pill shadow-sm">✓ Save Changes</button>
+                                <button type="submit" class="btn btn-success btn-sm px-2 rounded-pill shadow-sm">Cập nhật</button>
                             </div>
                         </div>
                     </div>

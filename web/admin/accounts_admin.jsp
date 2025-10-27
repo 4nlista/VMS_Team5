@@ -78,7 +78,6 @@
                                 <a href="?sort=id_desc"><i class="bi bi-caret-down-fill text-white"></i></a>
                             </th>
                             <th>Tài khoản</th>
-                            
                             <th>Vai trò</th>
                             <th>Trạng thái</th>
                             <th>Thao Tác</th>

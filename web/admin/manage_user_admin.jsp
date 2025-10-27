@@ -28,16 +28,16 @@
                     <!-- Filter (Role / Status) -->
                     <form action="AdminUserServlet" method="get" class="d-flex gap-3 flex-wrap" style="flex: 3;">
                         <select name="role" class="form-select w-25">
-                            <option value="">-- Role --</option>
-                            <option value="admin">Admin</option>
-                            <option value="organization">Organization</option>
-                            <option value="volunteer">Volunteer</option>
+                            <option value="">-- Vai Trò --</option>
+                            <option value="admin">Quản trị viên</option>
+                            <option value="organization">Người tổ chức</option>
+                            <option value="volunteer">Tình nguyện viên</option>
                         </select>
 
                         <input type="hidden" name="search" value="${fn:escapeXml(currentSearch)}" />
                         <input type="hidden" name="sort" value="${fn:escapeXml(currentSort)}" />
                         <button type="submit" class="btn btn-danger">
-                            <i class="bi bi-filter"></i> Filter
+                            <i class="bi bi-filter"></i> Lọc
                         </button>
                         <a href="AdminUserServlet" class="btn btn-secondary">
                             <i class="bi bi-trash"></i> Reset
@@ -48,7 +48,7 @@
                         <input type="text" name="search" class="form-control w-100" placeholder="Họ tên" value="${fn:escapeXml(currentSearch)}"/>
                         <input type="hidden" name="role" value="${fn:escapeXml(currentRole)}" />
                         <input type="hidden" name="sort" value="${fn:escapeXml(currentSort)}" />
-                        <button type="submit" class="btn btn-primary ms-2">Search</button>
+                        <button type="submit" class="btn btn-primary ms-2">Tìm</button>
                     </form>
                 </div>
 
@@ -72,18 +72,18 @@
                                 </c:url>
                                 <a href="${sortDescUrl}"><i class="bi bi-caret-down-fill text-white ms-1"></i></a>
                             </th>
-                            <th>Avatar</th>
-                            <th>Username</th>
-                            <th>Full name</th>
-                            <th>Gender</th>
-                            <th>Role</th>
-                            <th>Action</th>
+                            <th>Ảnh</th>
+                            <th>Tài khoản</th>
+                            <th>Họ tên</th>
+                            <th>Giới tính</th>
+                            <th>Vai trò</th>
+                            <th>Tính năng</th>
                         </tr>
                     </thead>
                     <tbody>
                         <c:if test="${empty users}">
                             <!-- This practically never happens because to view this list you need admin to exist... unless well you mess up the database lmao -->
-                            <tr><td colspan="7" class="text-center text-danger">No users found</td></tr>
+                            <tr><td colspan="7" class="text-center text-danger">Không tìm thấy người dùng hơp lệ</td></tr>
                         </c:if>
 
                         <c:forEach var="user" items="${users}">
@@ -99,13 +99,13 @@
                                 <td class="text-center">
                                     <form action="AdminUserDetailServlet" method="get" style="display:inline;">
                                         <input type="hidden" name="id" value="${user.id}">
-                                        <button type="submit" class="btn btn-primary btn-sm" title="View details">
+                                        <button type="submit" class="btn btn-primary btn-sm" title="Xem chi tiết">
                                             <i class="bi bi-eye"></i>
                                         </button>
                                     </form>
                                     <form action="AdminUserEditServlet" method="get" style="display:inline;">
                                         <input type="hidden" name="id" value="${user.id}">
-                                        <button type="submit" class="btn btn-warning btn-sm" title="Edit">
+                                        <button type="submit" class="btn btn-warning btn-sm" title="Chỉnh sửa">
                                             <i class="bi bi-pencil-square"></i>
                                         </button>
                                     </form>
@@ -134,7 +134,7 @@
                                 <c:param name="sort" value="${fn:escapeXml(currentSort)}" />
                             </c:url>
                             <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
-                                <a class="page-link" href="${prevUrl}" tabindex="-1">Previous</a>
+                                <a class="page-link" href="${prevUrl}" tabindex="-1">Trước</a>
                             </li>
 
                             <!-- Page number links -->
@@ -158,20 +158,20 @@
                                 <c:param name="sort" value="${fn:escapeXml(currentSort)}" />
                             </c:url>
                             <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
-                                <a class="page-link" href="${nextUrl}">Next</a>
+                                <a class="page-link" href="${nextUrl}">Sau</a>
                             </li>
                         </ul>
                     </nav>
 
                     <!-- Right: Go to page form -->
                     <form action="AdminUserServlet" method="get" class="d-flex align-items-center gap-2">
-                        <label for="gotoPage" class="form-label mb-0">Go to page:</label>
+                        <label for="gotoPage" class="form-label mb-0">Trang hiện tại:</label>
                         <input type="number" id="gotoPage" name="page" min="1" max="${totalPages}" value="${currentPage}" class="form-control" style="width: 80px;">
                         <!-- Preserve filter/sort -->
                         <input type="hidden" name="role" value="${fn:escapeXml(currentRole)}" />
                         <input type="hidden" name="search" value="${fn:escapeXml(currentSearch)}" />
                         <input type="hidden" name="sort" value="${fn:escapeXml(currentSort)}" />
-                        <button type="submit" class="btn btn-outline-primary btn-sm">Go</button>
+                        <button type="submit" class="btn btn-danger btn-sm">Chọn</button>
                     </form>
                 </div>
             </div>

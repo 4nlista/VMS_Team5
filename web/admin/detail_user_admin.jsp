@@ -38,8 +38,8 @@
                         <div class="col-md-9 p-4">
                             <div class="d-flex justify-content-between align-items-start mb-3">
                                 <div>
-                                    <h5 class="fw-bold mb-0">User Details</h5>
-                                    <small class="text-muted">Viewing <strong>${user.account.username}</strong>'s account</small>
+                                    <h5 class="fw-bold mb-0">Chi tiết người dùng</h5>
+                                    <small class="text-muted">Xem <strong>${user.account.username}</strong>'s account</small>
                                 </div>
                                 <div>
                                     <a href="AdminUserServlet" class="btn btn-sm btn-outline-secondary me-2">← Back</a>
