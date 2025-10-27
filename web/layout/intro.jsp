@@ -21,7 +21,7 @@
                         <div class="cause-entry">
                             <a href="#" class="img" style="background-image: url(images/cause-1.jpg);"></a>
                             <div class="text p-3 p-md-4">
-                                <h3><a href="#">Clean water for the urban area</a></h3>
+                                <h3><a href="#">Cleansssss water for the urban area</a></h3>
                                 <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life</p>
                                 <span class="donation-time mb-3 d-block">Last donation 1w ago</span>
                                 <div class="progress custom-progress-success">

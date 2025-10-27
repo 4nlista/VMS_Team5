@@ -4,10 +4,129 @@
  */
 package model;
 
+import java.util.Date;
+
 /**
  *
  * @author Admin
  */
 public class User {
+    private int id;
+    private int account_id;
+    private String full_name;
+    private Date dob;
+    private String gender;
+    private String phone;
+    private String email;
+    private String address;
+    private String avatar;
+    private String job_title;
+    private String bio;
+
+    public User() {
+    }
+
+    public User(int id, int account_id, String full_name, Date dob, String gender, String phone, String email, String address, String avatar, String job_title, String bio) {
+        this.id = id;
+        this.account_id = account_id;
+        this.full_name = full_name;
+        this.dob = dob;
+        this.gender = gender;
+        this.phone = phone;
+        this.email = email;
+        this.address = address;
+        this.avatar = avatar;
+        this.job_title = job_title;
+        this.bio = bio;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getAccount_id() {
+        return account_id;
+    }
+
+    public void setAccount_id(int account_id) {
+        this.account_id = account_id;
+    }
+
+    public String getFull_name() {
+        return full_name;
+    }
+
+    public void setFull_name(String full_name) {
+        this.full_name = full_name;
+    }
+
+    public Date getDob() {
+        return dob;
+    }
+
+    public void setDob(Date dob) {
+        this.dob = dob;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getJob_title() {
+        return job_title;
+    }
+
+    public void setJob_title(String job_title) {
+        this.job_title = job_title;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+    
     
 }

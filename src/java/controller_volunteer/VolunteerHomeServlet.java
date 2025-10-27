@@ -1,3 +1,5 @@
+
+
 package controller_volunteer;
 
 import jakarta.servlet.ServletException;
@@ -8,23 +10,43 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.util.List;
 import model.Account;
+import model.Donation;
+import model.Event;
+import model.New;
 import service.AccountService;
+import service.DisplayDonateService;
+import service.DisplayEventService;
+import service.DisplayNewService;
+import service.SumDisplayService;
 
 @WebServlet(name = "VolunteerHomeServlet", urlPatterns = {"/VolunteerHomeServlet"})
-
 public class VolunteerHomeServlet extends HttpServlet {
 
     private AccountService accountService;
+    private SumDisplayService sumService;
+    private DisplayEventService eventService;
+    private DisplayDonateService donateService;
+    private DisplayNewService displayNewService;
 
     @Override
     public void init() {
         accountService = new AccountService();
+        sumService = new SumDisplayService();
+        eventService = new DisplayEventService();
+        donateService = new DisplayDonateService();
+        displayNewService = new DisplayNewService();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        List<Event> lastEvents = eventService.getLatestActivePublicEvents();
+        List<Donation> topDonates = donateService.getTop3UserDonation();
+        List<New> allNews = displayNewService.getAllPostNews();
+        
+        double totalDonationSystem = sumService.getTotalDonations();
 
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("account") == null) {
@@ -40,11 +62,15 @@ public class VolunteerHomeServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "Truy cập bị từ chối");
             return;
         }
-
         // Lưu fullname vào session
         session.setAttribute("username", acc.getUsername());
         // Forward đến JSP, không redirect
-        request.getRequestDispatcher("/volunteer/home_volunteer.jsp").forward(request, response);
+
+        request.setAttribute("totalDonationSystem", totalDonationSystem);
+        request.setAttribute("lastEvents", eventService.getLatestActivePublicEvents());
+        request.setAttribute("topDonates", donateService.getTop3UserDonation()); 
+        request.setAttribute("allNews", displayNewService.getTop3PostNews());
+        request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 
     @Override

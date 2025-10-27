@@ -57,47 +57,65 @@
                 String currentPage = request.getRequestURI();
             %>
             <ul class="navbar-nav ml-auto">
+                <% if (acc == null) { %>
                 <li class="nav-item">
-                    <a href="<%= request.getContextPath() %>/index.jsp" class="nav-link <%= currentPage.contains("index.jsp") ? "active" : "" %>">Trang Chủ</a>
+                    <a href="<%= request.getContextPath() %>/home" class="nav-link <%= currentPage.contains("home") ? "active" : "" %>">Trang Chủ</a>
                 </li>
+
+                <% } else { %>
+                <li class="nav-item">
+                    <a href="<%= request.getContextPath() %>/VolunteerHomeServlet" class="nav-link <%= currentPage.contains("VolunteerHomeServlet") ? "active" : "" %>">Trang Chủ</a>
+                </li>
+                <% } %>
+
                 <!-- Chỉ hiện khi chưa login -->
                 <% if (acc == null) { %>
                 <li class="nav-item">
                     <a href="<%= request.getContextPath() %>/about.jsp" class="nav-link <%= currentPage.contains("about.jsp") ? "active" : "" %>">Giới thiệu</a>
                 </li>
-                <% } %>
-
-
+                <% }  %>
 
                 <!-- Dropdown Khám phá -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle <%= (currentPage.contains("causes.jsp") 
-                                                            || currentPage.contains("blog.jsp") 
+                                                            || currentPage.contains("GuessNewServlet") 
                                                             || currentPage.contains("gallery.jsp") 
-                                                            || currentPage.contains("event.jsp")) 
+                                                            || currentPage.contains("GuessEventServlet")) 
                                                             ? "active" : "" %>" 
                        href="#" id="exploreDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Khám phá
                     </a>
                     <div class="dropdown-menu" aria-labelledby="exploreDropdown">
                         <a class="dropdown-item <%= currentPage.contains("causes.jsp") ? "active" : "" %>" href="<%= request.getContextPath() %>/causes.jsp">Hoạt động</a>
-                        <a class="dropdown-item <%= currentPage.contains("blog.jsp") ? "active" : "" %>" href="<%= request.getContextPath() %>/blog.jsp">Bài viết</a>
+                        
+                        
+                        
+                        <a class="dropdown-item <%= currentPage.contains("GuessNewServlet") ? "active" : "" %>" href="<%= request.getContextPath() %>/GuessNewServlet">Bài viết</a>
+                        
+                        
                         <a class="dropdown-item <%= currentPage.contains("gallery.jsp") ? "active" : "" %>" href="<%= request.getContextPath() %>/gallery.jsp">Hình ảnh</a>
-                        <a class="dropdown-item <%= currentPage.contains("event.jsp") ? "active" : "" %>" href="<%= request.getContextPath() %>/event.jsp">Sự kiện</a>
+                        <a class="dropdown-item <%= currentPage.contains("event.jsp") ? "active" : "" %>" href="<%= request.getContextPath() %>/GuessEventServlet">Sự kiện</a>
                     </div>
                 </li>
                 <!-- End Dropdown Khám phá -->
 
+                <% if (acc == null) { %>
                 <li class="nav-item">
-                    <a href="<%= request.getContextPath() %>/donate.jsp" class="nav-link <%= currentPage.contains("donate.jsp") ? "active" : "" %>">Tài trợ</a>
+                    <a href="<%= request.getContextPath() %>/GuessDonateServlet" class="nav-link <%= currentPage.contains("GuessDonateServlet") ? "active" : "" %>">Tài trợ</a>
                 </li>
+                <% } else { %>
+                <li class="nav-item">
+                    <a href="<%= request.getContextPath() %>/GuessDonateServlet" class="nav-link <%= currentPage.contains("GuessDonateServlet") ? "active" : "" %>">Tài trợ</a>
+                </li>
+                <% } %>
+
 
                 <li class="nav-item">
                     <a href="<%= request.getContextPath() %>/contact.jsp" class="nav-link <%= currentPage.contains("contact.jsp") ? "active" : "" %>">Liên hệ</a>
                 </li>
 
+                <!--nếu đăng nhập , tạo session thì mới hiển thị lịch sử giao dịch + lịch sử sự kiện-->
                 <% if (acc != null) { %>
-                
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle <%= currentPage.contains("/volunteer/history_volunteer.jsp") ? "active" : "" %>" 
                        href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -122,8 +140,8 @@
                         Đăng xuất
                     </a>
                 </li>
+                <!--                nếu có thì hiển thị đăng xuất / nếu không thì thay bằng đăng nhập-->
                 <% } else { %>
-
                 <li class="nav-item" style="align-content: center">
                     <a href="<%= request.getContextPath() %>/LoginServlet" 
                        class="nav-link btn btn-outline-secondary" 

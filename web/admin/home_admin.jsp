@@ -26,8 +26,6 @@
                     </div>
                 </div>
 
-
-
                 <!-- 6 khối thống kê -->
                 <div class="row g-4 mb-4">
                     <div class="col-md-4"><div class="stat-card bg-warning text-black"><h2>120</h2><p>Tổng tài khoản</p></div></div>
@@ -41,7 +39,6 @@
                     <div class="col-md-4"><div class="stat-card bg-info text-black"><h2>450</h2><p>Tổng giờ tham gia</p></div></div>
                 </div>
                
-
                 <!-- Biểu đồ cột tĩnh -->
                 <div class="chart-container card p-3 shadow-sm">
                     <h5 class="mb-3"  >Tổng số tiền theo tháng</h5>
@@ -52,8 +49,7 @@
                         <div class="bar" style="height:60%">Tháng 8</div>
                         <div class="bar" style="height:100%">Tháng 9</div>
                     </div>
-                </div>
-                
+                </div>          
             </div>
         </div>
 

@@ -12,7 +12,7 @@ import model.Account;
  *
  * @author Admin
  */
-// xử lí nghiệp vụ logic login và đăng nhập
+// xử lí lấy dữ liệu các tài khoản
 public class AccountService {
 
     private AccountDAO accountDAO;
@@ -26,7 +26,7 @@ public class AccountService {
         return accountDAO.getAccountById(id);
     }
 
-    // 1. Hiển thị dữ liệu danh sách các Accounts
+    // 1.1 Hiển thị dữ liệu danh sách các Accounts
     public List<Account> getAllAccounts() {
         return accountDAO.getAllAccounts();
     }

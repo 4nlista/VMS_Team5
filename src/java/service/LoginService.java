@@ -12,6 +12,7 @@ import model.Account;
  *
  * @author Admin
  */
+// xử lí nghiệp vụ logic login đăng nhập
 public class LoginService {
 
     private LoginDAO loginDAO;
@@ -30,11 +31,14 @@ public class LoginService {
     // - Nếu sai → trả về null (hoặc URL login fail).
     public String processLogin(String username, String password, HttpSession session) {
         Account acc = loginDAO.checkLogin(username, password);
-        if (acc == null) {
+        if (acc == null || !acc.isStatus()) {
             return "/auth/login.jsp?error=1"; // Login fail
         }
 
         session.setAttribute("account", acc);
+
+        session.setAttribute("accountId", acc.getId());
+        session.setAttribute("role", acc.getRole());
 
         String role = acc.getRole() == null ? "" : acc.getRole().toLowerCase();
 
@@ -82,7 +86,7 @@ public class LoginService {
     //   - Nếu có action → kiểm tra role có được phép hay không.
     //   - Nếu không có action → fallback về trang theo role (dashboard/admin/org hoặc volunteer)
     public String resolveRedirect(Account acc, HttpSession session, String action) {
-        if (acc == null) {
+        if (acc == null || !acc.isStatus()) {
             return "/auth/login.jsp"; // fallback
         }
         // lấy action ưu tiên: tham số trước, nếu null thì lấy từ session

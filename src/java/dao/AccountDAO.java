@@ -12,6 +12,7 @@ import model.Account;
 import utils.DBContext;
 import java.sql.*;
 import java.util.List;
+import utils.PasswordUtil;
 
 /**
  *
@@ -29,6 +30,7 @@ public class AccountDAO {
             e.printStackTrace();
         }
     }
+
     // 1. Truy xuất thông tin theo ID
     public Account getAccountById(int id) {
         String sql = "SELECT id, username, password, role, status "
@@ -54,7 +56,7 @@ public class AccountDAO {
         return null; // Nếu không tìm thấy account
     }
 
-    // 1. Lấy ra danh sách các tài khoản
+    // 1.1. Lấy ra danh sách các tài khoản - dùng để hiển thị dữ liệu 
     public List<Account> getAllAccounts() {
         List<Account> list = new ArrayList<>();
         String sql = "SELECT id, username, password, role, status FROM Accounts";
@@ -73,178 +75,120 @@ public class AccountDAO {
             e.printStackTrace();
         }
         return list;
-        
-        
+
     }
 
-    // 2. Cập nhật trạng thái khóa/mở tài khoản
-    public boolean updateAccountStatus(int id, boolean status) {
-        String sql = "UPDATE Accounts SET status = ? WHERE id = ?";
+    // check email đã tồn tại trong sql ? - dùng cho đăng kí tài khoản
+    public boolean isUsernameExists(String username) {
+        String sql = "SELECT COUNT(*) FROM Accounts WHERE username = ?";
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // đăng kí tài khoản -> sẽ tự động insert vào database
+    public int insertAccount(Account account) {
+        String sql = "INSERT INTO Accounts (username, password, role, status) VALUES (?, ?, ?, ?)";
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, account.getUsername());
+            ps.setString(2, account.getPassword());
+            ps.setString(3, account.getRole());
+            ps.setBoolean(4, account.isStatus());
+            ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                return rs.getInt(1); // Trả về account_id vừa tạo
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    // -------- Quên mật khẩu -----------
+    // lấy thông tin username + email . nếu đúng -> trả về Account
+    public Account getAccountByUsernameAndEmail(String username, String email) {
+        String sql = "SELECT a.id, a.username, a.password, a.role, a.status "
+                + "FROM Accounts a JOIN Users u ON a.id = u.account_id "
+                + "WHERE a.username = ? AND u.email = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setBoolean(1, status);
-            ps.setInt(2, id);
-            int rows = ps.executeUpdate();
-            return rows > 0;
+            ps.setString(1, username);
+            ps.setString(2, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return new Account(
+                        rs.getInt("id"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getString("role"),
+                        rs.getBoolean("status")
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // Cập nhật mật khẩu mới được random (đã mã hóa) ghi mật khẩu random mới vào DB
+    public boolean updatePasswordRandom(int accountId, String newPassword) {
+        String sql = "UPDATE Accounts SET password = ? WHERE id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, newPassword);
+            ps.setInt(2, accountId);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // ----------------- Đổi mật khẩu -----------------
+    // đổi mật khẩu của từng tài khoản
+    public boolean updatePasswordByUser(int accountId, String newPassword) {
+        String sql = "UPDATE Accounts SET password = ? WHERE id = ?";
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            System.out.println("🔹 SQL: " + sql);
+            System.out.println("🔹 newPassword = " + newPassword);
+            System.out.println("🔹 accountId = " + accountId);
+
+            ps.setString(1, newPassword);
+            ps.setInt(2, accountId);
+
+            int rowsAffected = ps.executeUpdate();
+            System.out.println("🔹 Rows affected = " + rowsAffected);
+
+            return rowsAffected > 0;
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
     }
 
-    // 3. Tìm kiếm + lọc tài khoản theo role, status, search (username)
-    public List<Account> findAccounts(String role, Boolean status, String search) {
-        List<Account> result = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("SELECT id, username, password, role, status FROM Accounts WHERE 1=1");
-        List<Object> params = new ArrayList<>();
-
-        if (role != null && !role.isEmpty()) {
-            sql.append(" AND role = ?");
-            params.add(role);
-        }
-        if (status != null) {
-            sql.append(" AND status = ?");
-            params.add(status);
-        }
-        if (search != null && !search.isEmpty()) {
-            sql.append(" AND (username LIKE ?)");
-            params.add("%" + search + "%");
-        }
-        sql.append(" ORDER BY id ASC");
-
-        try (PreparedStatement ps = conn.prepareStatement(sql.toString())) {
-            for (int i = 0; i < params.size(); i++) {
-                Object p = params.get(i);
-                if (p instanceof String) {
-                    ps.setString(i + 1, (String) p);
-                } else if (p instanceof Boolean) {
-                    ps.setBoolean(i + 1, (Boolean) p);
-                } else if (p instanceof Integer) {
-                    ps.setInt(i + 1, (Integer) p);
-                } else {
-                    ps.setObject(i + 1, p);
-                }
-            }
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    result.add(new Account(
-                            rs.getInt("id"),
-                            rs.getString("username"),
-                            rs.getString("password"),
-                            rs.getString("role"),
-                            rs.getBoolean("status")
-                    ));
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-    // 4. Đếm tổng số bản ghi theo cùng tiêu chí lọc
-    public int countAccounts(String role, Boolean status, String search) {
-        StringBuilder sql = new StringBuilder("SELECT COUNT(*) AS total FROM Accounts WHERE 1=1");
-        List<Object> params = new ArrayList<>();
-
-        if (role != null && !role.isEmpty()) {
-            sql.append(" AND role = ?");
-            params.add(role);
-        }
-        if (status != null) {
-            sql.append(" AND status = ?");
-            params.add(status);
-        }
-        if (search != null && !search.isEmpty()) {
-            sql.append(" AND (username LIKE ?)");
-            params.add("%" + search + "%");
-        }
-
-        try (PreparedStatement ps = conn.prepareStatement(sql.toString())) {
-            for (int i = 0; i < params.size(); i++) {
-                Object p = params.get(i);
-                if (p instanceof String) {
-                    ps.setString(i + 1, (String) p);
-                } else if (p instanceof Boolean) {
-                    ps.setBoolean(i + 1, (Boolean) p);
-                } else if (p instanceof Integer) {
-                    ps.setInt(i + 1, (Integer) p);
-                } else {
-                    ps.setObject(i + 1, p);
-                }
-            }
+//
+    // Lấy hash mật khẩu hiện tại từ DB theo accountId
+    public String getPasswordHashById(int accountId) {
+        String sql = "SELECT password FROM Accounts WHERE id = ?";
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, accountId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getInt("total");
+                    return rs.getString("password");
+
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return 0;
-    }
-
-    // 5. Lấy danh sách theo trang (offset/limit) cùng tiêu chí lọc hiện tại
-    public List<Account> findAccountsPaged(String role, Boolean status, String search, int offset, int limit) {
-        List<Account> result = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("SELECT id, username, password, role, status FROM Accounts WHERE 1=1");
-        List<Object> params = new ArrayList<>();
-
-        if (role != null && !role.isEmpty()) {
-            sql.append(" AND role = ?");
-            params.add(role);
-        }
-        if (status != null) {
-            sql.append(" AND status = ?");
-            params.add(status);
-        }
-        if (search != null && !search.isEmpty()) {
-            sql.append(" AND (username LIKE ?)");
-            params.add("%" + search + "%");
-        }
-
-        sql.append(" ORDER BY id ASC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
-
-        try (PreparedStatement ps = conn.prepareStatement(sql.toString())) {
-            int idx = 1;
-            for (Object p : params) {
-                if (p instanceof String) {
-                    ps.setString(idx++, (String) p);
-                } else if (p instanceof Boolean) {
-                    ps.setBoolean(idx++, (Boolean) p);
-                } else if (p instanceof Integer) {
-                    ps.setInt(idx++, (Integer) p);
-                } else {
-                    ps.setObject(idx++, p);
-                }
-            }
-            ps.setInt(idx++, offset);
-            ps.setInt(idx, limit);
-
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    result.add(new Account(
-                            rs.getInt("id"),
-                            rs.getString("username"),
-                            rs.getString("password"),
-                            rs.getString("role"),
-                            rs.getBoolean("status")
-                    ));
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
-    
-    public static void main(String[] args) {
-        AccountDAO dao = new AccountDAO();
-        List<Account> list = dao.getAllAccounts();
-
-        System.out.println("Account size = " + list.size());
-        for (Account acc : list) {
-            System.out.println(acc.getId() + " - " + acc.getUsername() + " - " + acc.getRole());
-        }
+        return null;
     }
 
 }

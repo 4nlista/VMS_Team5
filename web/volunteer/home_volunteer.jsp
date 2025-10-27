@@ -45,10 +45,6 @@
 
         <!-- Donors -->
         <jsp:include page="/layout/donors.jsp" />
-
-        <h1>Chào mừng <%= fullname %> đến trang tình nguyện viên!</h1>
-        <p>Đây là trang chủ dành riêng cho tình nguyện viên.</p>
-
         <!-- Images Child -->
         <jsp:include page="/layout/images.jsp" />
 
@@ -57,15 +53,6 @@
 
         <!-- Events -->
         <jsp:include page="/layout/events.jsp" />
-
-
-
-
-
-
-        <form action="<%= request.getContextPath() %>/LogoutServlet" method="get">
-            <button type="submit">Logout</button>
-        </form>
         <jsp:include page="/layout/footer.jsp" />
         <jsp:include page="/layout/loader.jsp" />
     </body>
