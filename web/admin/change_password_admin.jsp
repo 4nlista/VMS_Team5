@@ -33,7 +33,6 @@
                     <% } %>
 
 <!--                hiển thị thông báo thành công-->
-                    <% String success = (String) request.getAttribute("success"); %>
                     <% if (success != null) { %>
                     <div class="alert alert-success"><%= success %></div>
                     <script>
