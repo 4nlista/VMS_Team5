@@ -25,8 +25,9 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Hủy session
+        // Hủy session để người dùng không thể back truy cập lại các trang bảo mật
         request.getSession().invalidate();
+        // Sau khi hủy session, chuyển hướng người dùng về trang đăng nhập
         response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
         //  request.getRequestDispatcher("auth/login.jsp").forward(request, response);
     }
