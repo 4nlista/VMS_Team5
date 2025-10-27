@@ -90,7 +90,7 @@
                             <tr>
                                 <td>${user.id}</td>
                                 <td>
-                                    <img src="${user.avatar}" alt="avatar" class="rounded-circle" width="50" height="50">
+                                    <img img src="${not empty user.avatar ? user.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}" alt="avatar" class="rounded-circle" width="50" height="50">
                                 </td>
                                 <td>${user.account.username}</td>
                                 <td>${user.full_name}</td>

@@ -13,18 +13,19 @@ import model.Account;
 import model.User;
 import utils.DBContext;
 import java.sql.SQLException;
-import java.sql.Date;
+import java.util.Date;
 
 /**
  * DAO for admin user management.
+ *
  * @author Admin
  */
 public class AdminUserDAO {
-	
+
 	private Connection conn;
 
 	/**
-	 *	Get connection from database
+	 * Get connection from database
 	 */
 	public AdminUserDAO() {
 		try {
@@ -37,6 +38,7 @@ public class AdminUserDAO {
 
 	/**
 	 * Returns an user according to the inputted id . This method is used to view list of users and their basic information.
+	 *
 	 * @param id The inputted id to specify which user to get from the database.
 	 * @return The id-specified user and their other information such as account id, role, username, full name, gender and avatar.
 	 */
@@ -68,6 +70,7 @@ public class AdminUserDAO {
 
 	/**
 	 * Get a list of all current user from the database. This method gives a list of all user while also showing more details about them.
+	 *
 	 * @return The list of all users and their details including id, role, username, full name, gender, phone, email, address, avatar, job, bio and date of birth.
 	 */
 	public List<User> getAllUsers() {
@@ -103,6 +106,7 @@ public class AdminUserDAO {
 
 	/**
 	 * The method used to update user detail as an admin.The method will take in the parameters and modify them.
+	 *
 	 * @param id The id of the user
 	 * @param username
 	 * @param fullName
@@ -116,8 +120,8 @@ public class AdminUserDAO {
 	 * @return true if the method successfully update the user, false otherwise.
 	 */
 	public boolean updateUser(int id, String username, String fullName, String gender, String phone,
-		    String email, String address, String jobTitle, String bio, Date dob) {
-		String updateUserSql = "UPDATE Users SET full_name=?, gender=?, phone=?, email=?, address=?, job_title=?, bio=?, dob=? WHERE id=?";
+		    String email, String address, String jobTitle, String bio, Date dob, String avatarPath) {
+		String updateUserSql = "UPDATE Users SET full_name=?, gender=?, phone=?, email=?, address=?, job_title=?, bio=?, dob=?, avatar=? WHERE id=?";
 		String updateAccountSql = "UPDATE Accounts SET username=? WHERE id=(SELECT account_id FROM Users WHERE id=?)";
 		try {
 			conn.setAutoCommit(false); // start transaction
@@ -132,11 +136,16 @@ public class AdminUserDAO {
 				psUser.setString(6, jobTitle);
 				psUser.setString(7, bio);
 				if (dob != null) {
-					psUser.setDate(8, dob);
+					psUser.setDate(8, (java.sql.Date) dob);
 				} else {
 					psUser.setNull(8, java.sql.Types.DATE);
 				}
-				psUser.setInt(9, id);
+				if (avatarPath != null) {
+					psUser.setString(9, avatarPath);
+				} else {
+					psUser.setNull(9, java.sql.Types.VARCHAR);
+				}
+				psUser.setInt(10, id);
 				psUser.executeUpdate();
 			}
 
@@ -165,9 +174,9 @@ public class AdminUserDAO {
 	}
 
 	//Full user details based on their id
-
 	/**
 	 * Quite the same as getUserById, this method gets user by id, but with even more details.
+	 *
 	 * @param id The inputted user id.
 	 * @return The user and their details.
 	 */
@@ -181,7 +190,8 @@ public class AdminUserDAO {
 					Account acc = new Account();
 					acc.setUsername(rs.getString("username"));
 					acc.setRole(rs.getString("role"));
-					java.sql.Timestamp createdAt = rs.getTimestamp("created_at");
+					java.util.Date createdAtUtil = rs.getTimestamp("created_at");
+					java.sql.Date createdAt = new java.sql.Date(createdAtUtil.getTime());
 					acc.setCreatedAt(createdAt);
 					return new User(
 						    rs.getInt("id"),
@@ -207,6 +217,7 @@ public class AdminUserDAO {
 
 	/**
 	 * Get a list of all user and their basic information, now with pagination logic.
+	 *
 	 * @param page Page number.
 	 * @param pageSize The number of users show per page.
 	 * @return A list of user per page.
@@ -247,6 +258,7 @@ public class AdminUserDAO {
 
 	/**
 	 * This method will get the count of all current users in the database. Used to evaluate the number of pages.
+	 *
 	 * @return The total count of all users.
 	 */
 	public int getTotalUserCount() {
@@ -264,6 +276,7 @@ public class AdminUserDAO {
 
 	/**
 	 * A method that gets a list of all user, with pagination logic while also handling the filter.
+	 *
 	 * @param page Page number.
 	 * @param pageSize The number of users per page.
 	 * @param role Get the inputted role for filtering by role.
@@ -338,9 +351,9 @@ public class AdminUserDAO {
 	}
 
 	//Return the filtered usercount
-
 	/**
 	 * Identical to getTotalUserCount, but now with applied filter.
+	 *
 	 * @param role Which role to count.
 	 * @param search What name to search.
 	 * @return The number of users match the criteria.
@@ -355,7 +368,7 @@ public class AdminUserDAO {
 			whereClauses.add("a.role = ?");
 		}
 		if (search != null && !search.trim().isEmpty()) {
-			whereClauses.add("a.full_name LIKE ?");
+			whereClauses.add("u.full_name LIKE ?");
 		}
 
 		if (!whereClauses.isEmpty()) {
@@ -379,5 +392,25 @@ public class AdminUserDAO {
 			e.printStackTrace();
 		}
 		return 0;
+	}
+
+	/**
+	 * Method to update the avatar only.
+	 *
+	 * @param id The id of the user.
+	 * @param avatarPath The save path of the avatar.
+	 * @return true if the method successfully update the user, false otherwise.
+	 */
+	public boolean updateAvatar(int id, String avatarPath) {
+		String sql = "UPDATE Users SET avatar = ? WHERE id = ?";
+		try (PreparedStatement ps = conn.prepareStatement(sql)) {
+			ps.setString(1, avatarPath);
+			ps.setInt(2, id);
+			int affected = ps.executeUpdate();
+			return affected > 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 }

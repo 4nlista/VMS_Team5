@@ -23,19 +23,28 @@
                 <div class="card-header bg-dark text-white text-center py-1 rounded-top">
                     <h6 class="mb-0"><i class="bi bi-person-circle me-1"></i>Editing ${user.account.username}'s account</h6>
                 </div>
-                <form action="AdminUserEditServlet" method="post" class="mt-1">
+                <form action="AdminUserEditServlet" method="post" class="mt-1" enctype="multipart/form-data">
                     <div class="card-body bg-light py-1">
                         <div class="container py-1">
                             <div class="profile-card bg-white rounded-3 shadow-sm p-2">
                                 <div class="row align-items-start">
                                     <!-- Avatar -->
                                     <div class="col-md-3 text-center border-end pe-2">
-                                        <img src="${not empty user.avatar ? user.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}" 
+                                        <img src="${not empty user.avatar ? user.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}"
                                              name="avatar"
                                              class="img-fluid rounded-circle border border-2 border-secondary-subtle shadow-sm mb-1"
                                              style="width: 100px; height: 100px; object-fit: cover;"
                                              alt="Avatar" />
                                         <p class="fw-semibold mt-0 small">${user.full_name}</p>
+                                        <div class="mb-3">
+                                            <label class="form-label">Upload Photo</label>
+                                            <input type="file" name="avatar" class="form-control" value="${not empty user.avatar ? user.avatar : user.avatar}">
+                                            <div class="error-container" style="height: 1rem; position: relative;">
+                                                <span class="field-error small text-danger" style="${empty errors['avatar'] ? 'opacity: 0;' : ''}">
+                                                    ${errors['avatar']}
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <!-- Info -->
@@ -91,7 +100,7 @@
                                                 </c:if>
                                             </div>
 
-                                                <!-- Row 3 -->
+                                            <!-- Row 3 -->
                                             <div class="col-md-6 position-relative">
                                                 <label class="fw-bold form-label small text-muted mb-0">Address</label>
                                                 <div class="error-container" style="height: 1rem; position: relative;">
@@ -128,27 +137,27 @@
                                                 <input type="email" name="email" class="form-control form-control-sm"
                                                        value="${not empty param.email ? param.email : user.email}">
                                             </div>
-                                            
+
                                             <!-- Row 5 -->
-                                        <hr class="my-1">
-                                        <h6 class="fw-bold text-dark mb-3 mt-3">Bio</h6>
-                                        <textarea class="form-control form-control-sm" style="resize:none;"name="bio" rows="9">${user.bio}</textarea>
+                                            <hr class="my-1">
+                                            <h6 class="fw-bold text-dark mb-3 mt-3">Bio</h6>
+                                            <textarea class="form-control form-control-sm" style="resize:none;"name="bio" rows="9">${user.bio}</textarea>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="text-center mt-1 mt-2">
-                                <a href="AdminUserServlet" class="btn btn-secondary px-2 btn-sm rounded-pill shadow-sm">← Back to User List</a>
-                                <a href="AdminUserDetailServlet?id=${user.id}" class="btn btn-warning btn-sm px-2 rounded-pill shadow-sm">
-                                    ✕ Discard Changes
-                                </a>
-                                <button type="submit" class="btn btn-success btn-sm px-2 rounded-pill shadow-sm">✓ Save Changes</button>
+                                <div class="text-center mt-1 mt-2">
+                                    <a href="AdminUserServlet" class="btn btn-secondary px-2 btn-sm rounded-pill shadow-sm">← Back to User List</a>
+                                    <a href="AdminUserDetailServlet?id=${user.id}" class="btn btn-warning btn-sm px-2 rounded-pill shadow-sm">
+                                        ✕ Discard Changes
+                                    </a>
+                                    <button type="submit" class="btn btn-success btn-sm px-2 rounded-pill shadow-sm">✓ Save Changes</button>
+                                </div>
                             </div>
                         </div>
                     </div>
+                </form>
             </div>
-        </form>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
 </html>

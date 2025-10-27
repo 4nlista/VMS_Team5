@@ -4,7 +4,13 @@
 package service;
 
 import dao.AdminUserDAO;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.Part;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Paths;
 import java.util.List;
 import model.User;
 import java.sql.SQLException;
@@ -14,9 +20,11 @@ import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Handling servlet logic for Admin user management.
+ *
  * @author Mirinae
  */
 public class AdminUserService {
@@ -26,13 +34,10 @@ public class AdminUserService {
 	// Returns true if update succeeded; if false, request will have "errors" Map<String,String>
 
 	/**
-	 * Handles the validation and update process for editing an admin user's information.
-	 * It will retrieve form parameters using {@link HttpServletRequest} and validate the user inputs.
-	 * If validation fails, it will send back the original inputs.
-	 * If validation passes, it will send the new validated inputs.
+	 * Handles the validation and update process for editing an admin user's information. It will retrieve form parameters using {@link HttpServletRequest} and validate the user inputs. If validation fails, it will send back the original inputs. If validation passes, it will send the new validated inputs.
+	 *
 	 * @param request the {@link HttpServletRequest} containing the form data and used to attach validation errors
-	 * @return {@code true} if the user information was successfully validated and updated;
-	 *		{@code false} if validation failed or the update could not be completed
+	 * @return {@code true} if the user information was successfully validated and updated; {@code false} if validation failed or the update could not be completed
 	 */
 	public boolean adminUserEdit(HttpServletRequest request) {
 		Map<String, String> errors = new HashMap<>();
@@ -74,14 +79,13 @@ public class AdminUserService {
             errors.put("username", "Username may contain only letters, numbers, dot, underscore or dash.");
         }
 		 */
-		
 		// Full name
 		if (fullName == null || fullName.isEmpty()) {
 			errors.put("full_name", "Full name cannot be empty.");
 		} else if (fullName.length() > 26) {
 			errors.put("full_name", "Full name must be 26 characters or fewer.");
 		} else if (!fullName.matches("^[\\p{L}\\s-]+$")) {
-			errors.put("full_name","Full name must contain only letters.");
+			errors.put("full_name", "Full name must contain only letters.");
 		}
 
 		// Phone
@@ -116,7 +120,7 @@ public class AdminUserService {
 		if (jobTitle == null || jobTitle.isEmpty()) {
 			errors.put("job_title", "Job title cannot be empty.");
 		} else if (!jobTitle.matches("^[\\p{L}\\s-]+$")) {
-			errors.put("job_title","Job title must contain only letters.");
+			errors.put("job_title", "Job title must contain only letters.");
 		} else if (jobTitle.length() <= 2) {
 			errors.put("job_title", "No such job is 2 letters long.");
 		}
@@ -150,6 +154,60 @@ public class AdminUserService {
 				dob = java.sql.Date.valueOf(localDate);
 			}
 		}
+		String avatarDbPath = null; // relative path to store in DB (e.g. /uploads/avatars/uuid.jpg)
+		try {
+			// getPart requires the servlet to be annotated @MultipartConfig (your servlet is)
+			Part avatarPart = null;
+			try {
+				avatarPart = request.getPart("avatar");
+			} catch (IllegalStateException ise) {
+				// file too large or not multipart; consider adding an error
+				// (optional) errors.put("avatar", "Uploaded file too large.");
+			}
+
+			if (avatarPart != null && avatarPart.getSize() > 0) {
+				String contentType = avatarPart.getContentType();
+				if (contentType == null || !contentType.startsWith("image/")) {
+					errors.put("avatar", "Uploaded file must be an image.");
+				} else if (avatarPart.getSize() > (2L * 1024 * 1024)) { // 2MB limit example
+					errors.put("avatar", "Avatar file must be <= 2MB.");
+				} else {
+					// save file to server
+					String submitted = avatarPart.getSubmittedFileName();
+					String fileName = Paths.get(submitted).getFileName().toString();
+					String ext = "";
+					int dot = fileName.lastIndexOf('.');
+					if (dot >= 0) {
+						ext = fileName.substring(dot);
+					}
+
+					// uploads dir inside webapp (or change to external path)
+					String uploadsRelative = "/uploads/avatars";
+					String uploadsAbsolute = request.getServletContext().getRealPath(uploadsRelative);
+					if (uploadsAbsolute == null) {
+						// fallback: use temp dir
+						uploadsAbsolute = System.getProperty("java.io.tmpdir") + File.separator + "uploads" + File.separator + "avatars";
+					}
+					File uploadsDir = new File(uploadsAbsolute);
+					if (!uploadsDir.exists()) {
+						uploadsDir.mkdirs();
+					}
+
+					String newFilename = UUID.randomUUID().toString() + ext;
+					File saved = new File(uploadsDir, newFilename);
+
+					try (InputStream in = avatarPart.getInputStream()) {
+						java.nio.file.Files.copy(in, saved.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+					}
+
+					// store relative path to DB so the JSP can build full URL: e.g. /context/uploads/avatars/uuid.jpg
+					avatarDbPath = uploadsRelative + "/" + newFilename;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			errors.put("avatar", "Failed to save uploaded avatar.");
+		}
 
 		// If there are validation errors, attach them to request and return false (no DAO call)
 		if (!errors.isEmpty()) {
@@ -169,7 +227,7 @@ public class AdminUserService {
 
 		// No validation errors: attempt DAO update
 		try {
-			boolean ok = userDAO.updateUser(id, username, fullName, gender, phone, email, address, jobTitle, bio, dob);
+			boolean ok = userDAO.updateUser(id, username, fullName, gender, phone, email, address, jobTitle, bio, dob, avatarDbPath);
 			if (!ok) {
 				errors.put("general", "Failed to update user in database.");
 				request.setAttribute("errors", errors);
@@ -187,6 +245,7 @@ public class AdminUserService {
 
 	/**
 	 * Safely trims a string by removing leading and trailing whitespace.
+	 *
 	 * @param s The inputted string. The string itself can be null.
 	 * @return The trimmed string, or null (instead of throwing a NullPointerException) if the inputted string were null.
 	 */
@@ -196,6 +255,7 @@ public class AdminUserService {
 
 	/**
 	 * Get list of all users based on the page number.
+	 *
 	 * @param page The page number. If it's somehow less than 1, it will be set to 1.
 	 * @return List of all users in a page based on the page number.
 	 * @throws SQLException
@@ -209,6 +269,7 @@ public class AdminUserService {
 
 	/**
 	 * Get list of all users based on the page number, now with filter support.
+	 *
 	 * @param page The specified page number, if it's less than 1, set to 1.
 	 * @param role The role for filtering purpose.
 	 * @param search Who to search for.
@@ -225,6 +286,7 @@ public class AdminUserService {
 
 	/**
 	 * Method to get the current total number of pages.
+	 *
 	 * @return The number of total pages.
 	 * @throws SQLException
 	 */
@@ -235,6 +297,7 @@ public class AdminUserService {
 
 	/**
 	 * Get the total number of page, based on filter.
+	 *
 	 * @param role The role to filter.
 	 * @param search The name to filter.
 	 * @return The number of page, with filter.
@@ -243,5 +306,98 @@ public class AdminUserService {
 	public int getTotalPages(String role, String search) throws SQLException {
 		int totalUsers = userDAO.getFilteredUserCount(role, search);
 		return (int) Math.ceil((double) totalUsers / pageSize);
+	}
+
+	/**
+	 * Load the list of users.
+	 * @param request
+	 * @throws SQLException
+	 */
+	public void loadUserList(HttpServletRequest request) throws SQLException {
+		int page = 1;
+		String pageParam = request.getParameter("page");
+		if (pageParam != null) {
+			try {
+				page = Integer.parseInt(pageParam);
+			} catch (NumberFormatException ignored) {
+			}
+		}
+
+		String role = request.getParameter("role");
+		String search = request.getParameter("search");
+		String sort = request.getParameter("sort");
+
+		List<User> users = getUsersByPage(page, role, search, sort);
+		int totalPages = getTotalPages(role, search);
+
+		request.setAttribute("users", users);
+		request.setAttribute("currentPage", page);
+		request.setAttribute("totalPages", totalPages);
+		request.setAttribute("currentRole", role == null ? "" : role);
+		request.setAttribute("currentSearch", search == null ? "" : search);
+		request.setAttribute("currentSort", sort == null ? "" : sort);
+	}
+
+	/**
+	 * Load details of user.
+	 * @param request
+	 * @return The user and their details.
+	 * @throws Exception
+	 */
+	public User loadUserDetail(HttpServletRequest request) throws Exception {
+		int id = Integer.parseInt(request.getParameter("id"));
+		return userDAO.getUserDetailById(id);
+	}
+
+	/**
+	 * Method used to specifically handle the upload of avatar to the system.
+	 * @param request
+	 * @param userId This param is here to act as a way to distinct file names.
+	 * @return true if completed, false if otherwise.
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	public boolean handleAvatarUpload(HttpServletRequest request, int userId)
+		    throws IOException, ServletException {
+		Part avatarPart = request.getPart("avatar");
+		if (avatarPart == null || avatarPart.getSize() == 0) {
+			return true; // nothing uploaded
+		}
+		// Validate type and size
+		String contentType = avatarPart.getContentType();
+		if (!contentType.startsWith("image/")) {
+			throw new IOException("Uploaded file is not an image.");
+		}
+		if (avatarPart.getSize() > 5 * 1024 * 1024) {
+			throw new IOException("Image size exceeds 5MB.");
+		}
+
+		// Paths
+		String realPath = request.getServletContext().getRealPath("");
+		String uploadPath = realPath + File.separator + "uploads" + File.separator + "avatars";
+		File uploadDir = new File(uploadPath);
+		if (!uploadDir.exists()) {
+			uploadDir.mkdirs();
+		}
+
+		// Generate unique file name
+		String submittedName = Paths.get(avatarPart.getSubmittedFileName()).getFileName().toString();
+		String ext = submittedName.substring(submittedName.lastIndexOf("."));
+		String fileName = "user_" + userId + "_" + System.currentTimeMillis() + ext;
+		String fullFilePath = uploadPath + File.separator + fileName;
+
+		// Save file
+		avatarPart.write(fullFilePath);
+
+		// Build URL for DB
+		String avatarUrl = request.getContextPath() + "/uploads/avatars/" + fileName;
+
+		// Update database
+		boolean ok = userDAO.updateAvatar(userId, avatarUrl);
+		if (!ok) {
+			throw new IOException("Failed to update avatar in database.");
+		}
+
+		return true;
 	}
 }

@@ -28,8 +28,7 @@
                     <div class="row g-0">
                         <!-- LEFT: Avatar -->
                         <div class="col-md-3 profile-left p-4 text-center">
-                            <img src="${not empty user.avatar ? user.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}"
-                                 class="rounded-circle avatar-lg mb-3 border p-2" alt="Avatar" />
+                            <img src="${not empty user.avatar ? user.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}" alt="avatar" class="rounded-circle avatar-lg mb-3 border p-2"/>
                             <div class="fw-semibold">${fn:escapeXml(user.full_name)}</div>
                             <div class="text-muted small">${user.account.username}</div>
                         </div>

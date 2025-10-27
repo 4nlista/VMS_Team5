@@ -3,7 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package model;
-import java.sql.Timestamp;
+
+import java.util.Date;
 
 /**
  *
@@ -11,89 +12,89 @@ import java.sql.Timestamp;
  */
 public class Account {
 
-    private int id;
-    private String username;
-    private String password;
-    private String role;
-    private boolean status;
-    private Timestamp created_at;
+	private int id;
+	private String username;
+	private String password;
+	private String role;
+	private boolean status;
+	private Date created_at;
 
-    public Account() {
-    }
+	public Account() {
+	}
 
-    public Account(int id, String username, String password, String role, boolean status) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.role = role;
-        this.status = status;
-    }
-    
-    public Account(int id, String username, String password, String role, boolean status, Timestamp created_at){
-	    this.id = id;
-	    this.username = username;
-	    this.password = password;
-	    this.role = role;
-	    this.status = status;
-	    this.created_at = created_at;
-    }
+	public Account(int id, String username, String password, String role, boolean status) {
+		this.id = id;
+		this.username = username;
+		this.password = password;
+		this.role = role;
+		this.status = status;
+	}
 
-    public int getId() {
-        return id;
-    }
+	public Account(int id, String username, String password, String role, boolean status, Date created_at) {
+		this.id = id;
+		this.username = username;
+		this.password = password;
+		this.role = role;
+		this.status = status;
+		this.created_at = created_at;
+	}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	public int getId() {
+		return id;
+	}
 
-    public String getUsername() {
-        return username;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+	public String getUsername() {
+		return username;
+	}
 
-    public String getPassword() {
-        return password;
-    }
+	public void setUsername(String username) {
+		this.username = username;
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	public String getPassword() {
+		return password;
+	}
 
-    public String getRole() {
-        return role;
-    }
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-    public void setRole(String role) {
-        this.role = role;
-    }
+	public String getRole() {
+		return role;
+	}
 
-    public boolean isStatus() {
-        return status;
-    }
+	public void setRole(String role) {
+		this.role = role;
+	}
 
-    public void setStatus(boolean status) {
-        this.status = status;
-    }
-    
-    public Timestamp getCreatedAt(){
-	    return created_at;
-    }
-    
-    public void setCreatedAt(Timestamp created_at){
-	    this.created_at = created_at;
-    }
+	public boolean isStatus() {
+		return status;
+	}
 
-    @Override
-    public String toString() {
-        return "Account{"
-                + "accountId=" + id
-                + ", username='" + username + '\''
-                + ", role=" + role
-                + ", status=" + status
-                + '}';
-    }
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+
+	public Date getCreatedAt() {
+		return created_at;
+	}
+
+	public void setCreatedAt(Date created_at) {
+		this.created_at = created_at;
+	}
+
+	@Override
+	public String toString() {
+		return "Account{"
+			    + "accountId=" + id
+			    + ", username='" + username + '\''
+			    + ", role=" + role
+			    + ", status=" + status
+			    + '}';
+	}
 
 }

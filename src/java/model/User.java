@@ -3,17 +3,19 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package model;
-import java.sql.Date;
+
+import java.util.Date;
 
 /**
  *
  * @author Admin
  */
 public class User {
-    private int id, account_id;
-    private String full_name, gender, phone, email, address, avatar, job_title, bio;
-    private Date dob;
-    private Account account;
+
+	private int id, account_id;
+	private String full_name, gender, phone, email, address, avatar, job_title, bio;
+	private Date dob;
+	private Account account;
 
 	public User() {
 	}
@@ -27,7 +29,7 @@ public class User {
 		this.account = account;
 	}
 
-	public User(int id, int account_id, Account account,String full_name, String gender, String phone, String email, String address, String avatar, String job_title, String bio, Date dob) {
+	public User(int id, int account_id, Account account, String full_name, String gender, String phone, String email, String address, String avatar, String job_title, String bio, Date dob) {
 		this.id = id;
 		this.account = account;
 		this.full_name = full_name;
@@ -44,7 +46,7 @@ public class User {
 	public int getId() {
 		return id;
 	}
-	
+
 	public int getAccountId() {
 		return account_id;
 	}
@@ -92,7 +94,7 @@ public class User {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
+
 	public void setAccountId(int account_id) {
 		this.account_id = account_id;
 	}
@@ -139,17 +141,17 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User{" + "id=" + id 
+		return "User{" + "id=" + id
 			    + ", account_id=" + account_id
 			    + ", username=" + account
-			    + ", full_name=" + full_name 
-			    + ", gender=" + gender 
-			    + ", phone=" + phone 
-			    + ", email=" + email 
-			    + ", address=" + address 
-			    + ", avatar=" + avatar 
-			    + ", job_title=" + job_title 
-			    + ", bio=" + bio 
+			    + ", full_name=" + full_name
+			    + ", gender=" + gender
+			    + ", phone=" + phone
+			    + ", email=" + email
+			    + ", address=" + address
+			    + ", avatar=" + avatar
+			    + ", job_title=" + job_title
+			    + ", bio=" + bio
 			    + ", dob=" + dob + '}';
 	}
 }
