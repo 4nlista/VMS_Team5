@@ -413,4 +413,65 @@ public class AdminUserDAO {
 		}
 		return false;
 	}
+
+	/**
+	 * Method to update text fields only.
+	 * @param id
+	 * @param username
+	 * @param fullName
+	 * @param gender
+	 * @param phone
+	 * @param email
+	 * @param address
+	 * @param jobTitle
+	 * @param bio
+	 * @param dob
+	 * @return
+	 */
+	public boolean updateUserTextOnly(int id, String username, String fullName, String gender, String phone,
+		    String email, String address, String jobTitle, String bio, Date dob) {
+		String updateUserSql = "UPDATE Users SET full_name=?, gender=?, phone=?, email=?, address=?, job_title=?, bio=?, dob=? WHERE id=?";
+		String updateAccountSql = "UPDATE Accounts SET username=? WHERE id=(SELECT account_id FROM Users WHERE id=?)";
+		try {
+			conn.setAutoCommit(false);
+
+			try (PreparedStatement psUser = conn.prepareStatement(updateUserSql)) {
+				psUser.setString(1, fullName);
+				psUser.setString(2, gender);
+				psUser.setString(3, phone);
+				psUser.setString(4, email);
+				psUser.setString(5, address);
+				psUser.setString(6, jobTitle);
+				psUser.setString(7, bio);
+				if (dob != null) {
+					psUser.setDate(8,(java.sql.Date) dob);
+				} else {
+					psUser.setNull(8, java.sql.Types.DATE);
+				}
+				psUser.setInt(9, id);
+				psUser.executeUpdate();
+			}
+
+			try (PreparedStatement psAccount = conn.prepareStatement(updateAccountSql)) {
+				psAccount.setString(1, username);
+				psAccount.setInt(2, id);
+				psAccount.executeUpdate();
+			}
+
+			conn.commit();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			try {
+				conn.rollback();
+			} catch (SQLException ignored) {
+			}
+		} finally {
+			try {
+				conn.setAutoCommit(true);
+			} catch (SQLException ignored) {
+			}
+		}
+		return false;
+	}
 }
