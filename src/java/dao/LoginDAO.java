@@ -71,7 +71,8 @@ public class LoginDAO {
                     rs.getString("username"),
                 rs.getString("password"),
                 rs.getString("role"),
-                rs.getBoolean("status")
+                rs.getBoolean("status"),
+                rs.getDate("createdAt")
         );
     }
 
