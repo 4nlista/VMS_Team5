@@ -4,6 +4,8 @@
  */
 package model;
 
+import java.util.Date;
+
 /**
  *
  * @author Admin
@@ -15,6 +17,7 @@ public class Account {
     private String password;
     private String role;
     private boolean status;
+    private Date createdAt;
 
     public Account() {
     }
@@ -25,6 +28,15 @@ public class Account {
         this.password = password;
         this.role = role;
         this.status = status;
+    }
+
+    public Account(int id, String username, String password, String role, boolean status, Date createdAt) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.role = role;
+        this.status = status;
+        this.createdAt = createdAt;
     }
 
     public int getId() {
@@ -65,6 +77,14 @@ public class Account {
 
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
     @Override

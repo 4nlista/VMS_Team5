@@ -11,10 +11,10 @@ import java.util.Date;
  * @author Admin
  */
 public class User {
+
     private int id;
     private int account_id;
     private String full_name;
-    private Date dob;
     private String gender;
     private String phone;
     private String email;
@@ -22,15 +22,16 @@ public class User {
     private String avatar;
     private String job_title;
     private String bio;
+    private Date dob;
+    private Account account;
 
     public User() {
     }
 
-    public User(int id, int account_id, String full_name, Date dob, String gender, String phone, String email, String address, String avatar, String job_title, String bio) {
+    public User(int id, int account_id, String full_name, String gender, String phone, String email, String address, String avatar, String job_title, String bio, Date dob) {
         this.id = id;
         this.account_id = account_id;
         this.full_name = full_name;
-        this.dob = dob;
         this.gender = gender;
         this.phone = phone;
         this.email = email;
@@ -38,6 +39,22 @@ public class User {
         this.avatar = avatar;
         this.job_title = job_title;
         this.bio = bio;
+        this.dob = dob;
+    }
+
+    public User(int id, int account_id, String full_name, String gender, String phone, String email, String address, String avatar, String job_title, String bio, Date dob, Account account) {
+        this.id = id;
+        this.account_id = account_id;
+        this.full_name = full_name;
+        this.gender = gender;
+        this.phone = phone;
+        this.email = email;
+        this.address = address;
+        this.avatar = avatar;
+        this.job_title = job_title;
+        this.bio = bio;
+        this.dob = dob;
+        this.account = account;
     }
 
     public int getId() {
@@ -62,14 +79,6 @@ public class User {
 
     public void setFull_name(String full_name) {
         this.full_name = full_name;
-    }
-
-    public Date getDob() {
-        return dob;
-    }
-
-    public void setDob(Date dob) {
-        this.dob = dob;
     }
 
     public String getGender() {
@@ -127,6 +136,21 @@ public class User {
     public void setBio(String bio) {
         this.bio = bio;
     }
-    
-    
+
+    public Date getDob() {
+        return dob;
+    }
+
+    public void setDob(Date dob) {
+        this.dob = dob;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
 }
