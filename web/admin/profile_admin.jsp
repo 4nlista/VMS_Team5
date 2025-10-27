@@ -101,15 +101,10 @@
                                         <input type="email" class="form-control form-control-sm" value="${user.email}" readonly>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label">Trạng thái</label>
-                                        <input type="text" class="form-control form-control-sm fw-bold text-success" value="${user.account.status}" readonly>
-                                    </div>
-
-                                    <div class="col-md-6">
                                         <label class="form-label">Vai trò</label>
                                         <input type="text" class="form-control form-control-sm fw-bold text-danger" value="${user.account.role}" readonly>
                                     </div>
-
+<!--
                                     <div class="col-md-6">
                                         <label class="form-label">Thời gian tạo</label>
                                         <c:choose>
@@ -121,7 +116,7 @@
                                                 <input type="text" class="form-control form-control-sm" value="N/A" readonly>
                                             </c:otherwise>
                                         </c:choose>
-                                    </div>
+                                    </div>-->
 
                                     <div class="col-12 mt-2">
                                         <label class="form-label">Giới thiệu</label>
