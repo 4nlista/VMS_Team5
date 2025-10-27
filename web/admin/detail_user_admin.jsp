@@ -1,7 +1,7 @@
 <%-- 
-    Document   : profile_admin
-    Created on : Sep 30, 2025, 1:26:44 PM
-    Author     : Admin
+    Document   : user_detail
+    Created on : 10 Oct 2025, 05:46:20
+    Author     : Mirinesa
 --%>
 
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -38,11 +38,12 @@
                         <div class="col-md-9 p-4">
                             <div class="d-flex justify-content-between align-items-start mb-3">
                                 <div>
-                                    <h5 class="fw-bold mb-0">Admin profile</h5>
+                                    <h5 class="fw-bold mb-0">User Details</h5>
                                     <small class="text-muted">Viewing <strong>${user.account.username}</strong>'s account</small>
                                 </div>
                                 <div>
-                                    <a href="AdminProfileEditServlet?id=1" class="btn btn-sm btn-warning">✎ Edit</a>
+                                    <a href="AdminUserServlet" class="btn btn-sm btn-outline-secondary me-2">← Back</a>
+                                    <a href="AdminUserEditServlet?id=${user.id}" class="btn btn-sm btn-warning">✎ Edit</a>
                                 </div>
                             </div>
 

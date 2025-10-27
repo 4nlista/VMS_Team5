@@ -1,36 +1,34 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
 import java.util.Date;
 
-/**
- *
- * @author Admin
- */
 public class User {
-    private int id;
-    private int account_id;
-    private String full_name;
-    private Date dob;
-    private String gender;
-    private String phone;
-    private String email;
-    private String address;
-    private String avatar;
-    private String job_title;
-    private String bio;
 
+    private int id, account_id;
+    private String full_name, gender, phone, email, address, avatar, job_title, bio;
+    private Date dob;  // Sử dụng java.util.Date
+    private Account account;
+
+    // Constructor mặc định
     public User() {
     }
 
-    public User(int id, int account_id, String full_name, Date dob, String gender, String phone, String email, String address, String avatar, String job_title, String bio) {
+    // Constructor với Account
+    public User(int id, int account_id, String full_name, String gender, String avatar, Account account) {
         this.id = id;
         this.account_id = account_id;
         this.full_name = full_name;
-        this.dob = dob;
+        this.gender = gender;
+        this.avatar = avatar;
+        this.account = account;
+    }
+
+    // Constructor đầy đủ với tất cả các thuộc tính
+    public User(int id, int account_id, Account account, String full_name, String gender, String phone, String email, String address, String avatar, String job_title, String bio, Date dob) {
+        this.id = id;
+        this.account_id = account_id;
+        this.account = account;
+        this.full_name = full_name;
         this.gender = gender;
         this.phone = phone;
         this.email = email;
@@ -38,8 +36,10 @@ public class User {
         this.avatar = avatar;
         this.job_title = job_title;
         this.bio = bio;
+        this.dob = dob;
     }
 
+    // Getter và setter cho các thuộc tính
     public int getId() {
         return id;
     }
@@ -48,12 +48,20 @@ public class User {
         this.id = id;
     }
 
-    public int getAccount_id() {
+    public int getAccountId() {
         return account_id;
     }
 
-    public void setAccount_id(int account_id) {
+    public void setAccountId(int account_id) {
         this.account_id = account_id;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     public String getFull_name() {
@@ -62,14 +70,6 @@ public class User {
 
     public void setFull_name(String full_name) {
         this.full_name = full_name;
-    }
-
-    public Date getDob() {
-        return dob;
-    }
-
-    public void setDob(Date dob) {
-        this.dob = dob;
     }
 
     public String getGender() {
@@ -127,6 +127,30 @@ public class User {
     public void setBio(String bio) {
         this.bio = bio;
     }
-    
-    
+
+    public Date getDob() {
+        return dob;
+    }
+
+    public void setDob(Date dob) {
+        this.dob = dob;
+    }
+
+    @Override
+    public String toString() {
+        return "User{"
+                + "id=" + id
+                + ", account_id=" + account_id
+                + ", account=" + account
+                + ", full_name='" + full_name + '\''
+                + ", gender='" + gender + '\''
+                + ", phone='" + phone + '\''
+                + ", email='" + email + '\''
+                + ", address='" + address + '\''
+                + ", avatar='" + avatar + '\''
+                + ", job_title='" + job_title + '\''
+                + ", bio='" + bio + '\''
+                + ", dob=" + dob
+                + '}';
+    }
 }

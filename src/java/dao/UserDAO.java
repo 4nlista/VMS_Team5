@@ -64,7 +64,7 @@ public class UserDAO {
         String sql = "INSERT INTO Users (account_id, full_name, dob, gender, phone, email, address, avatar, job_title, bio) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, user.getAccount_id());
+            ps.setInt(1, user.getAccountId());
             ps.setString(2, user.getFull_name());
             if (user.getDob() != null) {
                 ps.setDate(3, new java.sql.Date(user.getDob().getTime()));

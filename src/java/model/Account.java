@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package model;
+import java.sql.Timestamp;
 
 /**
  *
@@ -15,6 +16,7 @@ public class Account {
     private String password;
     private String role;
     private boolean status;
+    private Timestamp created_at;
 
     public Account() {
     }
@@ -25,6 +27,15 @@ public class Account {
         this.password = password;
         this.role = role;
         this.status = status;
+    }
+    
+    public Account(int id, String username, String password, String role, boolean status, Timestamp created_at){
+	    this.id = id;
+	    this.username = username;
+	    this.password = password;
+	    this.role = role;
+	    this.status = status;
+	    this.created_at = created_at;
     }
 
     public int getId() {
@@ -65,6 +76,14 @@ public class Account {
 
     public void setStatus(boolean status) {
         this.status = status;
+    }
+    
+    public Timestamp getCreatedAt(){
+	    return created_at;
+    }
+    
+    public void setCreatedAt(Timestamp created_at){
+	    this.created_at = created_at;
     }
 
     @Override

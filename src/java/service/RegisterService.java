@@ -50,7 +50,7 @@ public class RegisterService {
         }
 
         // 4. Liên kết account_id vào user và lưu user
-        user.setAccount_id(accountId);
+        user.setAccountId(accountId);
         boolean inserted = userDAO.insertUser(user);
 
         if (!inserted) {
