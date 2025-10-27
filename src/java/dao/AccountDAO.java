@@ -188,29 +188,5 @@ public class AccountDAO {
         return null;
     }
 
-    public static void main(String[] args) {
-        AccountDAO dao = new AccountDAO();
-
-        int accountId = 1; // ID của account test
-        String newPassword = "123"; // mật khẩu mới test
-
-        // Hash mật khẩu mới
-        String hashedPassword = PasswordUtil.hashPassword(newPassword);
-
-        // Gọi hàm update
-        boolean updated = dao.updatePasswordByUser(accountId, hashedPassword);
-
-        System.out.println("Update thành công? " + updated);
-
-        // Lấy lại mật khẩu từ DB
-        String dbPassword = dao.getPasswordHashById(accountId);
-        System.out.println("Mật khẩu trong DB hiện tại: " + dbPassword);
-
-        if (hashedPassword.equals(dbPassword)) {
-            System.out.println("Hàm updatePasswordByUser hoạt động đúng!");
-        } else {
-            System.out.println("Hàm updatePasswordByUser vẫn chưa update được mật khẩu.");
-        }
-    }
 
 }
