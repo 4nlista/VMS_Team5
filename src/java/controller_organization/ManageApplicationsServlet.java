@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.List;
 import model.EventVolunteerInfo;
 
-@WebServlet("/organization/manage-applications")
+@WebServlet("/ManageApplicationsServlet")
 public class ManageApplicationsServlet extends HttpServlet {
 
     private final EventVolunteerDAO evDAO = new EventVolunteerDAO();
@@ -31,7 +31,7 @@ public class ManageApplicationsServlet extends HttpServlet {
 
         List<EventVolunteerInfo> list = evDAO.getPendingVolunteersByOrganization(orgId);
         request.setAttribute("applications", list);
-        request.getRequestDispatcher("/organization/manage_applications.jsp").forward(request, response);
+        request.getRequestDispatcher("/organization/users_org.jsp").forward(request, response);
     }
 
     @Override

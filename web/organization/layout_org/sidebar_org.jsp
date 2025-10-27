@@ -32,8 +32,8 @@
                 </a>
             </li>
             <li>
-                <a href="<%= request.getContextPath() %>/organization/users_org.jsp"
-                   class="nav-link text-white <%= currentPath.endsWith("/users_org.jsp") ? "active" : "" %>">
+                <a href="<%= request.getContextPath() %>/ManageApplicationsServlet"
+                   class="nav-link text-white <%= currentPath.endsWith("/ManageApplicationsServlet") ? "active" : "" %>">
                     <i class="bi bi-person-lines-fill me-2"></i>
                     Quản lí người dùng
                 </a>
