@@ -68,10 +68,11 @@ public class LoginDAO {
     private Account mapAccount(ResultSet rs) throws Exception {
         return new Account(
                 rs.getInt("id"),
-                    rs.getString("username"),
+                rs.getString("username"),
                 rs.getString("password"),
                 rs.getString("role"),
-                rs.getBoolean("status")
+                rs.getBoolean("status"),
+                rs.getDate("created_at")
         );
     }
 
