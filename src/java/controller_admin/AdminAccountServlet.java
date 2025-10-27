@@ -78,6 +78,22 @@ public class AdminAccountServlet extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/AdminAccountServlet");
                 break;
             }
+            case "delete": {
+                String idRaw = request.getParameter("id");
+                try {
+                    int id = Integer.parseInt(idRaw);
+                    boolean ok = accountService.deleteAccount(id);
+                    if (!ok) {
+                        response.sendRedirect(request.getContextPath() + "/AdminAccountServlet?msg=delete_failed");
+                        break;
+                    }
+                } catch (NumberFormatException ignored) {
+                    response.sendRedirect(request.getContextPath() + "/AdminAccountServlet?msg=delete_failed");
+                    break;
+                }
+                response.sendRedirect(request.getContextPath() + "/AdminAccountServlet?msg=deleted");
+                break;
+            }
             default: {
                 response.sendRedirect(request.getContextPath() + "/AdminAccountServlet");
             }

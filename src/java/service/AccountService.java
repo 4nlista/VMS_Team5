@@ -38,6 +38,10 @@ public class AccountService {
             return false;
         }
         boolean newStatus = !acc.isStatus();
+        // Không cho phép khóa tài khoản có role admin
+        if ("admin".equalsIgnoreCase(acc.getRole()) && !newStatus) {
+            return false;
+        }
         return accountDAO.updateAccountStatus(id, newStatus);
     }
 
@@ -64,6 +68,15 @@ public class AccountService {
         int safePageSize = Math.max(1, pageSize);
         int offset = (safePage - 1) * safePageSize;
         return accountDAO.findAccountsPaged(normalizedRole, status, trimmedSearch, offset, safePageSize);
+    }
+
+    // 6. Xóa account (không cho xóa admin) và toàn bộ dữ liệu liên quan
+    public boolean deleteAccount(int id) {
+        Account acc = accountDAO.getAccountById(id);
+        if (acc == null) return false;
+        if ("admin".equalsIgnoreCase(acc.getRole())) return false;
+        // Thực hiện xóa cascade an toàn trong transaction
+        return accountDAO.deleteAccountCascade(id);
     }
 
 }
