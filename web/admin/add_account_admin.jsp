@@ -51,7 +51,7 @@
 
                 <div class="card">
                     <div class="card-body">
-                        <form action="<%= request.getContextPath() %>/AddAccountServlet" method="post" enctype="multipart/form-data" id="createAccountForm">
+                        <form action="<%= request.getContextPath() %>/AddAccountServlet" method="post" enctype="multipart/form-data" id="createAccountForm" novalidate>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="username" class="form-label">
@@ -60,6 +60,7 @@
                                     </label>
                                     <input type="text" class="form-control" id="username" name="username" 
                                            placeholder="Nhập tên đăng nhập" required maxlength="50">
+                                    <small class="text-danger fst-italic" id="username-error"></small>
                                 </div>
 
                                 <div class="col-md-6 mb-3">
@@ -84,7 +85,8 @@
                                     </label>
                                     <input type="password" class="form-control" id="password" name="password" 
                                            placeholder="Nhập mật khẩu" required minlength="3">
-                                    <small class="text-muted">Mật khẩu tối thiểu 3 ký tự</small>
+                                    <!-- <small class="text-muted">Mật khẩu tối thiểu 3 ký tự</small> -->
+                                    <small class="text-danger fst-italic" id="password-error"></small>
                                 </div>
 
                                 <div class="col-md-6 mb-3">
@@ -94,7 +96,7 @@
                                     </label>
                                     <input type="password" class="form-control" id="confirm_password" 
                                            placeholder="Nhập lại mật khẩu" required minlength="3">
-                                    <small class="text-danger" id="password-match-error"></small>
+                                    <small class="text-danger fst-italic" id="password-match-error"></small>
                                 </div>
                             </div>
 
@@ -106,6 +108,7 @@
                                     </label>
                                     <input type="text" class="form-control" id="full_name" name="full_name" 
                                            placeholder="Nhập họ và tên" required maxlength="100">
+                                    <small class="text-danger fst-italic" id="full-name-error"></small>
                                 </div>
 
                                 <div class="col-md-6 mb-3">
@@ -114,7 +117,9 @@
                                         Email <span class="text-danger">*</span>
                                     </label>
                                     <input type="email" class="form-control" id="email" name="email" 
-                                           placeholder="example@email.com" required maxlength="100">
+                                           placeholder="example@email.com" required maxlength="100"
+                                           pattern="^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$" title="Email không đúng định dạng (ví dụ: name@example.com)">
+                                    <small class="text-danger fst-italic" id="email-error"></small>
                                 </div>
                             </div>
 
@@ -125,7 +130,8 @@
                                         Số điện thoại
                                     </label>
                                     <input type="text" class="form-control" id="phone" name="phone" 
-                                           placeholder="0123456789" maxlength="20">
+                                           placeholder="0123456789" maxlength="11" inputmode="numeric" pattern="^\d{10,11}$" title="Số điện thoại phải gồm 10-11 chữ số" autocomplete="tel">
+                                    <small class="text-danger fst-italic" id="phone-error"></small>
                                 </div>
 
                                 <div class="col-md-4 mb-3">
@@ -149,6 +155,7 @@
                                         <option value="active" selected>Hoạt động (Active)</option>
                                         <option value="inactive">Khóa (Inactive)</option>
                                     </select>
+                                    <small class="text-danger fst-italic" id="status-error"></small>
                                 </div>
                             </div>
 
@@ -192,6 +199,7 @@
                                         Ngày sinh
                                     </label>
                                     <input type="date" class="form-control" id="dob" name="dob">
+                                    <small class="text-danger fst-italic" id="dob-error"></small>
                                 </div>
                             </div>
 
@@ -228,28 +236,264 @@
             const password = document.getElementById('password');
             const confirmPassword = document.getElementById('confirm_password');
             const errorMsg = document.getElementById('password-match-error');
+            if (errorMsg) { errorMsg.classList.add('text-danger', 'fst-italic'); }
+            const phoneInput = document.getElementById('phone');
+            const emailInput = document.getElementById('email');
+            const dobInput = document.getElementById('dob');
+            const usernameInput = document.getElementById('username');
+            const usernameError = document.getElementById('username-error');
+            const passwordError = document.getElementById('password-error');
+            const fullNameInput = document.getElementById('full_name');
+            const fullNameError = document.getElementById('full-name-error');
+            const statusSelect = document.getElementById('status');
+            const statusError = document.getElementById('status-error');
 
             function validatePassword() {
-                if (password.value !== confirmPassword.value) {
+                const passVal = (password.value || '');
+                const confirmVal = (confirmPassword.value || '');
+                if (confirmVal.length === 0) {
+                    errorMsg.textContent = 'Trường này là bắt buộc';
+                    confirmPassword.classList.add('is-invalid');
+                    return false;
+                }
+                if (passVal !== confirmVal) {
                     errorMsg.textContent = 'Mật khẩu không khớp';
                     confirmPassword.classList.add('is-invalid');
                     return false;
-                } else {
-                    errorMsg.textContent = '';
-                    confirmPassword.classList.remove('is-invalid');
-                    return true;
                 }
+                errorMsg.textContent = '';
+                confirmPassword.classList.remove('is-invalid');
+                return true;
             }
 
             confirmPassword.addEventListener('keyup', validatePassword);
             password.addEventListener('keyup', validatePassword);
 
             form.addEventListener('submit', function(e) {
+                // Password check
                 if (!validatePassword()) {
                     e.preventDefault();
                     return false;
                 }
+
+                // Required fields check
+                let requiredOk = true;
+                function markRequired(el, errEl) {
+                    if (!el) return;
+                    const value = (el.value || '').trim();
+                    if (value.length === 0) {
+                        requiredOk = false;
+                        el.classList.add('is-invalid');
+                        if (errEl) errEl.textContent = 'Trường này là bắt buộc';
+                    } else {
+                        el.classList.remove('is-invalid');
+                        if (errEl) errEl.textContent = '';
+                    }
+                }
+
+                markRequired(usernameInput, usernameError);
+                markRequired(password, passwordError);
+                // Enforce password min length 3
+                if ((password.value || '').length > 0 && password.value.length < 3) {
+                    requiredOk = false;
+                    password.classList.add('is-invalid');
+                    if (passwordError) passwordError.textContent = 'Mật khẩu tối thiểu 3 ký tự';
+                }
+                markRequired(fullNameInput, fullNameError);
+                if (statusSelect) {
+                    if (!statusSelect.value) {
+                        requiredOk = false;
+                        statusSelect.classList.add('is-invalid');
+                        if (statusError) statusError.textContent = 'Trường này là bắt buộc';
+                    } else {
+                        statusSelect.classList.remove('is-invalid');
+                        if (statusError) statusError.textContent = '';
+                    }
+                }
+
+                if (!requiredOk) {
+                    e.preventDefault();
+                    return false;
+                }
+
+                // Optional phone: if provided, must be 10-11 digits
+                const phone = phoneInput.value.trim();
+                const phoneError = document.getElementById('phone-error');
+                if (phone.length > 0) {
+                    const phoneOk = /^\d{10,11}$/.test(phone);
+                    if (!phoneOk) {
+                        e.preventDefault();
+                        phoneInput.classList.add('is-invalid');
+                        phoneInput.setCustomValidity('Số điện thoại phải gồm 10-11 chữ số');
+                        if (phoneError) phoneError.textContent = 'Số điện thoại phải gồm 10-11 chữ số';
+                        return false;
+                    } else {
+                        phoneInput.classList.remove('is-invalid');
+                        phoneInput.setCustomValidity('');
+                        if (phoneError) phoneError.textContent = '';
+                    }
+                } else {
+                    phoneInput.classList.remove('is-invalid');
+                    phoneInput.setCustomValidity('');
+                    if (phoneError) phoneError.textContent = '';
+                }
+
+                // Email pattern check (HTML pattern also enforces)
+                const emailVal = emailInput.value.trim();
+                const emailError = document.getElementById('email-error');
+                const emailOk = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(emailVal);
+                if (!emailOk) {
+                    e.preventDefault();
+                    emailInput.classList.add('is-invalid');
+                    emailInput.setCustomValidity('Email không đúng định dạng');
+                    if (emailError) emailError.textContent = 'Email không đúng định dạng';
+                    return false;
+                } else {
+                    emailInput.classList.remove('is-invalid');
+                    emailInput.setCustomValidity('');
+                    if (emailError) emailError.textContent = '';
+                }
+
+                // DOB must not be in the future
+                if (dobInput.value) {
+                    const dobError = document.getElementById('dob-error');
+                    const today = new Date();
+                    today.setHours(0,0,0,0);
+                    const dobDate = new Date(dobInput.value);
+                    if (dobDate > today) {
+                        e.preventDefault();
+                        dobInput.classList.add('is-invalid');
+                        dobInput.setCustomValidity('Ngày sinh không được vượt quá ngày hiện tại');
+                        if (dobError) dobError.textContent = 'Ngày sinh không được vượt quá ngày hiện tại';
+                        return false;
+                    } else {
+                        dobInput.classList.remove('is-invalid');
+                        dobInput.setCustomValidity('');
+                        if (dobError) dobError.textContent = '';
+                    }
+                }
             });
+
+            // Live required validation for generic fields
+            function validateRequiredLive(el, errEl) {
+                if (!el) return;
+                const handler = () => {
+                    const val = (el.value || '').trim();
+                    if (val.length === 0) {
+                        el.classList.add('is-invalid');
+                        if (errEl) errEl.textContent = 'Trường này là bắt buộc';
+                    } else {
+                        el.classList.remove('is-invalid');
+                        if (errEl) errEl.textContent = '';
+                    }
+                };
+                el.addEventListener('input', handler);
+                el.addEventListener('change', handler);
+            }
+
+            validateRequiredLive(usernameInput, usernameError);
+            validateRequiredLive(password, passwordError);
+            validateRequiredLive(fullNameInput, fullNameError);
+            // Live password length validation
+            if (password) {
+                password.addEventListener('input', () => {
+                    const val = password.value || '';
+                    if (val.length > 0 && val.length < 3) {
+                        password.classList.add('is-invalid');
+                        if (passwordError) passwordError.textContent = 'Mật khẩu tối thiểu 3 ký tự';
+                    } else {
+                        password.classList.remove('is-invalid');
+                        if (passwordError) passwordError.textContent = '';
+                    }
+                });
+            }
+            // Live phone validation (optional)
+            if (phoneInput) {
+                const phoneError = document.getElementById('phone-error');
+                phoneInput.addEventListener('input', () => {
+                    const val = (phoneInput.value || '').trim();
+                    if (val.length === 0) {
+                        phoneInput.classList.remove('is-invalid');
+                        phoneInput.setCustomValidity('');
+                        if (phoneError) phoneError.textContent = '';
+                        return;
+                    }
+                    const ok = /^\d{10,11}$/.test(val);
+                    if (ok) {
+                        phoneInput.classList.remove('is-invalid');
+                        phoneInput.setCustomValidity('');
+                        if (phoneError) phoneError.textContent = '';
+                    } else {
+                        phoneInput.classList.add('is-invalid');
+                        phoneInput.setCustomValidity('Số điện thoại phải gồm 10-11 chữ số');
+                        if (phoneError) phoneError.textContent = 'Số điện thoại phải gồm 10-11 chữ số';
+                    }
+                });
+            }
+
+            // Live email validation (required + pattern)
+            if (emailInput) {
+                const emailError = document.getElementById('email-error');
+                emailInput.addEventListener('input', () => {
+                    const val = (emailInput.value || '').trim();
+                    if (val.length === 0) {
+                        emailInput.classList.add('is-invalid');
+                        emailInput.setCustomValidity('Trường này là bắt buộc');
+                        if (emailError) emailError.textContent = 'Trường này là bắt buộc';
+                        return;
+                    }
+                    const ok = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(val);
+                    if (ok) {
+                        emailInput.classList.remove('is-invalid');
+                        emailInput.setCustomValidity('');
+                        if (emailError) emailError.textContent = '';
+                    } else {
+                        emailInput.classList.add('is-invalid');
+                        emailInput.setCustomValidity('Email không đúng định dạng');
+                        if (emailError) emailError.textContent = 'Email không đúng định dạng';
+                    }
+                });
+            }
+            if (statusSelect) {
+                statusSelect.addEventListener('change', () => {
+                    statusSelect.classList.remove('is-invalid');
+                    if (statusError) statusError.textContent = '';
+                });
+                // Also validate required live for select
+                statusSelect.addEventListener('input', () => {
+                    if (!statusSelect.value) {
+                        statusSelect.classList.add('is-invalid');
+                        if (statusError) statusError.textContent = 'Trường này là bắt buộc';
+                    } else {
+                        statusSelect.classList.remove('is-invalid');
+                        if (statusError) statusError.textContent = '';
+                    }
+                });
+            }
+
+            // Live DOB validation to prevent future date input
+            if (dobInput) {
+                const dobError = document.getElementById('dob-error');
+                const validateDobLive = () => {
+                    if (!dobInput.value) {
+                        dobInput.classList.remove('is-invalid');
+                        if (dobError) dobError.textContent = '';
+                        return;
+                    }
+                    const today = new Date();
+                    today.setHours(0,0,0,0);
+                    const dobDate = new Date(dobInput.value);
+                    if (dobDate > today) {
+                        dobInput.classList.add('is-invalid');
+                        if (dobError) dobError.textContent = 'Ngày sinh không được vượt quá ngày hiện tại';
+                    } else {
+                        dobInput.classList.remove('is-invalid');
+                        if (dobError) dobError.textContent = '';
+                    }
+                };
+                dobInput.addEventListener('change', validateDobLive);
+                dobInput.addEventListener('input', validateDobLive);
+            }
 
             // Preview avatar
             function previewAvatar(input) {
@@ -275,6 +519,16 @@
                     alert.close();
                 }, 3000);
             }
+
+            // Set max attribute for dob to today to prevent future picks in UI
+            (function setDobMaxToday(){
+                if (!dobInput) return;
+                const today = new Date();
+                const yyyy = today.getFullYear();
+                const mm = String(today.getMonth() + 1).padStart(2, '0');
+                const dd = String(today.getDate()).padStart(2, '0');
+                dobInput.max = `${yyyy}-${mm}-${dd}`;
+            })();
         </script>
     </body>
 </html>
