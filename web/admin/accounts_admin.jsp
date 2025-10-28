@@ -31,6 +31,12 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 </c:if>
+                <c:if test="${param.msg == 'created_successfully'}">
+                    <div class="alert alert-success alert-dismissible fade show" role="alert" id="create-success-alert">
+                        Đã tạo tài khoản mới thành công.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </c:if>
                 <c:if test="${param.msg == 'delete_failed'}">
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                         Không thể xóa tài khoản. Có thể là tài khoản quyền admin hoặc đang có dữ liệu liên quan.
@@ -64,7 +70,7 @@
                         </a>
                     </form>
 
-                    <a href="add_account.jsp" class="btn btn-primary">
+                    <a href="<%= request.getContextPath() %>/admin/add_account_admin.jsp" class="btn btn-primary">
                         <i class="bi bi-plus-circle"></i> Tạo tài khoản
                     </a>
                 </div>
@@ -288,10 +294,18 @@
             }
 
             // Tự động ẩn alert thành công sau 3 giây
-            const successAlert = document.getElementById('delete-success-alert');
-            if (successAlert) {
+            const deleteSuccessAlert = document.getElementById('delete-success-alert');
+            if (deleteSuccessAlert) {
                 setTimeout(() => {
-                    const alert = new bootstrap.Alert(successAlert);
+                    const alert = new bootstrap.Alert(deleteSuccessAlert);
+                    alert.close();
+                }, 3000);
+            }
+            
+            const createSuccessAlert = document.getElementById('create-success-alert');
+            if (createSuccessAlert) {
+                setTimeout(() => {
+                    const alert = new bootstrap.Alert(createSuccessAlert);
                     alert.close();
                 }, 3000);
             }
