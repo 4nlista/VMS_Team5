@@ -8,18 +8,22 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.util.List;
 import model.Account;
 import service.AccountService;
+import service.AdminHomeService;
 
 @WebServlet(name = "AdminHomeServlet", urlPatterns = {"/AdminHomeServlet"})
 
 public class AdminHomeServlet extends HttpServlet {
 
     private AccountService accountService;
+    private AdminHomeService adminHomeService;
 
     @Override
     public void init() {
         accountService = new AccountService();
+        adminHomeService = new AdminHomeService();
     }
 
     @Override
@@ -32,10 +36,11 @@ public class AdminHomeServlet extends HttpServlet {
         Account sessionAccount = (Account) session.getAttribute("account");
         Account acc = accountService.getAccountById(sessionAccount.getId());
         if (acc == null || !acc.getRole().equals("admin")) {
-
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "Truy cập bị từ chối");
             return;
         }
+        int totalAccounts = adminHomeService.getTotalAccount();
+        request.setAttribute("totalAccounts", totalAccounts); 
         request.setAttribute("username", acc.getUsername());
         request.getRequestDispatcher("/admin/home_admin.jsp").forward(request, response);
     }

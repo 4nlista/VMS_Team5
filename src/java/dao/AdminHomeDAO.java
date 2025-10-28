@@ -29,11 +29,15 @@ public class AdminHomeDAO {
         }
     }
 
-    public List<Account> getTotalAccount() {
-        List<Account> list = new ArrayList<>();
-        String sql = """
-                     SELECT COUNT(*) FROM Accounts;
-                     """;
-        return list;
+    public int getTotalAccount() {
+        String sql = "SELECT COUNT(*) AS total FROM Accounts";
+        try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return 0;
     }
 }
