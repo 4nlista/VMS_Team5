@@ -59,7 +59,7 @@
                                 <span class="badge bg-warning text-dark"><%= v.getStatus() %></span>
                             </td>
                             <td class="text-center">
-                                <form action="<%= request.getContextPath() %>/organization/manage-applications" method="post" style="display:inline-block;">
+                                <form action="<%= request.getContextPath() %>/ManageApplicationsServlet" method="post" style="display:inline-block;">
                                     <input type="hidden" name="applyId" value="<%= v.getApplyId() %>"/>
                                     <button type="submit" name="action" value="approve" class="btn btn-success btn-sm">Duyệt</button>
                                     <button type="submit" name="action" value="reject" class="btn btn-danger btn-sm">Từ chối</button>

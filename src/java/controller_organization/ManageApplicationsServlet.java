@@ -25,7 +25,7 @@ public class ManageApplicationsServlet extends HttpServlet {
         Integer orgId = (Integer) session.getAttribute("accountId");
 
         if (orgId == null) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
             return;
         }
 
@@ -44,6 +44,6 @@ public class ManageApplicationsServlet extends HttpServlet {
 
         evDAO.updateStatus(applyId, newStatus);
 
-        response.sendRedirect(request.getContextPath() + "/organization/manage-applications");
+        response.sendRedirect(request.getContextPath() + "/ManageApplicationsServlet");
     }
 }
