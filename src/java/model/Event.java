@@ -12,6 +12,7 @@ import java.util.Date;
  */
 public class Event {
     private int id;                         // ID sự kiện
+    private String images;                  // anh su kien
     private String title;                   // Tiêu đề
     private String description;             // Mô tả
     private Date startDate;                 // Ngày bắt đầu
@@ -28,6 +29,34 @@ public class Event {
 
     public Event() {
     }
+
+    public Event(int id, String images, String title, String description, Date startDate, Date endDate, String location, int neededVolunteers, String status, String visibility, int organizationId, int categoryId, double totalDonation, String organizationName, String categoryName) {
+        this.id = id;
+        this.images = images;
+        this.title = title;
+        this.description = description;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.location = location;
+        this.neededVolunteers = neededVolunteers;
+        this.status = status;
+        this.visibility = visibility;
+        this.organizationId = organizationId;
+        this.categoryId = categoryId;
+        this.totalDonation = totalDonation;
+        this.organizationName = organizationName;
+        this.categoryName = categoryName;
+    }
+
+    public String getImages() {
+        return images;
+    }
+
+    public void setImages(String images) {
+        this.images = images;
+    }
+    
+    
 
     public Event(int id, String title, String description, Date startDate, Date endDate, String location, int neededVolunteers, String status, String visibility, int organizationId, int categoryId, double totalDonation, String organizationName, String categoryName) {
         this.id = id;

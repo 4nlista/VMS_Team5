@@ -48,6 +48,7 @@ public class ViewEventsDAO {
                 Event e = new Event(
                         rs.getInt("id"),
                         rs.getString("title"),
+                        rs.getString("images"),
                         rs.getString("description"),
                         rs.getTimestamp("start_date"),
                         rs.getTimestamp("end_date"),
@@ -92,6 +93,7 @@ public class ViewEventsDAO {
                 Event e = new Event(
                         rs.getInt("id"),
                         rs.getString("title"),
+                        rs.getString("images"),
                         rs.getString("description"),
                         rs.getTimestamp("start_date"),
                         rs.getTimestamp("end_date"),
@@ -138,6 +140,7 @@ public class ViewEventsDAO {
                     Event e = new Event(
                             rs.getInt("id"),
                             rs.getString("title"),
+                            rs.getString("images"),
                             rs.getString("description"),
                             rs.getTimestamp("start_date"),
                             rs.getTimestamp("end_date"),
