@@ -30,7 +30,7 @@
                                 <div class="row align-items-start">
                                     <!-- Avatar -->
                                     <div class="col-md-3 text-center border-end pe-2">
-                                        <img src="${not empty user.avatar ? user.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}"
+                                        <img src="${not empty user.avatar ? user.avatar : user.avatar}"
                                              name="avatar"
                                              class="img-fluid rounded-circle border border-2 border-secondary-subtle shadow-sm mb-1"
                                              style="width: 100px; height: 100px; object-fit: cover;"

@@ -49,7 +49,7 @@ public class AdminProfileEditServlet extends HttpServlet {
 			boolean avatarOk = profileService.handleAvatarUpload(request, userId);
 
 			if (avatarOk) {
-				response.sendRedirect("AdminUserServlet?success=updated");
+				response.sendRedirect("AdminProfileServlet?id=1");
 			} else {
 				// avatar validation failed -> forward back to edit with errors (do not redirect)
 				try {
