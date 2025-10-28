@@ -7,7 +7,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.sql.*" %>
 <%@ page import="utils.DBContext" %>
-<%@ page import="dao.AccountDAO" %>
+<%@ page import="dao.AdminAccountDAO" %>
 <%@ page import="model.Account" %>
 <!DOCTYPE html>
 <html>
@@ -43,7 +43,7 @@
                         String gender = null;
                         Date dob = null;
                         if (accountId != null) {
-                            AccountDAO dao = new AccountDAO();
+                            AdminAccountDAO dao = new AdminAccountDAO();
                             account = dao.getAccountById(accountId);
                             try (Connection c = DBContext.getConnection();
                                  PreparedStatement ps = c.prepareStatement("SELECT full_name, email, phone, avatar, gender, dob FROM Users WHERE account_id = ?")) {
