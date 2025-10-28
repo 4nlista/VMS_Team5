@@ -203,6 +203,27 @@ public class AdminProfileService {
 			errors = new HashMap<>();
 		}
 
+		// check delete request
+		String deleteFlag = request.getParameter("delete_avatar");
+		boolean wantsDelete = "1".equals(deleteFlag) || "on".equalsIgnoreCase(deleteFlag) || "true".equalsIgnoreCase(deleteFlag);
+
+		if (wantsDelete) {
+			try {
+				boolean ok = userDAO.updateAvatar(userId, null);
+				if (!ok) {
+					errors.put("avatar", "Failed to remove avatar in database.");
+					request.setAttribute("errors", errors);
+					return false;
+				}
+				return true;
+			} catch (Exception e) {
+				e.printStackTrace();
+				errors.put("avatar", "Failed to remove avatar: unexpected error.");
+				request.setAttribute("errors", errors);
+				return false;
+			}
+		}
+
 		Part avatarPart = null;
 		try {
 			avatarPart = request.getPart("avatar");
@@ -244,11 +265,10 @@ public class AdminProfileService {
 				ext = filename.substring(dot);
 			}
 
-			String uploadsRelative = "/uploads/user_avatars";
-			String uploadsAbsolute = "C:\\Users\\DELL\\Downloads\\uploads\\user_avatars";  // FIXED LOCAL PATH OUTSIDE PROJECT
-			// Fallback
+			String uploadsRelative = "/uploads/avatars";
+			String uploadsAbsolute = request.getServletContext().getRealPath(uploadsRelative);
 			if (uploadsAbsolute == null) {
-				uploadsAbsolute = System.getProperty("java.io.tmpdir") + File.separator + "uploads" + File.separator + "user_avatars";
+				uploadsAbsolute = System.getProperty("java.io.tmpdir") + File.separator + "uploads" + File.separator + "avatars";
 			}
 			File uploadsDir = new File(uploadsAbsolute);
 			if (!uploadsDir.exists() && !uploadsDir.mkdirs()) {

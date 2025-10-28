@@ -373,12 +373,11 @@ public class AdminUserService {
 		}
 
 		// Paths
-		String uploadPath = "C:\\Users\\DELL\\Downloads\\uploads\\user_avatars";
+		String realPath = request.getServletContext().getRealPath("");
+		String uploadPath = realPath + File.separator + "uploads" + File.separator + "avatars";
 		File uploadDir = new File(uploadPath);
 		if (!uploadDir.exists()) {
-			if (!uploadDir.mkdirs()) {
-				throw new IOException("Failed to create upload directory.");
-			}
+			uploadDir.mkdirs();
 		}
 
 		// Generate unique file name
@@ -391,7 +390,7 @@ public class AdminUserService {
 		avatarPart.write(fullFilePath);
 
 		// Build URL for DB
-		String avatarUrl = request.getContextPath() + "/uploads/user_avatars/" + fileName;
+		String avatarUrl = request.getContextPath() + "/uploads/avatars/" + fileName;
 
 		// Update database
 		boolean ok = userDAO.updateAvatar(userId, avatarUrl);
