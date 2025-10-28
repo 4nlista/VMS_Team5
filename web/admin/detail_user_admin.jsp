@@ -11,68 +11,63 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta charset="UTF-8">
+        <title>User Detail</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
         <link href="<%= request.getContextPath() %>/admin/css/admin.css" rel="stylesheet" />
         <link href="<%= request.getContextPath() %>/admin/css/user_admin.css" rel="stylesheet" />
     </head>
     <body>
-        <div class="content-container">
+        <div class="content-container d-flex">
             <!-- Sidebar -->
             <jsp:include page="layout_admin/sidebar_admin.jsp" />
 
-            <!-- Main Content (centered) -->
-            <div class="main-content">
-                <div class="container-detail shadow-sm bg-white rounded">
+            <!-- Main Content -->
+            <div class="main-content flex-grow-1">
+                <div class="container-detail shadow bg-white">
                     <div class="row g-0">
                         <!-- LEFT: Avatar -->
-                        <div class="col-md-3 profile-left p-4 text-center">
-                            <img img src="${not empty user.avatar ? user.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}" alt="avatar" class="rounded-circle avatar-lg mb-3 border p-2"/>
-                            <div class="fw-semibold">${fn:escapeXml(user.full_name)}</div>
-                            <div class="text-muted small">${user.account.username}</div>
+                        <div class="col-md-4 profile-left d-flex flex-column align-items-center justify-content-center text-center p-4">
+                            <img src="${not empty user.avatar ? user.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}"
+                                 alt="avatar" class="rounded-circle avatar-lg mb-3 border border-2 border-light shadow-sm"/>
+                            <div class="fw-semibold fs-5">${fn:escapeXml(user.full_name)}</div>
+                            <div class="text-muted small">@${user.account.username}</div>
+                            <div class="mt-3 text-muted small fst-italic">${fn:escapeXml(user.job_title)}</div>
                         </div>
 
-                        <!-- RIGHT: All fields  -->
-                        <div class="col-md-9 p-4">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
+                        <!-- RIGHT: Fields -->
+                        <div class="col-md-8 p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-4">
                                 <div>
-                                    <h5 class="fw-bold mb-0">User Details</h5>
+                                    <h5 class="mb-0">User Details</h5>
                                     <small class="text-muted">Viewing <strong>${user.account.username}</strong>'s account</small>
                                 </div>
                                 <div>
-                                    <a href="AdminUserServlet" class="btn btn-sm btn-outline-secondary me-2">← Back</a>
-                                    <a href="AdminUserEditServlet?id=${user.id}" class="btn btn-sm btn-warning">✎ Edit</a>
+                                    <a href="AdminUserServlet" class="btn btn-sm btn-outline-secondary me-2">
+                                        <i class="bi bi-arrow-left"></i> Back
+                                    </a>
+                                    <a href="AdminUserEditServlet?id=${user.id}" class="btn btn-sm btn-warning text-white">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </a>
                                 </div>
                             </div>
 
                             <form>
-                                <div class="row g-2">
+                                <div class="row g-3">
                                     <div class="col-md-6">
                                         <label class="form-label">ID</label>
                                         <input type="text" class="form-control form-control-sm" value="${user.id}" readonly>
                                     </div>
-
                                     <div class="col-md-6">
                                         <label class="form-label">Username</label>
                                         <input type="text" class="form-control form-control-sm" value="${user.account.username}" readonly>
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label class="form-label">Full Name</label>
-                                        <input type="text" class="form-control form-control-sm" value="${fn:escapeXml(user.full_name)}" readonly>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label class="form-label">Job Title</label>
-                                        <input type="text" class="form-control form-control-sm" value="${fn:escapeXml(user.job_title)}" readonly>
-                                    </div>
-
-                                    <div class="col-md-6">
                                         <label class="form-label">Gender</label>
                                         <input type="text" class="form-control form-control-sm" value="${user.gender}" readonly>
                                     </div>
-
                                     <div class="col-md-6">
                                         <label class="form-label">Date of Birth</label>
                                         <c:choose>
@@ -90,9 +85,8 @@
                                         <label class="form-label">Address</label>
                                         <input type="text" class="form-control form-control-sm" value="${fn:escapeXml(user.address)}" readonly>
                                     </div>
-
                                     <div class="col-md-6">
-                                        <label class="form-label">Phone number</label>
+                                        <label class="form-label">Phone</label>
                                         <input type="text" class="form-control form-control-sm" value="${user.phone}" readonly>
                                     </div>
 
@@ -105,9 +99,8 @@
                                         <label class="form-label">Role</label>
                                         <input type="text" class="form-control form-control-sm fw-bold text-danger" value="${user.account.role}" readonly>
                                     </div>
-
                                     <div class="col-md-6">
-                                        <label class="form-label">Account created at</label>
+                                        <label class="form-label">Account Created At</label>
                                         <c:choose>
                                             <c:when test="${not empty user.account.createdAt}">
                                                 <fmt:formatDate value="${user.account.createdAt}" pattern="HH:mm:ss / dd-MM-yyyy" var="acctCreated"/>
@@ -119,9 +112,9 @@
                                         </c:choose>
                                     </div>
 
-                                    <div class="col-12 mt-2">
+                                    <div class="col-12">
                                         <label class="form-label">Bio</label>
-                                        <textarea class="form-control form-control-sm" style="resize:none;"rows="6" readonly>${fn:escapeXml(user.bio)}</textarea>
+                                        <textarea class="form-control form-control-sm" style="resize:none;" rows="5" readonly>${fn:escapeXml(user.bio)}</textarea>
                                     </div>
                                 </div>
                             </form>
@@ -130,7 +123,7 @@
                 </div>
             </div>
         </div>
+
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="<%= request.getContextPath() %>/admin/js/detail_user_admin.js"></script>
     </body>
 </html>

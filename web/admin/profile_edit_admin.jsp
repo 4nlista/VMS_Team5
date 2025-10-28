@@ -9,154 +9,128 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Edit User</title>
+        <title>Edit Admin Profile</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
         <link href="<%= request.getContextPath() %>/admin/css/admin.css" rel="stylesheet" />
         <link href="<%= request.getContextPath() %>/admin/css/user_admin.css" rel="stylesheet" />
     </head>
+
     <body>
         <div class="content-container">
-            <!-- Sidebar -->
             <jsp:include page="layout_admin/sidebar_admin.jsp" />
-            <div class="card mx-auto shadow-sm border-0" style= "margin-top: 15px">
-                <div class="card-header bg-dark text-white text-center py-1 rounded-top">
-                    <h6 class="mb-0"><i class="bi bi-person-circle me-1"></i>Editing ${user.account.username}'s account</h6>
-                </div>
-                <form action="AdminProfileEditServlet" method="post" class="mt-1" enctype="multipart/form-data">
-                    <div class="card-body bg-light py-1">
-                        <div class="container py-1">
-                            <div class="profile-card bg-white rounded-3 shadow-sm p-2">
-                                <div class="row align-items-start">
-                                    <!-- Avatar -->
-                                    <div class="col-md-3 text-center border-end pe-2">
-                                        <img src="${not empty user.avatar ? user.avatar : user.avatar}"
-                                             name="avatar"
-                                             class="img-fluid rounded-circle border border-2 border-secondary-subtle shadow-sm mb-1"
-                                             style="width: 100px; height: 100px; object-fit: cover;"
-                                             alt="Avatar" />
-                                        <p class="fw-semibold mt-0 small">${user.full_name}</p>
-                                        <div class="mb-3">
-                                            <label class="form-label">Upload Photo</label>
-                                            <input type="file" name="avatar" class="form-control">
-                                            <div class="error-container" style="height: 1rem; position: relative;">
-                                                <span class="field-error small text-danger" style="${empty errors['avatar'] ? 'opacity: 0;' : ''}">
-                                                    ${errors['avatar']}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
 
-                                    <!-- Info -->
-                                    <div class="col-md-9 ps-md-2 mt-1 mt-md-0">
-                                        <h6 class="fw-bold mb-1 text-dark">Editing user detail</h6>
+            <div class="edit-wrapper">
+                <form action="AdminProfileEditServlet" method="post" enctype="multipart/form-data" class="w-100 d-flex gap-3">
 
-                                        <div class="row g-1">
-                                            <!-- Hidden ensures the value is actually submitted -->
-                                            <label class="form-label small text-muted mb-0"></label>
-                                            <input type="hidden" name="id" class="form-control form-control-sm" value="${user.id}" readonly>
-                                            <label class="form-label small text-muted mb-0"></label>
-                                            <input type="hidden" name="username" class="form-control form-control-sm" value="${user.account.username}">
+                    <!-- Avatar Section -->
+                    <div class="profile-side">
+                        <img id="avatarPreview"
+                             src="${not empty user.avatar ? user.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}"
+                             alt="Avatar" />
+                        <h5>${user.full_name}</h5>
+                        <small>@${user.account.username}</small>
 
-                                            <!-- Row 1 -->
-                                            <div class="col-md-6 position-relative">
-                                                <label class="fw-bold form-label small text-muted mb-0">Full Name</label>
-                                                <div class="error-container" style="height: 1rem; position: relative;">
-                                                    <span class="field-error small text-danger"
-                                                          style="${empty errors['full_name'] ? 'opacity: 0;' : ''}">
-                                                        ${errors['full_name']}
-                                                    </span>
-                                                </div>
-                                                <input type="text" name="full_name" class="form-control form-control-sm"
-                                                       value="${not empty param.full_name ? param.full_name : user.full_name}">
-                                            </div>
-
-                                            <div class="col-md-6 position-relative">
-                                                <label class="fw-bold form-label small text-muted mb-0">Occupation</label>
-                                                <div class="error-container" style="height: 1rem; position: relative;">
-                                                    <span class="field-error small text-danger"
-                                                          style="${empty errors['job_title'] ? 'opacity: 0;' : ''}">
-                                                        ${errors['job_title']}
-                                                    </span>
-                                                </div>
-                                                <input type="text" name="job_title" class="form-control form-control-sm"
-                                                       value="${not empty param.job_title ? param.job_title : user.job_title}">
-                                            </div>
-
-                                            <!-- Row 2 -->
-                                            <div class="col-md-6">
-                                                <label class="fw-bold form-label small text-muted mb-3">Gender</label>
-                                                <select name="gender" class="form-select form-select-sm">
-                                                    <option value="male" ${user.gender == 'male' ? 'selected' : ''}>Male</option>
-                                                    <option value="female" ${user.gender == 'female' ? 'selected' : ''}>Female</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="fw-bold form-label small text-muted mb-3">Date of Birth</label>
-                                                <input type="date" name="dob" class="form-control form-control-sm"
-                                                       value="${not empty param.dob ? param.dob : user.dob}">
-                                                <c:if test="${not empty errors.dob}">
-                                                    <div class="field-error">${errors.dob}</div>
-                                                </c:if>
-                                            </div>
-
-                                            <!-- Row 3 -->
-                                            <div class="col-md-6 position-relative">
-                                                <label class="fw-bold form-label small text-muted mb-0">Address</label>
-                                                <div class="error-container" style="height: 1rem; position: relative;">
-                                                    <span class="field-error small text-danger"
-                                                          style="${empty errors['address'] ? 'opacity: 0;' : ''}">
-                                                        ${errors['address']}
-                                                    </span>
-                                                </div>
-                                                <input type="text" name="address" class="form-control form-control-sm"
-                                                       value="${not empty param.address ? param.address : user.address}">
-                                            </div>
-
-                                            <div class="col-md-6 position-relative">
-                                                <label class="fw-bold form-label small text-muted mb-0">Phone</label>
-                                                <div class="error-container" style="height: 1rem; position: relative;">
-                                                    <span class="field-error small text-danger"
-                                                          style="${empty errors['phone'] ? 'opacity: 0;' : ''}">
-                                                        ${errors['phone']}
-                                                    </span>
-                                                </div>
-                                                <input type="text" name="phone" class="form-control form-control-sm"
-                                                       value="${not empty param.phone ? param.phone : user.phone}">
-                                            </div>
-
-                                            <!-- Row 4 -->
-                                            <div class="col-md-12 position-relative">
-                                                <label class="fw-bold form-label small text-muted mb-0">Email</label>
-                                                <div class="error-container" style="height: 1rem; position: relative;">
-                                                    <span class="field-error small text-danger"
-                                                          style="${empty errors['email'] ? 'opacity: 0;' : ''}">
-                                                        ${errors['email']}
-                                                    </span>
-                                                </div>
-                                                <input type="email" name="email" class="form-control form-control-sm"
-                                                       value="${not empty param.email ? param.email : user.email}">
-                                            </div>
-
-                                            <!-- Row 5 -->
-                                            <hr class="my-1">
-                                            <h6 class="fw-bold text-dark mb-3 mt-3">Bio</h6>
-                                            <textarea class="form-control form-control-sm" style="resize:none;"name="bio" rows="9">${user.bio}</textarea>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="text-center mt-1 mt-2">
-                                    <a href="AdminProfileServlet?id=1" class="btn btn-warning btn-sm px-2 rounded-pill shadow-sm">
-                                        ✕ Discard Changes
-                                    </a>
-                                    <button type="submit" class="btn btn-success btn-sm px-2 rounded-pill shadow-sm">✓ Save Changes</button>
-                                </div>
+                        <div class="upload-section">
+                            <label>Change Avatar</label>
+                            <input type="file" name="avatar" id="avatarInput" class="form-control form-control-sm mt-1" />
+                            <div class="error-container" style="height: 1rem;">
+                                <span class="field-error">${errors['avatar']}</span>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Main Edit Form -->
+                    <div class="edit-form-card flex-grow-1">
+                        <h5><i class="bi bi-pencil-square me-2"></i>Edit Admin Information</h5>
+
+                        <input type="hidden" name="id" value="${user.id}" />
+                        <input type="hidden" name="username" value="${user.account.username}" />
+
+                        <div class="row g-3">
+                            <div class="col-md-6 position-relative">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" name="full_name" class="form-control form-control-sm"
+                                       value="${not empty param.full_name ? param.full_name : user.full_name}">
+                                <span class="field-error">${errors['full_name']}</span>
+                            </div>
+
+                            <div class="col-md-6 position-relative">
+                                <label class="form-label">Job Title</label>
+                                <input type="text" name="job_title" class="form-control form-control-sm"
+                                       value="${not empty param.job_title ? param.job_title : user.job_title}">
+                                <span class="field-error">${errors['job_title']}</span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Gender</label>
+                                <select name="gender" class="form-select form-select-sm">
+                                    <option value="male" ${user.gender == 'male' ? 'selected' : ''}>Male</option>
+                                    <option value="female" ${user.gender == 'female' ? 'selected' : ''}>Female</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Date of Birth</label>
+                                <input type="date" name="dob" class="form-control form-control-sm"
+                                       value="${not empty param.dob ? param.dob : user.dob}">
+                            </div>
+
+                            <div class="col-md-6 position-relative">
+                                <label class="form-label">Address</label>
+                                <input type="text" name="address" class="form-control form-control-sm"
+                                       value="${not empty param.address ? param.address : user.address}">
+                                <span class="field-error">${errors['address']}</span>
+                            </div>
+
+                            <div class="col-md-6 position-relative">
+                                <label class="form-label">Phone</label>
+                                <input type="text" name="phone" class="form-control form-control-sm"
+                                       value="${not empty param.phone ? param.phone : user.phone}">
+                                <span class="field-error">${errors['phone']}</span>
+                            </div>
+
+                            <div class="col-md-12 position-relative">
+                                <label class="form-label">Email</label>
+                                <input type="email" name="email" class="form-control form-control-sm"
+                                       value="${not empty param.email ? param.email : user.email}">
+                                <span class="field-error">${errors['email']}</span>
+                            </div>
+                        </div>
+
+                        <div class="form-section mt-3">
+                            <label class="form-label">Bio</label>
+                            <textarea class="form-control form-control-sm" name="bio" rows="6" style="resize:none;">${not empty param.bio ? param.bio : user.bio}</textarea>
+                        </div>
+
+                        <div class="action-buttons mt-3">
+                            <button type="button" class="btn btn-danger btn-sm btn-rounded px-3" onclick="history.back()">
+                                ✕ Discard
+                            </button>
+                            <button type="submit" class="btn btn-success btn-sm btn-rounded px-3 ms-2">
+                                ✓ Save Changes
+                            </button>
                         </div>
                     </div>
                 </form>
             </div>
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+                                // live avatar preview
+                                const avatarInput = document.getElementById('avatarInput');
+                                const avatarPreview = document.getElementById('avatarPreview');
+                                if (avatarInput && avatarPreview) {
+                                    avatarInput.addEventListener('change', function (e) {
+                                        const file = e.target.files[0];
+                                        if (!file)
+                                            return;
+                                        avatarPreview.src = URL.createObjectURL(file);
+                                    });
+                                }
+        </script>
     </body>
 </html>
+
+
