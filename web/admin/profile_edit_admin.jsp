@@ -117,19 +117,7 @@
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script>
-                                // live avatar preview
-                                const avatarInput = document.getElementById('avatarInput');
-                                const avatarPreview = document.getElementById('avatarPreview');
-                                if (avatarInput && avatarPreview) {
-                                    avatarInput.addEventListener('change', function (e) {
-                                        const file = e.target.files[0];
-                                        if (!file)
-                                            return;
-                                        avatarPreview.src = URL.createObjectURL(file);
-                                    });
-                                }
-        </script>
+        <script src="<%= request.getContextPath() %>/admin/js/live_avatar_preview.js"></script>
     </body>
 </html>
 

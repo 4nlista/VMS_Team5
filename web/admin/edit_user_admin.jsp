@@ -26,14 +26,14 @@
 
                     <!-- Left: Avatar section -->
                     <div class="profile-side">
-                        <img src="${not empty user.avatar ? user.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}"
+                        <img id="avatarPreview" src="${not empty user.avatar ? user.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}"
                              alt="Avatar" />
                         <h5>${user.full_name}</h5>
                         <small>@${user.account.username}</small>
 
                         <div class="upload-section">
                             <label>Change Avatar</label>
-                            <input type="file" name="avatar" class="form-control form-control-sm mt-1" />
+                            <input type="file" name="avatar" id="avatarInput" class="form-control form-control-sm mt-1" />
                             <div class="error-container" style="height: 1rem;">
                                 <span class="field-error">${errors['avatar']}</span>
                             </div>
@@ -120,5 +120,6 @@
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="<%= request.getContextPath() %>/admin/js/live_avatar_preview.js"></script>
     </body>
 </html>
