@@ -21,10 +21,11 @@
         <div class="content-container">
             <!-- Sidebar -->
             <jsp:include page="layout_admin/sidebar_admin.jsp" />
-
             <!-- Main Content -->
             <div class="main-content p-4">
                 <h1>Quản lí tài khoản</h1>               
+                
+                
                 <!-- Yêu cầu 1: Thêm nút Add Account + Filter + Search -->
                 <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
                     <!-- Filter (vai trò, trạng thái) -->
@@ -113,10 +114,11 @@
                         </c:forEach>
                     </tbody>
                 </table>
+                
+                
+                <!--Kết thúc main -->
             </div>
         </div>
-
-
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>
