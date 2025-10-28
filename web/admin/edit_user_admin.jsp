@@ -38,7 +38,7 @@
                                         <p class="fw-semibold mt-0 small">${user.full_name}</p>
                                         <div class="mb-3">
                                             <label class="form-label">Upload Photo</label>
-                                            <input type="file" name="avatar" class="form-control" value="${not empty user.avatar ? user.avatar : user.avatar}">
+                                            <input type="file" name="avatar" class="form-control">
                                             <div class="error-container" style="height: 1rem; position: relative;">
                                                 <span class="field-error small text-danger" style="${empty errors['avatar'] ? 'opacity: 0;' : ''}">
                                                     ${errors['avatar']}
