@@ -78,5 +78,47 @@ public class AdminAccountService {
         // Thực hiện xóa cascade an toàn trong transaction
         return adminAccountDAO.deleteAccountCascade(id);
     }
+    
+    // 8. Tạo tài khoản mới (chỉ cho tạo organization hoặc volunteer)
+    public boolean createAccount(String username, String password, String role, boolean status) {
+        // Validate role - không cho tạo admin từ đây
+        if (role == null || "admin".equalsIgnoreCase(role)) {
+            return false;
+        }
+        
+        // Kiểm tra username đã tồn tại
+        if (adminAccountDAO.usernameExists(username)) {
+            return false;
+        }
+        
+        // Tạo tài khoản
+        return adminAccountDAO.insertAccount(username, password, role, status);
+    }
+    
+    // 8b. Tạo tài khoản mới và trả về ID
+    public int createAccountAndGetId(String username, String password, String role, boolean status) {
+        // Validate role - không cho tạo admin từ đây
+        if (role == null || "admin".equalsIgnoreCase(role)) {
+            return -1;
+        }
+        
+        // Kiểm tra username đã tồn tại
+        if (adminAccountDAO.usernameExists(username)) {
+            return -1;
+        }
+        
+        // Tạo tài khoản và trả về ID
+        return adminAccountDAO.insertAccountAndGetId(username, password, role, status);
+    }
+    
+    // 9. Kiểm tra username đã tồn tại
+    public boolean usernameExists(String username) {
+        return adminAccountDAO.usernameExists(username);
+    }
+    
+    // 10. Lấy ID tài khoản vừa tạo (method này chỉ dùng trong một số trường hợp đặc biệt)
+    public int getLastInsertedAccountId() {
+        return adminAccountDAO.getLastInsertedAccountId();
+    }
 }
 

@@ -9,17 +9,17 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import model.Account;
-import service.AccountService;
+import service.AdminAccountService;
 
 @WebServlet(name = "VolunteerHomeServlet", urlPatterns = {"/VolunteerHomeServlet"})
 
 public class VolunteerHomeServlet extends HttpServlet {
 
-    private AccountService accountService;
+    private AdminAccountService adminAccountService;
 
     @Override
     public void init() {
-        accountService = new AccountService();
+        adminAccountService = new AdminAccountService();
     }
 
     @Override
@@ -34,7 +34,7 @@ public class VolunteerHomeServlet extends HttpServlet {
         }
 
         Account acc = (Account) session.getAttribute("account");
-        acc = accountService.getAccountById(acc.getId());  // Lấy lại từ DB cho chắc chắn
+        acc = adminAccountService.getAccountById(acc.getId());  // Lấy lại từ DB cho chắc chắn
 
         if (acc == null || !acc.getRole().equals("volunteer")) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "Truy cập bị từ chối");

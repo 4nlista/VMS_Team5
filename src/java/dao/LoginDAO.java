@@ -29,7 +29,7 @@ public class LoginDAO {
 
     // 1. Kiểm tra đăng nhập (username và password) 
     public Account checkLogin(String username, String password) {
-        String sql = "SELECT id, username, password, role, status "
+        String sql = "SELECT id, username, password, role, status, created_at "
                 + "FROM Accounts WHERE username = ? AND password = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, username);
@@ -42,7 +42,8 @@ public class LoginDAO {
                             rs.getString("username"),
                             rs.getString("password"),
                             rs.getString("role"),
-                            rs.getBoolean("status") // Gán giá trị status
+                            rs.getBoolean("status"), // Gán giá trị status
+                            new java.util.Date(rs.getTimestamp("created_at").getTime())
                     );
                 }
             }

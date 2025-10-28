@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 import model.Account;
@@ -33,7 +34,7 @@ public class AdminAccountDAO {
     
     // 1. Truy xuất thông tin account theo ID (dùng cho quản lí admin)
     public Account getAccountById(int id) {
-        String sql = "SELECT id, username, password, role, status "
+        String sql = "SELECT id, username, password, role, status, created_at "
                 + "FROM Accounts WHERE id = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -45,7 +46,8 @@ public class AdminAccountDAO {
                             rs.getString("username"),
                             rs.getString("password"),
                             rs.getString("role"),
-                            rs.getBoolean("status")
+                            rs.getBoolean("status"),
+                            new Date(rs.getTimestamp("created_at").getTime())
                     );
                 }
             }
@@ -58,7 +60,7 @@ public class AdminAccountDAO {
     // 2. Lấy ra danh sách tất cả các tài khoản
     public List<Account> getAllAccounts() {
         List<Account> list = new ArrayList<>();
-        String sql = "SELECT id, username, password, role, status FROM Accounts";
+        String sql = "SELECT id, username, password, role, status, created_at FROM Accounts";
         try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 Account acc = new Account(
@@ -66,7 +68,8 @@ public class AdminAccountDAO {
                         rs.getString("username"),
                         rs.getString("password"),
                         rs.getString("role"),
-                        rs.getBoolean("status")
+                        rs.getBoolean("status"),
+                        rs.getTimestamp("created_at")
                 );
                 list.add(acc);
             }
@@ -93,7 +96,7 @@ public class AdminAccountDAO {
     // 4. Tìm kiếm + lọc tài khoản theo role, status, search (username)
     public List<Account> findAccounts(String role, Boolean status, String search) {
         List<Account> result = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("SELECT id, username, password, role, status FROM Accounts WHERE 1=1");
+        StringBuilder sql = new StringBuilder("SELECT id, username, password, role, status, created_at FROM Accounts WHERE 1=1");
         List<Object> params = new ArrayList<>();
         
         if (role != null && !role.isEmpty()) {
@@ -130,7 +133,8 @@ public class AdminAccountDAO {
                             rs.getString("username"),
                             rs.getString("password"),
                             rs.getString("role"),
-                            rs.getBoolean("status")
+                            rs.getBoolean("status"),
+                            rs.getTimestamp("created_at")
                     ));
                 }
             }
@@ -139,7 +143,7 @@ public class AdminAccountDAO {
         }
         return result;
     }
-    
+
     // 5. Đếm tổng số bản ghi theo cùng tiêu chí lọc
     public int countAccounts(String role, Boolean status, String search) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) AS total FROM Accounts WHERE 1=1");
@@ -185,7 +189,7 @@ public class AdminAccountDAO {
     // 6. Lấy danh sách theo trang (offset/limit) cùng tiêu chí lọc hiện tại
     public List<Account> findAccountsPaged(String role, Boolean status, String search, int offset, int limit) {
         List<Account> result = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("SELECT id, username, password, role, status FROM Accounts WHERE 1=1");
+        StringBuilder sql = new StringBuilder("SELECT id, username, password, role, status, created_at FROM Accounts WHERE 1=1");
         List<Object> params = new ArrayList<>();
         
         if (role != null && !role.isEmpty()) {
@@ -226,7 +230,8 @@ public class AdminAccountDAO {
                             rs.getString("username"),
                             rs.getString("password"),
                             rs.getString("role"),
-                            rs.getBoolean("status")
+                            rs.getBoolean("status"),
+                            rs.getTimestamp("created_at")
                     ));
                 }
             }
@@ -236,7 +241,64 @@ public class AdminAccountDAO {
         return result;
     }
     
-    // 7. Xóa account và toàn bộ dữ liệu liên quan (cascading delete bằng code)
+    // 7. Tạo tài khoản mới và trả về ID
+    public int insertAccountAndGetId(String username, String password, String role, boolean status) {
+        String sql = "INSERT INTO Accounts (username, password, role, status, created_at) OUTPUT INSERTED.id VALUES (?, ?, ?, ?, ?)";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, username);
+            ps.setString(2, password);
+            ps.setString(3, role);
+            ps.setBoolean(4, status);
+            // Lưu thời gian tạo với giờ, phút, giây
+            ps.setTimestamp(5, new java.sql.Timestamp(new Date().getTime()));
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+    
+    // Overload method without return value
+    public boolean insertAccount(String username, String password, String role, boolean status) {
+        return insertAccountAndGetId(username, password, role, status) > 0;
+    }
+    
+    // 8. Kiểm tra username đã tồn tại chưa
+    public boolean usernameExists(String username) {
+        String sql = "SELECT COUNT(*) FROM Accounts WHERE username = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, username);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    // 9. Lấy ID tài khoản vừa tạo (sau khi INSERT)
+    public int getLastInsertedAccountId() {
+        String sql = "SELECT SCOPE_IDENTITY()";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+    
+    // 10. Xóa account và toàn bộ dữ liệu liên quan (cascading delete bằng code)
     public boolean deleteAccountCascade(int id) {
         String delReportsByEventOrg = "DELETE FROM Reports WHERE feedback_id IN (SELECT id FROM Feedback WHERE event_id IN (SELECT id FROM Events WHERE organization_id = ?))";
         String delDonationsByEventOrg = "DELETE FROM Donations WHERE event_id IN (SELECT id FROM Events WHERE organization_id = ?)";
