@@ -32,11 +32,11 @@
                         <small>@${user.account.username}</small>
 
                         <div class="upload-section">
-                            <label>Change Avatar</label>
+                            <label class="form-label">Change Avatar</label>
                             <input type="file" name="avatar" id="avatarInput" class="form-control form-control-sm mt-1" />
-                            <div class="error-container" style="height: 1rem;">
-                                <span class="field-error">${errors['avatar']}</span>
-                            </div>
+                            <c:if test="${not empty errors['avatar']}">
+                                <div class="text-danger small mt-1">${errors['avatar']}</div>
+                            </c:if>
                         </div>
                     </div>
 
