@@ -18,40 +18,49 @@
     </head>
     <body>
         <div class="content-container">
-            <!-- Sidebar -->
             <jsp:include page="layout_admin/sidebar_admin.jsp" />
 
-            <!-- Main Content -->
             <div class="main-content">
                 <h1><i class="bi bi-people-fill me-2"></i>User Management</h1>
 
                 <!-- Filter + Search -->
                 <div class="filter-bar mb-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
-                    <!-- Filter (Role / Status) -->
-                    <form action="AdminUserServlet" method="get" class="d-flex align-items-center gap-3 flex-wrap" style="flex: 3;">
-                        <select name="role" class="form-select w-auto">
-                            <option value="">-- Role --</option>
-                            <option value="admin" ${currentRole == 'admin' ? 'selected' : ''}>Admin</option>
-                            <option value="organization" ${currentRole == 'organization' ? 'selected' : ''}>Organization</option>
-                            <option value="volunteer" ${currentRole == 'volunteer' ? 'selected' : ''}>Volunteer</option>
-                        </select>
-                        
-                        <select name="gender" class="form-select w-auto">
-                            <option value="">-- Gender --</option>
-                            <option value="male" ${currentGender == 'male' ? 'selected' : ''}>Male</option>
-                            <option value="female" ${currentGender == 'female' ? 'selected' : ''}>Female</option>
-                        </select>
 
-                        <input type="hidden" name="search" value="${fn:escapeXml(currentSearch)}" />
-                        <input type="hidden" name="sort" value="${fn:escapeXml(currentSort)}" />
-
-                        <button type="submit" class="btn btn-danger">
+                    <!-- Compact Filter -->
+                    <div class="dropdown" style="flex: 3;">
+                        <button class="btn btn-danger dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="bi bi-filter me-1"></i>Filter
                         </button>
-                        <a href="AdminUserServlet" class="btn btn-secondary">
-                            <i class="bi bi-arrow-clockwise me-1"></i>Reset
-                        </a>
-                    </form>
+
+                        <div class="dropdown-menu filter-dropdown shadow" aria-labelledby="filterDropdown">
+                            <form action="AdminUserServlet" method="get" class="d-flex flex-column gap-2">
+                                <select name="role" class="form-select form-select-sm">
+                                    <option value="">-- Role --</option>
+                                    <option value="admin" ${currentRole == 'admin' ? 'selected' : ''}>Admin</option>
+                                    <option value="organization" ${currentRole == 'organization' ? 'selected' : ''}>Organization</option>
+                                    <option value="volunteer" ${currentRole == 'volunteer' ? 'selected' : ''}>Volunteer</option>
+                                </select>
+
+                                <select name="gender" class="form-select form-select-sm">
+                                    <option value="">-- Gender --</option>
+                                    <option value="male" ${currentGender == 'male' ? 'selected' : ''}>Male</option>
+                                    <option value="female" ${currentGender == 'female' ? 'selected' : ''}>Female</option>
+                                </select>
+
+                                <input type="hidden" name="search" value="${fn:escapeXml(currentSearch)}" />
+                                <input type="hidden" name="sort" value="${fn:escapeXml(currentSort)}" />
+
+                                <div class="d-flex justify-content-end gap-2 mt-2">
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="bi bi-search me-1"></i>Apply
+                                    </button>
+                                    <a href="AdminUserServlet" class="btn btn-secondary btn-sm">
+                                        <i class="bi bi-trash me-1"></i>Reset
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
 
                     <!-- Search -->
                     <form action="AdminUserServlet" method="get" class="d-flex" style="flex: 1; justify-content: end;">
@@ -68,27 +77,9 @@
                 <!-- User Table -->
                 <div class="table-responsive shadow-sm mb-4" style="min-height: 450px;">
                     <table class="table table-striped table-hover align-middle mb-0">
-                        <thead>
+                        <thead class="table-dark">
                             <tr>
-                                <th>ID
-                                    <c:url var="sortAscUrl" value="AdminUserServlet">
-                                        <c:param name="sort" value="id_asc" />
-                                        <c:param name="role" value="${fn:escapeXml(currentRole)}" />
-                                        <c:param name="search" value="${fn:escapeXml(currentSearch)}" />
-                                        <c:param name="gender" value="${fn:escapeXml(currentGender)}" />
-                                        <c:param name="page" value="${currentPage}" />
-                                    </c:url>
-                                    <a href="${sortAscUrl}" class="text-white"><i class="bi bi-caret-up-fill ms-1"></i></a>
-
-                                    <c:url var="sortDescUrl" value="AdminUserServlet">
-                                        <c:param name="sort" value="id_desc" />
-                                        <c:param name="role" value="${fn:escapeXml(currentRole)}" />
-                                        <c:param name="search" value="${fn:escapeXml(currentSearch)}" />
-                                        <c:param name="gender" value="${fn:escapeXml(currentGender)}" />
-                                        <c:param name="page" value="${currentPage}" />
-                                    </c:url>
-                                    <a href="${sortDescUrl}" class="text-white"><i class="bi bi-caret-down-fill ms-1"></i></a>
-                                </th>
+                                <th>ID</th>
                                 <th>Avatar</th>
                                 <th>Username</th>
                                 <th>Full Name</th>
@@ -98,13 +89,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Should never happen btw -->
                             <c:if test="${empty users}">
                                 <tr><td colspan="7" class="text-center text-danger py-4">No users found</td></tr>
                             </c:if>
 
                             <c:forEach var="user" items="${users}">
-                                <tr>
+                                <tr class="user-row bg-white">
                                     <td>${user.id}</td>
                                     <td>
                                         <img src="${not empty user.avatar ? user.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}"
@@ -115,11 +105,13 @@
                                     </td>
                                     <td>${user.account.username}</td>
                                     <td>${user.full_name}</td>
-                                    <td><c:choose>
+                                    <td>
+                                        <c:choose>
                                             <c:when test="${user.gender == 'male'}">Male</c:when>
                                             <c:when test="${user.gender == 'female'}">Female</c:when>
                                             <c:otherwise>Unknown</c:otherwise>
-                                        </c:choose></td>
+                                        </c:choose>
+                                    </td>
                                     <td><span class="badge bg-secondary text-capitalize">${user.account.role}</span></td>
                                     <td class="text-center">
                                         <form action="AdminUserDetailServlet" method="get" style="display:inline;">
@@ -207,6 +199,8 @@
                     </div>
                 </div>
             </div>
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

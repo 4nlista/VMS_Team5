@@ -252,7 +252,7 @@ textarea.form-control-sm {
 
 .form-error {
     color: #dc3545;
-        font-size: 0.75rem;
+    font-size: 0.75rem;
 }
 
 .btn-rounded {
@@ -262,4 +262,27 @@ textarea.form-control-sm {
 .action-buttons {
     text-align: center;
     margin-top: 2rem;
+}
+
+/* make table grid clearer */
+table.table th, table.table td {
+    vertical-align: middle;
+    border: 1px solid #dee2e6 !important;
+}
+.table-hover tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+/* subtle shadow and spacing between user rows */
+.user-row {
+    transition: box-shadow 0.2s ease;
+}
+.user-row:hover {
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+/* filter dropdown styling */
+.filter-dropdown {
+    min-width: 250px;
+    padding: 15px;
 }
