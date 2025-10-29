@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.List;
 import model.User;
@@ -29,6 +30,7 @@ public class AdminUserService {
 
 	private final AdminUserDAO userDAO = new AdminUserDAO();
 	private final int pageSize = 6; // configurable if needed
+	private static final long MAX_AVATAR_BYTES = 5L * 1024 * 1024; // 5MB
 	// Returns true if update succeeded; if false, request will have "errors" Map<String,String>
 
 	/**
@@ -294,8 +296,12 @@ public class AdminUserService {
 	 * @throws Exception
 	 */
 	public User loadUserDetail(HttpServletRequest request) throws Exception {
-		int id = Integer.parseInt(request.getParameter("id"));
-		return userDAO.getUserDetailById(id);
+		try {
+			int id = Integer.parseInt(request.getParameter("id"));
+			return userDAO.getUserDetailById(id);
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	/**
@@ -306,48 +312,86 @@ public class AdminUserService {
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	public boolean handleAvatarUpload(HttpServletRequest request, int userId)
-		    throws IOException, ServletException {
-		Part avatarPart = request.getPart("avatar");
+	public boolean handleAvatarUpload(HttpServletRequest request, int userId) {
+		Map<String, String> errors = (Map<String, String>) request.getAttribute("errors");
+		if (errors == null) {
+			errors = new HashMap<>();
+		}
+
+		Part avatarPart = null;
+		try {
+			avatarPart = request.getPart("avatar");
+		} catch (IllegalStateException | IOException | ServletException e) {
+			// e.g. file too large, not multipart or IO issue
+			e.printStackTrace();
+			errors.put("avatar", "Uploaded file too large or invalid multipart request.");
+			request.setAttribute("errors", errors);
+			return false;
+		}
+
+		// Nothing uploaded -> preserve existing avatar
 		if (avatarPart == null || avatarPart.getSize() == 0) {
-			return true; // nothing uploaded
+			return true;
 		}
-		// Validate type and size
+
+		// Validate content type
 		String contentType = avatarPart.getContentType();
-		if (!contentType.startsWith("image/")) {
-			throw new IOException("Uploaded file is not an image.");
-		}
-		if (avatarPart.getSize() > 5 * 1024 * 1024) {
-			throw new IOException("Image size exceeds 5MB.");
+		if (contentType == null || !contentType.startsWith("image/")) {
+			errors.put("avatar", "Uploaded file must be an image.");
+			request.setAttribute("errors", errors);
+			return false;
 		}
 
-		// Paths
-		String uploadPath = "C:\\Users\\DELL\\Downloads\\uploads\\user_avatars";
-		File uploadDir = new File(uploadPath);
-		if (!uploadDir.exists()) {
-			if (!uploadDir.mkdirs()) {
-				throw new IOException("Failed to create upload directory.");
+		// Validate size
+		if (avatarPart.getSize() > MAX_AVATAR_BYTES) {
+			errors.put("avatar", "Avatar file must be <= 5MB.");
+			request.setAttribute("errors", errors);
+			return false;
+		}
+
+		// Save file to uploads/avatars (fallback to tmp dir)
+		try {
+			String submitted = avatarPart.getSubmittedFileName();
+			String filename = Paths.get(submitted).getFileName().toString();
+			String ext = "";
+			int dot = filename.lastIndexOf('.');
+			if (dot >= 0) {
+				ext = filename.substring(dot);
 			}
+
+			String uploadsRelative = "/uploads/user_avatars";
+			String uploadsAbsolute = "C:\\Users\\DELL\\Downloads\\uploads\\user_avatars";  // FIXED LOCAL PATH OUTSIDE PROJECT
+			// Fallback
+			if (uploadsAbsolute == null) {
+				uploadsAbsolute = System.getProperty("java.io.tmpdir") + File.separator + "uploads" + File.separator + "user_avatars";
+			}
+			File uploadsDir = new File(uploadsAbsolute);
+			if (!uploadsDir.exists() && !uploadsDir.mkdirs()) {
+				errors.put("avatar", "Failed to prepare upload directory.");
+				request.setAttribute("errors", errors);
+				return false;
+			}
+
+			String newFilename = "user_" + userId + "_" + System.currentTimeMillis() + ext;
+			File saved = new File(uploadsDir, newFilename);
+
+			try (InputStream in = avatarPart.getInputStream()) {
+				java.nio.file.Files.copy(in, saved.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+			}
+
+			String avatarUrl = request.getContextPath() + uploadsRelative + "/" + newFilename;
+			boolean ok = userDAO.updateAvatar(userId, avatarUrl);
+			if (!ok) {
+				errors.put("avatar", "Failed to update avatar in database.");
+				request.setAttribute("errors", errors);
+				return false;
+			}
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			errors.put("avatar", "Failed to save uploaded avatar file.");
+			request.setAttribute("errors", errors);
+			return false;
 		}
-
-		// Generate unique file name
-		String submittedName = Paths.get(avatarPart.getSubmittedFileName()).getFileName().toString();
-		String ext = submittedName.substring(submittedName.lastIndexOf("."));
-		String fileName = "user_" + userId + "_" + System.currentTimeMillis() + ext;
-		String fullFilePath = uploadPath + File.separator + fileName;
-
-		// Save file
-		avatarPart.write(fullFilePath);
-
-		// Build URL for DB
-		String avatarUrl = request.getContextPath() + "/uploads/user_avatars/" + fileName;
-
-		// Update database
-		boolean ok = userDAO.updateAvatar(userId, avatarUrl);
-		if (!ok) {
-			throw new IOException("Failed to update avatar in database.");
-		}
-
-		return true;
 	}
 }

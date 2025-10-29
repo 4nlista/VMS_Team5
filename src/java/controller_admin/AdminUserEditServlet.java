@@ -42,22 +42,35 @@ public class AdminUserEditServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 		    throws ServletException, IOException {
-		AdminUserService service = new AdminUserService();
-		boolean textUpdated = service.adminUserEdit(request);
+		AdminUserService userService = new AdminUserService();
+		boolean textUpdated = userService.adminUserEdit(request);
 
 		if (textUpdated) {
+			// parse id safely
+			int userId = -1;
 			try {
-				int userId = Integer.parseInt(request.getParameter("id"));
-				service.handleAvatarUpload(request, userId);
-				response.sendRedirect("AdminUserServlet?success=updated");
-			} catch (Exception e) {
-				e.printStackTrace();
-				response.sendRedirect("AdminUserServlet?error=updateFailed");
+				userId = Integer.parseInt(request.getParameter("id"));
+			} catch (Exception ignored) {
+			}
+
+			// handle avatar: this returns false on validation failure and sets request.errors
+			boolean avatarOk = userService.handleAvatarUpload(request, userId);
+
+			if (avatarOk) {
+				response.sendRedirect("AdminUserServlet?id=" + userId);
+			} else {
+				// avatar validation failed -> forward back to edit with errors (do not redirect)
+				try {
+					User user = userService.loadUserDetail(request);
+					request.setAttribute("user", user);
+				} catch (Exception ignored) {
+				}
+				request.getRequestDispatcher("/admin/edit_user_admin.jsp").forward(request, response);
 			}
 		} else {
+			// text validation failed -> updateProfileText already attached "errors"
 			try {
-				int id = Integer.parseInt(request.getParameter("id"));
-				User user = service.loadUserDetail(request);
+				User user = userService.loadUserDetail(request);
 				request.setAttribute("user", user);
 			} catch (Exception ignored) {
 			}

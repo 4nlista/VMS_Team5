@@ -12,7 +12,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>User Detail</title>
+        <title>Chi tiết người dùng ${user.account.username}</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
         <link href="<%= request.getContextPath() %>/admin/css/admin.css" rel="stylesheet" />
@@ -40,15 +40,15 @@
                         <div class="col-md-8 p-4">
                             <div class="d-flex justify-content-between align-items-start mb-4">
                                 <div>
-                                    <h5 class="mb-0">User Details</h5>
-                                    <small class="text-muted">Viewing <strong>${user.account.username}</strong>'s account</small>
+                                    <h5 class="mb-0">Trang Chi Tiết Người Dùng.</h5>
+                                    <small class="text-muted">Đang xem hồ sơ của <strong>${user.account.username}</strong>.</small>
                                 </div>
                                 <div>
                                     <a href="AdminUserServlet" class="btn btn-sm btn-outline-secondary me-2">
-                                        <i class="bi bi-arrow-left"></i> Back
+                                        <i class="bi bi-arrow-left"></i> Trở Về
                                     </a>
                                     <a href="AdminUserEditServlet?id=${user.id}" class="btn btn-sm btn-warning text-white">
-                                        <i class="bi bi-pencil"></i> Edit
+                                        <i class="bi bi-pencil"></i> Chỉnh Sửa
                                     </a>
                                 </div>
                             </div>
@@ -60,19 +60,27 @@
                                         <input type="text" class="form-control form-control-sm" value="${user.id}" readonly>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label">Username</label>
+                                        <label class="form-label">Tên Tài Khoản</label>
                                         <input type="text" class="form-control form-control-sm" value="${user.account.username}" readonly>
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label class="form-label">Gender</label>
-                                        <input type="text" class="form-control form-control-sm" value="${user.gender}" readonly>
+                                        <label class="form-label">Giới Tính</label>
+                                        <c:choose>
+                                            <c:when test="${user.gender == 'male'}">
+                                                <input type="text" class="form-control form-control-sm" value="Nam" readonly>
+                                            </c:when>
+                                            <c:when test="${user.gender == 'female'}">
+                                                <input type="text" class="form-control form-control-sm" value="Nữ" readonly>
+                                            </c:when>
+                                            <c:otherwise>Unknown</c:otherwise>
+                                        </c:choose>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label">Date of Birth</label>
+                                        <label class="form-label">Ngày Sinh</label>
                                         <c:choose>
                                             <c:when test="${not empty user.dob}">
-                                                <fmt:formatDate value="${user.dob}" pattern="yyyy-MM-dd" var="dobFmt" />
+                                                <fmt:formatDate value="${user.dob}" pattern="dd-MM-yyyy" var="dobFmt" />
                                                 <input type="text" class="form-control form-control-sm" value="${dobFmt}" readonly>
                                             </c:when>
                                             <c:otherwise>
@@ -82,11 +90,11 @@
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label class="form-label">Address</label>
+                                        <label class="form-label">Địa Chỉ</label>
                                         <input type="text" class="form-control form-control-sm" value="${fn:escapeXml(user.address)}" readonly>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label">Phone</label>
+                                        <label class="form-label">Điện Thoại</label>
                                         <input type="text" class="form-control form-control-sm" value="${user.phone}" readonly>
                                     </div>
 
@@ -96,11 +104,22 @@
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label class="form-label">Role</label>
-                                        <input type="text" class="form-control form-control-sm fw-bold text-danger" value="${user.account.role}" readonly>
+                                        <label class="form-label">Vai Trò</label>
+                                        <c:choose>
+                                            <c:when test="${user.account.role == 'admin'}">
+                                                <input type="text" class="form-control form-control-sm fw-bold text-danger" value="Quản Trị Viên" readonly>
+                                            </c:when>
+                                            <c:when test="${user.account.role == 'organization'}">
+                                                <input type="text" class="form-control form-control-sm fw-bold text-danger" value="Người Tổ Chức" readonly>
+                                            </c:when>
+                                            <c:when test="${user.account.role == 'volunteer'}">
+                                                <input type="text" class="form-control form-control-sm fw-bold text-danger" value="Tình Nguyện Viên" readonly>
+                                            </c:when>
+                                            <c:otherwise>Unknown</c:otherwise>
+                                        </c:choose>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label">Account Created At</label>
+                                        <label class="form-label">Ngày Tạo Tài Khoản</label>
                                         <c:choose>
                                             <c:when test="${not empty user.account.createdAt}">
                                                 <fmt:formatDate value="${user.account.createdAt}" pattern="HH:mm:ss / dd-MM-yyyy" var="acctCreated"/>
@@ -113,7 +132,7 @@
                                     </div>
 
                                     <div class="col-12">
-                                        <label class="form-label">Bio</label>
+                                        <label class="form-label">Giới Thiệu Bản Thân</label>
                                         <textarea class="form-control form-control-sm" style="resize:none;" rows="5" readonly>${fn:escapeXml(user.bio)}</textarea>
                                     </div>
                                 </div>

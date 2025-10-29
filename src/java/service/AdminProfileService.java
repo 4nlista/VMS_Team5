@@ -191,11 +191,11 @@ public class AdminProfileService {
 	}
 
 	/**
-	 * Handle avatar upload or deletion.
+	 * Handle avatar upload or deletion.- If delete_avatar param is truthy -> sets avatar to NULL.- If file uploaded -> validate (MIME & size), save and update DB.On validation failure: sets request attribute "errors" and returns false (no exception thrown).
 	 *
-	 * - If delete_avatar param is truthy -> sets avatar to NULL. - If file uploaded -> validate (MIME & size), save and update DB.
-	 *
-	 * On validation failure: sets request attribute "errors" and returns false (no exception thrown).
+	 * @param request
+	 * @param userId
+	 * @return 
 	 */
 	public boolean handleAvatarUpload(HttpServletRequest request, int userId) {
 		Map<String, String> errors = (Map<String, String>) request.getAttribute("errors");

@@ -9,7 +9,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Edit User</title>
+        <title>Chỉnh Sửa Thông Tin Của ${user.account.username}</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
         <link href="<%= request.getContextPath() %>/admin/css/admin.css" rel="stylesheet" />
@@ -25,13 +25,14 @@
 
                     <!-- Left: Avatar section -->
                     <div class="profile-side">
-                        <img id="avatarPreview" src="${not empty user.avatar ? user.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}"
+                        <img id="avatarPreview"
+                             src="${not empty user.avatar ? user.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}"
                              alt="Avatar" />
                         <h5>${user.full_name}</h5>
                         <small>@${user.account.username}</small>
 
                         <div class="upload-section">
-                            <label class="form-label">Change Avatar</label>
+                            <label class="form-label">Đổi Ảnh</label>
                             <input type="file" name="avatar" id="avatarInput" class="form-control form-control-sm mt-1" />
                             <c:if test="${not empty errors['avatar']}">
                                 <div class="text-danger small mt-1">${errors['avatar']}</div>
@@ -41,46 +42,46 @@
 
                     <!-- Right: User form section -->
                     <div class="edit-form-card flex-grow-1">
-                        <h5><i class="bi bi-pencil-square me-2"></i>Edit User Information</h5>
+                        <h5><i class="bi bi-pencil-square me-2"></i>Chỉnh Sửa Chi Tiết Của Người Dùng ${user.account.username}.</h5>
 
                         <input type="hidden" name="id" value="${user.id}">
                         <input type="hidden" name="username" value="${user.account.username}">
 
                         <div class="row g-3">
                             <div class="col-md-6 position-relative">
-                                <label class="form-label">Full Name <span class="form-error">${errors['full_name']}</span></label>
+                                <label class="form-label">Họ Tên <span class="form-error">${errors['full_name']}</span></label>
                                 <input type="text" name="full_name" class="form-control form-control-sm"
                                        value="${not empty param.full_name ? param.full_name : user.full_name}">
                             </div>
 
                             <div class="col-md-6 position-relative">
-                                <label class="form-label">Occupation <span class="form-error">${errors['job_title']}</span></label>
+                                <label class="form-label">Nghề Nghiệp <span class="form-error">${errors['job_title']}</span></label>
                                 <input type="text" name="job_title" class="form-control form-control-sm"
                                        value="${not empty param.job_title ? param.job_title : user.job_title}">
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label">Gender</label>
+                                <label class="form-label">Giới Tính</label>
                                 <select name="gender" class="form-select form-select-sm">
-                                    <option value="male" ${user.gender == 'male' ? 'selected' : ''}>Male</option>
-                                    <option value="female" ${user.gender == 'female' ? 'selected' : ''}>Female</option>
+                                    <option value="male" ${user.gender == 'male' ? 'selected' : ''}>Nam</option>
+                                    <option value="female" ${user.gender == 'female' ? 'selected' : ''}>Nữ</option>
                                 </select>
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label">Date of Birth <span class="form-error">${errors['dob']}</span></label>
+                                <label class="form-label">Ngày Sinh <span class="form-error">${errors['dob']}</span></label>
                                 <input type="date" name="dob" class="form-control form-control-sm"
                                        value="${not empty param.dob ? param.dob : user.dob}">
                             </div>
 
                             <div class="col-md-6 position-relative">
-                                <label class="form-label">Address <span class="form-error">${errors['address']}</span></label>
+                                <label class="form-label">Địa Chỉ <span class="form-error">${errors['address']}</span></label>
                                 <input type="text" name="address" class="form-control form-control-sm"
                                        value="${not empty param.address ? param.address : user.address}">
                             </div>
 
                             <div class="col-md-6 position-relative">
-                                <label class="form-label">Phone <span class="form-error">${errors['phone']}</span></label>
+                                <label class="form-label">Điện Thoại <span class="form-error">${errors['phone']}</span></label>
                                 <input type="text" name="phone" class="form-control form-control-sm"
                                        value="${not empty param.phone ? param.phone : user.phone}">
                             </div>
@@ -93,19 +94,19 @@
                         </div>
 
                         <div class="form-section">
-                            <label class="form-label">Bio</label>
+                            <label class="form-label">Giới Thiệu Bản Thân </label>
                             <textarea class="form-control form-control-sm" name="bio" rows="6" style="resize:none;">${user.bio}</textarea>
                         </div>
 
                         <div class="action-buttons">
                             <a href="AdminUserServlet" class="btn btn-secondary btn-sm btn-rounded px-3">
-                                <i class="bi bi-arrow-left"></i> Back to List
+                                <i class="bi bi-arrow-left"></i> Trở Về Danh Sách
                             </a>
                             <a href="AdminUserDetailServlet?id=${user.id}" class="btn btn-danger btn-sm btn-rounded px-3">
-                                ✕ Discard
+                                ✕ Hủy
                             </a>
                             <button type="submit" class="btn btn-success btn-sm btn-rounded px-3 ms-2">
-                                ✓ Save Changes
+                                ✓ Lưu Thay Đổi
                             </button>
                         </div>
                     </div>

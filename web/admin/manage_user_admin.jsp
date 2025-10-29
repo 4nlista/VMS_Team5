@@ -11,6 +11,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Quản lý người dùng</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
         <link href="<%= request.getContextPath() %>/admin/css/admin.css" rel="stylesheet" />
@@ -21,7 +22,7 @@
             <jsp:include page="layout_admin/sidebar_admin.jsp" />
 
             <div class="main-content">
-                <h1><i class="bi bi-people-fill me-2"></i>User Management</h1>
+                <h1><i class="bi bi-people-fill me-2"></i>Trang Quản Lý Người Dùng</h1>
 
                 <!-- Filter + Search -->
                 <div class="filter-bar mb-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
@@ -29,22 +30,22 @@
                     <!-- Compact Filter -->
                     <div class="dropdown" style="flex: 3;">
                         <button class="btn btn-danger dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-filter me-1"></i>Filter
+                            <i class="bi bi-filter me-1"></i>Lọc
                         </button>
 
                         <div class="dropdown-menu filter-dropdown shadow" aria-labelledby="filterDropdown">
                             <form action="AdminUserServlet" method="get" class="d-flex flex-column gap-2">
                                 <select name="role" class="form-select form-select-sm">
-                                    <option value="">-- Role --</option>
-                                    <option value="admin" ${currentRole == 'admin' ? 'selected' : ''}>Admin</option>
-                                    <option value="organization" ${currentRole == 'organization' ? 'selected' : ''}>Organization</option>
-                                    <option value="volunteer" ${currentRole == 'volunteer' ? 'selected' : ''}>Volunteer</option>
+                                    <option value="">-- Vai Trò --</option>
+                                    <option value="admin" ${currentRole == 'admin' ? 'selected' : ''}>Quản Trị Viên</option>
+                                    <option value="organization" ${currentRole == 'organization' ? 'selected' : ''}>Người Tổ Chức</option>
+                                    <option value="volunteer" ${currentRole == 'volunteer' ? 'selected' : ''}>Tình Nguyện Viên</option>
                                 </select>
 
                                 <select name="gender" class="form-select form-select-sm">
-                                    <option value="">-- Gender --</option>
-                                    <option value="male" ${currentGender == 'male' ? 'selected' : ''}>Male</option>
-                                    <option value="female" ${currentGender == 'female' ? 'selected' : ''}>Female</option>
+                                    <option value="">-- Giới Tính --</option>
+                                    <option value="male" ${currentGender == 'male' ? 'selected' : ''}>Nam</option>
+                                    <option value="female" ${currentGender == 'female' ? 'selected' : ''}>Nữ</option>
                                 </select>
 
                                 <input type="hidden" name="search" value="${fn:escapeXml(currentSearch)}" />
@@ -52,10 +53,10 @@
 
                                 <div class="d-flex justify-content-end gap-2 mt-2">
                                     <button type="submit" class="btn btn-danger btn-sm">
-                                        <i class="bi bi-search me-1"></i>Apply
+                                        <i class="bi bi-search me-1"></i>Áp dụng
                                     </button>
                                     <a href="AdminUserServlet" class="btn btn-secondary btn-sm">
-                                        <i class="bi bi-trash me-1"></i>Reset
+                                        <i class="bi bi-trash me-1"></i>Đặt lại
                                     </a>
                                 </div>
                             </form>
@@ -64,12 +65,12 @@
 
                     <!-- Search -->
                     <form action="AdminUserServlet" method="get" class="d-flex" style="flex: 1; justify-content: end;">
-                        <input type="text" name="search" class="form-control" placeholder="Search by name" value="${fn:escapeXml(currentSearch)}" />
+                        <input type="text" name="search" class="form-control" placeholder="Tìm Họ Tên" value="${fn:escapeXml(currentSearch)}" />
                         <input type="hidden" name="role" value="${fn:escapeXml(currentRole)}" />
                         <input type="hidden" name="sort" value="${fn:escapeXml(currentSort)}" />
                         <input type="hidden" name="gender" value="${fn:escapeXml(currentGender)}" />
                         <button type="submit" class="btn btn-primary ms-2">
-                            <i class="bi bi-search"></i>
+                            <i class="bi bi-search" title="TÌm!"></i>
                         </button>
                     </form>
                 </div>
@@ -80,17 +81,18 @@
                         <thead class="table-dark">
                             <tr>
                                 <th>ID</th>
-                                <th>Avatar</th>
-                                <th>Username</th>
-                                <th>Full Name</th>
-                                <th>Gender</th>
-                                <th>Role</th>
-                                <th class="text-center">Actions</th>
+                                <th>Ảnh Đại Diện</th>
+                                <th>Tên Tài Khoản</th>
+                                <th>Họ và Tên</th>
+                                <th>Giới Tính</th>
+                                <th>Vai Trò</th>
+                                <th class="text-center">Hành Động</th>
                             </tr>
                         </thead>
                         <tbody>
+                            <!-- This should never happen lmao -->
                             <c:if test="${empty users}">
-                                <tr><td colspan="7" class="text-center text-danger py-4">No users found</td></tr>
+                                <tr><td colspan="7" class="text-center text-danger py-4">Không có ai ở đây hết cả :(</td></tr>
                             </c:if>
 
                             <c:forEach var="user" items="${users}">
@@ -107,22 +109,35 @@
                                     <td>${user.full_name}</td>
                                     <td>
                                         <c:choose>
-                                            <c:when test="${user.gender == 'male'}">Male</c:when>
-                                            <c:when test="${user.gender == 'female'}">Female</c:when>
+                                            <c:when test="${user.gender == 'male'}">Nam</c:when>
+                                            <c:when test="${user.gender == 'female'}">Nữ</c:when>
                                             <c:otherwise>Unknown</c:otherwise>
                                         </c:choose>
                                     </td>
-                                    <td><span class="badge bg-secondary text-capitalize">${user.account.role}</span></td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${user.account.role == 'admin'}">
+                                                <span class="badge bg-secondary text-capitalize">Quản Trị Viên</span>
+                                            </c:when>
+                                            <c:when test="${user.account.role == 'organization'}">
+                                                <span class="badge bg-secondary text-capitalize">Người Tổ Chức</span>
+                                            </c:when>
+                                            <c:when test="${user.account.role == 'volunteer'}">
+                                                <span class="badge bg-secondary text-capitalize">Tình Nguyện Viên</span>
+                                            </c:when>
+                                            <c:otherwise>Unknown</c:otherwise>
+                                        </c:choose>
+                                    </td>
                                     <td class="text-center">
                                         <form action="AdminUserDetailServlet" method="get" style="display:inline;">
                                             <input type="hidden" name="id" value="${user.id}">
-                                            <button type="submit" class="btn btn-primary btn-sm me-1" title="View details">
+                                            <button type="submit" class="btn btn-primary btn-sm me-1" title="Xem Thông Tin Chi Tiết">
                                                 <i class="bi bi-eye"></i>
                                             </button>
                                         </form>
                                         <form action="AdminUserEditServlet" method="get" style="display:inline;">
                                             <input type="hidden" name="id" value="${user.id}">
-                                            <button type="submit" class="btn btn-warning btn-sm" title="Edit">
+                                            <button type="submit" class="btn btn-warning btn-sm" title="Chỉnh Sửa Chi Tiết">
                                                 <i class="bi bi-pencil-square"></i>
                                             </button>
                                         </form>
@@ -139,7 +154,7 @@
 
                         <!-- Left: Page info -->
                         <div class="text-muted small">
-                            Page <strong>${currentPage}</strong> of <strong>${totalPages}</strong>
+                            Trang số <strong>${currentPage}</strong> trong tổng số <strong>${totalPages}</strong>
                         </div>
 
                         <!-- Center: Pagination Controls -->
@@ -154,7 +169,7 @@
                                     <c:param name="gender" value="${fn:escapeXml(currentGender)}" />
                                 </c:url>
                                 <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
-                                    <a class="page-link" href="${prevUrl}">Previous</a>
+                                    <a class="page-link" href="${prevUrl}">Trước</a>
                                 </li>
 
                                 <!-- Page numbers -->
@@ -180,21 +195,21 @@
                                     <c:param name="gender" value="${fn:escapeXml(currentGender)}" />
                                 </c:url>
                                 <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
-                                    <a class="page-link" href="${nextUrl}">Next</a>
+                                    <a class="page-link" href="${nextUrl}">Tiếp</a>
                                 </li>
                             </ul>
                         </nav>
 
                         <!-- Right: Go to page -->
                         <form action="AdminUserServlet" method="get" class="d-flex align-items-center gap-2">
-                            <label for="gotoPage" class="form-label mb-0 small text-muted">Go to:</label>
+                            <label for="gotoPage" class="form-label mb-0 small text-muted">Đi tới trang:</label>
                             <input type="number" id="gotoPage" name="page" min="1" max="${totalPages}" value="${currentPage}"
                                    class="form-control form-control-sm" style="width: 80px;">
                             <input type="hidden" name="role" value="${fn:escapeXml(currentRole)}" />
                             <input type="hidden" name="search" value="${fn:escapeXml(currentSearch)}" />
                             <input type="hidden" name="sort" value="${fn:escapeXml(currentSort)}" />
                             <input type="hidden" name="gender" value="${fn:escapeXml(currentGender)}" />
-                            <button type="submit" class="btn btn-primary btn-sm">Go</button>
+                            <button type="submit" class="btn btn-primary btn-sm">Đi!</button>
                         </form>
                     </div>
                 </div>
