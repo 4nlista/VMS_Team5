@@ -151,5 +151,15 @@
     border-radius: 50%;
 }
 
+.content-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex: 1;
+    overflow-y: auto;
+}
+
 
 
