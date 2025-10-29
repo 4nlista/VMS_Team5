@@ -5,6 +5,7 @@
 package service;
 
 import dao.AdminAccountDAO;
+import dao.AccountDAO;
 import java.util.List;
 import model.Account;
 
@@ -16,24 +17,26 @@ import model.Account;
 public class AdminAccountService {
     
     private AdminAccountDAO adminAccountDAO;
+    private AccountDAO accountDAO;
     
     public AdminAccountService() {
         adminAccountDAO = new AdminAccountDAO();
+        accountDAO = new AccountDAO();
     }
     
-    // 1. Truy xuất account theo id
+    // 1. Truy xuất account theo id (sử dụng AccountDAO để tránh trùng lặp)
     public Account getAccountById(int id) {
-        return adminAccountDAO.getAccountById(id);
+        return accountDAO.getAccountById(id);
     }
     
-    // 2. Hiển thị dữ liệu danh sách các Accounts
+    // 2. Hiển thị dữ liệu danh sách các Accounts (sử dụng AccountDAO để tránh trùng lặp)
     public List<Account> getAllAccounts() {
-        return adminAccountDAO.getAllAccounts();
+        return accountDAO.getAllAccounts();
     }
     
     // 3. Khóa / Mở khóa tài khoản (business rule: không cho tự khóa admin hiện hành)
     public boolean toggleAccountStatus(int id) {
-        Account acc = adminAccountDAO.getAccountById(id);
+        Account acc = accountDAO.getAccountById(id);
         if (acc == null) {
             return false;
         }
@@ -72,7 +75,7 @@ public class AdminAccountService {
     
     // 7. Xóa account (không cho xóa admin) và toàn bộ dữ liệu liên quan
     public boolean deleteAccount(int id) {
-        Account acc = adminAccountDAO.getAccountById(id);
+        Account acc = accountDAO.getAccountById(id);
         if (acc == null) return false;
         if ("admin".equalsIgnoreCase(acc.getRole())) return false;
         // Thực hiện xóa cascade an toàn trong transaction

@@ -51,7 +51,7 @@
 
                 <div class="card">
                     <div class="card-body">
-                        <form action="<%= request.getContextPath() %>/AddAccountServlet" method="post" enctype="multipart/form-data" id="createAccountForm" novalidate>
+                        <form action="<%= request.getContextPath() %>/AdminAddAccountServlet" method="post" enctype="multipart/form-data" id="createAccountForm" novalidate>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="username" class="form-label">

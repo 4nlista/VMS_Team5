@@ -32,54 +32,7 @@ public class AdminAccountDAO {
         }
     }
     
-    // 1. Truy xuất thông tin account theo ID (dùng cho quản lí admin)
-    public Account getAccountById(int id) {
-        String sql = "SELECT id, username, password, role, status, created_at "
-                + "FROM Accounts WHERE id = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return new Account(
-                            rs.getInt("id"),
-                            rs.getString("username"),
-                            rs.getString("password"),
-                            rs.getString("role"),
-                            rs.getBoolean("status"),
-                            new Date(rs.getTimestamp("created_at").getTime())
-                    );
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-    
-    // 2. Lấy ra danh sách tất cả các tài khoản
-    public List<Account> getAllAccounts() {
-        List<Account> list = new ArrayList<>();
-        String sql = "SELECT id, username, password, role, status, created_at FROM Accounts";
-        try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                Account acc = new Account(
-                        rs.getInt("id"),
-                        rs.getString("username"),
-                        rs.getString("password"),
-                        rs.getString("role"),
-                        rs.getBoolean("status"),
-                        rs.getTimestamp("created_at")
-                );
-                list.add(acc);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-    
-    // 3. Cập nhật trạng thái khóa/mở tài khoản
+    // 1. Cập nhật trạng thái khóa/mở tài khoản
     public boolean updateAccountStatus(int id, boolean status) {
         String sql = "UPDATE Accounts SET status = ? WHERE id = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -93,7 +46,7 @@ public class AdminAccountDAO {
         return false;
     }
     
-    // 4. Tìm kiếm + lọc tài khoản theo role, status, search (username)
+    // 2. Tìm kiếm + lọc tài khoản theo role, status, search (username)
     public List<Account> findAccounts(String role, Boolean status, String search) {
         List<Account> result = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT id, username, password, role, status, created_at FROM Accounts WHERE 1=1");
@@ -144,7 +97,7 @@ public class AdminAccountDAO {
         return result;
     }
 
-    // 5. Đếm tổng số bản ghi theo cùng tiêu chí lọc
+    // 3. Đếm tổng số bản ghi theo cùng tiêu chí lọc
     public int countAccounts(String role, Boolean status, String search) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) AS total FROM Accounts WHERE 1=1");
         List<Object> params = new ArrayList<>();
@@ -186,7 +139,7 @@ public class AdminAccountDAO {
         return 0;
     }
     
-    // 6. Lấy danh sách theo trang (offset/limit) cùng tiêu chí lọc hiện tại
+    // 4. Lấy danh sách theo trang (offset/limit) cùng tiêu chí lọc hiện tại
     public List<Account> findAccountsPaged(String role, Boolean status, String search, int offset, int limit) {
         List<Account> result = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT id, username, password, role, status, created_at FROM Accounts WHERE 1=1");
@@ -241,7 +194,7 @@ public class AdminAccountDAO {
         return result;
     }
     
-    // 7. Tạo tài khoản mới và trả về ID
+    // 5. Tạo tài khoản mới và trả về ID
     public int insertAccountAndGetId(String username, String password, String role, boolean status) {
         String sql = "INSERT INTO Accounts (username, password, role, status, created_at) OUTPUT INSERTED.id VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -267,7 +220,7 @@ public class AdminAccountDAO {
         return insertAccountAndGetId(username, password, role, status) > 0;
     }
     
-    // 8. Kiểm tra username đã tồn tại chưa
+    // 6. Kiểm tra username đã tồn tại chưa
     public boolean usernameExists(String username) {
         String sql = "SELECT COUNT(*) FROM Accounts WHERE username = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -283,7 +236,7 @@ public class AdminAccountDAO {
         return false;
     }
     
-    // 9. Lấy ID tài khoản vừa tạo (sau khi INSERT)
+    // 7. Lấy ID tài khoản vừa tạo (sau khi INSERT)
     public int getLastInsertedAccountId() {
         String sql = "SELECT SCOPE_IDENTITY()";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -298,7 +251,7 @@ public class AdminAccountDAO {
         return -1;
     }
     
-    // 10. Xóa account và toàn bộ dữ liệu liên quan (cascading delete bằng code)
+    // 8. Xóa account và toàn bộ dữ liệu liên quan (cascading delete bằng code)
     public boolean deleteAccountCascade(int id) {
         String delReportsByEventOrg = "DELETE FROM Reports WHERE feedback_id IN (SELECT id FROM Feedback WHERE event_id IN (SELECT id FROM Events WHERE organization_id = ?))";
         String delDonationsByEventOrg = "DELETE FROM Donations WHERE event_id IN (SELECT id FROM Events WHERE organization_id = ?)";

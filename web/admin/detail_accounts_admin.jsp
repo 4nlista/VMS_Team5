@@ -7,7 +7,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.sql.*" %>
 <%@ page import="utils.DBContext" %>
-<%@ page import="dao.AdminAccountDAO" %>
+<%@ page import="dao.AccountDAO" %>
 <%@ page import="model.Account" %>
 <!DOCTYPE html>
 <html>
@@ -43,7 +43,7 @@
                         String gender = null;
                         Date dob = null;
                         if (accountId != null) {
-                            AdminAccountDAO dao = new AdminAccountDAO();
+                            AccountDAO dao = new AccountDAO();
                             account = dao.getAccountById(accountId);
                             try (Connection c = DBContext.getConnection();
                                  PreparedStatement ps = c.prepareStatement("SELECT full_name, email, phone, avatar, gender, dob FROM Users WHERE account_id = ?")) {
@@ -72,7 +72,17 @@
                             <!-- Cột trái: Avatar -->
                             <div class="col-md-3 border-end">
                                 <div class="text-center mb-4">
-                                    <img src="<%= (avatar != null && !avatar.isEmpty()) ? avatar : "https://cdn-icons-png.flaticon.com/512/3135/3135715.png" %>"
+                                    <%
+                                        String avatarUrl;
+                                        if (avatar != null && !avatar.isEmpty()) {
+                                            // Sử dụng AvatarServlet để serve ảnh từ thư mục cố định
+                                            avatarUrl = request.getContextPath() + "/avatar/" + avatar;
+                                        } else {
+                                            // Ảnh mặc định
+                                            avatarUrl = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+                                        }
+                                    %>
+                                    <img src="<%= avatarUrl %>"
                                          class="img-fluid rounded-circle border p-2"
                                          style="width: 150px; height: 150px; object-fit: cover;"
                                          alt="Avatar" />
