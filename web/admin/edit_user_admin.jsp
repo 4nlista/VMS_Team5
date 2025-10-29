@@ -49,16 +49,15 @@
 
                         <div class="row g-3">
                             <div class="col-md-6 position-relative">
-                                <label class="form-label">Full Name <span class="field-error">${errors['full_name']}</span></label>
+                                <label class="form-label">Full Name <span class="form-error">${errors['full_name']}</span></label>
                                 <input type="text" name="full_name" class="form-control form-control-sm"
                                        value="${not empty param.full_name ? param.full_name : user.full_name}">
                             </div>
 
                             <div class="col-md-6 position-relative">
-                                <label class="form-label">Occupation</label>
+                                <label class="form-label">Occupation <span class="form-error">${errors['job_title']}</span></label>
                                 <input type="text" name="job_title" class="form-control form-control-sm"
                                        value="${not empty param.job_title ? param.job_title : user.job_title}">
-                                <span class="field-error">${errors['job_title']}</span>
                             </div>
 
                             <div class="col-md-6">
@@ -70,30 +69,27 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label">Date of Birth</label>
+                                <label class="form-label">Date of Birth <span class="form-error">${errors['dob']}</span></label>
                                 <input type="date" name="dob" class="form-control form-control-sm"
                                        value="${not empty param.dob ? param.dob : user.dob}">
                             </div>
 
                             <div class="col-md-6 position-relative">
-                                <label class="form-label">Address</label>
+                                <label class="form-label">Address <span class="form-error">${errors['address']}</span></label>
                                 <input type="text" name="address" class="form-control form-control-sm"
                                        value="${not empty param.address ? param.address : user.address}">
-                                <span class="field-error">${errors['address']}</span>
                             </div>
 
                             <div class="col-md-6 position-relative">
-                                <label class="form-label">Phone</label>
+                                <label class="form-label">Phone <span class="form-error">${errors['phone']}</span></label>
                                 <input type="text" name="phone" class="form-control form-control-sm"
                                        value="${not empty param.phone ? param.phone : user.phone}">
-                                <span class="field-error">${errors['phone']}</span>
                             </div>
 
                             <div class="col-md-12 position-relative">
-                                <label class="form-label">Email</label>
+                                <label class="form-label">Email <span class="form-error">${errors['email']}</span></label>
                                 <input type="email" name="email" class="form-control form-control-sm"
                                        value="${not empty param.email ? param.email : user.email}">
-                                <span class="field-error">${errors['email']}</span>
                             </div>
                         </div>
 

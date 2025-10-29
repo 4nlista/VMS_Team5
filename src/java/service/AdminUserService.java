@@ -154,23 +154,23 @@ public class AdminUserService {
 				dob = java.sql.Date.valueOf(localDate);
 			}
 		}
+		
+		
 		String avatarDbPath = null; // relative path to store in DB (e.g. /uploads/avatars/uuid.jpg)
 		try {
-			// getPart requires the servlet to be annotated @MultipartConfig (your servlet is)
+			// getPart requires the servlet to be annotated @MultipartConfig
 			Part avatarPart = null;
 			try {
 				avatarPart = request.getPart("avatar");
 			} catch (IllegalStateException ise) {
-				// file too large or not multipart; consider adding an error
-				// (optional) errors.put("avatar", "Uploaded file too large.");
 			}
 
 			if (avatarPart != null && avatarPart.getSize() > 0) {
 				String contentType = avatarPart.getContentType();
 				if (contentType == null || !contentType.startsWith("image/")) {
 					errors.put("avatar", "Uploaded file must be an image.");
-				} else if (avatarPart.getSize() > (2L * 1024 * 1024)) { // 2MB limit example
-					errors.put("avatar", "Avatar file must be <= 2MB.");
+				} else if (avatarPart.getSize() > (5L * 1024 * 1024)) { // 5MB limit
+					errors.put("avatar", "Avatar file must be <= 5MB.");
 				} else {
 					// save file to server
 					String submitted = avatarPart.getSubmittedFileName();
