@@ -129,7 +129,7 @@ public class EventVolunteerDAO {
         return list;
     }
 
-    // ✅ Lấy volunteer_id & event_id theo applyId
+    //  Lấy volunteer_id & event_id theo applyId
     public int[] getVolunteerAndEventByApplyId(int applyId) {
         String sql = "SELECT volunteer_id, event_id FROM Event_Volunteers WHERE id = ?";
         try (Connection conn = DBContext.getConnection();

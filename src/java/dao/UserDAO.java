@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dao;
 
 import java.sql.Connection;
@@ -13,7 +9,7 @@ import utils.DBContext;
 
 public class UserDAO {
 
-
+    // Lấy thông tin user theo account_id (dùng cho volunteer hoặc organization)
     public User getUserByAccountId(int accountId) {
         User user = null;
         String sql = "SELECT * FROM Users WHERE account_id = ?";
@@ -46,18 +42,24 @@ public class UserDAO {
         return user;
     }
 
-
+    // Cập nhật thông tin user dựa theo account_id
     public boolean updateUser(User user) {
-        String sql = "UPDATE Users "
-                   + "SET full_name=?, dob=?, gender=?, phone=?, email=?, "
-                   + "address=?, avatar=?, job_title=?, bio=? "
-                   + "WHERE id=?";
+        String sql = """
+            UPDATE Users
+            SET full_name=?, dob=?, gender=?, phone=?, email=?,
+                address=?, avatar=?, job_title=?, bio=?
+            WHERE account_id=?
+        """;
 
         try (Connection con = DBContext.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, user.getFullName());
-            ps.setDate(2, user.getDob() != null ? new java.sql.Date(user.getDob().getTime()) : null);
+            if (user.getDob() != null) {
+                ps.setDate(2, new java.sql.Date(user.getDob().getTime()));
+            } else {
+                ps.setNull(2, java.sql.Types.DATE);
+            }
             ps.setString(3, user.getGender());
             ps.setString(4, user.getPhone());
             ps.setString(5, user.getEmail());
@@ -65,7 +67,7 @@ public class UserDAO {
             ps.setString(7, user.getAvatar());
             ps.setString(8, user.getJobTitle());
             ps.setString(9, user.getBio());
-            ps.setInt(10, user.getId());
+            ps.setInt(10, user.getAccountId()); // dùng account_id thay vì id
 
             return ps.executeUpdate() > 0;
 
@@ -76,4 +78,3 @@ public class UserDAO {
         return false;
     }
 }
-

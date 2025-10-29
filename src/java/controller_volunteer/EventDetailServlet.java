@@ -40,10 +40,10 @@ public class EventDetailServlet extends HttpServlet {
             }
 
             request.setAttribute("event", event);
-            request.getRequestDispatcher("event_detail.jsp").forward(request, response);
+            request.getRequestDispatcher("/volunteer/detail_event_volunteer.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {
-            response.sendRedirect("EventListServlet");
+            response.sendRedirect("/eventDetail");
         }
     }
 }

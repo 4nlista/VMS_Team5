@@ -57,7 +57,7 @@
 
                                         <!-- Tiêu đề sự kiện -->
                                         <h3 class="heading mb-4">
-                                            <a href="EventDetailServlet?id=${e.id}">${e.title}</a>
+                                            <a href="eventDetail?id=${e.id}">${e.title}</a>
                                         </h3>
 
                                         <!-- Địa điểm -->
@@ -78,17 +78,15 @@
                                         <!-- Nút hành động -->
                                         <div class="d-flex justify-content-between">
                                             <p class="mb-0">
-                                                <a href="EventDetailServlet?id=${e.id}">
+                                                <a href="eventDetail?id=${e.id}">
                                                     View Details <i class="ion-ios-arrow-forward"></i>
                                                 </a>
                                             </p>
                                             <p class="mb-0">
-                                            <form action="${pageContext.request.contextPath}/ApplyEventServlet" method="post" style="display:inline;">
-                                                <input type="hidden" name="eventId" value="${e.id}">
-                                                <button type="submit" class="btn btn-link p-0 m-0 align-baseline">
+                                                <a href="${pageContext.request.contextPath}/volunteer/apply_event_volunteer.jsp?eventId=${e.id}" 
+                                                   class="btn btn-link p-0 m-0 align-baseline">
                                                     Join <i class="ion-ios-person-add"></i>
-                                                </button>
-                                            </form>
+                                                </a>
                                             </p>
                                         </div>
                                     </div>

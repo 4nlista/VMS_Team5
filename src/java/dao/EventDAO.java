@@ -7,7 +7,7 @@ import utils.DBContext;
 
 public class EventDAO {
 
-    // ✅ Lấy tất cả sự kiện đang active (cho volunteer xem)
+    // Lấy tất cả sự kiện đang active (cho volunteer xem)
     public List<Event> getAllEvents() {
         List<Event> list = new ArrayList<>();
         String sql = "SELECT * FROM Events WHERE status = 'active'";
@@ -24,7 +24,7 @@ public class EventDAO {
         return list;
     }
 
-    // ✅ Lấy sự kiện theo ID
+    // Lấy sự kiện theo ID
     public Event getEventById(int id) {
         Event event = null;
         String sql = "SELECT * FROM Events WHERE id = ?";
@@ -42,7 +42,7 @@ public class EventDAO {
         return event;
     }
 
-    // ✅ Lấy danh sách sự kiện theo tổ chức
+    // Lấy danh sách sự kiện theo tổ chức
     public List<Event> getEventsByOrganization(int orgId) {
         List<Event> list = new ArrayList<>();
         String sql = "SELECT * FROM Events WHERE organization_id = ?";
@@ -59,7 +59,7 @@ public class EventDAO {
         return list;
     }
 
-    // ✅ Thêm mới sự kiện
+    // Thêm mới sự kiện
     public void addEvent(Event e) {
         String sql = "INSERT INTO Events (title, description, start_date, end_date, location, needed_volunteers, status, organization_id, category_id, total_donation) "
                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -83,7 +83,7 @@ public class EventDAO {
         }
     }
 
-    // ✅ Cập nhật sự kiện
+    //  Cập nhật sự kiện
     public void updateEvent(Event e) {
         String sql = "UPDATE Events SET title=?, description=?, start_date=?, end_date=?, location=?, needed_volunteers=?, status=?, category_id=?, total_donation=? WHERE id=?";
         try (Connection conn = DBContext.getConnection();
@@ -106,7 +106,7 @@ public class EventDAO {
         }
     }
 
-    // ✅ Xóa sự kiện
+    //  Xóa sự kiện
     public void deleteEvent(int id) {
         String sql = "DELETE FROM Events WHERE id=?";
         try (Connection conn = DBContext.getConnection();
@@ -118,7 +118,7 @@ public class EventDAO {
         }
     }
 
-    // ✅ Hàm phụ trợ chung (tránh lặp lại code)
+    //  Hàm phụ trợ chung (tránh lặp lại code)
     private Event mapEvent(ResultSet rs) throws SQLException {
         return new Event(
             rs.getInt("id"),

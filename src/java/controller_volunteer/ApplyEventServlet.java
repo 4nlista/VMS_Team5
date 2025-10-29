@@ -45,16 +45,16 @@ public class ApplyEventServlet extends HttpServlet {
             boolean success = eventVolunteerDAO.applyForEvent(ev);
 
             if (success) {
-                session.setAttribute("applyMessage", "🎉 Đã gửi yêu cầu tham gia sự kiện thành công!");
+                session.setAttribute("applyMessage", "Đã gửi yêu cầu tham gia sự kiện thành công!");
             } else {
-                session.setAttribute("applyMessage", "⚠️ Bạn đã apply sự kiện này rồi hoặc có lỗi xảy ra!");
+                session.setAttribute("applyMessage", "Bạn đã apply sự kiện này rồi hoặc có lỗi xảy ra!");
             }
-            session.setAttribute("justApplied", true); // ✅ đánh dấu người này vừa apply
+            session.setAttribute("justApplied", true); // đánh dấu người này vừa apply
             response.sendRedirect(request.getContextPath() + "/volunteer/apply_event_volunteer.jsp?eventId=" + eventId);
 
         } catch (Exception e) {
             e.printStackTrace();
-            session.setAttribute("applyMessage", "❌ Lỗi hệ thống khi apply sự kiện!");
+            session.setAttribute("applyMessage", "Lỗi hệ thống khi apply sự kiện!");
             response.sendRedirect(request.getContextPath() + "/volunteer/apply_event_volunteer.jsp");
         }
     }

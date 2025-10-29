@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package controller_organization;
 
 import dao.OrganizationDAO;
@@ -12,8 +8,7 @@ import jakarta.servlet.http.*;
 import java.io.*;
 import java.nio.file.*;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import model.Organization;
+import model.User;
 
 @WebServlet("/organization/profile")
 @MultipartConfig(fileSizeThreshold = 1024 * 50,   // 50KB
@@ -34,7 +29,7 @@ public class OrganizationProfileServlet extends HttpServlet {
             return;
         }
 
-        Organization org = organizationDAO.getOrganizationById(accountId);
+        User org = organizationDAO.getOrganizationById(accountId);
         request.setAttribute("organization", org);
         request.getRequestDispatcher("/organization/profile_org.jsp").forward(request, response);
     }
@@ -46,6 +41,7 @@ public class OrganizationProfileServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
         Integer accountId = (Integer) session.getAttribute("accountId");
+
         if (accountId == null) {
             response.sendRedirect(request.getContextPath() + "/LoginService");
             return;
@@ -61,8 +57,8 @@ public class OrganizationProfileServlet extends HttpServlet {
         String gender = request.getParameter("gender");
         String bio = request.getParameter("bio");
 
-        // Get existing org
-        Organization org = organizationDAO.getOrganizationById(accountId);
+        // Get existing org (user with role = organization)
+        User org = organizationDAO.getOrganizationById(accountId);
         if (org == null) {
             response.sendRedirect(request.getContextPath() + "/organization/profile");
             return;
@@ -76,7 +72,7 @@ public class OrganizationProfileServlet extends HttpServlet {
         org.setGender(gender);
         org.setBio(bio);
 
-        // parse dob
+        // Parse date of birth
         try {
             if (dobStr != null && !dobStr.trim().isEmpty()) {
                 java.util.Date parsed = new SimpleDateFormat("yyyy-MM-dd").parse(dobStr);
@@ -97,7 +93,7 @@ public class OrganizationProfileServlet extends HttpServlet {
             File uploadDir = new File(realPath);
             if (!uploadDir.exists()) uploadDir.mkdirs();
 
-            // derive filename: avatar_timestamp.ext
+            // Derive filename: avatar_timestamp.ext
             String submitted = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
             String ext = "";
             int i = submitted.lastIndexOf('.');
@@ -116,13 +112,14 @@ public class OrganizationProfileServlet extends HttpServlet {
                 ex.printStackTrace();
             }
 
-            // Save relative URL to DB (use context path + uploadsDir + filename)
+            // Save relative URL to DB
             String avatarUrl = request.getContextPath() + uploadsDir + filename;
             org.setAvatar(avatarUrl);
         } else {
-            // optionally allow text input avatarUrl (field "avatarUrl")
             String avatarUrl = request.getParameter("avatarUrl");
-            if (avatarUrl != null && !avatarUrl.isBlank()) org.setAvatar(avatarUrl.trim());
+            if (avatarUrl != null && !avatarUrl.isBlank()) {
+                org.setAvatar(avatarUrl.trim());
+            }
         }
 
         boolean success = organizationDAO.updateOrganization(org);

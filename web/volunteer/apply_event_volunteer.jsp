@@ -16,6 +16,11 @@
         request.setAttribute("user", user);
     }
 %>
+<%
+    java.util.Date now = new java.util.Date();
+    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
+    String formattedDate = sdf.format(now);
+%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -105,8 +110,8 @@
                                         <input type="number" name="hours" class="form-control" placeholder="Nhập số giờ">
                                     </div>
                                     <div class="col-md-6 mb-2">
-                                        <label class="form-label fw-bold">Ngày đăng ký</label>
-                                        <input type="date" name="applyDate" class="form-control" value="<%= new java.sql.Date(System.currentTimeMillis()) %>">
+                                        <label class="form-label fw-bold">Thời gian đăng ký</label>
+                                        <input type="text" name="applyDate" class="form-control" value="<%= formattedDate %>" readonly>
                                     </div>
                                 </div>
 
@@ -127,48 +132,48 @@
                 </div>
             </div>
         </div>
-<%
-    String applyMessage = (String) session.getAttribute("applyMessage");
-    Boolean justApplied = (Boolean) session.getAttribute("justApplied");
+        <%
+            String applyMessage = (String) session.getAttribute("applyMessage");
+            Boolean justApplied = (Boolean) session.getAttribute("justApplied");
 
-    boolean shouldShow = (applyMessage != null && justApplied != null && justApplied);
+            boolean shouldShow = (applyMessage != null && justApplied != null && justApplied);
 
-    // Xóa flag sau khi đã hiển thị (để refresh lại không còn popup)
-    if (shouldShow) {
-        session.removeAttribute("applyMessage");
-        session.removeAttribute("justApplied");
-    }
-%>
-<!-- Popup hiển thị thông báo sau khi đăng ký -->
-<div class="modal fade" id="applyModal" tabindex="-1" aria-labelledby="applyModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content shadow">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="applyModalLabel">Thông báo</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body text-center">
-                <p id="applyMessage" class="fw-semibold"></p>
-            </div>
-            <div class="modal-footer justify-content-center">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+            // Xóa flag sau khi đã hiển thị (để refresh lại không còn popup)
+            if (shouldShow) {
+                session.removeAttribute("applyMessage");
+                session.removeAttribute("justApplied");
+            }
+        %>
+        <!-- Popup hiển thị thông báo sau khi đăng ký -->
+        <div class="modal fade" id="applyModal" tabindex="-1" aria-labelledby="applyModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content shadow">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="applyModalLabel">Thông báo</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <p id="applyMessage" class="fw-semibold"></p>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<script>
-    <% if (shouldShow) { %>
-    document.addEventListener("DOMContentLoaded", function () {
-        var msg = "<%= applyMessage.replace("\"", "\\\"") %>";
-        document.getElementById("applyMessage").textContent = msg;
-        var modal = new bootstrap.Modal(document.getElementById('applyModal'));
-        modal.show();
-    });
-    <% } %>
-</script>
+        <script>
+            <% if (shouldShow) { %>
+            document.addEventListener("DOMContentLoaded", function () {
+                var msg = "<%= applyMessage.replace("\"", "\\\"") %>";
+                document.getElementById("applyMessage").textContent = msg;
+                var modal = new bootstrap.Modal(document.getElementById('applyModal'));
+                modal.show();
+            });
+            <% } %>
+        </script>
 
 
         <jsp:include page="/layout/footer.jsp" />
