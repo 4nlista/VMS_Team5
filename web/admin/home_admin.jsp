@@ -1,4 +1,5 @@
 <%@page contentType="text/html; charset=UTF-8" language="java" pageEncoding="UTF-8"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -53,9 +54,11 @@
 
                     <div class="col-md-4">
                         <div class="bg-primary rounded shadow p-3 text-start text-white position-relative">
-                            <h2 class="fw-bold">150</h2>
+                            <h2 class="fw-bold">
+                                <fmt:formatNumber value="${totalMoneyDonate}" type="number" pattern="#,###" /> VND
+                            </h2>
                             <h5 class="">Tổng số tiền tài trợ</h5>
-                            <i class="bi bi-calendar-event" 
+                            <i class="bi bi-cash" 
                                style="font-size: 5rem; position: absolute; bottom:5px; right: 10px; opacity: 0.15; pointer-events: none; color: black"></i>
                         </div>
                     </div>

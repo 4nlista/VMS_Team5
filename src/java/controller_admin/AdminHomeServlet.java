@@ -40,7 +40,9 @@ public class AdminHomeServlet extends HttpServlet {
             return;
         }
         int totalAccounts = adminHomeService.getTotalAccount();
-        request.setAttribute("totalAccounts", totalAccounts); 
+        double totalMoneyDonate = adminHomeService.getTotalMoneyDonate();
+        request.setAttribute("totalAccounts", totalAccounts);
+        request.setAttribute("totalMoneyDonate", totalMoneyDonate);
         request.setAttribute("username", acc.getUsername());
         request.getRequestDispatcher("/admin/home_admin.jsp").forward(request, response);
     }

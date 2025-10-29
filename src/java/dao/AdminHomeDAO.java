@@ -40,4 +40,20 @@ public class AdminHomeDAO {
         }
         return 0;
     }
+
+    public double getTotalMoneyDonate() {
+        String sql = " SELECT \n"
+                + "    SUM(amount) AS total_success_amount\n"
+                + "FROM Donations\n"
+                + "WHERE status = 'success';";
+        try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getDouble("total_success_amount");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return 0;
+    }
+
 }

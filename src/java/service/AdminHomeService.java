@@ -23,5 +23,9 @@ public class AdminHomeService {
     public int getTotalAccount() {
         return adminHomeDAO.getTotalAccount();
     }
+    // 1.2 Hiển thị dữ liệu tổng số tiền donate
+    public double getTotalMoneyDonate() {
+        return adminHomeDAO.getTotalMoneyDonate();
+    }
     
 }
