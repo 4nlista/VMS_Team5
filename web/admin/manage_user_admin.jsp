@@ -31,9 +31,15 @@
                     <form action="AdminUserServlet" method="get" class="d-flex align-items-center gap-3 flex-wrap" style="flex: 3;">
                         <select name="role" class="form-select w-auto">
                             <option value="">-- Role --</option>
-                            <option value="admin">Admin</option>
-                            <option value="organization">Organization</option>
-                            <option value="volunteer">Volunteer</option>
+                            <option value="admin" ${currentRole == 'admin' ? 'selected' : ''}>Admin</option>
+                            <option value="organization" ${currentRole == 'organization' ? 'selected' : ''}>Organization</option>
+                            <option value="volunteer" ${currentRole == 'volunteer' ? 'selected' : ''}>Volunteer</option>
+                        </select>
+                        
+                        <select name="gender" class="form-select w-auto">
+                            <option value="">-- Gender --</option>
+                            <option value="male" ${currentGender == 'male' ? 'selected' : ''}>Male</option>
+                            <option value="female" ${currentGender == 'female' ? 'selected' : ''}>Female</option>
                         </select>
 
                         <input type="hidden" name="search" value="${fn:escapeXml(currentSearch)}" />
@@ -52,6 +58,7 @@
                         <input type="text" name="search" class="form-control" placeholder="Search by name" value="${fn:escapeXml(currentSearch)}" />
                         <input type="hidden" name="role" value="${fn:escapeXml(currentRole)}" />
                         <input type="hidden" name="sort" value="${fn:escapeXml(currentSort)}" />
+                        <input type="hidden" name="gender" value="${fn:escapeXml(currentGender)}" />
                         <button type="submit" class="btn btn-primary ms-2">
                             <i class="bi bi-search"></i>
                         </button>
@@ -68,6 +75,7 @@
                                         <c:param name="sort" value="id_asc" />
                                         <c:param name="role" value="${fn:escapeXml(currentRole)}" />
                                         <c:param name="search" value="${fn:escapeXml(currentSearch)}" />
+                                        <c:param name="gender" value="${fn:escapeXml(currentGender)}" />
                                         <c:param name="page" value="${currentPage}" />
                                     </c:url>
                                     <a href="${sortAscUrl}" class="text-white"><i class="bi bi-caret-up-fill ms-1"></i></a>
@@ -76,6 +84,7 @@
                                         <c:param name="sort" value="id_desc" />
                                         <c:param name="role" value="${fn:escapeXml(currentRole)}" />
                                         <c:param name="search" value="${fn:escapeXml(currentSearch)}" />
+                                        <c:param name="gender" value="${fn:escapeXml(currentGender)}" />
                                         <c:param name="page" value="${currentPage}" />
                                     </c:url>
                                     <a href="${sortDescUrl}" class="text-white"><i class="bi bi-caret-down-fill ms-1"></i></a>
@@ -106,7 +115,11 @@
                                     </td>
                                     <td>${user.account.username}</td>
                                     <td>${user.full_name}</td>
-                                    <td>${user.gender}</td>
+                                    <td><c:choose>
+                                            <c:when test="${user.gender == 'male'}">Male</c:when>
+                                            <c:when test="${user.gender == 'female'}">Female</c:when>
+                                            <c:otherwise>Unknown</c:otherwise>
+                                        </c:choose></td>
                                     <td><span class="badge bg-secondary text-capitalize">${user.account.role}</span></td>
                                     <td class="text-center">
                                         <form action="AdminUserDetailServlet" method="get" style="display:inline;">
@@ -146,6 +159,7 @@
                                     <c:param name="role" value="${fn:escapeXml(currentRole)}" />
                                     <c:param name="search" value="${fn:escapeXml(currentSearch)}" />
                                     <c:param name="sort" value="${fn:escapeXml(currentSort)}" />
+                                    <c:param name="gender" value="${fn:escapeXml(currentGender)}" />
                                 </c:url>
                                 <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
                                     <a class="page-link" href="${prevUrl}">Previous</a>
@@ -158,6 +172,7 @@
                                         <c:param name="role" value="${fn:escapeXml(currentRole)}" />
                                         <c:param name="search" value="${fn:escapeXml(currentSearch)}" />
                                         <c:param name="sort" value="${fn:escapeXml(currentSort)}" />
+                                        <c:param name="gender" value="${fn:escapeXml(currentGender)}" />
                                     </c:url>
                                     <li class="page-item ${i == currentPage ? 'active' : ''}">
                                         <a class="page-link" href="${pageUrl}">${i}</a>
@@ -170,6 +185,7 @@
                                     <c:param name="role" value="${fn:escapeXml(currentRole)}" />
                                     <c:param name="search" value="${fn:escapeXml(currentSearch)}" />
                                     <c:param name="sort" value="${fn:escapeXml(currentSort)}" />
+                                    <c:param name="gender" value="${fn:escapeXml(currentGender)}" />
                                 </c:url>
                                 <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
                                     <a class="page-link" href="${nextUrl}">Next</a>
@@ -185,6 +201,7 @@
                             <input type="hidden" name="role" value="${fn:escapeXml(currentRole)}" />
                             <input type="hidden" name="search" value="${fn:escapeXml(currentSearch)}" />
                             <input type="hidden" name="sort" value="${fn:escapeXml(currentSort)}" />
+                            <input type="hidden" name="gender" value="${fn:escapeXml(currentGender)}" />
                             <button type="submit" class="btn btn-primary btn-sm">Go</button>
                         </form>
                     </div>

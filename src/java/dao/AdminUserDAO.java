@@ -282,9 +282,10 @@ public class AdminUserDAO {
 	 * @param role Get the inputted role for filtering by role.
 	 * @param search Get the inputted search string for searching with full name.
 	 * @param sort For use with ascending/descending order.
+	 * @param gender Look for gender
 	 * @return The list of user with pagination and filter logic.
 	 */
-	public List<User> getUsersWithFiltersAndPagination(int page, int pageSize, String role, String search, String sort) {
+	public List<User> getUsersWithFiltersAndPagination(int page, int pageSize, String role, String search, String sort, String gender) {
 		List<User> list = new ArrayList<>();
 
 		StringBuilder sql = new StringBuilder();
@@ -298,6 +299,9 @@ public class AdminUserDAO {
 		}
 		if (search != null && !search.trim().isEmpty()) {
 			whereClauses.add("u.full_name LIKE ?");
+		}
+		if (gender != null && !gender.trim().isEmpty()) {
+			whereClauses.add("u.gender = ?");
 		}
 
 		if (!whereClauses.isEmpty()) {
@@ -322,6 +326,9 @@ public class AdminUserDAO {
 			}
 			if (search != null && !search.trim().isEmpty()) {
 				ps.setString(idx++, "%" + search.trim() + "%");
+			}
+			if (gender != null && !gender.trim().isEmpty()) {
+				ps.setString(idx++, gender.trim());
 			}
 			int offset = (page - 1) * pageSize;
 			ps.setInt(idx++, offset);
@@ -356,9 +363,10 @@ public class AdminUserDAO {
 	 *
 	 * @param role Which role to count.
 	 * @param search What name to search.
+	 * @param gender What gender to filter
 	 * @return The number of users match the criteria.
 	 */
-	public int getFilteredUserCount(String role, String search) {
+	public int getFilteredUserCount(String role, String search, String gender) {
 		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT COUNT(*) ");
 		sql.append("FROM Users u JOIN Accounts a ON u.account_id = a.id ");
@@ -369,6 +377,9 @@ public class AdminUserDAO {
 		}
 		if (search != null && !search.trim().isEmpty()) {
 			whereClauses.add("u.full_name LIKE ?");
+		}
+		if (gender != null && !gender.trim().isEmpty()) {
+			whereClauses.add("u.gender = ?");
 		}
 
 		if (!whereClauses.isEmpty()) {
@@ -382,6 +393,9 @@ public class AdminUserDAO {
 			}
 			if (search != null && !search.trim().isEmpty()) {
 				ps.setString(idx++, "%" + search.trim() + "%");
+			}
+			if (gender != null && !gender.trim().isEmpty()) {
+				ps.setString(idx++, gender.trim());
 			}
 			try (ResultSet rs = ps.executeQuery()) {
 				if (rs.next()) {

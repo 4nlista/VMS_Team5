@@ -9,7 +9,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.List;
 import model.User;
@@ -20,7 +19,6 @@ import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Handling servlet logic for Admin user management.
@@ -221,14 +219,15 @@ public class AdminUserService {
 	 * @param role The role for filtering purpose.
 	 * @param search Who to search for.
 	 * @param sort What kind of sort, asc or desc?
+	 * @param gender Which gender? Male or Female?
 	 * @return The list of user per page, with filter.
 	 * @throws SQLException
 	 */
-	public List<User> getUsersByPage(int page, String role, String search, String sort) throws SQLException {
+	public List<User> getUsersByPage(int page, String role, String search, String sort, String gender) throws SQLException {
 		if (page < 1) {
 			page = 1;
 		}
-		return userDAO.getUsersWithFiltersAndPagination(page, pageSize, role, search, sort);
+		return userDAO.getUsersWithFiltersAndPagination(page, pageSize, role, search, sort, gender);
 	}
 
 	/**
@@ -247,11 +246,12 @@ public class AdminUserService {
 	 *
 	 * @param role The role to filter.
 	 * @param search The name to filter.
+	 * @param gender THE GENDER!!!
 	 * @return The number of page, with filter.
 	 * @throws SQLException
 	 */
-	public int getTotalPages(String role, String search) throws SQLException {
-		int totalUsers = userDAO.getFilteredUserCount(role, search);
+	public int getTotalPages(String role, String search, String gender) throws SQLException {
+		int totalUsers = userDAO.getFilteredUserCount(role, search, gender);
 		return (int) Math.ceil((double) totalUsers / pageSize);
 	}
 
@@ -273,9 +273,10 @@ public class AdminUserService {
 		String role = request.getParameter("role");
 		String search = request.getParameter("search");
 		String sort = request.getParameter("sort");
+		String gender = request.getParameter("gender");
 
-		List<User> users = getUsersByPage(page, role, search, sort);
-		int totalPages = getTotalPages(role, search);
+		List<User> users = getUsersByPage(page, role, search, sort, gender);
+		int totalPages = getTotalPages(role, search, gender);
 
 		request.setAttribute("users", users);
 		request.setAttribute("currentPage", page);
@@ -283,6 +284,7 @@ public class AdminUserService {
 		request.setAttribute("currentRole", role == null ? "" : role);
 		request.setAttribute("currentSearch", search == null ? "" : search);
 		request.setAttribute("currentSort", sort == null ? "" : sort);
+		request.setAttribute("currentGender", gender == null ? "" : gender);
 	}
 
 	/**
