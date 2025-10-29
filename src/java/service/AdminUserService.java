@@ -183,7 +183,7 @@ public class AdminUserService {
 
 					// uploads dir inside webapp (or change to external path)
 					String uploadsRelative = "/uploads/avatars";
-					String uploadsAbsolute = request.getServletContext().getRealPath(uploadsRelative);
+					String uploadsAbsolute = "C:\\Users\\DELL\\Downloads\\uploads\\user_avatars";
 					if (uploadsAbsolute == null) {
 						// fallback: use temp dir
 						uploadsAbsolute = System.getProperty("java.io.tmpdir") + File.separator + "uploads" + File.separator + "avatars";
@@ -373,11 +373,12 @@ public class AdminUserService {
 		}
 
 		// Paths
-		String realPath = request.getServletContext().getRealPath("");
-		String uploadPath = realPath + File.separator + "uploads" + File.separator + "avatars";
+		String uploadPath = "C:\\Users\\DELL\\Downloads\\uploads\\user_avatars";
 		File uploadDir = new File(uploadPath);
 		if (!uploadDir.exists()) {
-			uploadDir.mkdirs();
+			if (!uploadDir.mkdirs()) {
+				throw new IOException("Failed to create upload directory.");
+			}
 		}
 
 		// Generate unique file name
@@ -390,7 +391,7 @@ public class AdminUserService {
 		avatarPart.write(fullFilePath);
 
 		// Build URL for DB
-		String avatarUrl = request.getContextPath() + "/uploads/avatars/" + fileName;
+		String avatarUrl = request.getContextPath() + "/uploads/user_avatars/" + fileName;
 
 		// Update database
 		boolean ok = userDAO.updateAvatar(userId, avatarUrl);

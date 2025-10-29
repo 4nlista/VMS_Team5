@@ -19,7 +19,6 @@
     <body>
         <div class="content-container">
             <jsp:include page="layout_admin/sidebar_admin.jsp" />
-
             <div class="edit-wrapper">
                 <!-- Start of unified form -->
                 <form action="AdminUserEditServlet" method="post" enctype="multipart/form-data" class="d-flex flex-wrap gap-3 w-100">
