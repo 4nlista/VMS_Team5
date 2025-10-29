@@ -49,10 +49,9 @@
 
                         <div class="row g-3">
                             <div class="col-md-6 position-relative">
-                                <label class="form-label">Full Name</label>
+                                <label class="form-label">Full Name <span class="field-error">${errors['full_name']}</span></label>
                                 <input type="text" name="full_name" class="form-control form-control-sm"
                                        value="${not empty param.full_name ? param.full_name : user.full_name}">
-                                <span class="field-error">${errors['full_name']}</span>
                             </div>
 
                             <div class="col-md-6 position-relative">

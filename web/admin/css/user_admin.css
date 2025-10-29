@@ -53,9 +53,9 @@ body {
     overflow: visible;
 }
 .field-error {
-    position: absolute;
-    top: 0;
-    left: 0;
+    position: relative;
+    bottom: 0;
+    right: 0;
     font-size: 0.85rem;
     color: #dc3545; /* red */
     line-height: 1rem;
