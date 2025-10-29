@@ -155,59 +155,6 @@ public class AdminUserService {
 			}
 		}
 		
-		
-		String avatarDbPath = null; // relative path to store in DB (e.g. /uploads/avatars/uuid.jpg)
-		try {
-			// getPart requires the servlet to be annotated @MultipartConfig
-			Part avatarPart = null;
-			try {
-				avatarPart = request.getPart("avatar");
-			} catch (IllegalStateException ise) {
-			}
-
-			if (avatarPart != null && avatarPart.getSize() > 0) {
-				String contentType = avatarPart.getContentType();
-				if (contentType == null || !contentType.startsWith("image/")) {
-					errors.put("avatar", "Uploaded file must be an image.");
-				} else if (avatarPart.getSize() > (5L * 1024 * 1024)) { // 5MB limit
-					errors.put("avatar", "Avatar file must be <= 5MB.");
-				} else {
-					// save file to server
-					String submitted = avatarPart.getSubmittedFileName();
-					String fileName = Paths.get(submitted).getFileName().toString();
-					String ext = "";
-					int dot = fileName.lastIndexOf('.');
-					if (dot >= 0) {
-						ext = fileName.substring(dot);
-					}
-
-					// uploads dir inside webapp (or change to external path)
-					String uploadsRelative = "/uploads/avatars";
-					String uploadsAbsolute = "C:\\Users\\DELL\\Downloads\\uploads\\user_avatars";
-					if (uploadsAbsolute == null) {
-						// fallback: use temp dir
-						uploadsAbsolute = System.getProperty("java.io.tmpdir") + File.separator + "uploads" + File.separator + "avatars";
-					}
-					File uploadsDir = new File(uploadsAbsolute);
-					if (!uploadsDir.exists()) {
-						uploadsDir.mkdirs();
-					}
-
-					String newFilename = UUID.randomUUID().toString() + ext;
-					File saved = new File(uploadsDir, newFilename);
-
-					try (InputStream in = avatarPart.getInputStream()) {
-						java.nio.file.Files.copy(in, saved.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-					}
-
-					// store relative path to DB so the JSP can build full URL: e.g. /context/uploads/avatars/uuid.jpg
-					avatarDbPath = uploadsRelative + "/" + newFilename;
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			errors.put("avatar", "Failed to save uploaded avatar.");
-		}
 
 		// If there are validation errors, attach them to request and return false (no DAO call)
 		if (!errors.isEmpty()) {
@@ -227,7 +174,7 @@ public class AdminUserService {
 
 		// No validation errors: attempt DAO update
 		try {
-			boolean ok = userDAO.updateUser(id, username, fullName, gender, phone, email, address, jobTitle, bio, dob, avatarDbPath);
+			boolean ok = userDAO.updateUserTextOnly(id, username, fullName, gender, phone, email, address, jobTitle, bio, dob);
 			if (!ok) {
 				errors.put("general", "Failed to update user in database.");
 				request.setAttribute("errors", errors);
