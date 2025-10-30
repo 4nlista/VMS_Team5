@@ -32,8 +32,8 @@
                             <img src="${not empty user.avatar ? user.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}"
                                  alt="avatar" class="rounded-circle avatar-lg mb-3 border border-2 border-light shadow-sm"/>
                             <div class="fw-semibold fs-5">${fn:escapeXml(user.full_name)}</div>
-                            <div class="text-muted small">@${user.account.username}</div>
-                            <div class="mt-3 text-muted small fst-italic">${fn:escapeXml(user.job_title)}</div>
+<!--                            <div class="text-muted small">@${user.account.username}</div>-->
+                            <div class="mt-3 text-muted fst-italic">${fn:escapeXml(user.job_title)}</div>
                         </div>
 
                         <!-- RIGHT: Fields -->
@@ -57,15 +57,11 @@
                                         <input type="text" class="form-control form-control-sm" value="${user.id}" readonly>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label">Tên Tài Khoản</label>
+                                        <label class="form-label">Tài Khoản</label>
                                         <input type="text" class="form-control form-control-sm" value="${user.account.username}" readonly>
                                     </div>
 
                                     <div class="col-md-6">
-<!--<<<<<<< HEAD
-                                        <label class="form-label">Họ tên</label>
-                                        <input type="text" class="form-control form-control-sm" value="${fn:escapeXml(user.full_name)}" readonly>
-=======-->
                                         <label class="form-label">Giới Tính</label>
                                         <c:choose>
                                             <c:when test="${user.gender == 'male'}">
@@ -76,11 +72,9 @@
                                             </c:when>
                                             <c:otherwise>Unknown</c:otherwise>
                                         </c:choose>
-<!-->>>>>>> tu-->
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label">Ngày Sinh</label>
-<!-->>>>>>> tu-->
                                         <c:choose>
                                             <c:when test="${not empty user.dob}">
                                                 <fmt:formatDate value="${user.dob}" pattern="dd-MM-yyyy" var="dobFmt" />
@@ -131,7 +125,7 @@
                                                 <input type="text" class="form-control form-control-sm" value="N/A" readonly>
                                             </c:otherwise>
                                         </c:choose>
-                                    </div>-->
+                                    </div>
 
                                     <div class="col-12">
                                         <label class="form-label">Giới Thiệu Bản Thân</label>
