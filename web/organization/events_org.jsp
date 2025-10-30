@@ -79,22 +79,11 @@
                                     <td>1</td>
                                     <td>Sự kiện gây quỹ mùa hè</td>
                                     <td><span class="badge bg-success">Môi trường</span></td>
+                                    <td><span class="badge bg-secondary">Công khai</span></td>
+                                    <td><span class="badge bg-danger">Đã kết thúc</span></td>
                                     <td>
-                                        <select class="form-select form-select-sm w-auto">
-                                            <option selected>Công khai</option>
-                                            <option>Riêng tư</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <select class="form-select form-select-sm w-auto">
-                                            <option selected>Đang diễn ra</option>
-                                            <option>Chưa diễn ra</option>
-                                            <option>Đã kết thúc</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <a href="<%= request.getContextPath() %>/organization/detail_event_org.jsp" class="btn btn-primary btn-sm">
-                                            <i class=""></i> Xem
+                                        <a href="<%= request.getContextPath() %>/organization/detail_event_org.jsp" class="btn btn-warning btn-sm">
+                                            <i class=""></i> Sửa
                                         </a>
                                         <a href="<%= request.getContextPath() %>/organization/apply_org.jsp" class="btn btn-secondary btn-sm">
                                             <i class=""></i> Xử lý
@@ -108,22 +97,11 @@
                                     <td>2</td>
                                     <td>Hội thảo công nghệ</td>
                                     <td><span class="badge bg-success">Y tế</span></td>
+                                    <td><span class="badge bg-info">Riêng tư</span></td>
+                                    <td><span class="badge bg-success">Đang diễn ra</span></td>
                                     <td>
-                                        <select class="form-select form-select-sm w-auto">
-                                            <option>Công khai</option>
-                                            <option selected>Riêng tư</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <select class="form-select form-select-sm w-auto">
-                                            <option>Đang diễn ra</option>
-                                            <option selected>Chưa diễn ra</option>
-                                            <option>Đã kết thúc</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <a href="<%= request.getContextPath() %>/organization/detail_event_org.jsp" class="btn btn-primary btn-sm">
-                                            <i class=""></i> Xem
+                                        <a href="<%= request.getContextPath() %>/organization/detail_event_org.jsp" class="btn btn-warning btn-sm">
+                                            <i class=""></i> Sửa
                                         </a>
                                         <a href="<%= request.getContextPath() %>/organization/apply_org.jsp" class="btn btn-secondary btn-sm">
                                             <i class=""></i> Xử lý
@@ -137,22 +115,11 @@
                                     <td>3</td>
                                     <td>Ngày hội tuyển sinh 2025</td>
                                     <td><span class="badge bg-success">Giáo dục</span></td>
+                                    <td><span class="badge bg-secondary">Công khai</span></td>
+                                    <td><span class="badge bg-success">Đang diễn ra</span></td>
                                     <td>
-                                        <select class="form-select form-select-sm w-auto">
-                                            <option selected>Công khai</option>
-                                            <option>Riêng tư</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <select class="form-select form-select-sm w-auto">
-                                            <option>Đang diễn ra</option>
-                                            <option>Chưa diễn ra</option>
-                                            <option selected>Đã kết thúc</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <a href="<%= request.getContextPath() %>/organization/detail_event_org.jsp" class="btn btn-primary btn-sm">
-                                            <i class=""></i> Xem
+                                        <a href="<%= request.getContextPath() %>/organization/detail_event_org.jsp" class="btn btn-warning btn-sm">
+                                            <i class=""></i> Sửa
                                         </a>
                                         <a href="<%= request.getContextPath() %>/organization/apply_org.jsp" class="btn btn-secondary btn-sm">
                                             <i class=""></i> Xử lý

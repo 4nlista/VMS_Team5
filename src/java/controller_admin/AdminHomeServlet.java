@@ -24,7 +24,6 @@ import service.AdminAccountService;
 
 public class AdminHomeServlet extends HttpServlet {
 
-//<<<<<<< HEAD
     private AccountService accountService;
     private AdminHomeService adminHomeService;
 private AdminAccountService adminAccountService;
