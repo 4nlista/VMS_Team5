@@ -51,7 +51,7 @@ public class RegisterService {
 
         // 4. Liên kết account_id vào user và lưu user
         user.setAccount_id(accountId);
-        boolean inserted = userDAO.insertUser(user);
+        boolean inserted = userDAO.insertUserWithAccount(user);
 
         if (!inserted) {
             return "Có lỗi khi lưu thông tin người dùng!";
