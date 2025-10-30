@@ -13,6 +13,7 @@ import java.util.Date;
 public class Event {
     private int id;                         // ID sự kiện
     private String images;                  // anh su kien
+    ///
     private String title;                   // Tiêu đề
     private String description;             // Mô tả
     private Date startDate;                 // Ngày bắt đầu
