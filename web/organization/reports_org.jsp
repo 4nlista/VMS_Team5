@@ -16,12 +16,12 @@
     </head>
     <body>
         <div class="content-container">
-             <%
-                      Object sessionId = session.getId();
-                      String fullname = (String) session.getAttribute("fullname");
-                      if (fullname == null) {
-                          fullname = "Khách";
-                      }
+            <%
+                     Object sessionId = session.getId();
+                     String fullname = (String) session.getAttribute("fullname");
+                     if (fullname == null) {
+                         fullname = "Khách";
+                     }
             %>
 
             <!-- Sidebar -->

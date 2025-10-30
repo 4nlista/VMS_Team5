@@ -7,7 +7,7 @@
 
 /* Sidebar */
 .sidebar {
-    width: 280px;
+    width: 260px;
     background-color: #192942; /* Màu nền sidebar sáng hơn */
     color: #000; /* Màu chữ trong sidebar sẽ đổi thành đen */
     display: flex;
@@ -98,28 +98,14 @@
 
 /* Main content */
 .main-content {
-    flex-grow: 1;
+    flex-grow: 0;
     padding: 2rem 3rem;
     background-color: whitesmoke; /* Màu nền sáng cho main content */
     color: #333; /* Màu chữ tối cho dễ đọc */
 }
 
-/* Button logout đẹp hơn */
-.main-content button {
-    background-color: #dc3545;
-    border: none;
-    color: white;
-    padding: 10px 18px;
-    border-radius: 6px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-top: 20px;
-}
+ 
 
-.main-content button:hover {
-    background-color: #b02a37;
-}
 
 .notification {
     font-size: 1.6rem;
