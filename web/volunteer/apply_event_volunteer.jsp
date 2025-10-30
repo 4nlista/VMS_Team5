@@ -143,7 +143,9 @@ boolean showModal = (message != null);
             </form>
 
             <!-- Nút Quyên góp -->
-            <form action="${pageContext.request.contextPath}/VolunteerPaymentS" method="get" class="flex-fill mt-3">
+            <form action="${pageContext.request.contextPath}/DonateServlet" method="post" class="flex-fill mt-3">
+                <input type="hidden" name="eventId" value="<%= request.getParameter("eventId") %>">
+                <input type="hidden" name="volunteerId" value="<%= session.getAttribute("accountId") %>">
                 <button type="submit" class="btn btn-primary w-100 custom-btn text-white">
                     Quyên góp
                 </button>
