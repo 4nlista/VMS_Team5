@@ -14,7 +14,7 @@ public class User {
     private String avatar;
     private String job_title;
     private String bio;
-    private Date dob;  
+    private Date dob;
     private Account account;
 
     // Constructor mặc định
@@ -142,7 +142,5 @@ public class User {
     public void setAccount(Account account) {
         this.account = account;
     }
-    
 
-    
 }

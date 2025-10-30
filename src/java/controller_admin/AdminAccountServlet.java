@@ -9,17 +9,17 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import model.Account;
-import service.AccountService;
+import service.AdminAccountService;
 
 @WebServlet(name = "AdminAccountServlet", urlPatterns = {"/AdminAccountServlet"})
 
 public class AdminAccountServlet extends HttpServlet {
 
-    private AccountService accountService;
+    private AdminAccountService adminAccountService;
 
     @Override
     public void init() {
-        accountService = new AccountService();
+        adminAccountService = new AdminAccountService();
     }
 
     @Override
@@ -47,11 +47,11 @@ public class AdminAccountServlet extends HttpServlet {
             }
 
             // pagination always applied (filters optional)
-            int totalItems = accountService.countAccounts(role, status, search);
+            int totalItems = adminAccountService.countAccounts(role, status, search);
             int totalPages = (int) Math.ceil(totalItems / (double) pageSize);
             if (totalPages == 0) totalPages = 1;
             if (page > totalPages) page = totalPages;
-            List<Account> accounts = accountService.findAccountsPaged(role, status, search, page, pageSize);
+            List<Account> accounts = adminAccountService.findAccountsPaged(role, status, search, page, pageSize);
 
             // keep selections
             request.setAttribute("selectedRole", role);
@@ -72,7 +72,7 @@ public class AdminAccountServlet extends HttpServlet {
                 String idRaw = request.getParameter("id");
                 try {
                     int id = Integer.parseInt(idRaw);
-                    accountService.toggleAccountStatus(id);
+                    adminAccountService.toggleAccountStatus(id);
                 } catch (NumberFormatException ignored) {
                 }
                 response.sendRedirect(request.getContextPath() + "/AdminAccountServlet");
@@ -82,7 +82,7 @@ public class AdminAccountServlet extends HttpServlet {
                 String idRaw = request.getParameter("id");
                 try {
                     int id = Integer.parseInt(idRaw);
-                    boolean ok = accountService.deleteAccount(id);
+                    boolean ok = adminAccountService.deleteAccount(id);
                     if (!ok) {
                         response.sendRedirect(request.getContextPath() + "/AdminAccountServlet?msg=delete_failed");
                         break;

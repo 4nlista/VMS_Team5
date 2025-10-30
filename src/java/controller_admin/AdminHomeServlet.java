@@ -12,20 +12,27 @@ import java.util.List;
 import java.util.Map;
 import model.Account;
 import model.Event;
+//<<<<<<< HEAD
+import model.Event;
 import service.AccountService;
 import service.AdminHomeService;
+//=======
+import service.AdminAccountService;
+//>>>>>>> hoang
 
 @WebServlet(name = "AdminHomeServlet", urlPatterns = {"/AdminHomeServlet"})
 
 public class AdminHomeServlet extends HttpServlet {
 
+//<<<<<<< HEAD
     private AccountService accountService;
     private AdminHomeService adminHomeService;
-
+private AdminAccountService adminAccountService;
     @Override
     public void init() {
         accountService = new AccountService();
         adminHomeService = new AdminHomeService();
+        adminAccountService = new AdminAccountService();
     }
 
     @Override
@@ -36,7 +43,7 @@ public class AdminHomeServlet extends HttpServlet {
             return;
         }
         Account sessionAccount = (Account) session.getAttribute("account");
-        Account acc = accountService.getAccountById(sessionAccount.getId());
+        Account acc = adminAccountService.getAccountById(sessionAccount.getId());
         if (acc == null || !acc.getRole().equals("admin")) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "Truy cập bị từ chối");
             return;
@@ -45,7 +52,6 @@ public class AdminHomeServlet extends HttpServlet {
         List<Event> topEvents = adminHomeService.getTop3EventsMoneyDonate();
         List<Event> eventsComing = adminHomeService.getTop3EventsComing();
         Map<String, Integer> accountStats = adminHomeService.getAccountStatistics();
-
         int totalAccounts = adminHomeService.getTotalAccount();
         double totalMoneyDonate = adminHomeService.getTotalMoneyDonate();
 

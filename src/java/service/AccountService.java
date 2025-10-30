@@ -12,7 +12,6 @@ import model.Account;
  *
  * @author Admin
  */
-// xử lí lấy dữ liệu các tài khoản
 public class AccountService {
 
     private AccountDAO accountDAO;
@@ -32,3 +31,4 @@ public class AccountService {
     }
 
 }
+

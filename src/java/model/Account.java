@@ -20,7 +20,7 @@ public class Account {
 
     public Account() {
     }
-    
+
     public Account(int id, String username, String password, String role, boolean status) {
         this.id = id;
         this.username = username;
@@ -86,16 +86,14 @@ public class Account {
         this.createdAt = createdAt;
     }
 
-    
-
+//<<<<<<< HEAD
+//    
+//
+//=======
+//>>>>>>> hoang
     @Override
     public String toString() {
-        return "Account{"
-                + "accountId=" + id
-                + ", username='" + username + '\''
-                + ", role=" + role
-                + ", status=" + status
-                + '}';
+        return "Account{" + "id=" + id + ", username=" + username + ", password=" + password + ", role=" + role + ", status=" + status + ", createdAt=" + createdAt + '}';
     }
 
 }

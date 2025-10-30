@@ -34,7 +34,10 @@
                        || currentPath.endsWith("/admin/accounts_admin.jsp") 
                        || currentPath.endsWith("/accounts_admin.jsp") 
                        || currentPath.endsWith("/admin/detail_accounts_admin.jsp") 
-                       || currentPath.endsWith("/detail_accounts_admin.jsp")) ? "active" : "" %>">
+                       || currentPath.endsWith("/detail_accounts_admin.jsp") 
+                       || currentPath.endsWith("/admin/add_account_admin.jsp") 
+                       || currentPath.endsWith("/add_account_admin.jsp")) ? "active" : "" %>">
+
                 <i class="bi bi-person-lines-fill me-2"></i>
                 Quản lí tài khoản
             </a>
