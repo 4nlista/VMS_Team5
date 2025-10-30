@@ -8,6 +8,7 @@ import dao.UserDAO;
 import java.io.InputStream;
 import utils.PasswordUtil;
 import service.FileStorageService;
+import utils.EmailUtil;
 
 /**
  * Service class for handling logic of adding new organization accounts by Admin
@@ -95,6 +96,38 @@ public class AdminAddAccountService {
         return fileStorageService.saveAvatar(avatarInputStream, fileName, accountId);
     }
 
+    // Expose unique checks for servlet delegation
+    public boolean emailExists(String email) {
+        if (adminUserDAO == null) {
+            adminUserDAO = new AdminUserDAO();
+        }
+        return adminUserDAO.emailExists(email);
+    }
+
+    public boolean phoneExists(String phone) {
+        if (adminUserDAO == null) {
+            adminUserDAO = new AdminUserDAO();
+        }
+        return adminUserDAO.phoneExists(phone);
+    }
+
+    /**
+     * Check unique by type. Returns null for invalid type.
+     */
+    public Boolean checkUnique(String type, String value) {
+        if (type == null || value == null || value.trim().isEmpty()) return null;
+        switch (type) {
+            case "username":
+                return checkUsernameExists(value.trim());
+            case "email":
+                return emailExists(value.trim());
+            case "phone":
+                return phoneExists(value.trim());
+            default:
+                return null;
+        }
+    }
+
     private Object[] extractAvatarInfo(jakarta.servlet.http.Part avatarPart) {
         if (avatarPart == null) {
             return new Object[]{null, null};
@@ -136,10 +169,31 @@ public class AdminAddAccountService {
             return new CreateAccountResult(false, "error_username_exists", -1);
         }
 
+        // Check email exists
+        if (email != null && !email.trim().isEmpty()) {
+            if (adminUserDAO == null) {
+                adminUserDAO = new AdminUserDAO();
+            }
+            if (adminUserDAO.emailExists(email.trim())) {
+                return new CreateAccountResult(false, "error_email_exists", -1);
+            }
+        }
+
+        // Check phone exists
+        if (phone != null && !phone.trim().isEmpty()) {
+            if (adminUserDAO == null) {
+                adminUserDAO = new AdminUserDAO();
+            }
+            if (adminUserDAO.phoneExists(phone.trim())) {
+                return new CreateAccountResult(false, "error_phone_exists", -1);
+            }
+        }
+
         // Convert status
         boolean status = "active".equalsIgnoreCase(statusParam);
 
         // Mã hóa mật khẩu trước khi lưu vào database
+        String originalPassword = password;
         String hashedPassword = PasswordUtil.hashPassword(password);
 
         // Tạo account và lấy ID
@@ -169,6 +223,11 @@ public class AdminAddAccountService {
             // adminAccountService.deleteAccount(accountId);
             return new CreateAccountResult(false, "error_validation", accountId);
         }
+
+        // Gửi email thông báo cho organization (best-effort)
+        try {
+            EmailUtil.sendEmailWithAdmin(email, fullName, username, originalPassword);
+        } catch (Exception ignored) {}
 
         return new CreateAccountResult(true, null, accountId);
     }

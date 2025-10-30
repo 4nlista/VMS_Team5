@@ -4,7 +4,7 @@
     Author     : Admin
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8" buffer="32kb"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
@@ -51,7 +51,7 @@
 
                 <div class="card">
                     <div class="card-body">
-                        <form action="<%= request.getContextPath() %>/AdminAddAccountServlet" method="post" enctype="multipart/form-data" id="createAccountForm" novalidate>
+                        <form action="<%= request.getContextPath() %>/admin/AdminAddAccountServlet" method="post" enctype="multipart/form-data" id="createAccountForm" novalidate>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="username" class="form-label">
@@ -231,6 +231,22 @@
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script>
+            const ctx = '<%= request.getContextPath() %>';
+            console.log('Context path:', ctx);
+
+            // Test API immediately on page load
+            window.addEventListener('load', async () => {
+                try {
+                    const testUrl = ctx + '/admin/check-unique?type=username&value=admin';
+                    console.log('Testing API with URL:', testUrl);
+                    const response = await fetch(testUrl);
+                    console.log('API test response status:', response.status);
+                    const data = await response.json();
+                    console.log('API test response data:', data);
+                } catch (error) {
+                    console.error('API test failed:', error);
+                }
+            });
             // Validate password match
             const form = document.getElementById('createAccountForm');
             const password = document.getElementById('password');
@@ -247,6 +263,39 @@
             const fullNameError = document.getElementById('full-name-error');
             const statusSelect = document.getElementById('status');
             const statusError = document.getElementById('status-error');
+            const submitBtn = document.querySelector('#createAccountForm button[type="submit"]');
+
+            let uniqueState = { username: true, email: true, phone: true };
+
+            async function checkUnique(type, value) {
+                if (!value || value.trim().length === 0) return { exists: false };
+                try {
+                    const encodedType = encodeURIComponent(type);
+                    const encodedValue = encodeURIComponent(value.trim());
+                    const url = ctx + '/admin/check-unique?type=' + encodedType + '&value=' + encodedValue;
+                    console.log('Calling checkUnique API:', url);
+                    const res = await fetch(url, { method: 'GET', headers: { 'Accept': 'application/json' } });
+                    console.log('Response status:', res.status);
+                    if (!res.ok) return { exists: false };
+                    return await res.json();
+                } catch (e) {
+                    console.error('checkUnique error:', e);
+                    return { exists: false };
+                }
+            }
+
+            function updateSubmitDisabled() {
+                const anyInvalid =
+                    password.classList.contains('is-invalid') ||
+                    confirmPassword.classList.contains('is-invalid') ||
+                    usernameInput.classList.contains('is-invalid') ||
+                    emailInput.classList.contains('is-invalid') ||
+                    phoneInput.classList.contains('is-invalid') ||
+                    !uniqueState.username ||
+                    !uniqueState.email ||
+                    !uniqueState.phone;
+                if (submitBtn) submitBtn.disabled = anyInvalid;
+            }
 
             function validatePassword() {
                 const passVal = (password.value || '');
@@ -407,50 +456,182 @@
                     }
                 });
             }
-            // Live phone validation (optional)
+            // Live phone validation (optional) with debounce
             if (phoneInput) {
                 const phoneError = document.getElementById('phone-error');
+                let phoneCheckTimeout = null;
+
+                // Check phone uniqueness with debounce
+                async function checkPhoneUnique(val) {
+                    console.log('Checking phone uniqueness for:', val);
+                    try {
+                        const resp = await checkUnique('phone', val);
+                        console.log('Phone check response:', resp);
+
+                        if (resp && resp.exists === true) {
+                            phoneInput.classList.add('is-invalid');
+                            if (phoneError) phoneError.textContent = 'Số điện thoại đã tồn tại';
+                            uniqueState.phone = false;
+                        } else {
+                            // Only remove invalid if format is also ok
+                            if (/^\d{10,11}$/.test(val)) {
+                                phoneInput.classList.remove('is-invalid');
+                                if (phoneError) phoneError.textContent = '';
+                                uniqueState.phone = true;
+                            }
+                        }
+                        updateSubmitDisabled();
+                    } catch (error) {
+                        console.error('Error checking phone:', error);
+                    }
+                }
+
                 phoneInput.addEventListener('input', () => {
                     const val = (phoneInput.value || '').trim();
+
+                    // Clear previous timeout
+                    if (phoneCheckTimeout) {
+                        clearTimeout(phoneCheckTimeout);
+                    }
+
+                    // Empty value is ok (optional field)
                     if (val.length === 0) {
                         phoneInput.classList.remove('is-invalid');
                         phoneInput.setCustomValidity('');
                         if (phoneError) phoneError.textContent = '';
+                        uniqueState.phone = true;
+                        updateSubmitDisabled();
                         return;
                     }
-                    const ok = /^\d{10,11}$/.test(val);
-                    if (ok) {
-                        phoneInput.classList.remove('is-invalid');
-                        phoneInput.setCustomValidity('');
-                        if (phoneError) phoneError.textContent = '';
-                    } else {
+
+                    // Check format first
+                    const formatOk = /^\d{10,11}$/.test(val);
+                    if (!formatOk) {
                         phoneInput.classList.add('is-invalid');
                         phoneInput.setCustomValidity('Số điện thoại phải gồm 10-11 chữ số');
                         if (phoneError) phoneError.textContent = 'Số điện thoại phải gồm 10-11 chữ số';
+                        uniqueState.phone = false;
+                        updateSubmitDisabled();
+                        return;
+                    }
+
+                    // Format is ok, clear format error
+                    phoneInput.setCustomValidity('');
+
+                    // Check uniqueness after 800ms delay (debounce)
+                    phoneCheckTimeout = setTimeout(() => {
+                        checkPhoneUnique(val);
+                    }, 800);
+                });
+
+                // Also check on blur for immediate feedback when leaving field
+                phoneInput.addEventListener('blur', async () => {
+                    const val = (phoneInput.value || '').trim();
+                    if (val.length === 0) {
+                        uniqueState.phone = true;
+                        updateSubmitDisabled();
+                        return;
+                    }
+
+                    // If format is ok, check uniqueness immediately
+                    if (/^\d{10,11}$/.test(val)) {
+                        // Clear any pending timeout
+                        if (phoneCheckTimeout) {
+                            clearTimeout(phoneCheckTimeout);
+                        }
+                        await checkPhoneUnique(val);
                     }
                 });
             }
 
-            // Live email validation (required + pattern)
+            // Live email validation (required + pattern) with debounce
             if (emailInput) {
                 const emailError = document.getElementById('email-error');
+                let emailCheckTimeout = null;
+
+                // Check email uniqueness with debounce
+                async function checkEmailUnique(val) {
+                    console.log('Checking email uniqueness for:', val);
+                    try {
+                        const resp = await checkUnique('email', val);
+                        console.log('Email check response:', resp);
+
+                        if (resp && resp.exists === true) {
+                            emailInput.classList.add('is-invalid');
+                            if (emailError) emailError.textContent = 'Email đã tồn tại';
+                            uniqueState.email = false;
+                        } else {
+                            // Only remove invalid if format is also ok
+                            const formatOk = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(val);
+                            if (formatOk) {
+                                emailInput.classList.remove('is-invalid');
+                                if (emailError) emailError.textContent = '';
+                                uniqueState.email = true;
+                            }
+                        }
+                        updateSubmitDisabled();
+                    } catch (error) {
+                        console.error('Error checking email:', error);
+                    }
+                }
+
                 emailInput.addEventListener('input', () => {
                     const val = (emailInput.value || '').trim();
+
+                    // Clear previous timeout
+                    if (emailCheckTimeout) {
+                        clearTimeout(emailCheckTimeout);
+                    }
+
+                    // Required field
                     if (val.length === 0) {
                         emailInput.classList.add('is-invalid');
                         emailInput.setCustomValidity('Trường này là bắt buộc');
                         if (emailError) emailError.textContent = 'Trường này là bắt buộc';
+                        uniqueState.email = false;
+                        updateSubmitDisabled();
                         return;
                     }
-                    const ok = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(val);
-                    if (ok) {
-                        emailInput.classList.remove('is-invalid');
-                        emailInput.setCustomValidity('');
-                        if (emailError) emailError.textContent = '';
-                    } else {
+
+                    // Check format
+                    const formatOk = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(val);
+                    if (!formatOk) {
                         emailInput.classList.add('is-invalid');
                         emailInput.setCustomValidity('Email không đúng định dạng');
                         if (emailError) emailError.textContent = 'Email không đúng định dạng';
+                        uniqueState.email = false;
+                        updateSubmitDisabled();
+                        return;
+                    }
+
+                    // Format is ok, clear format error
+                    emailInput.setCustomValidity('');
+
+                    // Check uniqueness after 800ms delay (debounce)
+                    emailCheckTimeout = setTimeout(() => {
+                        checkEmailUnique(val);
+                    }, 800);
+                });
+
+                // Also check on blur for immediate feedback
+                emailInput.addEventListener('blur', async () => {
+                    const val = (emailInput.value || '').trim();
+                    if (val.length === 0) {
+                        uniqueState.email = false;
+                        updateSubmitDisabled();
+                        return;
+                    }
+
+                    const formatOk = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(val);
+                    if (formatOk) {
+                        // Clear any pending timeout
+                        if (emailCheckTimeout) {
+                            clearTimeout(emailCheckTimeout);
+                        }
+                        await checkEmailUnique(val);
+                    } else {
+                        uniqueState.email = false;
+                        updateSubmitDisabled();
                     }
                 });
             }
@@ -527,8 +708,79 @@
                 const yyyy = today.getFullYear();
                 const mm = String(today.getMonth() + 1).padStart(2, '0');
                 const dd = String(today.getDate()).padStart(2, '0');
-                dobInput.max = `${yyyy}-${mm}-${dd}`;
+                dobInput.max = yyyy + '-' + mm + '-' + dd;
             })();
+
+            // Username live unique check with debounce
+            if (usernameInput) {
+                let usernameCheckTimeout = null;
+
+                // Check username uniqueness with debounce
+                async function checkUsernameUnique(val) {
+                    console.log('Checking username uniqueness for:', val);
+                    try {
+                        const resp = await checkUnique('username', val);
+                        console.log('Username check response:', resp);
+
+                        if (resp && resp.exists === true) {
+                            usernameInput.classList.add('is-invalid');
+                            if (usernameError) usernameError.textContent = 'Tên đăng nhập đã tồn tại';
+                            uniqueState.username = false;
+                        } else {
+                            usernameInput.classList.remove('is-invalid');
+                            if (usernameError) usernameError.textContent = '';
+                            uniqueState.username = true;
+                        }
+                        updateSubmitDisabled();
+                    } catch (error) {
+                        console.error('Error checking username:', error);
+                    }
+                }
+
+                usernameInput.addEventListener('input', () => {
+                    const val = (usernameInput.value || '').trim();
+
+                    // Clear previous timeout
+                    if (usernameCheckTimeout) {
+                        clearTimeout(usernameCheckTimeout);
+                    }
+
+                    // Required field
+                    if (val.length === 0) {
+                        usernameInput.classList.add('is-invalid');
+                        if (usernameError) usernameError.textContent = 'Trường này là bắt buộc';
+                        uniqueState.username = false;
+                        updateSubmitDisabled();
+                        return;
+                    }
+
+                    // Clear required error if has value
+                    usernameInput.classList.remove('is-invalid');
+                    if (usernameError) usernameError.textContent = '';
+
+                    // Check uniqueness after 800ms delay (debounce)
+                    usernameCheckTimeout = setTimeout(() => {
+                        checkUsernameUnique(val);
+                    }, 800);
+                });
+
+                // Also check on blur for immediate feedback
+                usernameInput.addEventListener('blur', async () => {
+                    const val = (usernameInput.value || '').trim();
+                    if (val.length === 0) {
+                        uniqueState.username = false;
+                        if (usernameError) usernameError.textContent = 'Trường này là bắt buộc';
+                        updateSubmitDisabled();
+                        return;
+                    }
+
+                    // Clear any pending timeout
+                    if (usernameCheckTimeout) {
+                        clearTimeout(usernameCheckTimeout);
+                    }
+                    await checkUsernameUnique(val);
+                });
+            }
         </script>
     </body>
 </html>

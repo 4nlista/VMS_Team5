@@ -93,6 +93,36 @@ public class AdminUserDAO {
         return list;
     }
 
+    public boolean emailExists(String email) {
+        String sql = "SELECT COUNT(*) FROM Users WHERE email = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean phoneExists(String phone) {
+        String sql = "SELECT COUNT(*) FROM Users WHERE phone = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, phone);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public boolean updateUser(int id, String username, String fullName, String gender, String phone,
             String email, String address, String jobTitle, String bio, Date dob, String avatarPath) {
         String updateUserSql = "UPDATE Users SET full_name=?, gender=?, phone=?, email=?, address=?, job_title=?, bio=?, dob=?, avatar=? WHERE id=?";
