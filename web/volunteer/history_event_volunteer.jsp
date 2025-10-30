@@ -1,10 +1,6 @@
-<%-- 
-    Document   : history_event_volunteer.jsp
-    Created on : Sep 29, 2025, 8:33:40 PM
-    Author     : Admin
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.util.List"%>
+<%@page import="model.EventVolunteerInfo"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -28,34 +24,43 @@
                             <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">Tên sự kiện</th>
-                                <th scope="col">Thời gian</th>
+                                <th scope="col">Ngày đăng ký</th>
                                 <th scope="col">Trạng thái</th>
                                 <th scope="col">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody>
+                            <%
+                                List<EventVolunteerInfo> historyList = (List<EventVolunteerInfo>) request.getAttribute("historyList");
+                                if (historyList != null && !historyList.isEmpty()) {
+                                    int index = 1;
+                                    for (EventVolunteerInfo ev : historyList) {
+                                        String status = ev.getStatus();
+                                        String badgeClass = "bg-secondary";
+                                        if ("approved".equalsIgnoreCase(status)) badgeClass = "bg-success";
+                                        else if ("rejected".equalsIgnoreCase(status)) badgeClass = "bg-danger";
+                                        else if ("pending".equalsIgnoreCase(status)) badgeClass = "bg-warning text-dark";
+                            %>
                             <tr>
-                                <td>1</td>
-                                <td>World Wide Donation</td>
-                                <td>10/09/2018 - 10/09/2018</td>
-                                <td><span class="badge bg-success">Approved</span></td>
+                                <td><%= index++ %></td>
+                                <td><%= ev.getEventTitle() %></td>
+                                <td><%= ev.getApplyDate() != null ? new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(ev.getApplyDate()) : "" %></td>
+                                <td><span class="badge <%= badgeClass %>"><%= status.substring(0, 1).toUpperCase() + status.substring(1).toLowerCase() %></span></td>
                                 <td>
-                                    <a href="<%= request.getContextPath() %>/volunteer/detail_event_volunteer.jsp" class="btn btn-sm btn-outline-primary">
+                                    <a href="<%= request.getContextPath() %>/eventDetail?applyId=<%= ev.getApplyId() %>" 
+                                       class="btn btn-sm btn-outline-primary">
                                         Xem chi tiết
                                     </a>
                                 </td>
                             </tr>
+                            <%
+                                    }
+                                } else {
+                            %>
                             <tr>
-                                <td>2</td>
-                                <td>Chiến dịch Xanh</td>
-                                <td>15/11/2019 - 20/11/2019</td>
-                                <td><span class="badge bg-warning text-dark">Pending</span></td>
-                                <td>
-                                    <a href="<%= request.getContextPath() %>/volunteer/detail_event_volunteer.jsp" class="btn btn-sm btn-outline-primary">
-                                        Xem chi tiết
-                                    </a>
-                                </td>
+                                <td colspan="5" class="text-center text-muted py-4">Không có lịch sử đăng ký nào.</td>
                             </tr>
+                            <% } %>
                         </tbody>
                     </table>
                 </div>

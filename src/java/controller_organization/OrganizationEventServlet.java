@@ -1,30 +1,37 @@
 package controller_organization;
 
+import dao.CategoriesDAO;
 import dao.EventDAO;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
+import model.Category;
 import model.Event;
 
 @WebServlet("/OrganizationEventServlet")
 public class OrganizationEventServlet extends HttpServlet {
 
     private EventDAO eventDAO = new EventDAO();
+    private CategoriesDAO categoriesDAO = new CategoriesDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         String action = request.getParameter("action");
-        if (action == null) action = "list";
+        if (action == null) {
+            action = "list";
+        }
 
-        switch(action) {
+        switch (action) {
             case "list":
                 showEventList(request, response);
                 break;
             case "createForm":
+                List<Category> categories = categoriesDAO.getAllCategories(); // 
+                request.setAttribute("categories", categories);
                 request.getRequestDispatcher("/organization/events_create_org.jsp").forward(request, response);
                 break;
             case "delete":

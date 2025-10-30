@@ -6,18 +6,32 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 import model.Event;
+import dao.CategoriesDAO;
+import model.Category;
+import java.util.List;
 
 @WebServlet("/OrganizationEventEditServlet")
 public class OrganizationEventEditServlet extends HttpServlet {
 
     private EventDAO eventDAO = new EventDAO();
+    private CategoriesDAO categoriesDAO = new CategoriesDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         int eventId = Integer.parseInt(request.getParameter("eventId"));
         Event event = eventDAO.getEventById(eventId);
+
+        if (event == null) {
+            response.sendRedirect(request.getContextPath() + "/OrganizationEventServlet?action=list");
+            return;
+        }
+
+        List<Category> categories = categoriesDAO.getAllCategories();
+
         request.setAttribute("event", event);
+        request.setAttribute("categories", categories);
         request.getRequestDispatcher("/organization/events_details_org.jsp").forward(request, response);
     }
 

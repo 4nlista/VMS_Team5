@@ -14,9 +14,7 @@ public class EventVolunteerDAO {
         String insertSQL = "INSERT INTO Event_Volunteers (event_id, volunteer_id, apply_date, hours, note, status) "
                 + "VALUES (?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = DBContext.getConnection();
-             PreparedStatement checkStmt = conn.prepareStatement(checkSQL);
-             PreparedStatement insertStmt = conn.prepareStatement(insertSQL)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement checkStmt = conn.prepareStatement(checkSQL); PreparedStatement insertStmt = conn.prepareStatement(insertSQL)) {
 
             checkStmt.setInt(1, ev.getEventId());
             checkStmt.setInt(2, ev.getVolunteerId());
@@ -46,8 +44,7 @@ public class EventVolunteerDAO {
         List<EventVolunteer> list = new ArrayList<>();
         String sql = "SELECT * FROM Event_Volunteers WHERE volunteer_id = ?";
 
-        try (Connection conn = DBContext.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, volunteerId);
             ResultSet rs = stmt.executeQuery();
@@ -74,8 +71,7 @@ public class EventVolunteerDAO {
     // Volunteer hủy đơn đăng ký (chỉ khi chưa được duyệt)
     public boolean cancelParticipation(int eventId, int volunteerId) {
         String sql = "DELETE FROM Event_Volunteers WHERE event_id = ? AND volunteer_id = ? AND status = 'pending'";
-        try (Connection conn = DBContext.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, eventId);
             stmt.setInt(2, volunteerId);
             int rows = stmt.executeUpdate();
@@ -89,8 +85,7 @@ public class EventVolunteerDAO {
     // Cập nhật trạng thái (duyệt / từ chối)
     public boolean updateStatus(int id, String status) {
         String sql = "UPDATE Event_Volunteers SET status = ? WHERE id = ?";
-        try (Connection conn = DBContext.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, status);
             stmt.setInt(2, id);
             return stmt.executeUpdate() > 0;
@@ -111,8 +106,7 @@ public class EventVolunteerDAO {
             WHERE e.organization_id = ? AND ev.status = 'pending'
             ORDER BY ev.apply_date DESC
         """;
-        try (Connection conn = DBContext.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, orgId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -134,8 +128,7 @@ public class EventVolunteerDAO {
     // Lấy volunteer_id & event_id theo applyId
     public int[] getVolunteerAndEventByApplyId(int applyId) {
         String sql = "SELECT volunteer_id, event_id FROM Event_Volunteers WHERE id = ?";
-        try (Connection conn = DBContext.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, applyId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -150,8 +143,7 @@ public class EventVolunteerDAO {
     // (Tùy chọn) - Lấy trạng thái đơn apply
     public String getStatus(int eventId, int volunteerId) {
         String sql = "SELECT status FROM Event_Volunteers WHERE event_id = ? AND volunteer_id = ?";
-        try (Connection conn = DBContext.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, eventId);
             stmt.setInt(2, volunteerId);
             ResultSet rs = stmt.executeQuery();
@@ -162,5 +154,39 @@ public class EventVolunteerDAO {
             e.printStackTrace();
         }
         return null;
+    }
+    // Lấy toàn bộ lịch sử đăng ký của volunteer kèm thông tin sự kiện
+
+    public List<EventVolunteerInfo> getAllApplicationsByVolunteer(int accountId) {
+        List<EventVolunteerInfo> list = new ArrayList<>();
+        String sql = """
+        SELECT ev.id AS apply_id, e.title AS event_title, u.full_name, u.email, ev.status, ev.apply_date
+        FROM Event_Volunteers ev
+        JOIN Events e ON ev.event_id = e.id
+        JOIN Users u ON ev.volunteer_id = u.id
+        WHERE ev.volunteer_id = ?
+        ORDER BY ev.apply_date DESC
+    """;
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, accountId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                EventVolunteerInfo info = new EventVolunteerInfo();
+                info.setApplyId(rs.getInt("apply_id"));
+                info.setEventTitle(rs.getString("event_title"));
+                info.setVolunteerName(rs.getString("full_name"));
+                info.setVolunteerEmail(rs.getString("email"));
+                info.setStatus(rs.getString("status"));
+                info.setApplyDate(rs.getTimestamp("apply_date"));
+                list.add(info);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
     }
 }
