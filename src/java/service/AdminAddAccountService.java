@@ -27,7 +27,6 @@ public class AdminAddAccountService {
         adminUserDAO = new AdminUserDAO();
     }
 
-
     public static class CreateAccountResult {
 
         private boolean success;
@@ -89,6 +88,8 @@ public class AdminAddAccountService {
     public boolean checkUsernameExists(String username) {
         return adminAccountService.usernameExists(username);
     }
+    
+    
 
     public String uploadAvatar(InputStream avatarInputStream, String fileName, int accountId) {
         return fileStorageService.saveAvatar(avatarInputStream, fileName, accountId);

@@ -61,7 +61,7 @@ public class UserDAO {
         return false;
     }
 
-//     3. Thêm mới user sau khi tạo account
+//     3. Thêm mới user sau khi tạo account -- phần của An
     public boolean insertUserWithAccount(User user) {
         String sql = "INSERT INTO Users (account_id, full_name, dob, gender, phone, email, address, avatar, job_title, bio) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
