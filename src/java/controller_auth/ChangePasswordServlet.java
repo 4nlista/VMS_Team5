@@ -50,7 +50,7 @@ public class ChangePasswordServlet extends HttpServlet {
                     request.getRequestDispatcher("/volunteer/change_password_volunteer.jsp").forward(request, response);
                     break;
                 case "admin":
-                    request.getRequestDispatcher("/auth/change_password_admin.jsp").forward(request, response);
+                    request.getRequestDispatcher("/admin/change_password_admin.jsp").forward(request, response);
                     break;
                 case "organization":
                     request.getRequestDispatcher("/organization/change_password_org.jsp").forward(request, response);
@@ -70,7 +70,7 @@ public class ChangePasswordServlet extends HttpServlet {
                 request.getRequestDispatcher("/volunteer/change_password_volunteer.jsp").forward(request, response);
                 break;
             case "admin":
-                request.getRequestDispatcher("/auth/change_password_admin.jsp").forward(request, response);
+                request.getRequestDispatcher("/admin/change_password_admin.jsp").forward(request, response);
                 break;
             case "organization":
                 request.getRequestDispatcher("/organization/change_password_org.jsp").forward(request, response);
