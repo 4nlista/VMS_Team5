@@ -23,7 +23,6 @@ public class AdminAddAccountService {
 
     public AdminAddAccountService() {
         adminAccountService = new AdminAccountService();
-        userDAO = new UserDAO();
         fileStorageService = new FileStorageService();
         adminUserDAO = new AdminUserDAO();
     }
@@ -162,9 +161,10 @@ public class AdminAddAccountService {
             avatarFileName = uploadAvatar(avatarInputStream, originalFileName, accountId);
         }
 
-        // Tạo user profile (lưu tên file avatar, không phải đường dẫn đầy đủ)
+//         Tạo user profile (lưu tên file avatar, không phải đường dẫn đầy đủ)
         boolean userCreated = adminUserDAO.insertUser(accountId, fullName, email, phone,
                 gender, dob, address, avatarFileName, jobTitle, bio);
+
         if (!userCreated) {
             // Nếu tạo user profile thất bại, có thể xóa account đã tạo
             // adminAccountService.deleteAccount(accountId);

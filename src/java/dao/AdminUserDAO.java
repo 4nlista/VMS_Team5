@@ -390,6 +390,7 @@ public class AdminUserDAO {
     //  4. Tạo user profile sau khi tạo account
     public boolean insertUser(int accountId, String fullName, String email, String phone,
             String gender, String dob, String address, String avatar, String jobTitle, String bio) {
+
         String sql = "INSERT INTO Users (account_id, full_name, dob, gender, phone, email, address, avatar, job_title, bio) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
