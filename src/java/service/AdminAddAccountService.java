@@ -27,9 +27,7 @@ public class AdminAddAccountService {
         adminUserDAO = new AdminUserDAO();
     }
 
-    /**
-     * Result class to hold the result of account creation
-     */
+ 
     public static class CreateAccountResult {
 
         private boolean success;
