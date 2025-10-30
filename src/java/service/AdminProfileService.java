@@ -11,35 +11,51 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Paths;
-import java.util.List;
-import model.User;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import model.User;
 
 /**
- * Handling servlet logic for Admin user management.
  *
  * @author Mirinae
  */
-public class AdminUserService {
+public class AdminProfileService {
 
 	private final AdminUserDAO userDAO = new AdminUserDAO();
-	private final int pageSize = 6; // configurable if needed
 	private static final long MAX_AVATAR_BYTES = 5L * 1024 * 1024; // 5MB
-	// Returns true if update succeeded; if false, request will have "errors" Map<String,String>
 
 	/**
-	 * Handles the validation and update process for editing an admin user's information. It will retrieve form parameters using {@link HttpServletRequest} and validate the user inputs. If validation fails, it will send back the original inputs. If validation passes, it will send the new validated inputs.
-	 *
-	 * @param request the {@link HttpServletRequest} containing the form data and used to attach validation errors
-	 * @return {@code true} if the user information was successfully validated and updated; {@code false} if validation failed or the update could not be completed
+	 * Load admin default profile (usually id = 1).
 	 */
-	public boolean adminUserEdit(HttpServletRequest request) {
+	public User loadDefaultProfile() {
+		return userDAO.getUserDetailById(1);
+	}
+
+	/**
+	 * Load profile by ID (used when forwarding back on errors).
+	 */
+	public User loadProfileById(HttpServletRequest request) {
+		try {
+			int id = Integer.parseInt(request.getParameter("id"));
+			return userDAO.getUserDetailById(id);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	/**
+	 * Validate and update text fields only (will NOT touch avatar column). Follows the same error-collection pattern as your AdminUserService.adminUserEdit.
+	 *
+	 * On validation failure this method will set request attribute "errors" (Map<String,String>) and will also set back the submitted values as attributes for the JSP to prefer (optional).
+	 *
+	 * @return true if update succeeded; false if validation failed or DB update failed.
+	 */
+	public boolean updateProfileText(HttpServletRequest request) {
 		Map<String, String> errors = new HashMap<>();
 
 		// id parsing
@@ -58,7 +74,7 @@ public class AdminUserService {
 			}
 		}
 
-		// collect raw parameters (trim where appropriate) so we can re-populate form easily
+		// collect params
 		String username = safeTrim(request.getParameter("username"));
 		String fullName = safeTrim(request.getParameter("full_name"));
 		String gender = safeTrim(request.getParameter("gender"));
@@ -66,20 +82,10 @@ public class AdminUserService {
 		String email = safeTrim(request.getParameter("email"));
 		String address = safeTrim(request.getParameter("address"));
 		String jobTitle = safeTrim(request.getParameter("job_title"));
-		String bio = request.getParameter("bio"); // allow null/empty
+		String bio = request.getParameter("bio");
 		String dobStr = safeTrim(request.getParameter("dob"));
 
-		// Validate username (Currently unused)
-		/*
-        if (username == null || username.isEmpty()) {
-            errors.put("username", "Username cannot be empty.");
-        } else if (username.length() < 3 || username.length() > 16) {
-            errors.put("username", "Username length must be between 3 and 16 characters.");
-        } else if (!username.matches("^[A-Za-z0-9_.-]+$")) {
-            errors.put("username", "Username may contain only letters, numbers, dot, underscore or dash.");
-        }
-		 */
-		// Full name
+		// Full name validation
 		if (fullName == null || fullName.isEmpty()) {
 			errors.put("full_name", "Full name cannot be empty.");
 		} else if (fullName.length() > 26) {
@@ -130,22 +136,18 @@ public class AdminUserService {
 		if (dobStr != null && !dobStr.isEmpty()) {
 			String s = dobStr.trim();
 			LocalDate localDate = null;
-
 			List<DateTimeFormatter> fmts = Arrays.asList(
-				    DateTimeFormatter.ISO_LOCAL_DATE, // yyyy-MM-dd
-				    DateTimeFormatter.ofPattern("d/M/yyyy"), // 1/2/2020 or 01/2/2020
-				    DateTimeFormatter.ofPattern("dd/MM/yyyy") // 01/02/2020
+				    DateTimeFormatter.ISO_LOCAL_DATE,
+				    DateTimeFormatter.ofPattern("d/M/yyyy"),
+				    DateTimeFormatter.ofPattern("dd/MM/yyyy")
 			);
-
 			for (DateTimeFormatter fmt : fmts) {
 				try {
 					localDate = LocalDate.parse(s, fmt);
 					break;
-				} catch (DateTimeParseException e) {
-					// try next
+				} catch (DateTimeParseException ignored) {
 				}
 			}
-
 			if (localDate == null) {
 				errors.put("dob", "Invalid date of birth.");
 			} else if (localDate.isAfter(LocalDate.now())) {
@@ -154,12 +156,11 @@ public class AdminUserService {
 				dob = java.sql.Date.valueOf(localDate);
 			}
 		}
-		
 
-		// If there are validation errors, attach them to request and return false (no DAO call)
+		// if any validation error -> attach and return false
 		if (!errors.isEmpty()) {
 			request.setAttribute("errors", errors);
-			// Also set back the submitted values so JSP can prefer them
+			// keep submitted values (JSP can use param.* but we set some as attributes too)
 			request.setAttribute("username", username);
 			request.setAttribute("full_name", fullName);
 			request.setAttribute("gender", gender);
@@ -172,7 +173,7 @@ public class AdminUserService {
 			return false;
 		}
 
-		// No validation errors: attempt DAO update
+		// Attempt DB update (text-only) using DAO.updateUserTextOnly
 		try {
 			boolean ok = userDAO.updateUserTextOnly(id, username, fullName, gender, phone, email, address, jobTitle, bio, dob);
 			if (!ok) {
@@ -182,7 +183,6 @@ public class AdminUserService {
 			}
 			return true;
 		} catch (Exception e) {
-			// Log the exception (stack trace) and surface a general message
 			e.printStackTrace();
 			errors.put("general", "An unexpected error occurred while updating the user.");
 			request.setAttribute("errors", errors);
@@ -191,126 +191,11 @@ public class AdminUserService {
 	}
 
 	/**
-	 * Safely trims a string by removing leading and trailing whitespace.
+	 * Handle avatar upload or deletion.- If delete_avatar param is truthy -> sets avatar to NULL.- If file uploaded -> validate (MIME & size), save and update DB.On validation failure: sets request attribute "errors" and returns false (no exception thrown).
 	 *
-	 * @param s The inputted string. The string itself can be null.
-	 * @return The trimmed string, or null (instead of throwing a NullPointerException) if the inputted string were null.
-	 */
-	private String safeTrim(String s) {
-		return (s == null) ? null : s.trim();
-	}
-
-	/**
-	 * Get list of all users based on the page number.
-	 *
-	 * @param page The page number. If it's somehow less than 1, it will be set to 1.
-	 * @return List of all users in a page based on the page number.
-	 * @throws SQLException
-	 */
-	public List<User> getUsersByPage(int page) throws SQLException {
-		if (page < 1) {
-			page = 1;
-		}
-		return userDAO.getAllUsersWithPagination(page, pageSize);
-	}
-
-	/**
-	 * Get list of all users based on the page number, now with filter support.
-	 *
-	 * @param page The specified page number, if it's less than 1, set to 1.
-	 * @param role The role for filtering purpose.
-	 * @param search Who to search for.
-	 * @param sort What kind of sort, asc or desc?
-	 * @param gender Which gender? Male or Female?
-	 * @return The list of user per page, with filter.
-	 * @throws SQLException
-	 */
-	public List<User> getUsersByPage(int page, String role, String search, String sort, String gender) throws SQLException {
-		if (page < 1) {
-			page = 1;
-		}
-		return userDAO.getUsersWithFiltersAndPagination(page, pageSize, role, search, sort, gender);
-	}
-
-	/**
-	 * Method to get the current total number of pages.
-	 *
-	 * @return The number of total pages.
-	 * @throws SQLException
-	 */
-	public int getTotalPages() throws SQLException {
-		int totalUsers = userDAO.getTotalUserCount();
-		return (int) Math.ceil((double) totalUsers / pageSize);
-	}
-
-	/**
-	 * Get the total number of page, based on filter.
-	 *
-	 * @param role The role to filter.
-	 * @param search The name to filter.
-	 * @param gender THE GENDER!!!
-	 * @return The number of page, with filter.
-	 * @throws SQLException
-	 */
-	public int getTotalPages(String role, String search, String gender) throws SQLException {
-		int totalUsers = userDAO.getFilteredUserCount(role, search, gender);
-		return (int) Math.ceil((double) totalUsers / pageSize);
-	}
-
-	/**
-	 * Load the list of users.
 	 * @param request
-	 * @throws SQLException
-	 */
-	public void loadUserList(HttpServletRequest request) throws SQLException {
-		int page = 1;
-		String pageParam = request.getParameter("page");
-		if (pageParam != null) {
-			try {
-				page = Integer.parseInt(pageParam);
-			} catch (NumberFormatException ignored) {
-			}
-		}
-
-		String role = request.getParameter("role");
-		String search = request.getParameter("search");
-		String sort = request.getParameter("sort");
-		String gender = request.getParameter("gender");
-
-		List<User> users = getUsersByPage(page, role, search, sort, gender);
-		int totalPages = getTotalPages(role, search, gender);
-
-		request.setAttribute("users", users);
-		request.setAttribute("currentPage", page);
-		request.setAttribute("totalPages", totalPages);
-		request.setAttribute("currentRole", role == null ? "" : role);
-		request.setAttribute("currentSearch", search == null ? "" : search);
-		request.setAttribute("currentSort", sort == null ? "" : sort);
-		request.setAttribute("currentGender", gender == null ? "" : gender);
-	}
-
-	/**
-	 * Load details of user.
-	 * @param request
-	 * @return The user and their details.
-	 * @throws Exception
-	 */
-	public User loadUserDetail(HttpServletRequest request) throws Exception {
-		try {
-			int id = Integer.parseInt(request.getParameter("id"));
-			return userDAO.getUserDetailById(id);
-		} catch (Exception e) {
-			return null;
-		}
-	}
-
-	/**
-	 * Method used to specifically handle the upload of avatar to the system.
-	 * @param request
-	 * @param userId This param is here to act as a way to distinct file names.
-	 * @return true if completed, false if otherwise.
-	 * @throws IOException
-	 * @throws ServletException
+	 * @param userId
+	 * @return 
 	 */
 	public boolean handleAvatarUpload(HttpServletRequest request, int userId) {
 		Map<String, String> errors = (Map<String, String>) request.getAttribute("errors");
@@ -393,5 +278,9 @@ public class AdminUserService {
 			request.setAttribute("errors", errors);
 			return false;
 		}
+	}
+
+	private String safeTrim(String s) {
+		return (s == null) ? null : s.trim();
 	}
 }

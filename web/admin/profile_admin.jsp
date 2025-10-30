@@ -11,73 +11,79 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta charset="UTF-8">
+        <title>Hồ Sơ Quản Trị Viên</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
         <link href="<%= request.getContextPath() %>/admin/css/admin.css" rel="stylesheet" />
-        <link href="<%= request.getContextPath() %>/admin/css/user_admin.css" rel="stylesheet" />
+        <link href="<%= request.getContextPath() %>/admin/css/profile_admin.css" rel="stylesheet" />
     </head>
     <body>
-        <div class="content-container">
+        <div class="content-container d-flex">
             <!-- Sidebar -->
             <jsp:include page="layout_admin/sidebar_admin.jsp" />
 
-            <!-- Main Content (centered) -->
-            <div class="main-content">
-                <div class="container-detail shadow-sm bg-white rounded">
+            <!-- Main Content -->
+            <div class="main-content flex-grow-1">
+                <div class="container-detail shadow bg-white">
                     <div class="row g-0">
                         <!-- LEFT: Avatar -->
-                        <div class="col-md-3 profile-left p-4 text-center">
+                        <div class="col-md-4 profile-left d-flex flex-column align-items-center justify-content-center text-center p-4">
                             <img src="${not empty user.avatar ? user.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}"
-                                 class="rounded-circle avatar-lg mb-3 border p-2" alt="Avatar" />
-                            <div class="fw-semibold">${fn:escapeXml(user.full_name)}</div>
-                            <div class="text-muted small">${user.account.username}</div>
+                                 alt="avatar" class="rounded-circle avatar-lg mb-3 border border-2 border-light shadow-sm"/>
+                            <div class="fw-semibold fs-5">${fn:escapeXml(user.full_name)}</div>
+                            <div class="text-muted small">@${user.account.username}</div>
+                            <div class="mt-3 text-muted small fst-italic">${fn:escapeXml(user.job_title)}</div>
                         </div>
 
-                        <!-- RIGHT: All fields  -->
-                        <div class="col-md-9 p-4">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
+                        <!-- RIGHT: Fields -->
+                        <div class="col-md-8 p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-4">
                                 <div>
-                                    <h5 class="fw-bold mb-0">Hồ sơ quản trị viên</h5>
-<!--                                    <small class="text-muted">Xem <strong>${user.account.username}</strong>'s account</small>-->
+                                    <h5 class="mb-0">Hồ Sơ Của Quản Trị Viên</h5>
+                                    <small class="text-muted">Đang Xem Hồ Sơ Của <strong>${user.account.username}</strong>.</small>
                                 </div>
                                 <div>
-                                    <a href="AdminProfileEditServlet?id=1" class="btn btn-sm btn-warning">Chỉnh sửa</a>
+                                    <a href="AdminProfileEditServlet?id=${user.id}" class="btn btn-sm btn-warning text-white">
+                                        <i class="bi bi-pencil"></i> Chỉnh Sửa
+                                    </a>
                                 </div>
                             </div>
 
                             <form>
-                                <div class="row g-2">
+                                <div class="row g-3">
                                     <div class="col-md-6">
                                         <label class="form-label">ID</label>
                                         <input type="text" class="form-control form-control-sm" value="${user.id}" readonly>
                                     </div>
-
                                     <div class="col-md-6">
-                                        <label class="form-label">Tài khoản</label>
+                                        <label class="form-label">Tên Tài Khoản</label>
                                         <input type="text" class="form-control form-control-sm" value="${user.account.username}" readonly>
                                     </div>
 
                                     <div class="col-md-6">
+<!--<<<<<<< HEAD
                                         <label class="form-label">Họ tên</label>
                                         <input type="text" class="form-control form-control-sm" value="${fn:escapeXml(user.full_name)}" readonly>
+=======-->
+                                        <label class="form-label">Giới Tính</label>
+                                        <c:choose>
+                                            <c:when test="${user.gender == 'male'}">
+                                                <input type="text" class="form-control form-control-sm" value="Nam" readonly>
+                                            </c:when>
+                                            <c:when test="${user.gender == 'female'}">
+                                                <input type="text" class="form-control form-control-sm" value="Nữ" readonly>
+                                            </c:when>
+                                            <c:otherwise>Unknown</c:otherwise>
+                                        </c:choose>
+<!-->>>>>>> tu-->
                                     </div>
-
                                     <div class="col-md-6">
-                                        <label class="form-label">Nghề nghiệp</label>
-                                        <input type="text" class="form-control form-control-sm" value="${fn:escapeXml(user.job_title)}" readonly>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label class="form-label">Giới tính</label>
-                                        <input type="text" class="form-control form-control-sm" value="${user.gender}" readonly>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label class="form-label">Ngày sinh</label>
+                                        <label class="form-label">Ngày Sinh</label>
+<!-->>>>>>> tu-->
                                         <c:choose>
                                             <c:when test="${not empty user.dob}">
-                                                <fmt:formatDate value="${user.dob}" pattern="yyyy-MM-dd" var="dobFmt" />
+                                                <fmt:formatDate value="${user.dob}" pattern="dd-MM-yyyy" var="dobFmt" />
                                                 <input type="text" class="form-control form-control-sm" value="${dobFmt}" readonly>
                                             </c:when>
                                             <c:otherwise>
@@ -87,12 +93,11 @@
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label class="form-label">Địa chỉ</label>
+                                        <label class="form-label">Địa Chỉ</label>
                                         <input type="text" class="form-control form-control-sm" value="${fn:escapeXml(user.address)}" readonly>
                                     </div>
-
                                     <div class="col-md-6">
-                                        <label class="form-label">Số điện thoại</label>
+                                        <label class="form-label">Điện Thoại</label>
                                         <input type="text" class="form-control form-control-sm" value="${user.phone}" readonly>
                                     </div>
 
@@ -101,12 +106,22 @@
                                         <input type="email" class="form-control form-control-sm" value="${user.email}" readonly>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label">Vai trò</label>
-                                        <input type="text" class="form-control form-control-sm fw-bold text-danger" value="${user.account.role}" readonly>
+                                        <label class="form-label">Vai Trò</label>
+                                        <c:choose>
+                                            <c:when test="${user.account.role == 'admin'}">
+                                                <input type="text" class="form-control form-control-sm fw-bold text-danger" value="Quản Trị Viên" readonly>
+                                            </c:when>
+                                            <c:when test="${user.account.role == 'organization'}">
+                                                <input type="text" class="form-control form-control-sm fw-bold text-danger" value="Người Tổ Chức" readonly>
+                                            </c:when>
+                                            <c:when test="${user.account.role == 'volunteer'}">
+                                                <input type="text" class="form-control form-control-sm fw-bold text-danger" value="Tình Nguyện Viên" readonly>
+                                            </c:when>
+                                            <c:otherwise>Unknown</c:otherwise>
+                                        </c:choose>
                                     </div>
-<!--
                                     <div class="col-md-6">
-                                        <label class="form-label">Thời gian tạo</label>
+                                        <label class="form-label">Ngày Tạo Tài Khoản</label>
                                         <c:choose>
                                             <c:when test="${not empty user.account.createdAt}">
                                                 <fmt:formatDate value="${user.account.createdAt}" pattern="HH:mm:ss / dd-MM-yyyy" var="acctCreated"/>
@@ -118,9 +133,9 @@
                                         </c:choose>
                                     </div>-->
 
-                                    <div class="col-12 mt-2">
-                                        <label class="form-label">Giới thiệu</label>
-                                        <textarea class="form-control form-control-sm" style="resize:none;"rows="6" readonly>${fn:escapeXml(user.bio)}</textarea>
+                                    <div class="col-12">
+                                        <label class="form-label">Giới Thiệu Bản Thân</label>
+                                        <textarea class="form-control form-control-sm" style="resize:none;" rows="5" readonly>${fn:escapeXml(user.bio)}</textarea>
                                     </div>
                                 </div>
                             </form>
@@ -129,7 +144,7 @@
                 </div>
             </div>
         </div>
+
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="<%= request.getContextPath() %>/admin/js/detail_user_admin.js"></script>
     </body>
 </html>

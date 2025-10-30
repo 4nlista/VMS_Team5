@@ -3,7 +3,6 @@
  */
 package controller_admin;
 
-import dao.AdminUserDAO;
 import service.AdminUserService;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -12,64 +11,70 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.User;
+import jakarta.servlet.annotation.MultipartConfig;
 
 /**
  *
  * @author Mirinesa
  */
+@MultipartConfig
 @WebServlet(name = "AdminUserEditServlet", urlPatterns = {"/AdminUserEditServlet"})
 public class AdminUserEditServlet extends HttpServlet {
 
-	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-		    throws ServletException, IOException {
-		response.setContentType("text/html;charset=UTF-8");
-	}
+	private final AdminUserService service = new AdminUserService();
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 		    throws ServletException, IOException {
-		int userId = Integer.parseInt(request.getParameter("id"));
-		AdminUserDAO dao = new AdminUserDAO();
-		User user = dao.getUserDetailById(userId);
-
-		if (user == null) {
-			response.sendRedirect("AdminUserServlet?error=notfound");
-			return;
+		try {
+			User user = service.loadUserDetail(request);
+			if (user == null) {
+				response.sendRedirect("AdminUserServlet?error=notfound");
+				return;
+			}
+			request.setAttribute("user", user);
+			request.getRequestDispatcher("/admin/edit_user_admin.jsp").forward(request, response);
+		} catch (Exception e) {
+			response.sendRedirect("AdminUserServlet?error=invalid");
 		}
-
-		request.setAttribute("user", user);
-		request.getRequestDispatcher("/admin/edit_user_admin.jsp").forward(request, response);
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 		    throws ServletException, IOException {
-		AdminUserService service = new AdminUserService();
-    boolean updated = service.adminUserEdit(request);
+		AdminUserService userService = new AdminUserService();
+		boolean textUpdated = userService.adminUserEdit(request);
 
-    if (updated) {
-        response.sendRedirect("AdminUserServlet?success=updated");
-        return;
-    } else {
-        // validation failed or DAO update failed: forward back to edit page and show errors
-        // try to fetch user so JSP can still show avatar/id etc.
-        String idStr = request.getParameter("id");
-        if (idStr != null) {
-            try {
-                int id = Integer.parseInt(idStr);
-                AdminUserDAO dao = new AdminUserDAO();
-                User user = dao.getUserDetailById(id);
-                if (user != null) {
-                    request.setAttribute("user", user);
-                }
-            } catch (Exception e) {
-                // ignore: if we cannot fetch user, the JSP will still render using request params
-                e.printStackTrace();
-            }
-        }
+		if (textUpdated) {
+			// parse id safely
+			int userId = -1;
+			try {
+				userId = Integer.parseInt(request.getParameter("id"));
+			} catch (Exception ignored) {
+			}
 
-        // Forward (not redirect) so request attributes (errors + submitted fields) are available
-        request.getRequestDispatcher("/admin/edit_user_admin.jsp").forward(request, response);
-    }
+			// handle avatar: this returns false on validation failure and sets request.errors
+			boolean avatarOk = userService.handleAvatarUpload(request, userId);
+
+			if (avatarOk) {
+				response.sendRedirect("AdminUserServlet?id=" + userId);
+			} else {
+				// avatar validation failed -> forward back to edit with errors (do not redirect)
+				try {
+					User user = userService.loadUserDetail(request);
+					request.setAttribute("user", user);
+				} catch (Exception ignored) {
+				}
+				request.getRequestDispatcher("/admin/edit_user_admin.jsp").forward(request, response);
+			}
+		} else {
+			// text validation failed -> updateProfileText already attached "errors"
+			try {
+				User user = userService.loadUserDetail(request);
+				request.setAttribute("user", user);
+			} catch (Exception ignored) {
+			}
+			request.getRequestDispatcher("/admin/edit_user_admin.jsp").forward(request, response);
+		}
 	}
 }

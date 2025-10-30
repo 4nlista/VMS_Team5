@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package model;
+
 import java.util.Date;
 
 /**
@@ -70,13 +71,13 @@ public class Account {
         this.role = role;
     }
 
-    public boolean isStatus() {
-        return status;
-    }
-
     public void setStatus(boolean status) {
         this.status = status;
     }
+     public boolean isStatus() {
+        return status;
+    }
+    
 
     public Date getCreatedAt() {
         return createdAt;
@@ -86,11 +87,9 @@ public class Account {
         this.createdAt = createdAt;
     }
 
-//<<<<<<< HEAD
-//    
-//
-//=======
-//>>>>>>> hoang
+   
+    
+
     @Override
     public String toString() {
         return "Account{" + "id=" + id + ", username=" + username + ", password=" + password + ", role=" + role + ", status=" + status + ", createdAt=" + createdAt + '}';

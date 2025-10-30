@@ -38,6 +38,10 @@
     card.style.left = offsetX + 'px';
     card.style.top = offsetY + 'px';
   }
+  
+  function genderFormat (){
+      const gender = document.getAttribute 
+  }
 
   // run on load and resize
   window.addEventListener('load', fitCard);

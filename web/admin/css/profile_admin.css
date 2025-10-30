@@ -1,0 +1,159 @@
+/*
+A friendly reminder to drink enough water
+*/
+/* 
+    Created on : 29 Oct 2025, 04:14:06
+    Author     : Mirinae
+*/
+
+body {
+    background-color: #f8f9fa;
+}
+
+.container-detail {
+    max-width: 900px;
+    margin: 1rem auto 2rem auto;
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+.profile-left {
+    background: linear-gradient(135deg, #f0f2f5, #ffffff);
+    border-right: 1px solid #e0e0e0;
+}
+
+.avatar-lg {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+}
+
+.main-content {
+    flex-grow: 1;
+    padding: 1.5rem 2rem;
+}
+
+label.form-label {
+    font-weight: 600;
+    color: #555;
+}
+
+input[readonly],
+textarea[readonly] {
+    background-color: #f9f9f9;
+    cursor: default;
+}
+
+.btn-warning {
+    border-radius: 50px;
+}
+
+.fw-bold.text-danger {
+    color: #dc3545 !important;
+}
+
+.container-detail h5 {
+    font-weight: 700;
+    color: #343a40;
+}
+
+textarea.form-control-sm {
+    min-height: 100px;
+}
+
+.content-container {
+    display: flex;
+}
+
+.edit-wrapper {
+    flex: 1;
+    margin: 1.5rem auto;
+    max-width: 1100px;
+    display: flex;
+    gap: 1.5rem;
+}
+
+/* Left avatar card */
+.profile-side {
+    flex: 0 0 280px;
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    padding: 1.5rem 1rem;
+}
+
+.profile-side img {
+    width: 130px;
+    height: 130px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #dee2e6;
+    box-shadow: 0 0 6px rgba(0,0,0,0.1);
+}
+
+.profile-side h5 {
+    margin-top: 1rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.profile-side small {
+    color: #777;
+}
+
+.upload-section {
+    margin-top: 1rem;
+    text-align: left;
+}
+
+.upload-section label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #555;
+}
+
+.upload-section input[type=file] {
+    font-size: 0.875rem;
+}
+
+/* Right form */
+.edit-form-card {
+    flex: 1;
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    padding: 1.5rem 2rem;
+}
+
+.edit-form-card h5 {
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+.form-section {
+    border-top: 1px solid #eee;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+}
+
+.form-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #666;
+}
+
+.form-error {
+    color: #dc3545;
+    font-size: 0.75rem;
+}
+
+.btn-rounded {
+    border-radius: 50px;
+}
+
+.action-buttons {
+    text-align: center;
+    margin-top: 2rem;
+}
