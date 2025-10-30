@@ -27,7 +27,8 @@ public class EventVolunteerDAO {
 
             insertStmt.setInt(1, ev.getEventId());
             insertStmt.setInt(2, ev.getVolunteerId());
-            insertStmt.setTimestamp(3, (Timestamp) ev.getApplyDate());
+            // ✅ dùng thời gian hiện tại
+            insertStmt.setTimestamp(3, new Timestamp(new java.util.Date().getTime()));
             insertStmt.setInt(4, ev.getHours());
             insertStmt.setString(5, ev.getNote());
             insertStmt.setString(6, ev.getStatus());
@@ -70,14 +71,15 @@ public class EventVolunteerDAO {
         return list;
     }
 
-    // Volunteer hủy tham gia
+    // Volunteer hủy đơn đăng ký (chỉ khi chưa được duyệt)
     public boolean cancelParticipation(int eventId, int volunteerId) {
-        String sql = "DELETE FROM Event_Volunteers WHERE event_id = ? AND volunteer_id = ?";
+        String sql = "DELETE FROM Event_Volunteers WHERE event_id = ? AND volunteer_id = ? AND status = 'pending'";
         try (Connection conn = DBContext.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, eventId);
             stmt.setInt(2, volunteerId);
-            return stmt.executeUpdate() > 0;
+            int rows = stmt.executeUpdate();
+            return rows > 0;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -98,7 +100,7 @@ public class EventVolunteerDAO {
         return false;
     }
 
-    
+    // Lấy danh sách volunteer đang chờ duyệt theo tổ chức
     public List<EventVolunteerInfo> getPendingVolunteersByOrganization(int orgId) {
         List<EventVolunteerInfo> list = new ArrayList<>();
         String sql = """
@@ -129,7 +131,7 @@ public class EventVolunteerDAO {
         return list;
     }
 
-    //  Lấy volunteer_id & event_id theo applyId
+    // Lấy volunteer_id & event_id theo applyId
     public int[] getVolunteerAndEventByApplyId(int applyId) {
         String sql = "SELECT volunteer_id, event_id FROM Event_Volunteers WHERE id = ?";
         try (Connection conn = DBContext.getConnection();
@@ -138,6 +140,23 @@ public class EventVolunteerDAO {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 return new int[]{rs.getInt("volunteer_id"), rs.getInt("event_id")};
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // (Tùy chọn) - Lấy trạng thái đơn apply
+    public String getStatus(int eventId, int volunteerId) {
+        String sql = "SELECT status FROM Event_Volunteers WHERE event_id = ? AND volunteer_id = ?";
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, eventId);
+            stmt.setInt(2, volunteerId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getString("status");
             }
         } catch (Exception e) {
             e.printStackTrace();
