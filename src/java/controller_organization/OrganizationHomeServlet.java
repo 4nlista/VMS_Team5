@@ -34,7 +34,7 @@ public class OrganizationHomeServlet extends HttpServlet {
         }
 
         Account acc = (Account) session.getAttribute("account");
-        acc = adminAccountService.getAccountById(acc.getId());  // Lấy lại từ DB cho chắc chắn
+        acc = adminAccountService.getAccountById(acc.getId());
 
         if (acc == null || !acc.getRole().equals("organization")) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "Truy cập bị từ chối");

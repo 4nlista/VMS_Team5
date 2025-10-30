@@ -97,7 +97,7 @@
                         </div>
 
                         <div class="text-center mt-4">
-                            <a href="<%= request.getContextPath() %>/organization/events_org.jsp" class="btn btn-outline-primary">
+                            <a href="<%= request.getContextPath() %>/OrganizationListServlet" class="btn btn-outline-primary">
                                 <i class="bi bi-arrow-left"></i> Quay lại danh sách
                             </a>
                         </div>

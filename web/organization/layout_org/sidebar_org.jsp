@@ -39,8 +39,8 @@
                 </a>
             </li>
             <li>
-                <a href="<%= request.getContextPath() %>/organization/events_org.jsp"
-                   class="nav-link text-white <%= currentPath.endsWith("/events_org.jsp") ? "active" : "" %>">
+                <a href="<%= request.getContextPath() %>/OrganizationListServlet"
+                   class="nav-link text-white <%= currentPath.endsWith("/OrganizationListServlet") ? "active" : "" %>">
                     <i class="bi bi-calendar-event me-2"></i>
                     Quản lí sự kiện
                 </a>

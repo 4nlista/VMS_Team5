@@ -8,18 +8,23 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.util.List;
 import model.Account;
+import model.Event;
 import service.AccountService;
+import service.OrganizationEventsService;
 
 @WebServlet(name = "OrganizationListServlet", urlPatterns = {"/OrganizationListServlet"})
 
 public class OrganizationListServlet extends HttpServlet {
 
     private AccountService accountService;
+    private OrganizationEventsService organizationEventsService;
 
     @Override
     public void init() {
         accountService = new AccountService();
+        organizationEventsService = new OrganizationEventsService();
     }
 
     @Override
@@ -36,17 +41,18 @@ public class OrganizationListServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "Truy cập bị từ chối");
             return;
         }
-        
-        
-        
-        
-        
-        
-        
+        String category = request.getParameter("category");    // giá trị dropdown
+        String status = request.getParameter("status");
+        String visibility = request.getParameter("visibility");
+        int organizationId = acc.getId();
+        List<Event> eventsOrg = organizationEventsService.getEventsByOrganization(organizationId);
+        List<Event> filterEvents = organizationEventsService.getEventsByOrganizationFiltered(organizationId, category, status, visibility);
 
+        request.setAttribute("eventsOrg", filterEvents);
+        request.setAttribute("filterEvents", filterEvents);
         // Gửi sang JSP
         request.setAttribute("account", acc);
-        request.getRequestDispatcher("/organization/home_org.jsp").forward(request, response);
+        request.getRequestDispatcher("/organization/events_org.jsp").forward(request, response);
     }
 
     @Override

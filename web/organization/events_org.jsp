@@ -1,4 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -17,118 +18,124 @@
                     <h3 class="fw-bold mb-4">Danh sách sự kiện</h3>
 
                     <!-- Bộ lọc + nút tạo mới -->
-                    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
-                        <div class="d-flex gap-3 flex-wrap">
+                    <form method="get" action="OrganizationListServlet" class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+                        <!-- Nhóm dropdown + nút lọc/reset -->
+                        <div class="d-flex gap-2 align-items-center flex-wrap">
+                            <!-- Loại sự kiện -->
+                            <div class="form-group d-flex flex-column">
+                                <label class="form-label fw-semibold">Loại sự kiện:</label>
+                                <select name="category" class="form-select form-select-sm" style="width: 160px;">
+                                    <option value="" <c:if test="${param.category == null || param.category == ''}">selected</c:if>>Tất cả</option>
+                                    <option value="Y tế" <c:if test="${param.category == 'Y tế'}">selected</c:if>>Y tế</option>
+                                    <option value="Môi trường" <c:if test="${param.category == 'Môi trường'}">selected</c:if>>Môi trường</option>
+                                    <option value="Xã hội" <c:if test="${param.category == 'Xã hội'}">selected</c:if>>Xã hội</option>
+                                    <option value="Giáo dục" <c:if test="${param.category == 'Giáo dục'}">selected</c:if>>Giáo dục</option>
+                                    </select>
+                                </div>
 
-                            <!-- Lọc theo loại sự kiện -->
-                            <div class="form-group">
-                                <label class="form-label me-2 fw-semibold">Loại sự kiện:</label>
-                                <select class="form-select form-select-sm" style="width: 160px;">
-                                    <option>Tất cả</option>
-                                    <option>Y tế</option>
-                                    <option>Môi trường</option>
-                                    <option>Xã hội</option>
-                                    <option>Giáo dục</option>
-                                </select>
+                                <!-- Trạng thái -->
+                                <div class="form-group d-flex flex-column">
+                                    <label class="form-label fw-semibold">Trạng thái:</label>
+                                    <select name="status" class="form-select form-select-sm" style="width: 160px;">
+                                        <option value="" <c:if test="${param.status == null || param.status == ''}">selected</c:if>>Tất cả</option>
+                                    <option value="active" <c:if test="${param.status == 'active'}">selected</c:if>>Đang diễn ra</option>
+                                    <option value="pending" <c:if test="${param.status == 'pending'}">selected</c:if>>Chưa diễn ra</option>
+                                    <option value="inactive" <c:if test="${param.status == 'inactive'}">selected</c:if>>Tạm dừng</option>
+                                     <option value="closed" <c:if test="${param.status == 'closed'}">selected</c:if>>Đã kết thúc</option>
+                                    </select>
+                                </div>
+
+                                <!-- Chế độ -->
+                                <div class="form-group d-flex flex-column">
+                                    <label class="form-label fw-semibold">Chế độ:</label>
+                                    <select name="visibility" class="form-select form-select-sm" style="width: 160px;">
+                                        <option value="" <c:if test="${param.visibility == null || param.visibility == ''}">selected</c:if>>Tất cả</option>
+                                    <option value="public" <c:if test="${param.visibility == 'public'}">selected</c:if>>Công khai</option>
+                                    <option value="private" <c:if test="${param.visibility == 'private'}">selected</c:if>>Riêng tư</option>
+                                    </select>
+                                </div>
+
+                                <!-- Nút Lọc -->
+                                <button type="submit" class="btn btn-primary btn-sm" style="min-width:110px; align-self:end;">
+                                    <i class="bi bi-search"></i> Lọc
+                                </button>
+
+                                <!-- Nút Reset -->
+                                <a href="OrganizationListServlet" class="btn btn-secondary btn-sm" style="min-width:110px; align-self:end;">
+                                    <i class="bi bi-arrow-counterclockwise"></i> Reset
+                                </a>
                             </div>
 
-                            <!-- Lọc theo trạng thái -->
-                            <div class="form-group">
-                                <label class="form-label me-2 fw-semibold">Trạng thái:</label>
-                                <select class="form-select form-select-sm" style="width: 160px;">
-                                    <option>Tất cả</option>
-                                    <option>Đang diễn ra</option>
-                                    <option>Chưa diễn ra</option>
-                                    <option>Đã kết thúc</option>
-                                </select>
-                            </div>
-
-                            <!-- Lọc theo chế độ -->
-                            <div class="form-group">
-                                <label class="form-label me-2 fw-semibold">Chế độ:</label>
-                                <select class="form-select form-select-sm" style="width: 160px;">
-                                    <option>Tất cả</option>
-                                    <option>Công khai</option>
-                                    <option>Riêng tư</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- Nút tạo mới -->
-                        <button class="btn btn-primary btn-sm">
-                            <i class="bi bi-plus-lg"></i> Tạo mới sự kiện
-                        </button>
-                    </div>
+                            <!-- Nút tạo mới sự kiện -->
+                            <a href="create_event_org.jsp" class="btn btn-success btn-sm" style="min-width:130px;">
+                                <i class="bi bi-plus-lg"></i> Tạo mới sự kiện
+                            </a>
+                        </form>
 
 
-                    <!-- Bảng dữ liệu -->
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-hover">
-                            <thead class="table-secondary">
-                                <tr>
-                                    <th>STT</th>
-                                    <th>Tiêu đề</th>
-                                    <th>Loại sự kiện</th>
-                                    <th>Chế độ</th>
-                                    <th>Trạng thái</th>
-                                    <th>Thao tác</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Sự kiện gây quỹ mùa hè</td>
-                                    <td><span class="badge bg-success">Môi trường</span></td>
-                                    <td><span class="badge bg-secondary">Công khai</span></td>
-                                    <td><span class="badge bg-danger">Đã kết thúc</span></td>
-                                    <td>
-                                        <a href="<%= request.getContextPath() %>/organization/detail_event_org.jsp" class="btn btn-warning btn-sm">
-                                            <i class=""></i> Sửa
-                                        </a>
-                                        <a href="<%= request.getContextPath() %>/organization/apply_org.jsp" class="btn btn-secondary btn-sm">
-                                            <i class=""></i> Xử lý
-                                        </a>
-                                        <button class="btn btn-danger btn-sm">
-                                            <i class=""></i> Xóa
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Hội thảo công nghệ</td>
-                                    <td><span class="badge bg-success">Y tế</span></td>
-                                    <td><span class="badge bg-info">Riêng tư</span></td>
-                                    <td><span class="badge bg-success">Đang diễn ra</span></td>
-                                    <td>
-                                        <a href="<%= request.getContextPath() %>/organization/detail_event_org.jsp" class="btn btn-warning btn-sm">
-                                            <i class=""></i> Sửa
-                                        </a>
-                                        <a href="<%= request.getContextPath() %>/organization/apply_org.jsp" class="btn btn-secondary btn-sm">
-                                            <i class=""></i> Xử lý
-                                        </a>
-                                        <button class="btn btn-danger btn-sm">
-                                            <i class=""></i> Xóa
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>Ngày hội tuyển sinh 2025</td>
-                                    <td><span class="badge bg-success">Giáo dục</span></td>
-                                    <td><span class="badge bg-secondary">Công khai</span></td>
-                                    <td><span class="badge bg-success">Đang diễn ra</span></td>
-                                    <td>
-                                        <a href="<%= request.getContextPath() %>/organization/detail_event_org.jsp" class="btn btn-warning btn-sm">
-                                            <i class=""></i> Sửa
-                                        </a>
-                                        <a href="<%= request.getContextPath() %>/organization/apply_org.jsp" class="btn btn-secondary btn-sm">
-                                            <i class=""></i> Xử lý
-                                        </a>
-                                        <button class="btn btn-danger btn-sm">
-                                            <i class=""></i> Xóa
-                                        </button>
-                                    </td>
-                                </tr>
+
+
+                        <!-- Bảng dữ liệu -->
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover">
+                                <thead class="table-secondary">
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>Tiêu đề</th>
+                                        <th>Loại sự kiện</th>
+                                        <th>Chế độ</th>
+                                        <th>Trạng thái</th>
+                                        <th>Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <c:forEach var="e" items="${eventsOrg}" varStatus="loop">
+                                    <tr>
+                                        <td>${loop.index + 1}</td>
+                                        <td>${e.title}</td>
+                                        <td><span class="badge bg-success">${e.categoryName}</span></td>
+                                        <td>
+                                            <c:choose>
+                                                <c:when test="${e.visibility == 'public'}">
+                                                    <span class="badge bg-secondary">Công khai</span>
+                                                </c:when>
+                                                <c:when test="${e.visibility == 'private'}">
+                                                    <span class="badge bg-warning text-dark">Riêng tư</span>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <span class="badge bg-light text-dark">${e.visibility}</span>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </td>
+
+                                        <td>
+                                            <c:choose>
+                                                <c:when test="${e.status == 'active'}">
+                                                    <span class="badge bg-success">Đang diễn ra</span>
+                                                </c:when>
+                                                <c:when test="${e.status == 'pending'}">
+                                                    <span class="badge bg-warning text-dark">Chưa diễn ra</span>
+                                                </c:when>
+                                                <c:when test="${e.status == 'closed'}">
+                                                    <span class="badge bg-danger">Đã kết thúc</span>
+                                                </c:when>
+                                                <c:when test="${e.status == 'inactive'}">
+                                                    <span class="badge bg-dark">Tạm dừng</span>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <span class="badge bg-secondary">${e.status}</span>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </td>
+
+                                        <td>
+                                            <a href="organization/detail_event_org.jsp?id=${e.id}" class="btn btn-primary btn-sm">Xem</a>
+                                            <a href="organization/edit_event_org.jsp?id=${e.id}" class="btn btn-secondary btn-sm">Sửa</a>
+                                            <a href="organization/delete_event?id=${e.id}" class="btn btn-danger btn-sm">Xóa</a>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+
                             </tbody>
 
                         </table>

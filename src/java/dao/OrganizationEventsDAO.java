@@ -30,32 +30,53 @@ public class OrganizationEventsDAO {
         }
     }
 
-    // lấy top 3 sự kiện nhiều có tổng tiền donate nhiều nhất
+    // lấy EventsByOrganization theo người tổ chức 
     public List<Event> getEventsByOrganization(int organizationId) {
         List<Event> list = new ArrayList<>();
         String sql = """ 
-                     SELECT * FROM Event WHERE organization_id = ?
+                     SELECT 
+                         e.id,
+                         e.title,
+                         e.images,
+                         e.description,
+                         e.start_date,
+                         e.end_date,
+                         e.location,
+                         e.needed_volunteers,
+                         e.status,
+                         e.visibility,
+                         e.organization_id,
+                         a.username AS organization_name,   -- lấy tên tổ chức từ Accounts
+                         e.category_id,
+                         c.name AS category_name,           -- lấy tên category từ Categories
+                         e.total_donation,
+                         e.created_at
+                     FROM Events e
+                     JOIN Accounts a ON e.organization_id = a.id
+                     LEFT JOIN Categories c ON e.category_id = c.category_id
+                     WHERE e.organization_id = ?
                      """;
         try (Connection con = DBContext.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, organizationId);
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Event e = new Event();
-                e.setId(rs.getInt("id"));
-                e.setImages(rs.getString("images"));
-                e.setTitle(rs.getString("title"));
-                e.setDescription(rs.getString("description"));
-                e.setStartDate(rs.getDate("start_date"));
-                e.setEndDate(rs.getDate("end_date"));
-                e.setLocation(rs.getString("location"));
-                e.setNeededVolunteers(rs.getInt("needed_volunteers"));
-                e.setStatus(rs.getString("status"));
-                e.setVisibility(rs.getString("visibility"));
-                e.setOrganizationId(rs.getInt("organization_id"));
-                e.setCategoryId(rs.getInt("category_id"));
-                e.setTotalDonation(rs.getDouble("total_donation"));
-                e.setOrganizationName(rs.getString("organization_name"));
-                e.setCategoryName(rs.getString("category_name"));
+             while (rs.next()) {
+                Event e = new Event(
+                        rs.getInt("id"),
+                        rs.getString("images"),
+                        rs.getString("title"),
+                        rs.getString("description"),
+                        rs.getTimestamp("start_date"),
+                        rs.getTimestamp("end_date"),
+                        rs.getString("location"),
+                        rs.getInt("needed_volunteers"),
+                        rs.getString("status"),
+                        rs.getString("visibility"),
+                        rs.getInt("organization_id"),
+                        rs.getInt("category_id"),
+                        rs.getDouble("total_donation"),
+                        rs.getString("organization_name"),
+                        rs.getString("category_name")
+                );
                 list.add(e);
             }
         } catch (Exception ex) {
@@ -63,4 +84,69 @@ public class OrganizationEventsDAO {
         }
         return list;
     }
+    
+    // lọc danh sách các loại sự kiện, trạng thái, chế độ
+    public List<Event> getEventsByOrganizationFiltered(int organizationId, String categoryName, String status, String visibility) {
+        List<Event> list = new ArrayList<>();
+        String sql = """
+            SELECT e.*, a.username AS organization_name, c.name AS category_name
+            FROM Events e
+            JOIN Accounts a ON e.organization_id = a.id
+            LEFT JOIN Categories c ON e.category_id = c.category_id
+            WHERE e.organization_id = ?
+            """;
+
+        // thêm điều kiện filter nếu có
+        if (categoryName != null && !categoryName.isEmpty() && !"Tất cả".equals(categoryName)) {
+            sql += " AND c.name = ?";
+        }
+        if (status != null && !status.isEmpty() && !"Tất cả".equals(status)) {
+            sql += " AND e.status = ?";
+        }
+        if (visibility != null && !visibility.isEmpty() && !"Tất cả".equals(visibility)) {
+            sql += " AND e.visibility = ?";
+        }
+
+        try (Connection con = DBContext.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            int index = 1;
+            ps.setInt(index++, organizationId);
+            if (categoryName != null && !categoryName.isEmpty() && !"Tất cả".equals(categoryName)) {
+                ps.setString(index++, categoryName);
+            }
+            if (status != null && !status.isEmpty() && !"Tất cả".equals(status)) {
+                ps.setString(index++, status);
+            }
+            if (visibility != null && !visibility.isEmpty() && !"Tất cả".equals(visibility)) {
+                ps.setString(index++, visibility);
+            }
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Event e = new Event(
+                    rs.getInt("id"),
+                    rs.getString("images"),
+                    rs.getString("title"),
+                    rs.getString("description"),
+                    rs.getTimestamp("start_date"),
+                    rs.getTimestamp("end_date"),
+                    rs.getString("location"),
+                    rs.getInt("needed_volunteers"),
+                    rs.getString("status"),
+                    rs.getString("visibility"),
+                    rs.getInt("organization_id"),
+                    rs.getInt("category_id"),
+                    rs.getDouble("total_donation"),
+                    rs.getString("organization_name"),
+                    rs.getString("category_name")
+                );
+                list.add(e);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return list;
+    }
+    
 }
