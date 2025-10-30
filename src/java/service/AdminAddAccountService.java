@@ -93,26 +93,10 @@ public class AdminAddAccountService {
         return adminAccountService.usernameExists(username);
     }
 
-    /**
-     * Upload avatar file and return the filename (not full path) File được lưu
-     * vào thư mục cố định bên ngoài webapp để tránh mất khi deploy
-     *
-     * @param avatarInputStream InputStream của file avatar
-     * @param fileName Tên file gốc
-     * @param accountId ID của account
-     * @return Tên file đã được lưu (chỉ tên file, không có đường dẫn)
-     */
     public String uploadAvatar(InputStream avatarInputStream, String fileName, int accountId) {
         return fileStorageService.saveAvatar(avatarInputStream, fileName, accountId);
     }
 
-    /**
-     * Extract avatar information from Part
-     *
-     * @param avatarPart Part object from request
-     * @return Array with [InputStream, fileName] or [null, null] if no valid
-     * avatar
-     */
     private Object[] extractAvatarInfo(jakarta.servlet.http.Part avatarPart) {
         if (avatarPart == null) {
             return new Object[]{null, null};
@@ -132,26 +116,6 @@ public class AdminAddAccountService {
         return new Object[]{null, null};
     }
 
-    /**
-     * Main method to create organization account with all details This method
-     * handles all business logic including avatar processing
-     *
-     * @param username Username
-     * @param password Plain text password (will be hashed)
-     * @param role Role (should be "organization")
-     * @param statusParam Status string ("active" or "inactive")
-     * @param fullName Full name
-     * @param email Email
-     * @param phone Phone
-     * @param gender Gender
-     * @param dob Date of birth
-     * @param address Address
-     * @param jobTitle Job title
-     * @param bio Bio
-     * @param avatarPart Avatar file Part from request (can be null)
-     * @return CreateAccountResult with success status and error message if
-     * failed
-     */
     public CreateAccountResult createOrganizationAccount(
             String username, String password, String role, String statusParam,
             String fullName, String email, String phone, String gender,
@@ -201,8 +165,6 @@ public class AdminAddAccountService {
         // Tạo user profile (lưu tên file avatar, không phải đường dẫn đầy đủ)
         boolean userCreated = adminUserDAO.insertUser(accountId, fullName, email, phone,
                 gender, dob, address, avatarFileName, jobTitle, bio);
-
-//        boolean userCreated = userDAO.insertUser(user)
         if (!userCreated) {
             // Nếu tạo user profile thất bại, có thể xóa account đã tạo
             // adminAccountService.deleteAccount(accountId);
