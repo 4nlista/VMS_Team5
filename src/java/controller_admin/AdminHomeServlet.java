@@ -8,18 +8,24 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import model.Account;
+import model.Event;
 import service.AccountService;
+import service.AdminHomeService;
 
 @WebServlet(name = "AdminHomeServlet", urlPatterns = {"/AdminHomeServlet"})
 
 public class AdminHomeServlet extends HttpServlet {
 
     private AccountService accountService;
+    private AdminHomeService adminHomeService;
 
     @Override
     public void init() {
         accountService = new AccountService();
+        adminHomeService = new AdminHomeService();
     }
 
     @Override
@@ -32,10 +38,22 @@ public class AdminHomeServlet extends HttpServlet {
         Account sessionAccount = (Account) session.getAttribute("account");
         Account acc = accountService.getAccountById(sessionAccount.getId());
         if (acc == null || !acc.getRole().equals("admin")) {
-
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "Truy cập bị từ chối");
             return;
         }
+
+        List<Event> topEvents = adminHomeService.getTop3EventsMoneyDonate();
+        List<Event> eventsComing = adminHomeService.getTop3EventsComing();
+        Map<String, Integer> accountStats = adminHomeService.getAccountStatistics();
+
+        int totalAccounts = adminHomeService.getTotalAccount();
+        double totalMoneyDonate = adminHomeService.getTotalMoneyDonate();
+
+        request.setAttribute("topEvents", topEvents);
+        request.setAttribute("accountStats", accountStats);
+        request.setAttribute("eventsComing", eventsComing);
+        request.setAttribute("totalAccounts", totalAccounts);
+        request.setAttribute("totalMoneyDonate", totalMoneyDonate);
         request.setAttribute("username", acc.getUsername());
         request.getRequestDispatcher("/admin/home_admin.jsp").forward(request, response);
     }
