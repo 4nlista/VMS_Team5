@@ -245,14 +245,14 @@ public class AdminProfileService {
 			}
 
 			String uploadsRelative = "/uploads/user_avatars";
-			String uploadsAbsolute = "C:\\Users\\DELL\\Downloads\\uploads\\user_avatars";  // FIXED LOCAL PATH OUTSIDE PROJECT
+			String uploadsAbsolute = "C:\\Users\\Admin\\Downloads\\uploads\\user_avatars";  // FIXED LOCAL PATH OUTSIDE PROJECT
 			// Fallback
 			if (uploadsAbsolute == null) {
 				uploadsAbsolute = System.getProperty("java.io.tmpdir") + File.separator + "uploads" + File.separator + "user_avatars";
 			}
 			File uploadsDir = new File(uploadsAbsolute);
 			if (!uploadsDir.exists() && !uploadsDir.mkdirs()) {
-				errors.put("avatar", "Failed to prepare upload directory.");
+				errors.put("avatar", "Lỗi up ảnh.");
 				request.setAttribute("errors", errors);
 				return false;
 			}
