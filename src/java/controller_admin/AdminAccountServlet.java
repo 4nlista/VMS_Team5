@@ -9,17 +9,21 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import model.Account;
+import service.AccountService;
 import service.AdminAccountService;
 
 @WebServlet(name = "AdminAccountServlet", urlPatterns = {"/AdminAccountServlet"})
 
 public class AdminAccountServlet extends HttpServlet {
 
+    private AccountService accountService;
     private AdminAccountService adminAccountService;
 
     @Override
     public void init() {
+        accountService = new AccountService();
         adminAccountService = new AdminAccountService();
+        
     }
 
     @Override
@@ -35,22 +39,34 @@ public class AdminAccountServlet extends HttpServlet {
             int page = 1;
             int pageSize = 5; // yêu cầu: 5 item/trang
             try {
-                if (pageParam != null) page = Integer.parseInt(pageParam);
-                if (page <= 0) page = 1;
-            } catch (NumberFormatException ignored) {}
+                if (pageParam != null) {
+                    page = Integer.parseInt(pageParam);
+                }
+                if (page <= 0) {
+                    page = 1;
+                }
+            } catch (NumberFormatException ignored) {
+            }
 
             Boolean status = null;
             if (statusParam != null && !statusParam.isEmpty()) {
                 // expecting "active" or "inactive"
-                if ("active".equalsIgnoreCase(statusParam)) status = true;
-                else if ("inactive".equalsIgnoreCase(statusParam)) status = false;
+                if ("active".equalsIgnoreCase(statusParam)) {
+                    status = true;
+                } else if ("inactive".equalsIgnoreCase(statusParam)) {
+                    status = false;
+                }
             }
 
             // pagination always applied (filters optional)
             int totalItems = adminAccountService.countAccounts(role, status, search);
             int totalPages = (int) Math.ceil(totalItems / (double) pageSize);
-            if (totalPages == 0) totalPages = 1;
-            if (page > totalPages) page = totalPages;
+            if (totalPages == 0) {
+                totalPages = 1;
+            }
+            if (page > totalPages) {
+                page = totalPages;
+            }
             List<Account> accounts = adminAccountService.findAccountsPaged(role, status, search, page, pageSize);
 
             // keep selections
