@@ -20,20 +20,17 @@ import service.DisplayDonateService;
 import service.DisplayEventService;
 import service.DisplayNewService;
 import service.SumDisplayService;
-//=======
 import service.AdminAccountService;
-//>>>>>>> hoang
+
 
 @WebServlet(name = "VolunteerHomeServlet", urlPatterns = {"/VolunteerHomeServlet"})
 public class VolunteerHomeServlet extends HttpServlet {
 
-//<<<<<<< HEAD
     private AccountService accountService;
     private SumDisplayService sumService;
     private DisplayEventService eventService;
     private DisplayDonateService donateService;
     private DisplayNewService displayNewService;
-    private AdminAccountService adminAccountService;
 
     @Override
     public void init() {
@@ -42,7 +39,6 @@ public class VolunteerHomeServlet extends HttpServlet {
         eventService = new DisplayEventService();
         donateService = new DisplayDonateService();
         displayNewService = new DisplayNewService();
-        adminAccountService = new AdminAccountService();
     }
 
     @Override
@@ -60,10 +56,8 @@ public class VolunteerHomeServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/LoginServlet");
             return;
         }
-
         Account acc = (Account) session.getAttribute("account");
-        acc = adminAccountService.getAccountById(acc.getId());  // Lấy lại từ DB cho chắc chắn
-
+        acc = accountService.getAccountById(acc.getId());  // Lấy lại từ DB cho chắc chắn
         if (acc == null || !acc.getRole().equals("volunteer")) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "Truy cập bị từ chối");
             return;

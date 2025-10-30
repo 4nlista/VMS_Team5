@@ -12,7 +12,6 @@ import model.Event;
 import service.DisplayEventService;
 
 @WebServlet(name = "GuessEventServlet", urlPatterns = {"/GuessEventServlet"})
-//@WebServlet("/events")
 public class GuessEventServlet extends HttpServlet {
 
     private DisplayEventService displayService;
