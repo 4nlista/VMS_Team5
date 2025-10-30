@@ -34,7 +34,7 @@
                     <c:forEach var="e" items="${events}">
                         <div class="col-md-4 d-flex align-items-stretch">
                             <div class="blog-entry align-self-stretch h-100 w-100">
-                                <a href="#" class="block-20" style="background-image: url('images/event-1.jpg');"></a>
+                                <a href="#" class="block-20" style="background-image: url('${e.images}');"></a>
                                 <div class="text p-4 d-block h-100">
                                     <div class="meta mb-3">
                                         <div><a href="#">Người tổ chức: <b><i>${e.organizationName}</i></b></a></div>

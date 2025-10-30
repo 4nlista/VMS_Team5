@@ -91,6 +91,7 @@ public class ViewEventsDAO {
             while (rs.next()) {
                 Event e = new Event(
                         rs.getInt("id"),
+                        rs.getString("images"),
                         rs.getString("title"),
                         rs.getString("description"),
                         rs.getTimestamp("start_date"),
