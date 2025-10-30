@@ -5,11 +5,6 @@
 package dao;
 
 import java.sql.Connection;
-//<<<<<<< HEAD
-//import java.util.ArrayList;
-//import java.util.List;
-//import model.Account;
-//=======
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -18,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import model.Account;
 import model.Event;
-//>>>>>>> an
 import utils.DBContext;
 
 /**
@@ -32,24 +26,12 @@ public class AdminHomeDAO {
     public AdminHomeDAO() {
         try {
             DBContext db = new DBContext();
-//<<<<<<< HEAD
-//            this.conn = db.getConnection();
-//=======
+
             this.conn = db.getConnection(); // lấy connection từ DBContext
-//>>>>>>> an
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-//<<<<<<< HEAD
-//    
-//    
-//    public List<Account> getTotalAccount() {
-//        List<Account> list = new ArrayList<>();
-//        return list;
-//    }
-//        
-//=======
 
     public int getTotalAccount() {
         String sql = "SELECT COUNT(*) AS total FROM Accounts";
@@ -144,6 +126,4 @@ public class AdminHomeDAO {
         }
         return stats;
     }
-
-//>>>>>>> an
 }

@@ -77,8 +77,6 @@ public class AccountDAO {
         return list;
 
     }
-//<<<<<<< HEAD
-
     // check email đã tồn tại trong sql ? - dùng cho đăng kí tài khoản
     public boolean isUsernameExists(String username) {
         String sql = "SELECT COUNT(*) FROM Accounts WHERE username = ?";
@@ -174,7 +172,7 @@ public class AccountDAO {
         return false;
     }
 
-//
+
     // Lấy hash mật khẩu hiện tại từ DB theo accountId
     public String getPasswordHashById(int accountId) {
         String sql = "SELECT password FROM Accounts WHERE id = ?";
@@ -190,17 +188,6 @@ public class AccountDAO {
             e.printStackTrace();
         }
         return null;
-//=======
-//    
-//    public static void main(String[] args) {
-//        AccountDAO dao = new AccountDAO();
-//        List<Account> list = dao.getAllAccounts();
-//
-//        System.out.println("Account size = " + list.size());
-//        for (Account acc : list) {
-//            System.out.println(acc.getId() + " - " + acc.getUsername() + " - " + acc.getRole());
-//        }
-//>>>>>>> hoang
     }
 
 }
