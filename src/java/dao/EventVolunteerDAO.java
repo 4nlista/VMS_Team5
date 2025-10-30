@@ -27,7 +27,7 @@ public class EventVolunteerDAO {
 
             insertStmt.setInt(1, ev.getEventId());
             insertStmt.setInt(2, ev.getVolunteerId());
-            // ✅ dùng thời gian hiện tại
+            //  dùng thời gian hiện tại
             insertStmt.setTimestamp(3, new Timestamp(new java.util.Date().getTime()));
             insertStmt.setInt(4, ev.getHours());
             insertStmt.setString(5, ev.getNote());
