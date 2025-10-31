@@ -103,12 +103,6 @@ public class VolunteerApplyEventServlet extends HttpServlet {
             applyDate = java.sql.Date.valueOf(applyDateStr);
         }
 
-//        // Kiểm tra volunteer đã apply chưa
-//        boolean hasApplied = volunteerApplyService.hasApplied(acc.getId(), eventId);
-//        if (!hasApplied) {
-//            // Thêm vào CSDL (SQL sẽ tự lấy ngày hiện tại)
-//            volunteerApplyService.applyToEvent(acc.getId(), eventId, hours, note);
-//        }
         try {
             boolean success = volunteerApplyService.applyToEvent(acc.getId(), eventId, hours, note);
 
@@ -129,7 +123,5 @@ public class VolunteerApplyEventServlet extends HttpServlet {
             session.setAttribute("messageType", "error");
             response.sendRedirect(request.getContextPath() + "/VolunteerEventListServl");
         }
-        // Quay lại trang chi tiết event (kèm eventId)
-//        response.sendRedirect(request.getContextPath() + "/VolunteerApplyEventServlet?eventId=" + eventId);
     }
 }

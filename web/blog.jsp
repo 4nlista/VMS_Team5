@@ -45,10 +45,7 @@
                                     <div class="meta mb-3">
                                         <div>
                                             <strong class="text-success">Ngày đăng:</strong>
-                                            <a href="#">
-
-                                                <fmt:formatDate value="${e.createdAt}" pattern="dd/MM/yyyy HH:mm" />
-                                            </a>
+                                            <fmt:formatDate value="${e.createdAt}" pattern="dd/MM/yyyy HH:mm" />
                                             <br/>
                                             &nbsp;•&nbsp;
                                             <strong class="text-primary">${e.organizationName}</strong>

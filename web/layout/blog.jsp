@@ -28,19 +28,16 @@
                             <div class="meta mb-3">
                                 <div>
                                     <strong class="text-success">Ngày đăng:</strong>
-                                    <a href="#">
-
                                         <fmt:formatDate value="${e.createdAt}" pattern="dd/MM/yyyy HH:mm" />
-                                    </a>
                                     <br/>
                                     &nbsp;•&nbsp;
                                     <strong class="text-primary">${e.organizationName}</strong>
                                 </div>
-                                <div>
+<!--                                <div>
                                     <a href="#" class="meta-chat">
                                         <span class="icon-chat"></span> 3
                                     </a>
-                                </div>
+                                </div>-->
                             </div>
 
                             <h3 class="heading mt-3"><a href="#">${e.title}</a></h3>

@@ -27,9 +27,6 @@ public class VolunteerApplyService {
         return volunteerApplyDAO.hasApplied(volunteerId, eventId);
     }
 
-//    public void applyToEvent(int volunteerId, int eventId, int hours, String note) {
-//        volunteerApplyDAO.applyToEvent(volunteerId, eventId, hours, note);
-//    }
 
     public boolean applyToEvent(int volunteerId, int eventId, int hours, String note) {
         // 1️. Kiểm tra sự kiện có tồn tại
