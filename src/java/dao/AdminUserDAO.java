@@ -36,11 +36,24 @@ public class AdminUserDAO {
         }
     }
 
-    public User getUserById(int id) {
-        String sql = "SELECT u.id AS id, a.id AS account_id, a.role, a.username, u.full_name, u.gender, u.avatar "
-                + "FROM Users u JOIN Accounts a ON u.account_id = a.id WHERE u.id = ?";
+    // Lấy User theo account_id
+    public User getUserByAccountId(int accountId) {
+        String sql = """
+                  SELECT 
+                         u.id AS id,
+                         a.id AS account_id,
+                         a.role,
+                         a.username,
+                         u.full_name,
+                         u.gender,
+                         u.avatar,
+                         u.email
+                     FROM Users u
+                     JOIN Accounts a ON u.account_id = a.id
+                     WHERE a.id = ? ;
+                     """;
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, id);
+            ps.setInt(1, accountId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     Account acc = new Account();
@@ -51,6 +64,7 @@ public class AdminUserDAO {
                             rs.getInt("account_id"),
                             rs.getString("full_name"),
                             rs.getString("gender"),
+                            rs.getString("email"),
                             rs.getString("avatar"),
                             acc
                     );

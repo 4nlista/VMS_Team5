@@ -181,6 +181,9 @@ public class AdminUserService {
         }
     }
 
+    public User getUserByAccountId(int id) {
+        return userDAO.getUserByAccountId(id);
+    }
 
     private String safeTrim(String s) {
         return (s == null) ? null : s.trim();

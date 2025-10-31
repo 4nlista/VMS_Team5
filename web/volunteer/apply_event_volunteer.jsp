@@ -74,40 +74,30 @@
                             <form action="${pageContext.request.contextPath}/VolunteerApplyEventServlet" method="post">
                                 <input type="hidden" name="volunteerId" value="${volunteerId}" />
                                 <input type="hidden" name="eventId" value="${event.id}" />
+
                                 <div class="row">
                                     <div class="col-md-6 mb-2">
-                                        <label class="form-label fw-bold">ID</label>
-                                        <input type="text" class="form-control" value="V1" readonly>
+                                        <label class="form-label fw-bold">Họ tên</label>
+                                        <input type="text" class="form-control" value="${user.full_name}" readonly>
                                     </div>
-                                    <div class="col-md-6 mb-2">
-                                        <label class="form-label fw-bold">Họ và tên</label>
-                                        <input type="text" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="row">
                                     <div class="col-md-6 mb-2">
                                         <label class="form-label fw-bold">Email</label>
-                                        <input type="email" class="form-control" placeholder="Emai của bạn....">
-                                    </div>
-                                    <div class="col-md-6 mb-2">
-                                        <label class="form-label fw-bold">Số điện thoại</label>
-                                        <input type="tel" class="form-control" placeholder="0123 456 789">
+                                        <input type="email" class="form-control" value="${user.email}" readonly>
                                     </div>
                                 </div>
+
                                 <div class="row">
                                     <div class="col-md-6 mb-2">
                                         <label class="form-label fw-bold">Số giờ đăng ký</label>
-                                        <input type="number" class="form-control" placeholder="Nhập số giờ">
-                                    </div>
-                                    <div class="col-md-6 mb-2">
-                                        <label class="form-label fw-bold">Ngày đăng ký</label>
-                                        <input type="date" class="form-control">
+                                        <input type="number" class="form-control" name="hours" placeholder="Nhập số giờ" required>
                                     </div>
                                 </div>
+
                                 <div class="mb-2">
                                     <label class="form-label fw-bold">Ghi chú</label>
-                                    <textarea class="form-control" rows="2" placeholder="Ghi chú thêm..."></textarea>
+                                    <textarea class="form-control" rows="2" name="note" placeholder="Ghi chú thêm..."></textarea>
                                 </div>
+
                                 <div class="d-flex justify-content-between">
                                     <button type="submit" class="btn btn-primary">Đăng ký tham gia</button>
                                     <button type="reset" class="btn btn-outline-secondary">Hủy</button>
@@ -116,6 +106,9 @@
                         </div>
                     </div>
                 </div>
+
+
+
             </div>
         </div>
         <jsp:include page="/layout/footer.jsp" />

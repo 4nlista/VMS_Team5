@@ -31,6 +31,16 @@ public class User {
         this.account = account;
     }
 
+    public User(int id, int account_id, String full_name, String gender, String avatar, String email, Account account) {
+        this.id = id;
+        this.account_id = account_id;
+        this.full_name = full_name;
+        this.gender = gender;
+        this.avatar = avatar;
+        this.email = email;
+        this.account = account;
+    }
+
     // Constructor đầy đủ với tất cả các thuộc tính
     public User(int id, int account_id, Account account, String full_name, String gender, String phone, String email, String address, String avatar, String job_title, String bio, Date dob) {
         this.id = id;
@@ -113,6 +123,8 @@ public class User {
     public String getAddress() {
         return address;
     }
+    
+    
 
     public void setAddress(String address) {
         this.address = address;

@@ -12,6 +12,8 @@ import java.util.List;
 import model.Account;
 import model.Event;
 import model.EventVolunteer;
+import model.User;
+import service.AdminUserService;
 import service.DisplayEventService;
 import service.VolunteerApplyService;
 
@@ -21,11 +23,13 @@ public class VolunteerApplyEventServlet extends HttpServlet {
 
     private VolunteerApplyService volunteerApplyService;
     private DisplayEventService displayEventService;
+    private AdminUserService adminUserService;
 
     @Override
     public void init() {
         volunteerApplyService = new VolunteerApplyService();
         displayEventService = new DisplayEventService();
+        adminUserService = new AdminUserService();
     }
 
     @Override
@@ -39,7 +43,7 @@ public class VolunteerApplyEventServlet extends HttpServlet {
         }
 
         Account acc = (Account) session.getAttribute("account");
-        int volunteerId = acc.getId();
+        User user = adminUserService.getUserByAccountId(acc.getId());
 
         // Lấy eventId từ request (từ link chi tiết sự kiện)
         String eventIdParam = request.getParameter("eventId");
@@ -49,7 +53,7 @@ public class VolunteerApplyEventServlet extends HttpServlet {
             return;
         }
         int eventId = Integer.parseInt(eventIdParam);
-
+        int volunteerId = acc.getId();
         // Lấy thông tin sự kiện từ DB
         Event event = displayEventService.getEventById(eventId);
         if (event == null) {
@@ -64,14 +68,14 @@ public class VolunteerApplyEventServlet extends HttpServlet {
         request.setAttribute("event", event);                    // Thông tin event đang xem
         request.setAttribute("volunteerId", volunteerId);        // ID volunteer để pre-fill form
         request.setAttribute("myApplications", myApplications);  // Lịch sử apply nếu cần hiển thị
-
+        request.setAttribute("user", user);
         request.getRequestDispatcher("/volunteer/apply_event_volunteer.jsp").forward(request, response);
     }
 
     @Override
-
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("account") == null) {
             response.sendRedirect(request.getContextPath() + "/LoginServlet");
@@ -84,16 +88,19 @@ public class VolunteerApplyEventServlet extends HttpServlet {
         int eventId = Integer.parseInt(request.getParameter("eventId"));
         int hours = Integer.parseInt(request.getParameter("hours"));
         String note = request.getParameter("note");
+        String applyDateStr = request.getParameter("applyDate"); // nếu muốn dùng ngày đăng ký
+        java.sql.Date applyDate = null;
+        if (applyDateStr != null && !applyDateStr.isEmpty()) {
+            applyDate = java.sql.Date.valueOf(applyDateStr);
+        }
 
         // Kiểm tra volunteer đã apply chưa
         boolean hasApplied = volunteerApplyService.hasApplied(acc.getId(), eventId);
         if (!hasApplied) {
-            // Thêm vào CSDL
+            // Thêm vào CSDL (SQL sẽ tự lấy ngày hiện tại)
             volunteerApplyService.applyToEvent(acc.getId(), eventId, hours, note);
         }
-
-        // Quay lại trang hiển thị danh sách apply
-        response.sendRedirect(request.getContextPath() + "/VolunteerApplyEventServlet");
-
+        // Quay lại trang chi tiết event (kèm eventId)
+        response.sendRedirect(request.getContextPath() + "/VolunteerApplyEventServlet?eventId=" + eventId);
     }
 }

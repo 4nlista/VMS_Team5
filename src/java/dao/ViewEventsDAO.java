@@ -77,7 +77,6 @@ public class ViewEventsDAO {
         SELECT e.*, 
                u.full_name AS organization_name, 
                c.name AS category_name
-               e.name as volunteer_name
         FROM Events e
         JOIN Accounts a ON e.organization_id = a.id
         JOIN Users u ON a.id = u.account_id
