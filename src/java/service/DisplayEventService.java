@@ -26,6 +26,10 @@ public class DisplayEventService {
         return viewEventsDAO.getActiveEvents();
     }
 
+    public Event getEventById(int eventId) {
+        return viewEventsDAO.getEventById(eventId);
+    }
+
     // trả về danh sách 3 sự kiện mới nhất
     public List<Event> getLatestActivePublicEvents() {
         return viewEventsDAO.getLatestActivePublicEvents();

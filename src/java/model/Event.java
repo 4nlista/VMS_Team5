@@ -11,6 +11,7 @@ import java.util.Date;
  * @author ADDMIN
  */
 public class Event {
+
     private int id;                         // ID sự kiện
     private String images;                  // anh su kien
     private String title;                   // Tiêu đề
@@ -64,9 +65,7 @@ public class Event {
         this.organizationName = organizationName;
         this.categoryName = categoryName;
     }
-    
-    
-    
+
 
     public int getId() {
         return id;
@@ -91,8 +90,6 @@ public class Event {
     public void setImages(String images) {
         this.images = images;
     }
-    
-    
 
     public String getDescription() {
         return description;
@@ -191,7 +188,5 @@ public class Event {
     }
 
     
-    
 
-    
 }

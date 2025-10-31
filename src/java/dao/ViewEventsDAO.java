@@ -70,6 +70,49 @@ public class ViewEventsDAO {
         return list;
     }
 
+    // lấy từng sự kiện để apply
+    public Event getEventById(int eventId) {
+        Event event = null;
+        String sql = """
+        SELECT e.*, 
+               u.full_name AS organization_name, 
+               c.name AS category_name
+               e.name as volunteer_name
+        FROM Events e
+        JOIN Accounts a ON e.organization_id = a.id
+        JOIN Users u ON a.id = u.account_id
+        JOIN Categories c ON e.category_id = c.category_id
+        WHERE e.id = ?
+    """;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, eventId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    event = new Event(
+                            rs.getInt("id"),
+                            rs.getString("images"),
+                            rs.getString("title"),
+                            rs.getString("description"),
+                            rs.getTimestamp("start_date"),
+                            rs.getTimestamp("end_date"),
+                            rs.getString("location"),
+                            rs.getInt("needed_volunteers"),
+                            rs.getString("status"),
+                            rs.getString("visibility"),
+                            rs.getInt("organization_id"),
+                            rs.getInt("category_id"),
+                            rs.getDouble("total_donation"),
+                            rs.getString("organization_name"),
+                            rs.getString("category_name")
+                    );
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return event;
+    }
+
     // Lấy 3 sự kiện mới nhất để update lên màn hình giao diện quảng bá
     public List<Event> getLatestActivePublicEvents() {
         List<Event> list = new ArrayList<>();

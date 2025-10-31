@@ -49,7 +49,7 @@
                                     <p>${e.description}</p>
                                     <div class="d-flex justify-content-between mt-auto">
                                         <p class="mb-0">
-                                            <a href="${pageContext.request.contextPath}/volunteer/apply_event_volunteer.jsp">
+                                            <a href="${pageContext.request.contextPath}/VolunteerApplyEventServlet?eventId=${e.id}">
                                                 Tham gia sự kiện <i class="ion-ios-arrow-forward"></i>
                                             </a>
                                         </p>

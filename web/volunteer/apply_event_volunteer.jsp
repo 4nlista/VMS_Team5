@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -34,27 +35,32 @@
                             <ul class="list-group list-group-flush mt-3">
                                 <li class="list-group-item">
                                     <span class="fw-bold text-dark">Tiêu đề:</span>
-                                    <span class="text-secondary ms-2">World Wide Donation</span>
-                                </li>
-                                <li class="list-group-item">
-                                    <span class="fw-bold text-dark">Thời gian:</span>
-                                    <span class="text-secondary ms-2">Sep, 10, 2018 10:30AM - 03:30PM</span>
-                                </li>
-                                <li class="list-group-item">
-                                    <span class="fw-bold text-dark">Địa điểm:</span>
-                                    <span class="text-secondary ms-2">Venue Main Campus</span>
+                                    <span class="text-secondary ms-2">${event.title}</span>
                                 </li>
                                 <li class="list-group-item">
                                     <span class="fw-bold text-dark">Người tổ chức:</span>
-                                    <span class="text-secondary ms-2">Org1</span>
+                                    <span class="text-secondary ms-2">${event.organizationName}</span>
                                 </li>
                                 <li class="list-group-item">
+                                    <span class="fw-bold text-dark">Thời gian:</span>
+                                    <span class="text-secondary ms-2">
+                                        <fmt:formatDate value="${event.startDate}" pattern="yyyy-MM-dd  HH:mm" /> 
+                                        [ đến ]
+                                        <fmt:formatDate value="${event.endDate}" pattern="yyyy-MM-dd HH:mm" />
+                                    </span>
+                                </li>
+                                <li class="list-group-item">
+                                    <span class="fw-bold text-dark">Địa điểm:</span>
+                                    <span class="text-secondary ms-2">${event.location}</span>
+                                </li>
+
+                                <li class="list-group-item">
                                     <span class="fw-bold text-dark">Số lượng tình nguyện viên cần:</span>
-                                    <span class="text-secondary ms-2">50</span>
+                                    <span class="text-secondary ms-2">${event.neededVolunteers}</span>
                                 </li>
                                 <li class="list-group-item">
                                     <span class="fw-bold text-dark">Mô tả sự kiện:</span>
-                                    <span class="text-secondary ms-2">Sự kiện gây quỹ quy mô toàn cầu...</span>
+                                    <span class="text-secondary ms-2">${event.description}</span>
                                 </li>
                             </ul>
                         </div>
@@ -65,7 +71,9 @@
                 <div class="col-md-6">
                     <div class="card border shadow-sm">
                         <div class="card-body">
-                            <form>
+                            <form action="${pageContext.request.contextPath}/VolunteerApplyEventServlet" method="post">
+                                <input type="hidden" name="volunteerId" value="${volunteerId}" />
+                                <input type="hidden" name="eventId" value="${event.id}" />
                                 <div class="row">
                                     <div class="col-md-6 mb-2">
                                         <label class="form-label fw-bold">ID</label>
@@ -89,7 +97,7 @@
                                 <div class="row">
                                     <div class="col-md-6 mb-2">
                                         <label class="form-label fw-bold">Số giờ đăng ký</label>
-                                    <input type="number" class="form-control" placeholder="Nhập số giờ">
+                                        <input type="number" class="form-control" placeholder="Nhập số giờ">
                                     </div>
                                     <div class="col-md-6 mb-2">
                                         <label class="form-label fw-bold">Ngày đăng ký</label>
@@ -110,14 +118,6 @@
                 </div>
             </div>
         </div>
-
-
-
-
-
-
-
-
         <jsp:include page="/layout/footer.jsp" />
         <jsp:include page="/layout/loader.jsp" />
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
