@@ -68,11 +68,14 @@ public class EmailUtil {
     // Gửi email thông báo admin đã cấp tài khoản kèm thông tin đăng nhập
     public static void sendEmailWithAdmin(String toEmail, String organizationName, String username, String plainPassword) {
         String safeOrg = organizationName == null ? "" : organizationName;
+        
+        
+        
         String subject = "[Volunteer System] Tài khoản đã được cấp";
         StringBuilder content = new StringBuilder();
         content.append("<div style=\"font-family:Arial, Helvetica, sans-serif; line-height:1.6;\">")
                .append("<h2>Xin chào ").append(escapeHtml(safeOrg)).append("</h2>")
-               .append("<p>Quản trị viên đã tạo tài khoản cho tổ chức của bạn trên hệ thống Volunteer System.</p>")
+               .append("<p>Quản trị viên đã tạo tài khoản cho vai trò Người Tổ Chức của bạn trên hệ thống Volunteer System.</p>")
                .append("<p><strong>Thông tin đăng nhập:</strong></p>")
                .append("<ul>")
                .append("<li><strong>Tên đăng nhập:</strong> ").append(escapeHtml(username)).append("</li>")
