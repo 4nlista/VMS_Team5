@@ -6,6 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -22,7 +23,16 @@
 
         <div class="page-content container mt-5 pt-5 pb-5">
             <h1 class="mb-4 text-center">Đăng ký tham gia sự kiện</h1>
-
+            <c:if test="${not empty message}">
+                <div class="alert
+                     ${messageType == 'success' ? 'alert-success' : 
+                       messageType == 'warning' ? 'alert-warning' : 
+                       'alert-danger'}
+                     alert-dismissible fade show" role="alert">
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </c:if>
             <div class="row">
                 <!-- Cột trái: Thông tin sự kiện -->
                 <div class="col-md-6">

@@ -63,8 +63,17 @@ public class VolunteerApplyEventServlet extends HttpServlet {
 
         // Lấy danh sách các sự kiện mà volunteer đã apply
         List<EventVolunteer> myApplications = volunteerApplyService.getMyApplications(volunteerId);
+        // Lấy message từ session (nếu có)
+        String message = (String) session.getAttribute("message");
+        String messageType = (String) session.getAttribute("messageType");
 
         // Gửi dữ liệu sang JSP
+        session.removeAttribute("message");
+        session.removeAttribute("messageType");
+
+        request.setAttribute("message", message);
+        request.setAttribute("messageType", messageType);
+
         request.setAttribute("event", event);                    // Thông tin event đang xem
         request.setAttribute("volunteerId", volunteerId);        // ID volunteer để pre-fill form
         request.setAttribute("myApplications", myApplications);  // Lịch sử apply nếu cần hiển thị
@@ -94,13 +103,33 @@ public class VolunteerApplyEventServlet extends HttpServlet {
             applyDate = java.sql.Date.valueOf(applyDateStr);
         }
 
-        // Kiểm tra volunteer đã apply chưa
-        boolean hasApplied = volunteerApplyService.hasApplied(acc.getId(), eventId);
-        if (!hasApplied) {
-            // Thêm vào CSDL (SQL sẽ tự lấy ngày hiện tại)
-            volunteerApplyService.applyToEvent(acc.getId(), eventId, hours, note);
+//        // Kiểm tra volunteer đã apply chưa
+//        boolean hasApplied = volunteerApplyService.hasApplied(acc.getId(), eventId);
+//        if (!hasApplied) {
+//            // Thêm vào CSDL (SQL sẽ tự lấy ngày hiện tại)
+//            volunteerApplyService.applyToEvent(acc.getId(), eventId, hours, note);
+//        }
+        try {
+            boolean success = volunteerApplyService.applyToEvent(acc.getId(), eventId, hours, note);
+
+            if (success) {
+                session.setAttribute("message", "Đăng ký sự kiện thành công!");
+                session.setAttribute("messageType", "success");
+                // Redirect về danh sách sự kiện
+                response.sendRedirect(request.getContextPath() + "/VolunteerEventListServlet");
+            } else {
+                session.setAttribute("message", "Bạn đã đăng ký sự kiện này rồi!");
+                session.setAttribute("messageType", "warning");
+            }
+
+            response.sendRedirect(request.getContextPath() + "/VolunteerApplyEventServlet?eventId=" + eventId);
+
+        } catch (IllegalArgumentException e) {
+            session.setAttribute("message", e.getMessage());
+            session.setAttribute("messageType", "error");
+            response.sendRedirect(request.getContextPath() + "/VolunteerEventListServl");
         }
         // Quay lại trang chi tiết event (kèm eventId)
-        response.sendRedirect(request.getContextPath() + "/VolunteerApplyEventServlet?eventId=" + eventId);
+//        response.sendRedirect(request.getContextPath() + "/VolunteerApplyEventServlet?eventId=" + eventId);
     }
 }
