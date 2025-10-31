@@ -48,7 +48,7 @@
                         <div class="col-auto">
                             <select id="statusFilter" name="statusFilter" class="form-select form-select-sm">
                                 <option value="all" ${statusFilter == 'all' ? 'selected' : ''}>Tất cả</option>
-                                <option value="pending" ${statusFilter == 'pending' ? 'selected' : ''}>Đang xử lý</option>
+                                <option value="pending" ${statusFilter == 'pending' ? 'selected' : ''}>Chưa xử lý</option>
                                 <option value="approved" ${statusFilter == 'approved' ? 'selected' : ''}>Đã xử lý</option>
                                 <option value="rejected" ${statusFilter == 'rejected' ? 'selected' : ''}>Đã từ chối</option>
                             </select>
@@ -65,13 +65,13 @@
                         <table class="table table-bordered table-hover align-middle">
                             <thead class="table-secondary">
                                 <tr>
-                                    <th>STT</th>
-                                    <th>Tên</th>
-                                    <th>Ngày nộp đơn</th>
-                                    <th>Trạng thái</th>
-                                    <th>Số giờ đăng ký</th>
-                                    <th>Ghi chú</th>
-                                    <th>Thao tác</th>
+                                    <th style="width:5%;">STT</th>
+                                    <th style="width:15%;">Tên</th>
+                                    <th style="width:15%;">Ngày nộp đơn</th>
+                                    <th style="width:15%;">Trạng thái</th>
+                                    <th style="width:15%;">Số giờ đăng ký</th>
+                                    <th style="width:20%;">Ghi chú</th>
+                                    <th style="width:15%;">Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -137,8 +137,12 @@
                                     </tr>
                                 </c:forEach>
                             </tbody>
-
                         </table>
+                        <div class="d-flex justify-content-end mt-3">
+                            <a href="OrganizationApplyServlet" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Quay lại
+                            </a>
+                        </div>
                         <!-- Phân trang -->
                         <div class="d-flex justify-content-between align-items-center mt-3">
                             <span>Hiển thị phân trang sự kiện</span>
