@@ -6,6 +6,8 @@
 
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -36,16 +38,19 @@
                     <h2 class="fw-bold mb-4">Danh sách đơn đăng kí</h2>
 
                     <!-- Form lọc -->
-                    <form class="row g-3 align-items-center mb-3">
+                    <form class="row g-3 align-items-center mb-3" method="get" action="OrganizationApplyServlet">
+                        <!-- giữ eventId -->
+                        <input type="hidden" name="id" value="${eventId}" />
+
                         <div class="col-auto">
                             <label for="statusFilter" class="col-form-label fw-semibold">Trạng thái:</label>
                         </div>
                         <div class="col-auto">
-                            <select id="statusFilter" class="form-select form-select-sm">
-                                <option value="all" selected>Tất cả</option>
-                                <option value="pending">Đang chờ duyệt</option>
-                                <option value="approved">Đã duyệt</option>
-                                <option value="rejected">Đã từ chối</option>
+                            <select id="statusFilter" name="statusFilter" class="form-select form-select-sm">
+                                <option value="all" ${statusFilter == 'all' ? 'selected' : ''}>Tất cả</option>
+                                <option value="pending" ${statusFilter == 'pending' ? 'selected' : ''}>Đang xử lý</option>
+                                <option value="approved" ${statusFilter == 'approved' ? 'selected' : ''}>Đã xử lý</option>
+                                <option value="rejected" ${statusFilter == 'rejected' ? 'selected' : ''}>Đã từ chối</option>
                             </select>
                         </div>
                         <div class="col-auto">
@@ -55,6 +60,7 @@
                         </div>
                     </form>
 
+
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover align-middle">
                             <thead class="table-secondary">
@@ -63,68 +69,79 @@
                                     <th>Tên</th>
                                     <th>Ngày nộp đơn</th>
                                     <th>Trạng thái</th>
-                                    <th>Ghi chú</th>
                                     <th>Số giờ đăng ký</th>
+                                    <th>Ghi chú</th>
                                     <th>Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Nguyễn Văn A</td>
-                                    <td>25/10/2025</td>
-                                    <td><span class="badge bg-warning text-dark">Đang chờ duyệt</span></td>
-                                    <td>Có kinh nghiệm tổ chức sự kiện</td>
-                                    <td>10</td>
-                                    <td>
-                                        <button class="btn btn-success btn-sm">
-                                            <i class="bi bi-check-circle"></i> Duyệt đơn
-                                        </button>
-                                        <button class="btn btn-danger btn-sm">
-                                            <i class="bi bi-x-circle"></i> Từ chối
-                                        </button>
-                                    </td>
-                                </tr>
+                                <c:forEach var="v" items="${volunteers}" varStatus="loop">
+                                    <tr>
+                                        <td>${loop.index + 1}</td>
+                                        <td>${v.volunteerName}</td>
+                                        <td> <fmt:formatDate value="${v.applyDate}" pattern="dd/MM/yyyy HH:mm" /></td>
+                                        <td>
+                                            <c:choose>
+                                                <c:when test="${v.status == 'approved'}">
+                                                    <span class="badge bg-success">Đã xử lý</span>
+                                                </c:when>
+                                                <c:when test="${v.status == 'pending'}">
+                                                    <span class="badge bg-warning text-dark">Chưa xử lý</span>
+                                                </c:when>
+                                                <c:when test="${v.status == 'rejected'}">
+                                                    <span class="badge bg-danger text-white">Từ chối</span>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <span class="badge bg-light text-dark">${v.status}</span>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </td>
+                                        <td>${v.hours}</td>
+                                        <td>${v.note}</td>
 
-                                <tr>
-                                    <td>2</td>
-                                    <td>Trần Thị B</td>
-                                    <td>26/10/2025</td>
-                                    <td><span class="badge bg-success">Đã duyệt</span></td>
-                                    <td>Tham gia nhiều hoạt động môi trường</td>
-                                    <td>8</td>
-                                    <td>
-                                        <button class="btn btn-success btn-sm">
-                                            <i class="bi bi-check-circle"></i> Duyệt đơn
-                                        </button>
-                                        <button class="btn btn-danger btn-sm">
-                                            <i class="bi bi-x-circle"></i> Từ chối
-                                        </button>
-                                    </td>
-                                </tr>
+                                        <!--                                        thao tác xử lý-->
+                                        <td>
+                                            <c:choose>
+                                                <c:when test="${v.status == 'pending'}">
+                                                    <!-- Form duyệt -->
+                                                    <form method="post" action="OrganizationApplyServlet" class="d-inline">
+                                                        <input type="hidden" name="action" value="approve"/>
+                                                        <input type="hidden" name="id" value="${v.id}"/>
+                                                        <input type="hidden" name="eventId" value="${v.eventId}"/>
+                                                        <button type="submit" class="btn btn-success btn-sm">
+                                                            Chấp nhận
+                                                        </button>
+                                                    </form>
 
-                                <tr>
-                                    <td>3</td>
-                                    <td>Lê Quốc C</td>
-                                    <td>27/10/2025</td>
-                                    <td><span class="badge bg-danger">Đã từ chối</span></td>
-                                    <td>Thiếu thông tin xác minh</td>
-                                    <td>5</td>
-                                    <td>
-                                        <button class="btn btn-success btn-sm">
-                                            <i class="bi bi-check-circle"></i> Duyệt đơn
-                                        </button>
-                                        <button class="btn btn-danger btn-sm">
-                                            <i class="bi bi-x-circle"></i> Từ chối
-                                        </button>
-                                    </td>
-                                </tr>
+                                                    <!-- Form từ chối -->
+                                                    <form method="post" action="OrganizationApplyServlet" class="d-inline">
+                                                        <input type="hidden" name="action" value="reject"/>
+                                                        <input type="hidden" name="id" value="${v.id}"/>
+                                                        <input type="hidden" name="eventId" value="${v.eventId}"/>
+                                                        <button type="submit" class="btn btn-danger btn-sm">
+                                                            Từ chối
+                                                        </button>
+                                                    </form>
+                                                </c:when>
+
+                                                <c:when test="${v.status == 'approved'}">
+                                                    <span class="badge bg-success">Đã duyệt</span>
+                                                </c:when>
+
+                                                <c:when test="${v.status == 'rejected'}">
+                                                    <span class="badge bg-danger">Đã từ chối</span>
+                                                </c:when>
+                                            </c:choose>
+                                        </td>
+                                        <!--                                        hết thao tác xử lý-->
+                                    </tr>
+                                </c:forEach>
                             </tbody>
 
                         </table>
                         <!-- Phân trang -->
                         <div class="d-flex justify-content-between align-items-center mt-3">
-                            <span>Hiển thị 1 - 3 trong tổng 3 sự kiện</span>
+                            <span>Hiển thị phân trang sự kiện</span>
                             <ul class="pagination pagination-sm mb-0">
                                 <li class="page-item disabled"><a class="page-link" href="#">Trước</a></li>
                                 <li class="page-item active"><a class="page-link" href="#">1</a></li>

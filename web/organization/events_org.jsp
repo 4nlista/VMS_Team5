@@ -41,7 +41,7 @@
                                     <option value="active" <c:if test="${param.status == 'active'}">selected</c:if>>Đang diễn ra</option>
                                     <option value="pending" <c:if test="${param.status == 'pending'}">selected</c:if>>Chưa diễn ra</option>
                                     <option value="inactive" <c:if test="${param.status == 'inactive'}">selected</c:if>>Tạm dừng</option>
-                                     <option value="closed" <c:if test="${param.status == 'closed'}">selected</c:if>>Đã kết thúc</option>
+                                    <option value="closed" <c:if test="${param.status == 'closed'}">selected</c:if>>Đã kết thúc</option>
                                     </select>
                                 </div>
 
@@ -77,15 +77,15 @@
 
                         <!-- Bảng dữ liệu -->
                         <div class="table-responsive">
-                            <table class="table table-bordered table-hover">
+                            <table class="table table-bordered table-hover" style="table-layout: fixed; width: 100%;">
                                 <thead class="table-secondary">
                                     <tr>
-                                        <th>STT</th>
-                                        <th>Tiêu đề</th>
-                                        <th>Loại sự kiện</th>
-                                        <th>Chế độ</th>
-                                        <th>Trạng thái</th>
-                                        <th>Thao tác</th>
+                                        <th style="width:4%;">STT</th>
+                                        <th style="width:30%;">Tiêu đề</th>
+                                        <th style="width:15%;">Loại sự kiện</th>
+                                        <th style="width:15%;">Chế độ</th>
+                                        <th style="width:16%;">Trạng thái</th>
+                                        <th style="width:20%;">Thao tác</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -129,8 +129,8 @@
                                         </td>
 
                                         <td>
-                                            <a href="organization/detail_event_org.jsp?id=${e.id}" class="btn btn-primary btn-sm">Xem</a>
-                                            <a href="organization/edit_event_org.jsp?id=${e.id}" class="btn btn-secondary btn-sm">Sửa</a>
+                                            <a href="organization/detail_event_org.jsp?id=${e.id}" class="btn btn-primary btn-sm">Chi tiết</a>
+                                            <a href="OrganizationApplyServlet?id=${e.id}" class="btn btn-secondary btn-sm">Xử lý</a>
                                             <a href="organization/delete_event?id=${e.id}" class="btn btn-danger btn-sm">Xóa</a>
                                         </td>
                                     </tr>

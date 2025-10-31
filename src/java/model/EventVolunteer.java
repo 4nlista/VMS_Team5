@@ -17,7 +17,7 @@ public class EventVolunteer {
     private int volunteerId;
     private Date applyDate;
     private String status;
-    private int hour;
+    private int hours;
     private String note;
 
     private String organizationName;
@@ -27,19 +27,20 @@ public class EventVolunteer {
     public EventVolunteer() {
     }
 
-    public EventVolunteer(int id, int eventId, int volunteerId, Date applyDate, String status, int hour, String note, String organizationName, String categoryName, String volunteerName) {
+    public EventVolunteer(int id, int eventId, int volunteerId, Date applyDate, String status, int hours, String note, String organizationName, String categoryName, String volunteerName) {
         this.id = id;
         this.eventId = eventId;
         this.volunteerId = volunteerId;
         this.applyDate = applyDate;
         this.status = status;
-        this.hour = hour;
+        this.hours = hours;
         this.note = note;
         this.organizationName = organizationName;
         this.categoryName = categoryName;
         this.volunteerName = volunteerName;
     }
 
+    
     public int getId() {
         return id;
     }
@@ -80,12 +81,12 @@ public class EventVolunteer {
         this.status = status;
     }
 
-    public int getHour() {
-        return hour;
+    public int getHours() {
+        return hours;
     }
 
-    public void setHour(int hour) {
-        this.hour = hour;
+    public void setHour(int hours) {
+        this.hours = hours;
     }
 
     public String getNote() {
