@@ -65,13 +65,8 @@ public class OrganizationCreateEventServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        System.out.println("========== doPost() ĐƯỢC GỌI =========="); // ✅ THÊM DÒNG NÀY
-        System.out.println("Method: " + request.getMethod());
-        System.out.println("URI: " + request.getRequestURI());
-
         // Lấy tên file đã upload từ hidden input (đã upload qua UploadImagesServlet)
         String fileName = request.getParameter("uploadedImage");
-        System.out.println("uploadedImage param: " + fileName); // ✅ THÊM DÒNG NÀY
         // Nếu không có file đã upload, báo lỗi
         if (fileName == null || fileName.trim().isEmpty()) {
             request.setAttribute("errorMsg", "Vui lòng chọn ảnh sự kiện trước khi tạo!");
@@ -129,18 +124,6 @@ public class OrganizationCreateEventServlet extends HttpServlet {
             event.setStartDate(startDate);
             event.setEndDate(endDate);
             event.setTotalDonation(0); // mặc định
-
-            // ✅ THÊM LOG ĐỂ KIỂM TRA DỮ LIỆU
-            System.out.println("========== DEBUG EVENT ==========");
-            System.out.println("Title: " + event.getTitle());
-            System.out.println("Images: " + event.getImages());
-            System.out.println("Location: " + event.getLocation());
-            System.out.println("OrganizationId: " + event.getOrganizationId());
-            System.out.println("CategoryId: " + event.getCategoryId());
-            System.out.println("Start Date: " + event.getStartDate());
-            System.out.println("End Date: " + event.getEndDate());
-            System.out.println("==================================");
-
             boolean success = createEventsService.createEvent(event);
 
             if (success) {

@@ -33,40 +33,31 @@ public class CreateEventsDAO {
         if (e == null) {
             return false;
         }
-
         String sql = "INSERT INTO Events (title, description, images, location, status, visibility, "
                 + "category_id, organization_id, needed_volunteers, start_date, end_date, total_donation) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            // ✅ ĐÚNG THỨ TỰ THEO CÂU SQL
+            ps.setString(1, e.getTitle());                    // title
+            ps.setString(2, e.getDescription());              // description
+            ps.setString(3, e.getImages());                   // images
+            ps.setString(4, e.getLocation());                 // location
+            ps.setString(5, e.getStatus());                   // status
+            ps.setString(6, e.getVisibility());               // visibility
+            ps.setInt(7, e.getCategoryId());                  // category_id
+            ps.setInt(8, e.getOrganizationId());              // organization_id
+            ps.setInt(9, e.getNeededVolunteers());            // needed_volunteers
 
-            ps.setString(1, e.getImages());
-            ps.setString(2, e.getTitle());
-            ps.setString(3, e.getDescription());
-
-            // Convert java.util.Date sang java.sql.Date bên trong DAO
+            // Convert java.util.Date sang java.sql.Date
             Date start = e.getStartDate();
             Date end = e.getEndDate();
             if (start == null || end == null) {
                 return false;
             }
-
-            ps.setDate(4, new java.sql.Date(start.getTime()));
-            ps.setDate(5, new java.sql.Date(end.getTime()));
-
-            ps.setString(6, e.getLocation());
-            ps.setInt(7, e.getNeededVolunteers());
-            ps.setString(8, e.getStatus());
-            ps.setString(9, e.getVisibility());
-            ps.setInt(10, e.getOrganizationId());
-
-            // categoryId bắt buộc không null
-            if (e.getCategoryId() <= 0) {
-                return false;
-            }
-            ps.setInt(11, e.getCategoryId());
-
-            ps.setDouble(12, e.getTotalDonation());
+            ps.setDate(10, new java.sql.Date(start.getTime())); // start_date
+            ps.setDate(11, new java.sql.Date(end.getTime()));   // end_date
+            ps.setDouble(12, e.getTotalDonation());              // total_donation
 
             int rows = ps.executeUpdate();
             return rows > 0;

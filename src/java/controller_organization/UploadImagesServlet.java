@@ -16,9 +16,8 @@ import java.nio.file.Paths;
 @MultipartConfig
 public class UploadImagesServlet extends HttpServlet {
 
-    private static final String UPLOAD_DIR = "C:\\Users\\Admin\\Downloads\\uploads\\user_avatars";
+    private static final String UPLOAD_DIR = "C:\\Users\\Admin\\Downloads\\uploads\\background";
 
-    // ✅ POST = upload file
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
