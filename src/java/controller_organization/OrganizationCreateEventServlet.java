@@ -1,13 +1,17 @@
 package controller_organization;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
+import java.io.File;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -17,7 +21,7 @@ import service.AccountService;
 import service.CreateEventsService;
 
 @WebServlet(name = "OrganizationCreateEventServlet", urlPatterns = {"/OrganizationCreateEventServlet"})
-
+@MultipartConfig
 public class OrganizationCreateEventServlet extends HttpServlet {
 
     private CreateEventsService createEventsService = new CreateEventsService();
@@ -53,6 +57,16 @@ public class OrganizationCreateEventServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        Part filePart = request.getPart("eventImage");
+        String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+        String uploadPath = "C:\\Users\\Admin\\Downloads\\uploads\\user_avatars";
+
+        File uploadDir = new File(uploadPath);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdirs();
+        }
+        // Lưu file
+        filePart.write(uploadPath + File.separator + fileName);
 
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
@@ -94,7 +108,8 @@ public class OrganizationCreateEventServlet extends HttpServlet {
             Event event = new Event();
             event.setTitle(title);
             event.setDescription(description);
-            event.setImages(images);
+            // Gán vào event.setImages()
+            event.setImages(fileName);
             event.setLocation(location);
             event.setStatus(status);
             event.setVisibility(visibility);
@@ -108,14 +123,14 @@ public class OrganizationCreateEventServlet extends HttpServlet {
             boolean success = createEventsService.createEvent(event);
 
             if (success) {
-                response.sendRedirect(request.getContextPath() + "/OrganizationCreateEventsServlet?msg=success");
+                response.sendRedirect(request.getContextPath() + "/OrganizationCreateEventServlet?msg=success");
             } else {
-                response.sendRedirect(request.getContextPath() + "/OrganizationCreateEventsServlet?msg=error");
+                response.sendRedirect(request.getContextPath() + "/OrganizationCreateEventServlet?msg=error");
             }
 
         } catch (NumberFormatException | ParseException ex) {
             ex.printStackTrace();
-            response.sendRedirect(request.getContextPath() + "/OrganizationCreateEventsServlet?msg=invalid");
+            response.sendRedirect(request.getContextPath() + "/OrganizationCreateEventServlet?msg=invalid");
 
         }
     }

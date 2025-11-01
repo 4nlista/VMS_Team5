@@ -97,20 +97,8 @@
                                         </select>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label fw-semibold">Ảnh Sự Kiện <span class="text-danger">*</span></label>
-                                        <div class="image-preview">
-                                            <c:choose>
-                                                <c:when test="${not empty uploadedFileName}">
-                                                    <img src="${pageContext.request.contextPath}/UploadImagesServlet?file=${uploadedFileName}" 
-                                                         class="img-fluid" alt="Event Image">
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <img src="https://via.placeholder.com/400x250?text=Ch%E1%BB%8Dn+%E1%BA%A3nh" 
-                                                         class="img-fluid" alt="Preview">
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </div>
-                                        <input type="file" class="form-control mt-2" name="eventImage" accept="image/*" required>
+                                        <label class="form-label required">Ảnh Sự Kiện</label>
+                                        <input type="file" class="form-control" name="images" accept="image/*" required>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label required">Số Lượng Tình Nguyện Viên</label>

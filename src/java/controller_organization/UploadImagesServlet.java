@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 import java.io.File;
-
 import java.io.IOException;
 import java.nio.file.Paths;
 
@@ -18,8 +17,9 @@ public class UploadImagesServlet extends HttpServlet {
 
     private static final String UPLOAD_DIR = "C:\\Users\\Admin\\Downloads\\uploads\\user_avatars";
 
+    // ✅ POST = upload file
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Part filePart = request.getPart("eventImage");
         if (filePart != null && filePart.getSize() > 0) {
@@ -41,15 +41,12 @@ public class UploadImagesServlet extends HttpServlet {
 
         // Forward về form tạo sự kiện
         request.getRequestDispatcher("/organization/create_events_org.jsp").forward(request, response);
-
     }
 
+    // ✅ GET = hiển thị ảnh
     @Override
-
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        // Dùng để phục vụ file từ thư mục ngoài project
         String fileName = request.getParameter("file");
         if (fileName == null || fileName.isEmpty()) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "File name is required");
