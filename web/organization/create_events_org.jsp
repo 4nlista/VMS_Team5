@@ -68,17 +68,56 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                     </div>
                                 </c:when>
-                                <c:when test="${param.msg == 'invalid'}">
-                                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                        <strong>Dữ liệu không hợp lệ!</strong> Kiểm tra các trường nhập vào.
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                    </div>
-                                </c:when>
                             </c:choose>
                         </div>
                     </c:if>
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Bước 1: Tải ảnh sự kiện</h5>
+
+                            <form method="post" action="UploadImagesServlet" enctype="multipart/form-data">
+                                <div class="row">
+
+                                    <div class="col-md-6">
+                                        <%-- Preview ảnh --%>
+                                        <c:if test="${not empty sessionScope.uploadedFileName}">
+                                            <div class="image-preview">
+                                                <img src="UploadImagesServlet?file=${sessionScope.uploadedFileName}" alt="Preview">
+                                            </div>
+                                            <small class="text-success d-block mt-2">
+                                                <i class="bi bi-check-circle"></i> Đã tải lên: ${sessionScope.uploadedFileName}
+                                            </small>
+                                        </c:if>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label required">Ảnh Sự Kiện</label>
+                                        <c:choose>
+                                            <c:when test="${not empty uploadedFileName}">
+                                                <input type="text" class="form-control" value="${sessionScope.uploadedFileName}" readonly>
+                                                <input type="hidden" name="uploadedImage" value="${sessionScope.uploadedFileName}">
+                                            </c:when>
+                                            <c:otherwise>
+                                                <input type="text" class="form-control" value="Chưa tải ảnh" readonly>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label required">Chọn Ảnh</label>
+                                        <input type="file" class="form-control" name="eventImage" accept="image/*" 
+                                               onchange="this.form.submit()" required>
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
 
                     <form method="post" action="OrganizationCreateEventServlet" enctype="multipart/form-data">
+                        <%-- ✅ ĐOẠN VỪA THÊM --%>
+                        <c:if test="${not empty sessionScope.uploadedFileName}">
+                            <input type="hidden" name="uploadedImage" value="${sessionScope.uploadedFileName}">
+                        </c:if>
+                        <%-- KẾT THÚC ĐOẠN THÊM --%>
                         <div class="card">
                             <div class="card-body">
                                 <div class="row g-3">
@@ -97,20 +136,16 @@
                                         </select>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label required">Ảnh Sự Kiện</label>
-                                        <input type="file" class="form-control" name="images" accept="image/*" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label required">Số Lượng Tình Nguyện Viên</label>
-                                        <input type="number" class="form-control" name="neededVolunteers" min="1" value="1" required>
-                                    </div>
-                                    <div class="col-md-6">
                                         <label class="form-label required">Ngày Bắt Đầu</label>
                                         <input type="date" class="form-control" name="startDate" required>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label required">Ngày Kết Thúc</label>
                                         <input type="date" class="form-control" name="endDate" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label required">Số Lượng Tình Nguyện Viên</label>
+                                        <input type="number" class="form-control" name="neededVolunteers" min="1" value="1" required>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label required">Chế Độ</label>
@@ -123,19 +158,24 @@
                                         <label class="form-label required">Địa Điểm</label>
                                         <input type="text" class="form-control" name="location" required>
                                     </div>
-                                    <div class="col-12">
-                                        <label class="form-label required">Mô Tả</label>
-                                        <textarea class="form-control" name="description" rows="5" required></textarea>
-                                    </div>
                                     <div class="col-md-6">
                                         <label class="form-label">Tổng Tiền Từ Thiện (VNĐ)</label>
                                         <input type="text" class="form-control" name="totalDonation" value="0">
                                     </div>
+
+                                    <div class="col-12">
+                                        <label class="form-label required">Mô Tả</label>
+                                        <textarea class="form-control" name="description" rows="5" required></textarea>
+                                    </div>
+
                                 </div>
                             </div>
                             <div class="text-end mb-3">
                                 <a href="<%= request.getContextPath() %>/OrganizationListServlet" class="btn btn-secondary">Quay lại</a>
-                                <button type="submit" class="btn btn-primary">Tạo Sự Kiện</button>
+                                <div class="text-end mb-3">
+                                    <a href="<%= request.getContextPath() %>/OrganizationListServlet" class="btn btn-secondary">Quay lại</a>
+                                    <button type="submit" class="btn btn-primary">Tạo Sự Kiện</button>
+                                </div>
                             </div>
                         </div>
                     </form>

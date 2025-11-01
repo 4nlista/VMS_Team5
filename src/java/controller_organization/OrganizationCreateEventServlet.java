@@ -36,7 +36,14 @@ public class OrganizationCreateEventServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        // ✅ THÊM LOG KIỂM TRA
         HttpSession session = request.getSession(false);
+        System.out.println("========== doGet() được gọi ==========");
+        System.out.println("Session ID: " + (session != null ? session.getId() : "NULL"));
+        System.out.println("uploadedFileName trong session: " + (session != null ? session.getAttribute("uploadedFileName") : "NULL"));
+        System.out.println("======================================");
+
         if (session == null || session.getAttribute("account") == null) {
             response.sendRedirect(request.getContextPath() + "/LoginServlet");
             return;
@@ -57,16 +64,20 @@ public class OrganizationCreateEventServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Part filePart = request.getPart("eventImage");
-        String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-        String uploadPath = "C:\\Users\\Admin\\Downloads\\uploads\\user_avatars";
 
-        File uploadDir = new File(uploadPath);
-        if (!uploadDir.exists()) {
-            uploadDir.mkdirs();
+        System.out.println("========== doPost() ĐƯỢC GỌI =========="); // ✅ THÊM DÒNG NÀY
+        System.out.println("Method: " + request.getMethod());
+        System.out.println("URI: " + request.getRequestURI());
+
+        // Lấy tên file đã upload từ hidden input (đã upload qua UploadImagesServlet)
+        String fileName = request.getParameter("uploadedImage");
+        System.out.println("uploadedImage param: " + fileName); // ✅ THÊM DÒNG NÀY
+        // Nếu không có file đã upload, báo lỗi
+        if (fileName == null || fileName.trim().isEmpty()) {
+            request.setAttribute("errorMsg", "Vui lòng chọn ảnh sự kiện trước khi tạo!");
+            request.getRequestDispatcher("/organization/create_events_org.jsp").forward(request, response);
+            return;
         }
-        // Lưu file
-        filePart.write(uploadPath + File.separator + fileName);
 
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
@@ -86,7 +97,6 @@ public class OrganizationCreateEventServlet extends HttpServlet {
         // Lấy dữ liệu từ form
         String title = request.getParameter("title");
         String description = request.getParameter("description");
-        String images = request.getParameter("images");
         String location = request.getParameter("location");
         String status = request.getParameter("status");
         String visibility = request.getParameter("visibility");
@@ -120,9 +130,21 @@ public class OrganizationCreateEventServlet extends HttpServlet {
             event.setEndDate(endDate);
             event.setTotalDonation(0); // mặc định
 
+            // ✅ THÊM LOG ĐỂ KIỂM TRA DỮ LIỆU
+            System.out.println("========== DEBUG EVENT ==========");
+            System.out.println("Title: " + event.getTitle());
+            System.out.println("Images: " + event.getImages());
+            System.out.println("Location: " + event.getLocation());
+            System.out.println("OrganizationId: " + event.getOrganizationId());
+            System.out.println("CategoryId: " + event.getCategoryId());
+            System.out.println("Start Date: " + event.getStartDate());
+            System.out.println("End Date: " + event.getEndDate());
+            System.out.println("==================================");
+
             boolean success = createEventsService.createEvent(event);
 
             if (success) {
+                session.removeAttribute("uploadedFileName"); // 
                 response.sendRedirect(request.getContextPath() + "/OrganizationCreateEventServlet?msg=success");
             } else {
                 response.sendRedirect(request.getContextPath() + "/OrganizationCreateEventServlet?msg=error");

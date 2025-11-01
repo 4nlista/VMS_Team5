@@ -6,6 +6,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
@@ -21,6 +22,7 @@ public class UploadImagesServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        System.out.println("========== UploadImagesServlet được gọi ==========");
         Part filePart = request.getPart("eventImage");
         if (filePart != null && filePart.getSize() > 0) {
             String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
@@ -35,15 +37,21 @@ public class UploadImagesServlet extends HttpServlet {
             String filePath = UPLOAD_DIR + File.separator + fileName;
             filePart.write(filePath);
 
-            // Lưu tên file vào request để JSP hiển thị
-            request.setAttribute("uploadedFileName", fileName);
+            //  Lưu tên file vào SESSION để giữ qua các request
+            HttpSession session = request.getSession();
+            session.setAttribute("uploadedFileName", fileName);
+
+            // THÊM LOG ĐỂ KIỂM TRA
+            System.out.println("✅ Đã lưu vào session: " + fileName);
+            System.out.println("✅ Kiểm tra session: " + session.getAttribute("uploadedFileName"));
         }
 
         // Forward về form tạo sự kiện
-        request.getRequestDispatcher("/organization/create_events_org.jsp").forward(request, response);
+//        request.getRequestDispatcher("/organization/create_events_org.jsp").forward(request, response);
+        response.sendRedirect(request.getContextPath() + "/OrganizationCreateEventServlet");
     }
 
-    // ✅ GET = hiển thị ảnh
+    //  GET = hiển thị ảnh
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

@@ -34,11 +34,9 @@ public class CreateEventsDAO {
             return false;
         }
 
-        String sql = """
-                INSERT INTO Events (images, title, description, startDate, endDate, location, 
-                neededVolunteers, status, visibility, organizationId, categoryId, totalDonation) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-                """;
+        String sql = "INSERT INTO Events (title, description, images, location, status, visibility, "
+                + "category_id, organization_id, needed_volunteers, start_date, end_date, total_donation) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
 
