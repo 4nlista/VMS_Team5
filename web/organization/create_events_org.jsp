@@ -132,11 +132,11 @@
                             </div>
 
                             <div class="card-footer text-end">
-                                <button type="button" class="btn btn-secondary" onclick="history.back()">
-                                    <i class="bi bi-x-circle"></i> Hủy
+                                <button type="button" class="btn btn-secondary">
+                                    <i class="bi bi-arrow-left"></i> Quay lại
                                 </button>
-                                <button type="reset" class="btn btn-outline-warning">
-                                    <i class="bi bi-arrow-clockwise"></i> Đặt lại
+                                <button type="reset" class="btn btn-danger">
+                                    <i class="bi bi-x-circle"></i> Hủy
                                 </button>
                                 <button type="submit" class="btn btn-primary">
                                     <i class="bi bi-check-circle"></i> Tạo Sự Kiện
