@@ -16,6 +16,26 @@
         <jsp:include page="/layout/header.jsp" />
     </head>
     <body>
+
+        <!-- Hiển thị thông báosss -->
+        <!-- Hiển thị thông báo -->
+        <c:if test="${not empty message}">
+            <div class="alert alert-${messageType} alert-dismissible fade show" role="alert" 
+                 style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; min-width: 400px; max-width: 600px;">
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <script>
+                // Tự động ẩn sau 3 giây
+                setTimeout(function () {
+                    var alert = document.querySelector('.alert');
+                    if (alert) {
+                        var bsAlert = new bootstrap.Alert(alert);
+                        bsAlert.close();
+                    }
+                }, 3000);
+            </script>
+        </c:if>
         <%
             Object sessionId = session.getId();
             String fullname = (String) session.getAttribute("fullname");

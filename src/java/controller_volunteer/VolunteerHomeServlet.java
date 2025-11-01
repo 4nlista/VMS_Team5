@@ -1,5 +1,3 @@
-
-
 package controller_volunteer;
 
 import jakarta.servlet.ServletException;
@@ -21,7 +19,6 @@ import service.DisplayEventService;
 import service.DisplayNewService;
 import service.SumDisplayService;
 import service.AdminAccountService;
-
 
 @WebServlet(name = "VolunteerHomeServlet", urlPatterns = {"/VolunteerHomeServlet"})
 public class VolunteerHomeServlet extends HttpServlet {
@@ -47,7 +44,7 @@ public class VolunteerHomeServlet extends HttpServlet {
         List<Event> lastEvents = eventService.getLatestActivePublicEvents();
         List<Donation> topDonates = donateService.getTop3UserDonation();
         List<New> allNews = displayNewService.getAllPostNews();
-        
+
         double totalDonationSystem = sumService.getTotalDonations();
 
         HttpSession session = request.getSession(false);
@@ -62,13 +59,25 @@ public class VolunteerHomeServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "Truy cập bị từ chối");
             return;
         }
+
+        // Lấy message từ session (nếu có)
+        String message = (String) session.getAttribute("message");
+        String messageType = (String) session.getAttribute("messageType");
+
+        // Xóa message khỏi session
+        session.removeAttribute("message");
+        session.removeAttribute("messageType");
+
+        // Set vào request
+        request.setAttribute("message", message);
+        request.setAttribute("messageType", messageType);
         // Lưu fullname vào session
         session.setAttribute("username", acc.getUsername());
         // Forward đến JSP, không redirect
 
         request.setAttribute("totalDonationSystem", totalDonationSystem);
         request.setAttribute("lastEvents", eventService.getLatestActivePublicEvents());
-        request.setAttribute("topDonates", donateService.getTop3UserDonation()); 
+        request.setAttribute("topDonates", donateService.getTop3UserDonation());
         request.setAttribute("allNews", displayNewService.getTop3PostNews());
         request.getRequestDispatcher("index.jsp").forward(request, response);
     }
