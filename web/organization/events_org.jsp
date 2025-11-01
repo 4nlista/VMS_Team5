@@ -67,7 +67,7 @@
                             </div>
 
                             <!-- Nút tạo mới sự kiện -->
-                            <a href="create_event_org.jsp" class="btn btn-success btn-sm" style="min-width:130px;">
+                            <a href="${pageContext.request.contextPath}/organization/create_events_org.jsp" class="btn btn-success btn-sm" style="min-width:130px;">
                                 <i class="bi bi-plus-lg"></i> Tạo mới sự kiện
                             </a>
                         </form>

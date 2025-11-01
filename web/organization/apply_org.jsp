@@ -138,8 +138,9 @@
                                 </c:forEach>
                             </tbody>
                         </table>
+                        
                         <div class="d-flex justify-content-end mt-3">
-                            <a href="OrganizationApplyServlet" class="btn btn-secondary">
+                            <a href="${pageContext.request.contextPath}/OrganizationApplyServlet" class="btn btn-secondary">
                                 <i class="bi bi-arrow-left"></i> Quay lại
                             </a>
                         </div>
