@@ -45,7 +45,6 @@ public class OrganizationHomeServlet extends HttpServlet {
         session.setAttribute("username", acc.getUsername());
         // Forward đến JSP, không redirect
         request.getRequestDispatcher("/organization/home_org.jsp").forward(request, response);
-
     }
 
     @Override

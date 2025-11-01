@@ -66,7 +66,6 @@ public class Event {
         this.categoryName = categoryName;
     }
 
-
     public int getId() {
         return id;
     }
@@ -186,7 +185,5 @@ public class Event {
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
     }
-
-    
 
 }

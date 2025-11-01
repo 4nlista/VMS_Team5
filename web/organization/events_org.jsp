@@ -67,28 +67,29 @@
                             </div>
 
                             <!-- Nút tạo mới sự kiện -->
-                            <a href="${pageContext.request.contextPath}/organization/create_events_org.jsp" class="btn btn-success btn-sm" style="min-width:130px;">
-                                <i class="bi bi-plus-lg"></i> Tạo mới sự kiện
-                            </a>
-                        </form>
+                            <a href="${pageContext.request.contextPath}/OrganizationCreateEventServlet" 
+                           class="btn btn-success btn-sm" style="min-width:130px;">
+                            <i class="bi bi-plus-lg"></i> Tạo mới sự kiện
+                        </a>
+                    </form>
 
 
 
 
-                        <!-- Bảng dữ liệu -->
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-hover" style="table-layout: fixed; width: 100%;">
-                                <thead class="table-secondary">
-                                    <tr>
-                                        <th style="width:4%;">STT</th>
-                                        <th style="width:30%;">Tiêu đề</th>
-                                        <th style="width:15%;">Loại sự kiện</th>
-                                        <th style="width:15%;">Chế độ</th>
-                                        <th style="width:16%;">Trạng thái</th>
-                                        <th style="width:20%;">Thao tác</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
+                    <!-- Bảng dữ liệu -->
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover" style="table-layout: fixed; width: 100%;">
+                            <thead class="table-secondary">
+                                <tr>
+                                    <th style="width:4%;">STT</th>
+                                    <th style="width:30%;">Tiêu đề</th>
+                                    <th style="width:15%;">Loại sự kiện</th>
+                                    <th style="width:15%;">Chế độ</th>
+                                    <th style="width:16%;">Trạng thái</th>
+                                    <th style="width:20%;">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
                                 <c:forEach var="e" items="${eventsOrg}" varStatus="loop">
                                     <tr>
                                         <td>${loop.index + 1}</td>

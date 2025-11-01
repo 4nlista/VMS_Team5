@@ -13,6 +13,7 @@
         <title>Trang chủ khách hàng</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+        
         <jsp:include page="/layout/header.jsp" />
     </head>
     <body>
@@ -20,13 +21,13 @@
         <jsp:include page="/layout/navbar.jsp" />
         <div class="page-content container mt-5 pt-5">
             <h1 class="mb-4 text-center">Trang Thanh Toán</h1>
+            <form action="PaymentServlet" method="post">
+                <div class="container py-5">
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <div class="card shadow p-4">
+                                <h5 class="mb-3">Thông tin người thanh toán</h5>
 
-            <div class="container py-5">
-                <div class="row justify-content-center">
-                    <div class="col-md-8">
-                        <div class="card shadow p-4">
-                            <h5 class="mb-3">Thông tin người thanh toán</h5>
-                            <form action="PaymentServlet" method="post">
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <label class="form-label">Họ và tên</label>
@@ -90,15 +91,28 @@
                                     <input type="text" class="form-control" name="note" required>
                                 </div>
 
-                                <div class="text-end">
-                                    <button type="submit" class="btn btn-success btn-lg mr-2">Xác nhận thanh toán</button>
-                                    <a href="<%= request.getContextPath() %>/VolunteerHomeServlet" class="btn btn-secondary btn-lg">Hủy</a>
+                                <div class="d-flex justify-content-between">
+                                    <!-- Nút Quay lại bên trái -->
+                   
+                                    <a href="<%= request.getContextPath() %>/VolunteerHomeServlet" class="btn btn-secondary btn-lg">
+                                        Quay lại
+                                    </a>
+
+                                    <!-- Nút Xác nhận thanh toán và Hủy ở bên phải -->
+                                    <div class="d-flex">
+                                        <button type="submit" class="btn btn-success btn-lg mr-2">Xác nhận thanh toán</button>
+                                        <a href="<%= request.getContextPath() %>/VolunteerHomeServlet" class="btn btn-secondary btn-lg">Hủy</a>
+                                    </div>
                                 </div>
-                            </form>
+
+                                </form>
+                            </div>
                         </div>
+
                     </div>
+
                 </div>
-            </div>
+
 
         </div>
 

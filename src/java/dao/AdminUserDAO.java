@@ -24,9 +24,6 @@ public class AdminUserDAO {
 
     private Connection conn;
 
-    /**
-     * Get connection from database
-     */
     public AdminUserDAO() {
         try {
             DBContext db = new DBContext();

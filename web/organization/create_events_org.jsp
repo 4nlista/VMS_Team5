@@ -50,100 +50,108 @@
         <div class="content-container">
             <jsp:include page="layout_org/sidebar_org.jsp" />
 
-            <div class="main-content p-4">
+            <div class="main-content p-8">
                 <div class="container-fluid">
-                    <h2 class="fw-bold mb-4"><i class="bi bi-calendar-plus"></i> Tạo Sự Kiện Mới</h2>
+                    <h2 class="fw-bold mb-4"> Tạo Sự Kiện Mới</h2>
+                    <c:if test="${not empty param.msg}">
+                        <div class="container mt-3">
+                            <c:choose>
+                                <c:when test="${param.msg == 'success'}">
+                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                        <strong>Thành công!</strong> Sự kiện đã được tạo.
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                </c:when>
+                                <c:when test="${param.msg == 'error'}">
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <strong>Lỗi!</strong> Không thể tạo sự kiện. Vui lòng thử lại.
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                </c:when>
+                                <c:when test="${param.msg == 'invalid'}">
+                                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                        <strong>Dữ liệu không hợp lệ!</strong> Kiểm tra các trường nhập vào.
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                </c:when>
+                            </c:choose>
+                        </div>
+                    </c:if>
 
-                    <form method="post" action="CreateEventServlet" enctype="multipart/form-data">
+                    <form method="post" action="OrganizationCreateEventServlet" enctype="multipart/form-data">
                         <div class="card">
                             <div class="card-body">
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <label class="form-label fw-semibold">ID Sự Kiện <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="eventId" required>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-semibold">Tiêu Đề <span class="text-danger">*</span></label>
+                                        <label class="form-label required">Tiêu Đề</label>
                                         <input type="text" class="form-control" name="title" required>
                                     </div>
-
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-semibold">Ảnh Sự Kiện <span class="text-danger">*</span></label>
-                                        <input type="file" class="form-control mb-2" name="eventImage" accept="image/*" required onchange="document.getElementById('preview').src = window.URL.createObjectURL(this.files[0])">
-                                        <img id="preview" src="https://via.placeholder.com/400x250?text=Ch%E1%BB%8Dn+%E1%BA%A3nh" class="img-fluid border rounded" alt="Preview">
-                                    </div>
-
-                                    <div class="col-md-8">
-                                        <div class="row g-3">
-                                            <div class="col-12">
-                                                <label class="form-label fw-semibold">Mô Tả <span class="text-danger">*</span></label>
-                                                <textarea class="form-control" name="description" rows="8" required></textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
                                     <div class="col-md-6">
-                                        <label class="form-label fw-semibold">Ngày Bắt Đầu <span class="text-danger">*</span></label>
-                                        <input type="datetime-local" class="form-control" name="startDate" required>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-semibold">Ngày Kết Thúc <span class="text-danger">*</span></label>
-                                        <input type="datetime-local" class="form-control" name="endDate" required>
-                                    </div>
-
-                                    <div class="col-12">
-                                        <label class="form-label fw-semibold">Địa Điểm <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="location" required>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-semibold">Số Lượng Tình Nguyện Viên <span class="text-danger">*</span></label>
-                                        <input type="number" class="form-control" name="volunteers" min="0" value="0" required>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-semibold">Chế Độ <span class="text-danger">*</span></label>
-                                        <select class="form-select" name="privacy" required>
+                                        <label class="form-label required">Loại Sự Kiện</label>
+                                        <select class="form-select" name="categoryId" required>
                                             <option value="">-- Chọn --</option>
+                                            <option value="1">Y tế</option>
+                                            <option value="2">Môi trường</option>
+                                            <option value="3">Giáo dục</option>
+                                            <option value="4">Xã hội</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">Ảnh Sự Kiện <span class="text-danger">*</span></label>
+                                        <div class="image-preview">
+                                            <c:choose>
+                                                <c:when test="${not empty uploadedFileName}">
+                                                    <img src="${pageContext.request.contextPath}/UploadImagesServlet?file=${uploadedFileName}" 
+                                                         class="img-fluid" alt="Event Image">
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <img src="https://via.placeholder.com/400x250?text=Ch%E1%BB%8Dn+%E1%BA%A3nh" 
+                                                         class="img-fluid" alt="Preview">
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </div>
+                                        <input type="file" class="form-control mt-2" name="eventImage" accept="image/*" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label required">Số Lượng Tình Nguyện Viên</label>
+                                        <input type="number" class="form-control" name="neededVolunteers" min="1" value="1" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label required">Ngày Bắt Đầu</label>
+                                        <input type="date" class="form-control" name="startDate" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label required">Ngày Kết Thúc</label>
+                                        <input type="date" class="form-control" name="endDate" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label required">Chế Độ</label>
+                                        <select class="form-select" name="visibility" required>
                                             <option value="public">Công khai</option>
                                             <option value="private">Riêng tư</option>
                                         </select>
                                     </div>
-
                                     <div class="col-md-6">
-                                        <label class="form-label fw-semibold">Loại Sự Kiện <span class="text-danger">*</span></label>
-                                        <select class="form-select" name="eventType" required>
-                                            <option value="">-- Chọn --</option>
-                                            <option value="health">Y tế</option>
-                                            <option value="environment">Môi trường</option>
-                                            <option value="education">Giáo dục</option>
-                                            <option value="social">Xã hội</option>
-                                        </select>
+                                        <label class="form-label required">Địa Điểm</label>
+                                        <input type="text" class="form-control" name="location" required>
                                     </div>
-
+                                    <div class="col-12">
+                                        <label class="form-label required">Mô Tả</label>
+                                        <textarea class="form-control" name="description" rows="5" required></textarea>
+                                    </div>
                                     <div class="col-md-6">
-                                        <label class="form-label fw-semibold">Tổng Tiền Từ Thiện (VNĐ)</label>
-                                        <input type="text" class="form-control" name="donationAmount" value="0">
+                                        <label class="form-label">Tổng Tiền Từ Thiện (VNĐ)</label>
+                                        <input type="text" class="form-control" name="totalDonation" value="0">
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="card-footer text-end">
-                                <button type="button" class="btn btn-secondary">
-                                    <i class="bi bi-arrow-left"></i> Quay lại
-                                </button>
-                                <button type="reset" class="btn btn-danger">
-                                    <i class="bi bi-x-circle"></i> Hủy
-                                </button>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="bi bi-check-circle"></i> Tạo Sự Kiện
-                                </button>
+                            <div class="text-end mb-3">
+                                <a href="<%= request.getContextPath() %>/OrganizationListServlet" class="btn btn-secondary">Quay lại</a>
+                                <button type="submit" class="btn btn-primary">Tạo Sự Kiện</button>
                             </div>
                         </div>
                     </form>
+
                 </div>
             </div>
         </div>
