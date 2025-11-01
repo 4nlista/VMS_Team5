@@ -33,6 +33,7 @@ public class AdminHomeDAO {
         }
     }
 
+    // lấy tổng số tài khoản
     public int getTotalAccount() {
         String sql = "SELECT COUNT(*) AS total FROM Accounts";
         try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {

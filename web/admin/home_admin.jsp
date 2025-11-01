@@ -37,7 +37,7 @@
                     <div class="col-md-4">
                         <div class="bg-warning rounded shadow p-3 text-start text-dark position-relative">
                             <h2 class="fw-bold">${totalAccounts}</h2>
-                            <h5 class="">Tổng số tài khoản</h5>
+                            <h5 class="">Tổng số người dùng</h5>
                             <i class="bi bi-person-plus-fill"
                                style="font-size: 5rem; position: absolute; bottom:5px; right: 10px; opacity: 0.15; color: black"></i>
                         </div>
@@ -46,7 +46,7 @@
                     <!-- Tổng sự kiện -->
                     <div class="col-md-4">
                         <div class="bg-primary rounded shadow p-3 text-start text-white position-relative">
-                            <h2 class="fw-bold">240</h2>
+                            <h2 class="fw-bold">${totalEventsActive}</h2>
                             <h5 class="">Tổng số sự kiện</h5>
                             <i class="bi bi-house-door"
                                style="font-size: 5rem; position: absolute; bottom:5px; right: 10px; opacity: 0.15; color: black"></i>

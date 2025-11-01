@@ -5,6 +5,7 @@
 package service;
 
 import dao.AdminHomeDAO;
+import dao.StatisticsDAO;
 import java.util.List;
 import java.util.Map;
 import model.Account;
@@ -18,9 +19,11 @@ import model.Event;
 public class AdminHomeService {
 
     private AdminHomeDAO adminHomeDAO;
+    private StatisticsDAO statisticsDAO;
 
     public AdminHomeService() {
         adminHomeDAO = new AdminHomeDAO();
+        statisticsDAO = new StatisticsDAO();
     }
 
     // 1.1 Hiển thị dữ liệu tổng số tài khoản
@@ -46,6 +49,9 @@ public class AdminHomeService {
     public Map<String, Integer> getAccountStatistics() {
         return adminHomeDAO.getAccountStatistics();
     }
-
-//>>>>>>> an
+    
+    // danh sách các sự kiện đang diễn ra
+    public int getTotalEventsActive() {
+        return statisticsDAO.getTotalEventsActive();
+    }
 }

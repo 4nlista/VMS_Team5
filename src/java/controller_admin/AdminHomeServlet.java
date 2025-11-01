@@ -26,7 +26,8 @@ public class AdminHomeServlet extends HttpServlet {
 
     private AccountService accountService;
     private AdminHomeService adminHomeService;
-private AdminAccountService adminAccountService;
+    private AdminAccountService adminAccountService;
+
     @Override
     public void init() {
         accountService = new AccountService();
@@ -52,10 +53,12 @@ private AdminAccountService adminAccountService;
         List<Event> eventsComing = adminHomeService.getTop3EventsComing();
         Map<String, Integer> accountStats = adminHomeService.getAccountStatistics();
         int totalAccounts = adminHomeService.getTotalAccount();
+        int totalEventsActive = adminHomeService.getTotalEventsActive();
         double totalMoneyDonate = adminHomeService.getTotalMoneyDonate();
 
         request.setAttribute("topEvents", topEvents);
         request.setAttribute("accountStats", accountStats);
+        request.setAttribute("totalEventsActive", totalEventsActive);
         request.setAttribute("eventsComing", eventsComing);
         request.setAttribute("totalAccounts", totalAccounts);
         request.setAttribute("totalMoneyDonate", totalMoneyDonate);
