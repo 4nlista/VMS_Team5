@@ -73,9 +73,6 @@
                         </a>
                     </form>
 
-
-
-
                     <!-- Bảng dữ liệu -->
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover" style="table-layout: fixed; width: 100%;">

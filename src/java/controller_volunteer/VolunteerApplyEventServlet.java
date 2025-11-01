@@ -49,7 +49,7 @@ public class VolunteerApplyEventServlet extends HttpServlet {
         String eventIdParam = request.getParameter("eventId");
         if (eventIdParam == null) {
             // Nếu không có eventId, có thể redirect về danh sách event
-            response.sendRedirect(request.getContextPath() + "/VolunteerEventListServlet");
+            response.sendRedirect(request.getContextPath() + "/VolunteerHomeServlet");
             return;
         }
         int eventId = Integer.parseInt(eventIdParam);
@@ -109,19 +109,21 @@ public class VolunteerApplyEventServlet extends HttpServlet {
             if (success) {
                 session.setAttribute("message", "Đăng ký sự kiện thành công!");
                 session.setAttribute("messageType", "success");
-                // Redirect về danh sách sự kiện
-                response.sendRedirect(request.getContextPath() + "/VolunteerEventListServlet");
+                response.sendRedirect(request.getContextPath() + "/VolunteerHomeServlet");
+                return;
             } else {
                 session.setAttribute("message", "Bạn đã đăng ký sự kiện này rồi!");
                 session.setAttribute("messageType", "warning");
+                response.sendRedirect(request.getContextPath() + "/VolunteerApplyEventServlet?eventId=" + eventId);
+                return;
             }
-
-            response.sendRedirect(request.getContextPath() + "/VolunteerApplyEventServlet?eventId=" + eventId);
 
         } catch (IllegalArgumentException e) {
             session.setAttribute("message", e.getMessage());
             session.setAttribute("messageType", "error");
-            response.sendRedirect(request.getContextPath() + "/VolunteerEventListServl");
+            response.sendRedirect(request.getContextPath() + "/VolunteerHomeServlet");
+            return;
         }
+
     }
 }
