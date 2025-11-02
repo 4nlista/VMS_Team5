@@ -20,17 +20,17 @@
             <c:forEach var="e" items="${lastEvents}">
                 <div class="col-md-4 d-flex align-items-stretch">
                     <div class="blog-entry align-self-stretch h-100 w-100">
-                        <a href="#" class="block-20" style="background-image: url('${e.images}');"></a>
+                        <a class="block-20" style="background-image: url('${pageContext.request.contextPath}/UploadImagesServlet?file=${e.images}');"></a>
                         <div class="text p-4 d-block h-100">
                             <div class="meta d-flex justify-content-end">
-                                <a href="#" class="meta-chat">
+                                <a href="" class="meta-chat">
                                     <span class="icon-star text-warning"></span> 3
                                 </a>
                             </div>
                             <div class="meta mb-3">
                                 <div><a href="#">Người tổ chức: <b><i>${e.organizationName}</i></b></a></div>
                             </div>
-                            <h3 class="heading mb-1"><a href="#">${e.title}</a></h3>
+                            <h3 class="heading mb-1"><a href="${pageContext.request.contextPath}/VolunteerApplyEventServlet?eventId=${e.id}">${e.title}</a></h3>
                             <p class="text-muted mb-1"><i>Loại sự kiện: ${e.categoryName}</i></p>
                             <p class="time-loc">
                                 <span class="mr-2"><i class="icon-clock-o"></i> Bắt đầu: ${e.startDate}</span><br/>

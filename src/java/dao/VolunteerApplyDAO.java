@@ -44,10 +44,10 @@ public class VolunteerApplyDAO {
         }
         return false;
     }
-    
+
     // Thêm một bản ghi apply mới
     public void applyToEvent(int volunteerId, int eventId, int hours, String note) {
-        String sql = "INSERT INTO Event_Volunteers (volunteer_id, event_id, hours, note, apply_date, status) VALUES (?, ?, ?, ?, GETDATE(), 'pending')";
+        String sql = "INSERT INTO Event_Volunteers (volunteer_id, event_id, hours, note, apply_date) VALUES (?, ?, ?, ?, GETDATE())";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, volunteerId);
             ps.setInt(2, eventId);

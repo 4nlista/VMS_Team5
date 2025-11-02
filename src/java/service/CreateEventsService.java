@@ -43,7 +43,7 @@ public class CreateEventsService {
 
         // Set mặc định
         if (e.getStatus() == null) {
-            e.setStatus("pending");
+            e.setStatus("active");
         }
         if (e.getVisibility() == null) {
             e.setVisibility("public");
