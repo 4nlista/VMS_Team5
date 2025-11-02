@@ -113,7 +113,7 @@ public class ViewEventsDAO {
         return event;
     }
 
-    // Lấy 3 sự kiện mới nhất để update lên màn hình giao diện quảng bá
+    // Lấy 3 sự kiện mới nhất active + public để update lên màn hình giao diện quảng bá
     public List<Event> getLatestActivePublicEvents() {
         List<Event> list = new ArrayList<>();
         String sql = """

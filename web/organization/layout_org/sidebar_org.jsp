@@ -48,15 +48,15 @@
             <li>
                 <a href="<%= request.getContextPath() %>/organization/manage_feedback_org.jsp"
                    class="nav-link text-white <%= currentPath.endsWith("/manage_feedback_org.jsp") ? "active" : "" %>">
-                    <i class="bi bi-gear me-2"></i>
+                    <i class="bi bi-pencil me-2"></i>
                     Quản lí đánh giá
                 </a>
             </li>
             <li>
-                <a href="<%= request.getContextPath() %>/organization/reports_org.jsp"
-                   class="nav-link text-white <%= currentPath.endsWith("/reports_org.jsp") ? "active" : "" %>">
+                <a href="<%= request.getContextPath() %>/organization/manage_new_org.jsp"
+                   class="nav-link text-white <%= currentPath.endsWith("/manage_new_org.jsp") ? "active" : "" %>">
                     <i class="bi bi-file-earmark-bar-graph me-2"></i>
-                    Báo cáo & thống kê
+                    Quản lí tin tức
                 </a>
             </li>
             <li>

@@ -39,8 +39,7 @@
                                     <select name="status" class="form-select form-select-sm" style="width: 160px;">
                                         <option value="" <c:if test="${param.status == null || param.status == ''}">selected</c:if>>Tất cả</option>
                                     <option value="active" <c:if test="${param.status == 'active'}">selected</c:if>>Đang diễn ra</option>
-                                    <option value="pending" <c:if test="${param.status == 'pending'}">selected</c:if>>Chưa diễn ra</option>
-                                    <option value="inactive" <c:if test="${param.status == 'inactive'}">selected</c:if>>Tạm dừng</option>
+                                    <option value="inactive" <c:if test="${param.status == 'inactive'}">selected</c:if>>Chưa diễn ra</option>
                                     <option value="closed" <c:if test="${param.status == 'closed'}">selected</c:if>>Đã kết thúc</option>
                                     </select>
                                 </div>
@@ -111,14 +110,11 @@
                                                 <c:when test="${e.status == 'active'}">
                                                     <span class="badge bg-success">Đang diễn ra</span>
                                                 </c:when>
-                                                <c:when test="${e.status == 'pending'}">
-                                                    <span class="badge bg-warning text-dark">Chưa diễn ra</span>
+                                                <c:when test="${e.status == 'inactive'}">
+                                                    <span class="badge bg-info text-dark">Chưa diễn ra</span>
                                                 </c:when>
                                                 <c:when test="${e.status == 'closed'}">
                                                     <span class="badge bg-danger">Đã kết thúc</span>
-                                                </c:when>
-                                                <c:when test="${e.status == 'inactive'}">
-                                                    <span class="badge bg-dark">Tạm dừng</span>
                                                 </c:when>
                                                 <c:otherwise>
                                                     <span class="badge bg-secondary">${e.status}</span>

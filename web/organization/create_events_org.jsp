@@ -171,7 +171,6 @@
                                 </div>
                             </div>
                             <div class="text-end mb-3">
-                                <a href="<%= request.getContextPath() %>/OrganizationListServlet" class="btn btn-secondary">Quay lại</a>
                                 <div class="text-end mb-3">
                                     <a href="<%= request.getContextPath() %>/OrganizationListServlet" class="btn btn-secondary">Quay lại</a>
                                     <button type="submit" class="btn btn-primary">Tạo Sự Kiện</button>
