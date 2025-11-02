@@ -13,7 +13,7 @@ import java.util.List;
 import model.Donation;
 import model.Event;
 
-@WebServlet(name = "OrganizationDetailEventServlet", urlPatterns = {"OrganizationDetailEventServlet"})
+@WebServlet(name = "OrganizationDetailEventServlet", urlPatterns = {"/OrganizationDetailEventServlet"})
 
 public class OrganizationDetailEventServlet extends HttpServlet {
 
@@ -21,7 +21,9 @@ public class OrganizationDetailEventServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String eventIdParam = request.getParameter("eventId");
-
+    // DEBUG: In ra console
+        System.out.println("===== DEBUG =====");
+        System.out.println("eventIdParam: " + eventIdParam);
         if (eventIdParam == null || eventIdParam.isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/organization/events_org.jsp");
             return;
@@ -29,9 +31,11 @@ public class OrganizationDetailEventServlet extends HttpServlet {
 
         try {
             int eventId = Integer.parseInt(eventIdParam);
+            System.out.println("eventId parsed: " + eventId);
             OrganizationDetailEventDAO dao = new OrganizationDetailEventDAO();
 
             Event event = dao.getEventById(eventId);
+            System.out.println("Event từ DB: " + (event != null ? event.getTitle() : "NULL"));
             if (event == null) {
                 request.setAttribute("errorMessage", "Không tìm thấy sự kiện!");
                 request.getRequestDispatcher("/error.jsp").forward(request, response);
@@ -39,6 +43,7 @@ public class OrganizationDetailEventServlet extends HttpServlet {
             }
 
             List<Donation> donations = dao.getDonationsByEventId(eventId);
+            System.out.println("Số donations: " + (donations != null ? donations.size() : 0));
             dao.close();
 
             request.setAttribute("event", event);

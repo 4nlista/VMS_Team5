@@ -30,11 +30,21 @@ public class OrganizationDetailEventDAO {
 
     public Event getEventById(int eventId) {
         Event event = null;
-        String sql = "SELECT e.*, c.category_name, a.username as organization_name "
+
+        // Viết rõ từng cột thay vì e.*
+        String sql = "SELECT e.id, e.title, e.images, e.description, "
+                + "e.start_date, e.end_date, e.location, e.needed_volunteers, "
+                + "e.status, e.visibility, e.organization_id, e.category_id, "
+                + "e.total_donation, "
+                + "c.name as category_name, "
+                + "a.full_name as organization_name "
                 + "FROM Events e "
                 + "LEFT JOIN Categories c ON e.category_id = c.category_id "
-                + "LEFT JOIN Accounts a ON e.organization_id = a.id "
+                + "LEFT JOIN Users a ON e.organization_id = a.id "
                 + "WHERE e.id = ?";
+
+        System.out.println("===== DAO DEBUG =====");
+        System.out.println("Query event với id = " + eventId);
 
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -42,6 +52,7 @@ public class OrganizationDetailEventDAO {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
+                System.out.println("Tìm thấy event: " + rs.getString("title"));
                 event = new Event();
                 event.setId(rs.getInt("id"));
                 event.setTitle(rs.getString("title"));
@@ -58,11 +69,14 @@ public class OrganizationDetailEventDAO {
                 event.setTotalDonation(rs.getDouble("total_donation"));
                 event.setOrganizationName(rs.getString("organization_name"));
                 event.setCategoryName(rs.getString("category_name"));
+            } else {
+                System.out.println("KHÔNG tìm thấy event với id = " + eventId);
             }
 
             rs.close();
             ps.close();
         } catch (Exception e) {
+            System.out.println("Lỗi query: " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -72,15 +86,19 @@ public class OrganizationDetailEventDAO {
     // Lấy danh sách donations của 1 sự kiện
     public List<Donation> getDonationsByEventId(int eventId) {
         List<Donation> donations = new ArrayList<>();
-        String sql = "SELECT d.*, "
-                + "a.username as volunteer_username, "
-                + "a.full_name as volunteer_full_name, "
-                + "e.title as event_title "
-                + "FROM Donations d "
-                + "JOIN Accounts a ON d.volunteer_id = a.id "
-                + "JOIN Events e ON d.event_id = e.id "
-                + "WHERE d.event_id = ? "
-                + "ORDER BY d.donate_date DESC";
+        String sql = """ 
+                     SELECT 
+                         d.*,
+                         a.username AS volunteer_username,
+                         u.full_name AS volunteer_full_name,
+                         e.title AS event_title
+                     FROM Donations d
+                     JOIN Accounts a ON d.volunteer_id = a.id
+                     JOIN Users u ON a.id = u.account_id
+                     JOIN Events e ON d.event_id = e.id
+                     WHERE d.event_id = 1
+                     ORDER BY d.donate_date DESC;
+                     """;
 
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -115,8 +133,7 @@ public class OrganizationDetailEventDAO {
     }
 
     // Cập nhật thông tin sự kiện
-
-public boolean updateEvent(int eventId, String title, String description, String location,
+    public boolean updateEvent(int eventId, String title, String description, String location,
             java.sql.Date startDate, java.sql.Date endDate, int neededVolunteers,
             String status, String visibility) {
         String sql = "UPDATE Events SET title = ?, description = ?, location = ?, "
