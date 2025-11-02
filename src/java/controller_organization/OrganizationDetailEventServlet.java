@@ -1,0 +1,120 @@
+package controller_organization;
+
+import dao.OrganizationDetailEventDAO;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import model.Donation;
+import model.Event;
+
+@WebServlet(name = "OrganizationDetailEventServlet", urlPatterns = {"OrganizationDetailEventServlet"})
+
+public class OrganizationDetailEventServlet extends HttpServlet {
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String eventIdParam = request.getParameter("eventId");
+
+        if (eventIdParam == null || eventIdParam.isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/organization/events_org.jsp");
+            return;
+        }
+
+        try {
+            int eventId = Integer.parseInt(eventIdParam);
+            OrganizationDetailEventDAO dao = new OrganizationDetailEventDAO();
+
+            Event event = dao.getEventById(eventId);
+            if (event == null) {
+                request.setAttribute("errorMessage", "Không tìm thấy sự kiện!");
+                request.getRequestDispatcher("/error.jsp").forward(request, response);
+                return;
+            }
+
+            List<Donation> donations = dao.getDonationsByEventId(eventId);
+            dao.close();
+
+            request.setAttribute("event", event);
+            request.setAttribute("donations", donations);
+            request.getRequestDispatcher("/organization/detail_event_org.jsp").forward(request, response);
+
+        } catch (NumberFormatException e) {
+            response.sendRedirect(request.getContextPath() + "/organization/events_org.jsp");
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        request.setCharacterEncoding("UTF-8");
+        String action = request.getParameter("action");
+        String eventIdParam = request.getParameter("eventId");
+
+        if (eventIdParam == null || eventIdParam.isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/organization/events_org.jsp");
+            return;
+        }
+
+        int eventId = Integer.parseInt(eventIdParam);
+        OrganizationDetailEventDAO dao = new OrganizationDetailEventDAO();
+
+        try {
+            if ("update".equals(action)) {
+                // Lấy dữ liệu từ form
+                String title = request.getParameter("title");
+                String description = request.getParameter("description");
+                String location = request.getParameter("location");
+                String startDateStr = request.getParameter("startDate");
+                String endDateStr = request.getParameter("endDate");
+                int neededVolunteers = Integer.parseInt(request.getParameter("neededVolunteers"));
+                String status = request.getParameter("status");
+                String visibility = request.getParameter("visibility");
+
+                // Parse dates
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                java.util.Date startDate = sdf.parse(startDateStr);
+                java.util.Date endDate = sdf.parse(endDateStr);
+
+                // Update event
+                boolean success = dao.updateEvent(eventId, title, description, location,
+                        new java.sql.Date(startDate.getTime()),
+                        new java.sql.Date(endDate.getTime()),
+                        neededVolunteers, status, visibility);
+
+                if (success) {
+                    request.getSession().setAttribute("successMessage", "Cập nhật sự kiện thành công!");
+                } else {
+                    request.getSession().setAttribute("errorMessage", "Cập nhật thất bại!");
+                }
+
+            } else if ("delete".equals(action)) {
+                boolean success = dao.deleteEvent(eventId);
+
+                if (success) {
+                    request.getSession().setAttribute("successMessage", "Xóa sự kiện thành công!");
+                    response.sendRedirect(request.getContextPath() + "/OrganizationListServlet");
+                    return;
+                } else {
+                    request.getSession().setAttribute("errorMessage", "Xóa sự kiện thất bại!");
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.getSession().setAttribute("errorMessage", "Có lỗi xảy ra: " + e.getMessage());
+        } finally {
+            dao.close();
+        }
+
+        // Redirect về trang detail
+        response.sendRedirect(request.getContextPath() + "/OrganizationDetailEventServlet?eventId=" + eventId);
+    }
+}

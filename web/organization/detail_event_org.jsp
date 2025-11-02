@@ -5,6 +5,8 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -61,146 +63,142 @@
             <div class="main-content p-4">
                 <div class="container-fluid">
                     <!-- Page Header -->
-
-                    <!-- Event Information Card -->
-                    <div class="card shadow-sm border-0 mb-4">
-                        <div class="card-body p-4">
-                            <h5 class="section-title mb-4">
-                                Thông tin sự kiện
-                            </h5>
-
-                            <!-- Header với tiêu đề nổi bật -->
-                            <div class="alert alert-primary border-0 mb-4" role="alert">
-                                <div class="d-flex align-items-center">
-                                    <div>
-                                        <h4 class="alert-heading mb-1">Lớp học tình thương</h4>
-                                        <p >
-                                             Mã sự kiện: <strong>EVT001</strong></small>
-                                        </p>
-                                    </div>
-                                </div>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="fw-bold mb-0">
+                            <i class="bi bi-eye text-primary me-2"></i>Xem chi tiết sự kiện
+                        </h3>
+                        <!-- Thông báo success/error -->
+                        <c:if test="${not empty sessionScope.successMessage}">
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                ${sessionScope.successMessage}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                             </div>
+                            <c:remove var="successMessage" scope="session"/>
+                        </c:if>
 
-                            <!-- Grid Layout 2 cột -->
-                            <div class="row g-4">
-                                <!-- Cột trái -->
-                                <div class="col-md-6">
-                                    <div class="border rounded p-3 h-100 bg-light">
-                                        <h6 class="text-primary fw-bold mb-3">
-                                            <i class="bi bi-info-square me-2"></i>Thông tin cơ bản
-                                        </h6>
-
-                                        <div class="mb-3">
-                                            <label class="text-muted small mb-1">
-                                                <i class="bi bi-tag-fill text-info me-1"></i>Loại sự kiện
-                                            </label>
-                                            <div>
-                                                <span class="badge bg-info fs-6 px-3 py-2">Giáo dục</span>
-                                            </div>
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <label class="text-muted small mb-1">
-                                                <i class="bi bi-person-badge-fill text-primary me-1"></i>Người tổ chức
-                                            </label>
-                                            <div class="fw-semibold">Org1</div>
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <label class="text-muted small mb-1">
-                                                <i class="bi bi-geo-alt-fill text-danger me-1"></i>Địa điểm
-                                            </label>
-                                            <div class="fw-semibold">Trung tâm Hội nghị Thành phố</div>
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <label class="text-muted small mb-1">
-                                                <i class="bi bi-people-fill text-success me-1"></i>Số lượng tình nguyện viên
-                                            </label>
-                                            <div class="fw-semibold">150 người</div>
-                                        </div>
-
-                                        <div>
-                                            <label class="text-muted small mb-1">
-                                                <i class="bi bi-calendar-plus-fill text-secondary me-1"></i>Ngày tạo
-                                            </label>
-                                            <div class="fw-semibold">25/10/2025</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Cột phải -->
-                                <div class="col-md-6">
-                                    <div class="border rounded p-3 h-100 bg-light">
-                                        <h6 class="text-primary fw-bold mb-3">
-                                            <i class="bi bi-clock-history me-2"></i>Thời gian & Trạng thái
-                                        </h6>
-
-                                        <div class="mb-3">
-                                            <label class="text-muted small mb-1">
-                                                <i class="bi bi-calendar-check-fill text-success me-1"></i>Ngày bắt đầu
-                                            </label>
-                                            <div class="fw-semibold">01/11/2025</div>
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <label class="text-muted small mb-1">
-                                                <i class="bi bi-calendar-x-fill text-danger me-1"></i>Ngày kết thúc
-                                            </label>
-                                            <div class="fw-semibold">05/11/2025</div>
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <label class="text-muted small mb-1">
-                                                <i class="bi bi-hourglass-split text-warning me-1"></i>Trạng thái
-                                            </label>
-                                            <div>
-                                                <span class="badge bg-warning text-dark fs-6 px-3 py-2">
-                                                    <i class="bi bi-lightning-charge-fill me-1"></i>Đang diễn ra
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <label class="text-muted small mb-1">
-                                                <i class="bi bi-eye-fill text-secondary me-1"></i>Chế độ
-                                            </label>
-                                            <div>
-                                                <span class="badge bg-secondary fs-6 px-3 py-2">
-                                                    <i class="bi bi-globe me-1"></i>Công khai
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        <div>
-                                            <label class="text-muted small mb-1">
-                                                <i class="bi bi-cash-stack text-success me-1"></i>Tổng tiền tài trợ
-                                            </label>
-                                            <div>
-                                                <span class="badge bg-success fs-5 px-4 py-2">
-                                                    <i class="bi bi-currency-dollar me-1"></i>50,000,000 VND
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                        <c:if test="${not empty sessionScope.errorMessage}">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                ${sessionScope.errorMessage}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                             </div>
+                            <c:remove var="errorMessage" scope="session"/>
+                        </c:if>
+                        <a href="#" class="btn btn-outline-primary">
+                            <i class="bi bi-arrow-left me-1"></i> Quay lại danh sách
+                        </a>
+                    </div>
+                    <!-- Form Cập nhật Sự kiện -->
+                    <form action="<%= request.getContextPath() %>/OrganizationDetailEventServlet" method="post">
+                        <input type="hidden" name="eventId" value="${event.id}">
 
-                            <!-- Mô tả -->
-                            <div class="mt-4">
-                                <div class="border rounded p-3 bg-light">
-                                    <h6 class="text-primary fw-bold mb-2">
-                                        <i class="bi bi-file-text-fill me-2"></i>Mô tả sự kiện
-                                    </h6>
-                                    <p class="mb-0 text-dark">
-                                        Sự kiện quy mô toàn cầu hỗ trợ các khu vực gặp khó khăn về kinh tế và y tế.
-                                    </p>
+                        <div class="card shadow-sm border mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">Thông tin sự kiện</h5>
+                            </div>
+                            <div class="card-body p-4">
+                                <!-- Tiêu đề sự kiện -->
+                                <div class="mb-4">
+                                    <label class="form-label text-muted fw-semibold">Tiêu đề sự kiện</label>
+                                    <input type="text" name="title" class="form-control form-control-lg" 
+                                           value="${event.title}" required>
+                                </div>
+
+                                <div class="row">
+                                    <!-- Cột trái -->
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label text-muted">Mã sự kiện</label>
+                                            <input type="text" class="form-control" value="${event.id}" disabled>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label text-muted">Loại sự kiện</label>
+                                            <input type="text" class="form-control" value="${event.categoryName}" disabled>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label text-muted">Người tổ chức</label>
+                                            <input type="text" class="form-control" value="${event.organizationName}" disabled>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label text-muted">Địa điểm</label>
+                                            <input type="text" name="location" class="form-control" 
+                                                   value="${event.location}" required>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label text-muted">Số lượng tình nguyện viên cần</label>
+                                            <input type="number" name="neededVolunteers" class="form-control" 
+                                                   value="${event.neededVolunteers}" min="1" required>
+                                        </div>
+                                    </div>
+
+                                    <!-- Cột phải -->
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label text-muted">Ngày bắt đầu</label>
+                                            <input type="date" name="startDate" class="form-control" 
+                                                   value="${event.startDate}" required>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label text-muted">Ngày kết thúc</label>
+                                            <input type="date" name="endDate" class="form-control" 
+                                                   value="${event.endDate}" required>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label text-muted">Trạng thái</label>
+                                            <select name="status" class="form-select" required>
+                                                <option value="active" ${event.status == 'active' ? 'selected' : ''}>Đang hoạt động</option>
+                                                <option value="inactive" ${event.status == 'inactive' ? 'selected' : ''}>Tạm dừng</option>
+                                                <option value="closed" ${event.status == 'closed' ? 'selected' : ''}>Đã đóng</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label text-muted">Chế độ</label>
+                                            <select name="visibility" class="form-select" required>
+                                                <option value="public" ${event.visibility == 'public' ? 'selected' : ''}>Công khai</option>
+                                                <option value="private" ${event.visibility == 'private' ? 'selected' : ''}>Riêng tư</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label text-muted">Tổng tiền tài trợ</label>
+                                            <input type="text" class="form-control fw-bold text-success" 
+                                                   value="${event.totalDonation} VND" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Mô tả -->
+                                <div class="mb-4">
+                                    <label class="form-label text-muted">Mô tả sự kiện</label>
+                                    <textarea name="description" class="form-control" rows="4" required>${event.description}</textarea>
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="text-end">
+                                    <a href="<%= request.getContextPath() %>/organization/list-events" 
+                                       class="btn btn-secondary me-2">
+                                        <i class="bi bi-x-circle me-1"></i>Hủy
+                                    </a>
+                                    <button type="submit" name="action" value="update" class="btn btn-primary me-2">
+                                        <i class="bi bi-check-circle me-1"></i>Cập nhật
+                                    </button>
+                                    <button type="submit" name="action" value="delete" class="btn btn-danger"
+                                            onclick="return confirm('Bạn có chắc chắn muốn xóa sự kiện này?')">
+                                        <i class="bi bi-trash me-1"></i>Xóa
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </form>
 
-                    <!-- Donations List Card -->
+
+                    <!-- Danh sách đơn tài trợ cho sự kiện này -->
                     <div class="card shadow-sm border-0">
                         <div class="card-body p-4">
                             <h5 class="section-title">
@@ -219,76 +217,72 @@
                                             <th style="width: 20%;">Thao tác</th>
                                         </tr>
                                     </thead>
+                                    <!-- Thay thế phần <tbody> cũ bằng code này -->
                                     <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>Nguyễn Văn An</td>
-                                            <td>5,000,000 VND</td>
-                                            <td>
-                                                01/11/2025 10:30
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-info">
-                                                    <i class="bi bi-qr-code me-1"></i>QR Code
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-warning text-dark">Chưa xử lí</span>
-                                            </td>
+                                        <c:forEach var="donation" items="${donations}" varStatus="loop">
+                                            <tr>
+                                                <td>${loop.index + 1}</td>
+                                                <td>${donation.volunteerFullName}</td>
+                                                <td class="amount-highlight">
+                                                    <fmt:formatNumber value="${donation.amount}" type="number" groupingUsed="true"/> VND
+                                                </td>
+                                                <td>
+                                                    <fmt:formatDate value="${donation.donateDate}" pattern="dd/MM/yyyy HH:mm"/>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-info">
+                                                        <i class="bi bi-qr-code me-1"></i>${donation.paymentMethod}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <c:choose>
+                                                        <c:when test="${donation.status == 'pending'}">
+                                                            <span class="badge bg-warning text-dark">Chưa xử lý</span>
+                                                        </c:when>
+                                                        <c:when test="${donation.status == 'success'}">
+                                                            <span class="badge bg-success">Đã chấp nhận</span>
+                                                        </c:when>
+                                                        <c:when test="${donation.status == 'cancelled'}">
+                                                            <span class="badge bg-danger">Đã từ chối</span>
+                                                        </c:when>
+                                                    </c:choose>
+                                                </td>
+                                                <td>
+                                                    <c:choose>
+                                                        <c:when test="${donation.status == 'pending'}">
+                                                            <form action="<%= request.getContextPath() %>/ProcessDonationServlet" 
+                                                                  method="post" style="display:inline;">
+                                                                <input type="hidden" name="donationId" value="${donation.id}">
+                                                                <input type="hidden" name="eventId" value="${event.id}">
+                                                                <button type="submit" name="action" value="approve" 
+                                                                        class="btn btn-primary btn-sm">Chấp nhận</button>
+                                                                <button type="submit" name="action" value="reject" 
+                                                                        class="btn btn-danger btn-sm"
+                                                                        onclick="return confirm('Bạn có chắc muốn từ chối đơn này?')">Từ chối</button>
+                                                            </form>
+                                                        </c:when>
+                                                        <c:when test="${donation.status == 'success'}">
+                                                            <span class="badge bg-success">Đã chấp nhận</span>
+                                                        </c:when>
+                                                        <c:when test="${donation.status == 'cancelled'}">
+                                                            <span class="badge bg-danger">Đã từ chối</span>
+                                                        </c:when>
+                                                    </c:choose>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
 
-                                            <td>
-                                                <a href="#" class="btn btn-primary btn-sm">Chấp nhận</a>
-                                                <a href="#" class="btn btn-danger btn-sm">Từ chối</a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>Nguyễn Văn Nam</td>
-                                            <td>4,000,000 VND</td>
-                                            <td>
-                                                01/11/2025 10:30
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-info">
-                                                    <i class="bi bi-qr-code me-1"></i>QR Code
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-success">Đã xử lý</span>
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-success">Chấp nhận</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>3</td>
-                                            <td>Nguyễn Văn An</td>
-                                            <td>2,500,000 VND</td>
-                                            <td>
-                                                01/11/2025 10:30
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-info">
-                                                    <i class="bi bi-qr-code me-1"></i>QR Code
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-success">Đã xử lý</span>
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-danger">Từ chối</span>
-                                            </td>
-                                        </tr>
+                                        <c:if test="${empty donations}">
+                                            <tr>
+                                                <td colspan="7" class="text-center text-muted">Chưa có đơn donate nào</td>
+                                            </tr>
+                                        </c:if>
                                     </tbody>
                                 </table>
                             </div>
 
                             <!-- Pagination -->
                             <div class="d-flex justify-content-between align-items-center mt-4">
-                                <div class="text-muted">
-                                    <i class="bi bi-info-circle me-1"></i>
-                                    Hiển thị <strong>1-10</strong> trong tổng số <strong>10</strong> người đóng góp
-                                </div>
                                 <nav>
                                     <ul class="pagination mb-0">
                                         <li class="page-item disabled">
