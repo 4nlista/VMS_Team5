@@ -96,7 +96,7 @@ public class OrganizationDetailEventDAO {
                      JOIN Accounts a ON d.volunteer_id = a.id
                      JOIN Users u ON a.id = u.account_id
                      JOIN Events e ON d.event_id = e.id
-                     WHERE d.event_id = 1
+                     WHERE d.event_id = ?
                      ORDER BY d.donate_date DESC;
                      """;
 
@@ -145,8 +145,8 @@ public class OrganizationDetailEventDAO {
             ps.setString(1, title);
             ps.setString(2, description);
             ps.setString(3, location);
-            ps.setDate(4, startDate);      // ✅ Giờ không đỏ nữa
-            ps.setDate(5, endDate);        // ✅ Giờ không đỏ nữa
+            ps.setDate(4, startDate);
+            ps.setDate(5, endDate);
             ps.setInt(6, neededVolunteers);
             ps.setString(7, status);
             ps.setString(8, visibility);

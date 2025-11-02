@@ -181,16 +181,16 @@
 
                                 <!-- Action Buttons -->
                                 <div class="text-end">
-                                    <a href="<%= request.getContextPath() %>/organization/list-events" 
+                                    <a href="<%= request.getContextPath() %>/OrganizationListServlet" 
                                        class="btn btn-secondary me-2">
-                                        <i class="bi bi-x-circle me-1"></i>Hủy
+                                        <i></i>Hủy
                                     </a>
                                     <button type="submit" name="action" value="update" class="btn btn-primary me-2">
-                                        <i class="bi bi-check-circle me-1"></i>Cập nhật
+                                        <i></i>Cập nhật
                                     </button>
                                     <button type="submit" name="action" value="delete" class="btn btn-danger"
                                             onclick="return confirm('Bạn có chắc chắn muốn xóa sự kiện này?')">
-                                        <i class="bi bi-trash me-1"></i>Xóa
+                                        <i></i>Xóa
                                     </button>
                                 </div>
                             </div>
@@ -240,10 +240,10 @@
                                                             <span class="badge bg-warning text-dark">Chưa xử lý</span>
                                                         </c:when>
                                                         <c:when test="${donation.status == 'success'}">
-                                                            <span class="badge bg-success">Đã chấp nhận</span>
+                                                            <span class="badge bg-success">Thành công</span>
                                                         </c:when>
                                                         <c:when test="${donation.status == 'cancelled'}">
-                                                            <span class="badge bg-danger">Đã từ chối</span>
+                                                            <span class="badge bg-danger">Từ chối</span>
                                                         </c:when>
                                                     </c:choose>
                                                 </td>
@@ -262,7 +262,7 @@
                                                             </form>
                                                         </c:when>
                                                         <c:when test="${donation.status == 'success'}">
-                                                            <span class="badge bg-success">Đã chấp nhận</span>
+                                                            <span class="badge bg-success">Đã xử lí</span>
                                                         </c:when>
                                                         <c:when test="${donation.status == 'cancelled'}">
                                                             <span class="badge bg-danger">Đã từ chối</span>
