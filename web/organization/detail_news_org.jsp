@@ -25,59 +25,72 @@
 
                         <div class="card shadow-sm border-0">
                             <div class="card-body p-4">
-                                <form action="<%= request.getContextPath() %>/organization/submit_report" method="post" class="row g-3">
+                                <form action="<%= request.getContextPath() %>/organization/update_news" method="post" class="row g-3">
 
-                                    <!-- ID bình luận -->
+                                    <!-- ID bài viết -->
                                     <div class="col-md-6">
-                                        <label class="form-label fw-semibold">ID bình luận</label>
-                                        <input type="text" class="form-control" name="commentId" value="1" required>
+                                        <label class="form-label fw-semibold">ID Bài viết</label>
+                                        <input type="text" class="form-control" name="newsId" value="1" readonly>
                                     </div>
 
-                                    <!-- Người gửi -->
+                                    <!-- Người đăng -->
                                     <div class="col-md-6">
-                                        <label class="form-label fw-semibold">Tên người gửi</label>
-                                        <input type="text" class="form-control" name="senderName" value="OrganizationName" required>
+                                        <label class="form-label fw-semibold">Người đăng</label>
+                                        <input type="text" class="form-control" name="authorName" value="OrganizationName" readonly>
                                     </div>
 
-                                    <!-- Người bị báo cáo -->
-                                    <div class="col-12">
-                                        <label class="form-label fw-semibold">Người bình luận</label>
-                                        <input type="text" class="form-control" name="commenterName" value="Nguyễn Bảo An" required>
+                                    <!-- Ngày tạo -->
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">Ngày tạo</label>
+                                        <input type="text" class="form-control" name="createdAt" value="01/11/2025" readonly>
                                     </div>
 
-                                    <!-- Lý do chi tiết -->
+                                    <!-- Trạng thái -->
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">Trạng thái</label>
+                                        <select class="form-select" name="status">
+                                            <option value="published">Hiển thị</option>
+                                            <option value="hidden">Ẩn</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Nội dung bài viết -->
                                     <div class="col-12">
-                                        <label class="form-label fw-semibold">Lý do chi tiết</label>
-                                        <textarea class="form-control" name="details" rows="4" placeholder="Nhập mô tả chi tiết về báo cáo..." required></textarea>
+                                        <label class="form-label fw-semibold">Nội dung</label>
+                                        <textarea class="form-control" name="content" rows="6" readonly>
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                                        Phasellus euismod, justo nec consectetur malesuada, 
+                                        nisl nisi vehicula metus, ac facilisis mi eros in ligula.
+                                        </textarea>
                                     </div>
 
                                     <!-- Nút thao tác -->
                                     <div class="col-12 mt-3">
                                         <div class="d-flex justify-content-between align-items-center">
-                                            <!-- Bên trái -->
-                                            <a href="<%= request.getContextPath() %>/organization/manage_feedback_org.jsp" 
+                                            <a href="<%= request.getContextPath() %>/organization/manage_new_org.jsp" 
                                                class="btn btn-secondary">
                                                 <i class="bi bi-arrow-left me-1"></i> Quay lại
                                             </a>
 
-                                            <!-- Bên phải -->
                                             <div>
                                                 <button type="submit" class="btn btn-primary me-2">
-                                                    <i></i> Gửi báo cáo
+                                                    <i class="bi bi-save me-1"></i> Cập nhật
                                                 </button>
-                                                <a href="<%= request.getContextPath() %>/organization/send_report_org.jsp" 
+                                                <a href="<%= request.getContextPath() %>/organization/detail_news_org.jsp" 
                                                    class="btn btn-outline-danger">
                                                     <i class="bi bi-x-circle me-1"></i> Hủy
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
+
                                 </form>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
 
 

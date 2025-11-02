@@ -28,6 +28,10 @@ public class Event {
     private String organizationName;
     private String categoryName;
 
+    // khai báo thêm
+    private int volunteerHour;  // số giờ tích lũy
+    private double donateVolunteer;  // số tiền donate
+
     public Event() {
     }
 
@@ -64,6 +68,26 @@ public class Event {
         this.totalDonation = totalDonation;
         this.organizationName = organizationName;
         this.categoryName = categoryName;
+    }
+
+    public Event(int id, String images, String title, String description, Date startDate, Date endDate, String location, int neededVolunteers, String status, String visibility, int organizationId, int categoryId, double totalDonation, String organizationName, String categoryName, int volunteerHour, double donateVolunteer) {
+        this.id = id;
+        this.images = images;
+        this.title = title;
+        this.description = description;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.location = location;
+        this.neededVolunteers = neededVolunteers;
+        this.status = status;
+        this.visibility = visibility;
+        this.organizationId = organizationId;
+        this.categoryId = categoryId;
+        this.totalDonation = totalDonation;
+        this.organizationName = organizationName;
+        this.categoryName = categoryName;
+        this.volunteerHour = volunteerHour;
+        this.donateVolunteer = donateVolunteer;
     }
 
     public int getId() {
@@ -184,6 +208,22 @@ public class Event {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
+    }
+
+    public int getVolunteerHour() {
+        return volunteerHour;
+    }
+
+    public void setVolunteerHour(int volunteerHour) {
+        this.volunteerHour = volunteerHour;
+    }
+
+    public double getDonateVolunteer() {
+        return donateVolunteer;
+    }
+
+    public void setDonateVolunteer(double donateVolunteer) {
+        this.donateVolunteer = donateVolunteer;
     }
 
 }

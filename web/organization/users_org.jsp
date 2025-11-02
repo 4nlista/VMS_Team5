@@ -16,26 +16,92 @@
     </head>
     <body>
         <div class="content-container">
-            <%
-                Object sessionId = session.getId();
-                String fullname = (String) session.getAttribute("fullname");
-                if (fullname == null) {
-                    fullname = "Khách";
-                }
-            %>
+
 
             <!-- Sidebar -->
             <jsp:include page="layout_org/sidebar_org.jsp" />
 
             <!-- Main Content -->
-            <div class="main-content">
-                <h1>Chào mừng <%= fullname %> đến trang hỗ trợ viên!</h1>
-                <h4>Màn hình quản lí người dùng.</h4>
+            <div class="main-content p-4">
+                <div class="container-fluid">
+                    <h3 class="fw-bold mb-4">Danh sách tình nguyện viên</h3>
 
-                <form action="<%= request.getContextPath() %>/LogoutServlet" method="get">
-                    <button type="submit" class="btn btn-danger">Logout</button> <!-- Button đẹp hơn -->
-                </form>
+                    <!-- Bộ lọc + nút tạo mới (nếu cần) -->
+                    <form method="get" action="UserListServlet" class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+                        <div class="d-flex gap-2 align-items-center flex-wrap">
+                            <!-- Giới tính -->
+                            <div class="form-group d-flex flex-column">
+                                <label class="form-label fw-semibold">Giới tính:</label>
+                                <select name="gender" class="form-select form-select-sm" style="width: 160px;">
+                                    <option value="">Tất cả</option>
+                                    <option value="Nam">Nam</option>
+                                    <option value="Nữ">Nữ</option>
+                                </select>
+                            </div>
+
+                            <!-- Nút Lọc -->
+                            <button type="submit" class="btn btn-primary btn-sm" style="min-width:110px; align-self:end;">
+                                <i class="bi bi-search"></i> Lọc
+                            </button>
+
+                            <!-- Nút Reset -->
+                            <a href="UserListServlet" class="btn btn-secondary btn-sm" style="min-width:110px; align-self:end;">
+                                <i class="bi bi-arrow-counterclockwise"></i> Reset
+                            </a>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label fw-semibold">Tên tình nguyện viên</label>
+                            <div class="d-flex align-items-center gap-2 mt-1">
+                                <input class="form-control w-auto" placeholder="Nhập tên..." />
+                                <button class="btn btn-danger">Tìm kiếm</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Bảng dữ liệu -->
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover" style="table-layout: fixed; width: 100%;">
+                            <thead class="table-secondary">
+                                <tr>
+                                    <th style="width:4%;">STT</th>
+                                    <th style="width:20%;">Tên</th>
+                                    <th style="width:15%;">Ngày sinh</th>
+                                    <th style="width:10%;">Giới tính</th>
+                                    <th style="width:25%;">Địa chỉ</th>
+                                    <th style="width:26%;">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <c:forEach var="u" items="${users}" varStatus="loop">
+                                <tr>
+                                    <td>${loop.index + 1}</td>
+                                    <td>${u.name}</td>
+                                    <td>${u.dateOfBirth}</td>
+                                    <td>${u.gender}</td>
+                                    <td>${u.address}</td>
+                                    <td>
+                                        <a href="${pageContext.request.contextPath}/organization/detail_users_org.jsp" class="btn btn-primary btn-sm me-1">Chi tiết</a>
+                                        <a href="#" class="btn btn-danger btn-sm me-1">Xóa</a>
+                                        <a href="#" class="btn btn-info btn-sm">Gửi thông báo</a>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Phân trang -->                            
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                        <span>Hiển thị 1 - 3 người dùng</span>
+                        <ul class="pagination pagination-sm mb-0">
+                            <li class="page-item disabled"><a class="page-link" href="#">Trước</a></li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">Sau</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
+
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

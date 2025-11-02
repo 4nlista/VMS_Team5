@@ -15,54 +15,59 @@
     <body>
         <!-- Navbar -->
         <jsp:include page="/layout/navbar.jsp" />
-        <div class="page-content container mt-5 pt-5 pb-5">
+        <div class="page-content container-fluid mt-5 pt-5 pb-5" style="max-width: 1400px;">
             <h1 class="mb-4 text-center">Lịch sử thanh toán</h1>
 
             <div class="card shadow-sm border">
                 <div class="card-body">
-                    <table class="table table-striped table-hover align-middle">
-                        <thead class="table-dark">
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Mã giao dịch</th>
-                                <th scope="col">Sự kiện</th>
-                                <th scope="col">Số tiền (VNĐ)</th>
-                                <th scope="col">Phương thức</th>
-                                <th scope="col">Ngày thanh toán</th>
-                                <th scope="col">Trạng thái</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Ví dụ dữ liệu mẫu -->
-                            <tr>
-                                <td>1</td>
-                                <td>QR123456</td>
-                                <td>World Wide Donation</td>
-                                <td>500,000</td>
-                                <td>Momo</td>
-                                <td>2025-09-20 10:30</td>
-                                <td><span class="badge bg-success">Thành công</span></td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>QR987654</td>
-                                <td>Clean the Beach</td>
-                                <td>200,000</td>
-                                <td>Ngân hàng</td>
-                                <td>2025-09-18 14:10</td>
-                                <td><span class="badge bg-warning text-dark">Đang xử lý</span></td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>QR555888</td>
-                                <td>Charity Run</td>
-                                <td>300,000</td>
-                                <td>QR Pay</td>
-                                <td>2025-09-10 09:00</td>
-                                <td><span class="badge bg-danger">Đã hủy</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover align-middle" style="table-layout: fixed; width: 100%;">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th scope="col" style="width:4%;">STT</th>
+                                    <th scope="col" style="width:13%;">Mã QR</th>
+                                    <th scope="col" style="width:20%;">Sự kiện</th>
+                                    <th scope="col" style="width:9%;">Số tiền</th>
+                                    <th scope="col" style="width:11%;">Phương thức</th>
+                                    <th scope="col" style="width:15%;">Ngày thanh toán</th>
+                                    <th scope="col" style="width:15%; word-wrap: break-word; overflow-wrap: break-word;">Ghi chú</th>
+                                    <th scope="col" style="width:8%;">Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>QR-20250901-V5-500K</td>
+                                    <td>World Wide Donation</td>
+                                    <td>500,000</td>
+                                    <td>Momo</td>
+                                    <td>2025-09-20 10:30</td>
+                                    <td>Ủng hộ người nghèo, nội dung rất dài sẽ xuống dòng mà không kéo cột khác</td>
+                                    <td><span class="badge bg-success">Thành công</span></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>QR987654</td>
+                                    <td>Clean the Beach</td>
+                                    <td>200,000</td>
+                                    <td>Ngân hàng</td>
+                                    <td>2025-09-18 14:10</td>
+                                    <td>Ủng hộ người đói khổ</td>
+                                    <td><span class="badge bg-warning text-dark">Đang xử lý</span></td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>QR555888</td>
+                                    <td>Charity Run</td>
+                                    <td>300,000</td>
+                                    <td>QR Pay</td>
+                                    <td>2025-09-10 09:00</td>
+                                    <td>Quyên góp từ thiện</td>
+                                    <td><span class="badge bg-danger">Bị từ chối</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
