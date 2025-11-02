@@ -1,6 +1,6 @@
 <%-- 
-    Document   : detail_users_org
-    Created on : Nov 2, 2025, 5:48:21 PM
+    Document   : send_notification_org
+    Created on : Nov 2, 2025, 7:32:07 PM
     Author     : Admin
 --%>
 
@@ -11,7 +11,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Chi tiết người dùng</title>
+        <title>Gửi thông báo</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
         <link href="<%= request.getContextPath() %>/organization/css/org.css" rel="stylesheet" />
@@ -22,7 +22,7 @@
             <jsp:include page="layout_org/sidebar_org.jsp" />
             <div class="main-content p-4">
                 <div class="container-fluid">
-                    <h3 class="fw-bold mb-4">Hồ sơ tình nguyện viên</h3>
+                    <h3 class="fw-bold mb-4">Gửi thông báo</h3>
                 </div>
             </div>
         </div>

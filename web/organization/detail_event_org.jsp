@@ -61,140 +61,141 @@
             <div class="main-content p-4">
                 <div class="container-fluid">
                     <!-- Page Header -->
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h3 class="fw-bold mb-0">
-                            <i class="bi bi-eye text-primary me-2"></i>Xem chi tiết sự kiện
-                        </h3>
-
-
-
-                    </div>
 
                     <!-- Event Information Card -->
                     <div class="card shadow-sm border-0 mb-4">
                         <div class="card-body p-4">
-                            <h5 class="section-title">
-                                <i class="bi bi-info-circle me-2"></i>Thông tin sự kiện
+                            <h5 class="section-title mb-4">
+                                Thông tin sự kiện
                             </h5>
 
+                            <!-- Header với tiêu đề nổi bật -->
+                            <div class="alert alert-primary border-0 mb-4" role="alert">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <h4 class="alert-heading mb-1">Lớp học tình thương</h4>
+                                        <p >
+                                             Mã sự kiện: <strong>EVT001</strong></small>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Grid Layout 2 cột -->
                             <div class="row g-4">
-                                <!-- Cột ảnh -->
-                                <div class="col-lg-4">
-                                    <div class="event-image-container">
-                                        <img src="https://viet-power.vn/wp-content/uploads/2025/06/backdrop-su-kien-3.jpg" 
-                                             alt="Event Image" 
-                                             class="img-fluid">
-                                    </div>
-                                    <div class="text-center mt-3">
-                                        <span class="badge bg-light text-dark border px-3 py-2">
-                                            <i class="bi bi-image me-1"></i>Hình ảnh sự kiện
-                                        </span>
-                                    </div>
-                                </div>
+                                <!-- Cột trái -->
+                                <div class="col-md-6">
+                                    <div class="border rounded p-3 h-100 bg-light">
+                                        <h6 class="text-primary fw-bold mb-3">
+                                            <i class="bi bi-info-square me-2"></i>Thông tin cơ bản
+                                        </h6>
 
-                                <!-- Cột thông tin -->
-                                <div class="col-lg-8">
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered align-middle info-table mb-0">
-                                            <tbody>
-                                                <tr>
-                                                    <th style="width: 30%">
-                                                        <i class="bi bi-hash text-primary me-2"></i>Mã sự kiện
-                                                    </th>
-                                                    <td class="fw-semibold">EVT001</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>
-                                                        <i class="bi bi-file-text text-primary me-2"></i>Tiêu đề
-                                                    </th>
-                                                    <td class="fs-5 fw-bold text-dark">Lớp học tình thương</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>
-                                                        <i class="bi bi-tag text-primary me-2"></i>Loại sự kiện
-                                                    </th>
-                                                    <td>
-                                                        <span class="badge bg-info">Giáo dục</span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th>
-                                                        <i class="bi bi-person-badge text-primary me-2"></i>Người tổ chức
-                                                    </th>
-                                                    <td>Org1</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>
-                                                        <i class="bi bi-calendar-check text-primary me-2"></i>Ngày bắt đầu
-                                                    </th>
-                                                    <td>01/11/2025</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>
-                                                        <i class="bi bi-calendar-x text-primary me-2"></i>Ngày kết thúc
-                                                    </th>
-                                                    <td>05/11/2025</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>
-                                                        <i class="bi bi-geo-alt text-primary me-2"></i>Địa điểm
-                                                    </th>
-                                                    <td>Trung tâm Hội nghị Thành phố</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>
-                                                        <i class="bi bi-people text-primary me-2"></i>Số lượng tình nguyện viên
-                                                    </th>
-                                                    <td>150 người</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>
-                                                        <i class="bi bi-currency-dollar text-primary me-2"></i>Tổng tiền tài trợ
-                                                    </th>
-                                                    <td>
-                                                        <span class="badge bg-success fs-6 px-3 py-2">
-                                                            50,000,000 VND
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th>
-                                                        <i class="bi bi-clock-history text-primary me-2"></i>Trạng thái
-                                                    </th>
-                                                    <td>
-                                                        <span class="badge bg-warning text-dark px-3 py-2">
-                                                            <i class="bi bi-hourglass-split me-1"></i>Đang diễn ra
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th>
-                                                        <i class="bi bi-eye text-primary me-2"></i>Chế độ
-                                                    </th>
-                                                    <td>
-                                                        <span class="badge bg-secondary px-3 py-2">
-                                                            <i class="bi bi-globe me-1"></i>Công khai
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th>
-                                                        <i class="bi bi-calendar-plus text-primary me-2"></i>Ngày tạo
-                                                    </th>
-                                                    <td>25/10/2025</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>
-                                                        <i class="bi bi-card-text text-primary me-2"></i>Mô tả sự kiện
-                                                    </th>
-                                                    <td>Sự kiện quy mô toàn cầu hỗ trợ các khu vực gặp khó khăn về kinh tế và y tế.</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                        <div class="mb-3">
+                                            <label class="text-muted small mb-1">
+                                                <i class="bi bi-tag-fill text-info me-1"></i>Loại sự kiện
+                                            </label>
+                                            <div>
+                                                <span class="badge bg-info fs-6 px-3 py-2">Giáo dục</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="text-muted small mb-1">
+                                                <i class="bi bi-person-badge-fill text-primary me-1"></i>Người tổ chức
+                                            </label>
+                                            <div class="fw-semibold">Org1</div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="text-muted small mb-1">
+                                                <i class="bi bi-geo-alt-fill text-danger me-1"></i>Địa điểm
+                                            </label>
+                                            <div class="fw-semibold">Trung tâm Hội nghị Thành phố</div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="text-muted small mb-1">
+                                                <i class="bi bi-people-fill text-success me-1"></i>Số lượng tình nguyện viên
+                                            </label>
+                                            <div class="fw-semibold">150 người</div>
+                                        </div>
+
+                                        <div>
+                                            <label class="text-muted small mb-1">
+                                                <i class="bi bi-calendar-plus-fill text-secondary me-1"></i>Ngày tạo
+                                            </label>
+                                            <div class="fw-semibold">25/10/2025</div>
+                                        </div>
                                     </div>
                                 </div>
 
+                                <!-- Cột phải -->
+                                <div class="col-md-6">
+                                    <div class="border rounded p-3 h-100 bg-light">
+                                        <h6 class="text-primary fw-bold mb-3">
+                                            <i class="bi bi-clock-history me-2"></i>Thời gian & Trạng thái
+                                        </h6>
 
+                                        <div class="mb-3">
+                                            <label class="text-muted small mb-1">
+                                                <i class="bi bi-calendar-check-fill text-success me-1"></i>Ngày bắt đầu
+                                            </label>
+                                            <div class="fw-semibold">01/11/2025</div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="text-muted small mb-1">
+                                                <i class="bi bi-calendar-x-fill text-danger me-1"></i>Ngày kết thúc
+                                            </label>
+                                            <div class="fw-semibold">05/11/2025</div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="text-muted small mb-1">
+                                                <i class="bi bi-hourglass-split text-warning me-1"></i>Trạng thái
+                                            </label>
+                                            <div>
+                                                <span class="badge bg-warning text-dark fs-6 px-3 py-2">
+                                                    <i class="bi bi-lightning-charge-fill me-1"></i>Đang diễn ra
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="text-muted small mb-1">
+                                                <i class="bi bi-eye-fill text-secondary me-1"></i>Chế độ
+                                            </label>
+                                            <div>
+                                                <span class="badge bg-secondary fs-6 px-3 py-2">
+                                                    <i class="bi bi-globe me-1"></i>Công khai
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label class="text-muted small mb-1">
+                                                <i class="bi bi-cash-stack text-success me-1"></i>Tổng tiền tài trợ
+                                            </label>
+                                            <div>
+                                                <span class="badge bg-success fs-5 px-4 py-2">
+                                                    <i class="bi bi-currency-dollar me-1"></i>50,000,000 VND
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Mô tả -->
+                            <div class="mt-4">
+                                <div class="border rounded p-3 bg-light">
+                                    <h6 class="text-primary fw-bold mb-2">
+                                        <i class="bi bi-file-text-fill me-2"></i>Mô tả sự kiện
+                                    </h6>
+                                    <p class="mb-0 text-dark">
+                                        Sự kiện quy mô toàn cầu hỗ trợ các khu vực gặp khó khăn về kinh tế và y tế.
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -203,109 +204,79 @@
                     <div class="card shadow-sm border-0">
                         <div class="card-body p-4">
                             <h5 class="section-title">
-                                <i class="bi bi-heart-fill text-danger me-2"></i>Danh sách người đóng góp
+                                Đơn tài trợ
                             </h5>
-
                             <div class="table-responsive">
                                 <table class="table table-hover donor-table mb-0">
                                     <thead>
                                         <tr>
-                                            <th style="width: 60px;" class="text-center">STT</th>
-                                            <th style="width: 120px;">ID</th>
-                                            <th>Họ và Tên</th>
-                                            <th style="width: 150px;">Số tiền</th>
-                                            <th style="width: 180px;">Thời gian</th>
-                                            <th style="width: 120px;" class="text-center">Phương thức</th>
-                                            <th style="width: 100px;" class="text-center">Thao tác</th>
+                                            <th style="width: 5%;">STT</th>
+                                            <th style="width: 15%;">Họ và Tên</th>
+                                            <th style="width: 15%;">Số tiền</th>
+                                            <th style="width: 20%;">Thời gian</th>                             
+                                            <th style="width: 15%;">Phương thức</th>
+                                            <th style="width: 10%;">Trạng thái</th>
+                                            <th style="width: 20%;">Thao tác</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td class="text-center fw-semibold">1</td>
-                                            <td class="font-monospace">DN001</td>
+                                            <td>1</td>
+                                            <td>Nguyễn Văn An</td>
+                                            <td>5,000,000 VND</td>
                                             <td>
-                                                <i class="bi bi-person-circle text-primary me-2"></i>
-                                                <span class="fw-semibold">Nguyễn Văn An</span>
+                                                01/11/2025 10:30
                                             </td>
-                                            <td class="amount-highlight">5,000,000 VND</td>
                                             <td>
-                                                <i class="bi bi-calendar3 me-1 text-muted"></i>01/11/2025 10:30
-                                            </td>
-                                            <td class="text-center">
                                                 <span class="badge bg-info">
                                                     <i class="bi bi-qr-code me-1"></i>QR Code
                                                 </span>
                                             </td>
-                                            <td class="text-center">
-                                                <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#donorModal1">
-                                                    <i class="bi bi-info-circle"></i>
-                                                </button>
+                                            <td>
+                                                <span class="badge bg-warning text-dark">Chưa xử lí</span>
+                                            </td>
+
+                                            <td>
+                                                <a href="#" class="btn btn-primary btn-sm">Chấp nhận</a>
+                                                <a href="#" class="btn btn-danger btn-sm">Từ chối</a>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="text-center fw-semibold">2</td>
-                                            <td class="font-monospace">DN002</td>
+                                            <td>2</td>
+                                            <td>Nguyễn Văn Nam</td>
+                                            <td>4,000,000 VND</td>
                                             <td>
-                                                <i class="bi bi-person-circle text-primary me-2"></i>
-                                                <span class="fw-semibold">Trần Thị Bình</span>
+                                                01/11/2025 10:30
                                             </td>
-                                            <td class="amount-highlight">3,000,000 VND</td>
                                             <td>
-                                                <i class="bi bi-calendar3 me-1 text-muted"></i>01/11/2025 14:15
-                                            </td>
-                                            <td class="text-center">
                                                 <span class="badge bg-info">
                                                     <i class="bi bi-qr-code me-1"></i>QR Code
                                                 </span>
                                             </td>
-                                            <td class="text-center">
-                                                <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#donorModal2">
-                                                    <i class="bi bi-info-circle"></i>
-                                                </button>
+                                            <td>
+                                                <span class="badge bg-success">Đã xử lý</span>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-success">Chấp nhận</span>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="text-center fw-semibold">3</td>
-                                            <td class="font-monospace">DN003</td>
+                                            <td>3</td>
+                                            <td>Nguyễn Văn An</td>
+                                            <td>2,500,000 VND</td>
                                             <td>
-                                                <i class="bi bi-person-circle text-primary me-2"></i>
-                                                <span class="fw-semibold">Lê Minh Cường</span>
+                                                01/11/2025 10:30
                                             </td>
-                                            <td class="amount-highlight">10,000,000 VND</td>
                                             <td>
-                                                <i class="bi bi-calendar3 me-1 text-muted"></i>02/11/2025 09:00
-                                            </td>
-                                            <td class="text-center">
                                                 <span class="badge bg-info">
                                                     <i class="bi bi-qr-code me-1"></i>QR Code
                                                 </span>
                                             </td>
-                                            <td class="text-center">
-                                                <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#donorModal3">
-                                                    <i class="bi bi-info-circle"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-center fw-semibold">4</td>
-                                            <td class="font-monospace">DN004</td>
                                             <td>
-                                                <i class="bi bi-person-circle text-primary me-2"></i>
-                                                <span class="fw-semibold">Phạm Thị Dung</span>
+                                                <span class="badge bg-success">Đã xử lý</span>
                                             </td>
-                                            <td class="amount-highlight">2,000,000 VND</td>
                                             <td>
-                                                <i class="bi bi-calendar3 me-1 text-muted"></i>02/11/2025 16:45
-                                            </td>
-                                            <td class="text-center">
-                                                <span class="badge bg-info">
-                                                    <i class="bi bi-qr-code me-1"></i>QR Code
-                                                </span>
-                                            </td>
-                                            <td class="text-center">
-                                                <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#donorModal4">
-                                                    <i class="bi bi-info-circle"></i>
-                                                </button>
+                                                <span class="badge bg-danger">Từ chối</span>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -314,29 +285,28 @@
 
                             <!-- Pagination -->
                             <div class="d-flex justify-content-between align-items-center mt-4">
+                                <div class="text-muted">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    Hiển thị <strong>1-10</strong> trong tổng số <strong>10</strong> người đóng góp
+                                </div>
                                 <nav>
                                     <ul class="pagination mb-0">
                                         <li class="page-item disabled">
                                             <a class="page-link" href="#" tabindex="-1">
-                                                <i class="bi bi-chevron-left"></i>Trước
+                                                <i class="bi bi-chevron-left"></i>
                                             </a>
                                         </li>
                                         <li class="page-item active"><a class="page-link" href="#">1</a></li>
                                         <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
                                         <li class="page-item">
                                             <a class="page-link" href="#">
-                                                <i class="bi bi-chevron-right"></i>Sau
+                                                <i class="bi bi-chevron-right"></i>
                                             </a>
                                         </li>
                                     </ul>
                                 </nav>
-                                <div class="d-flex justify-content-end mt-3">
-                                    <a href="${pageContext.request.contextPath}/OrganizationApplyServlet" class="btn btn-secondary">
-                                        <i class="bi bi-arrow-left"></i> Quay lại
-                                    </a>
-                                </div>
                             </div>
-
 
                         </div>
                     </div>

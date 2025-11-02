@@ -123,8 +123,8 @@
                                         </td>
 
                                         <td>
-                                            <a href="organization/detail_event_org.jsp?id=${e.id}" class="btn btn-primary btn-sm">Chi tiết</a>
-                                            <a href="OrganizationApplyServlet?id=${e.id}" class="btn btn-secondary btn-sm">Xử lý</a>
+                                            <a href="organization/detail_event_org.jsp?id=${e.id}" class="btn btn-primary btn-sm">Xem chi tiết</a>
+                                            <a href="OrganizationApplyServlet?id=${e.id}" class="btn btn-secondary btn-sm">Xử lý đơn</a>
                                             <a href="organization/delete_event?id=${e.id}" class="btn btn-danger btn-sm">Xóa</a>
                                         </td>
                                     </tr>

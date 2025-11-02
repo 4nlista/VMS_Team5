@@ -5,6 +5,8 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -72,26 +74,37 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            <c:forEach var="u" items="${users}" varStatus="loop">
                                 <tr>
-                                    <td>${loop.index + 1}</td>
-                                    <td>${u.name}</td>
-                                    <td>${u.dateOfBirth}</td>
-                                    <td>${u.gender}</td>
-                                    <td>${u.address}</td>
+                                    <td>1</td>
+                                    <td>Nguyễn Văn An</td>
+                                    <td>2004/09/20</td>
+                                    <td>Nam</td>
+                                    <td>Hà Nội</td>
                                     <td>
                                         <a href="${pageContext.request.contextPath}/organization/detail_users_org.jsp" class="btn btn-primary btn-sm me-1">Chi tiết</a>
                                         <a href="#" class="btn btn-danger btn-sm me-1">Xóa</a>
-                                        <a href="#" class="btn btn-info btn-sm">Gửi thông báo</a>
+                                        <a href="<%= request.getContextPath() %>/organization/send_notification_org.jsp" class="btn btn-info btn-sm">Thông báo</a>
                                     </td>
                                 </tr>
-                            </c:forEach>
+
+                                <tr>
+                                    <td>2</td>
+                                    <td>Nguyễn Thị Linh</td>
+                                    <td>1994/11/16</td>
+                                    <td>Nữ</td>
+                                    <td>Hà Nam</td>
+                                    <td>
+                                        <a href="${pageContext.request.contextPath}/organization/detail_users_org.jsp" class="btn btn-primary btn-sm me-1">Chi tiết</a>
+                                        <a href="#" class="btn btn-danger btn-sm me-1">Xóa</a>
+                                        <a href="<%= request.getContextPath() %>/organization/send_notification_org.jsp" class="btn btn-info btn-sm">Thông báo</a>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
 
                     <!-- Phân trang -->                            
-                            <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div class="d-flex justify-content-between align-items-center mt-3">
                         <span>Hiển thị 1 - 3 người dùng</span>
                         <ul class="pagination pagination-sm mb-0">
                             <li class="page-item disabled"><a class="page-link" href="#">Trước</a></li>
