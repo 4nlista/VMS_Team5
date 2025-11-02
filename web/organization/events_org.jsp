@@ -79,7 +79,7 @@
                             <thead class="table-secondary">
                                 <tr>
                                     <th style="width:4%;">STT</th>
-                                    <th style="width:30%;">Tiêu đề</th>
+                                    <th style="width:30%;">Tên sự kiện</th>
                                     <th style="width:15%;">Loại sự kiện</th>
                                     <th style="width:15%;">Chế độ</th>
                                     <th style="width:16%;">Trạng thái</th>
