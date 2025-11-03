@@ -11,7 +11,9 @@ import java.util.Date;
  * @author Admin
  */
 public class ProfileVolunteer {
+
     private int id;
+    private String images;  // ảnh của hồ sơ
     private String fullName;
     private Date dob;
     private String gender;
@@ -21,13 +23,16 @@ public class ProfileVolunteer {
 
     private int totalEvents; // tổng số sự kiện đã tham gia
     private int totalHours;     // tổng số giờ tích lũy
-    private double totalDonated;    // tổng số tiền đã donated
+    private double totalDonated;    // tổng số tiền đã donated của tất cả các sự kiện
+    private String eventName;       // sự kiện đó tên là gì
+    private String organizationName;    // tên người tạo ra sự kiện đó
 
     public ProfileVolunteer() {
     }
 
-    public ProfileVolunteer(int id, String fullName, Date dob, String gender, String phone, String email, String address, int totalEvents, int totalHours, double totalDonated) {
+    public ProfileVolunteer(int id, String images, String fullName, Date dob, String gender, String phone, String email, String address, int totalEvents, int totalHours, double totalDonated) {
         this.id = id;
+        this.images = images;
         this.fullName = fullName;
         this.dob = dob;
         this.gender = gender;
@@ -39,12 +44,36 @@ public class ProfileVolunteer {
         this.totalDonated = totalDonated;
     }
 
+    public ProfileVolunteer(int id, String images, String fullName, Date dob, String gender, String phone, String email, String address, int totalEvents, int totalHours, double totalDonated, String eventName, String organizationName) {
+        this.id = id;
+        this.images = images;
+        this.fullName = fullName;
+        this.dob = dob;
+        this.gender = gender;
+        this.phone = phone;
+        this.email = email;
+        this.address = address;
+        this.totalEvents = totalEvents;
+        this.totalHours = totalHours;
+        this.totalDonated = totalDonated;
+        this.eventName = eventName;
+        this.organizationName = organizationName;
+    }
+
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getImages() {
+        return images;
+    }
+
+    public void setImages(String images) {
+        this.images = images;
     }
 
     public String getFullName() {
@@ -119,5 +148,20 @@ public class ProfileVolunteer {
         this.totalDonated = totalDonated;
     }
 
-    
+    public String getEventName() {
+        return eventName;
+    }
+
+    public void setEventName(String eventName) {
+        this.eventName = eventName;
+    }
+
+    public String getOrganizationName() {
+        return organizationName;
+    }
+
+    public void setOrganizationName(String organizationName) {
+        this.organizationName = organizationName;
+    }
+
 }
