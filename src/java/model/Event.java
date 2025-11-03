@@ -32,6 +32,9 @@ public class Event {
     private int volunteerHour;  // số giờ tích lũy
     private double donateVolunteer;  // số tiền donate
 
+    private boolean hasApplied;  // Đã đăng ký chưa
+    private boolean hasDonated;  // Đã donate chưa
+
     public Event() {
     }
 
@@ -89,6 +92,30 @@ public class Event {
         this.volunteerHour = volunteerHour;
         this.donateVolunteer = donateVolunteer;
     }
+
+    public Event(int id, String images, String title, String description, Date startDate, Date endDate, String location, int neededVolunteers, String status, String visibility, int organizationId, int categoryId, double totalDonation, String organizationName, String categoryName, int volunteerHour, double donateVolunteer, boolean hasApplied, boolean hasDonated) {
+        this.id = id;
+        this.images = images;
+        this.title = title;
+        this.description = description;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.location = location;
+        this.neededVolunteers = neededVolunteers;
+        this.status = status;
+        this.visibility = visibility;
+        this.organizationId = organizationId;
+        this.categoryId = categoryId;
+        this.totalDonation = totalDonation;
+        this.organizationName = organizationName;
+        this.categoryName = categoryName;
+        this.volunteerHour = volunteerHour;
+        this.donateVolunteer = donateVolunteer;
+        this.hasApplied = hasApplied;
+        this.hasDonated = hasDonated;
+    }
+    
+    
 
     public int getId() {
         return id;
@@ -225,5 +252,22 @@ public class Event {
     public void setDonateVolunteer(double donateVolunteer) {
         this.donateVolunteer = donateVolunteer;
     }
+
+    public boolean isHasApplied() {
+        return hasApplied;
+    }
+
+    public void setHasApplied(boolean hasApplied) {
+        this.hasApplied = hasApplied;
+    }
+
+    public boolean isHasDonated() {
+        return hasDonated;
+    }
+
+    public void setHasDonated(boolean hasDonated) {
+        this.hasDonated = hasDonated;
+    }
+    
 
 }

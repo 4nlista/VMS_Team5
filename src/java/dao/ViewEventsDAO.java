@@ -182,7 +182,7 @@ public class ViewEventsDAO {
                     Event e = new Event(
                             rs.getInt("id"),
                             rs.getString("images"),
-                            rs.getString("title"),         
+                            rs.getString("title"),
                             rs.getString("description"),
                             rs.getTimestamp("start_date"),
                             rs.getTimestamp("end_date"),
@@ -216,6 +216,44 @@ public class ViewEventsDAO {
             ex.printStackTrace();
         }
         return 0;
+    }
+    // Kiểm tra volunteer đã đăng ký sự kiện chưa
+
+    public boolean hasVolunteerApplied(int volunteerId, int eventId) {
+        String sql = "SELECT COUNT(*) FROM Event_Volunteers WHERE volunteer_id = ? AND event_id = ?";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, volunteerId);
+            ps.setInt(2, eventId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+// Kiểm tra volunteer đã donate sự kiện chưa
+    public boolean hasVolunteerDonated(int volunteerId, int eventId) {
+        String sql = "SELECT COUNT(*) FROM Donations WHERE volunteer_id = ? AND event_id = ?";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, volunteerId);
+            ps.setInt(2, eventId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 }

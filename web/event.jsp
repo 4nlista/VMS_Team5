@@ -55,16 +55,38 @@
                                         <span><i class="icon-map-o"></i> Địa điểm : ${e.location}</span>
                                     </p>
                                     <p>${e.description}</p>
+
                                     <div class="d-flex justify-content-between mt-auto">
+                                        <!-- Nút Tham gia sự kiện -->
                                         <p class="mb-0">
-                                            <a href="${pageContext.request.contextPath}/VolunteerApplyEventServlet?eventId=${e.id}">
-                                                Tham gia sự kiện <i class="ion-ios-arrow-forward"></i>
-                                            </a>
+                                            <c:choose>
+                                                <c:when test="${e.hasApplied}">
+                                                    <span class="text-success">
+                                                        <i class="icon-check"></i> Đã đăng ký
+                                                    </span>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <a href="${pageContext.request.contextPath}/VolunteerApplyEventServlet?eventId=${e.id}">
+                                                        Tham gia sự kiện <i class="ion-ios-arrow-forward"></i>
+                                                    </a>
+                                                </c:otherwise>
+                                            </c:choose>
                                         </p>
+
+                                        <!-- Nút Ủng hộ / Donate -->
                                         <p class="mb-0">
-                                            <a href="${pageContext.request.contextPath}/volunteer/payment_volunteer.jsp">
-                                                Ủng hộ <i class="ion-ios-add-circle"></i>
-                                            </a>
+                                            <c:choose>
+                                                <c:when test="${e.hasDonated}">
+                                                    <span class="text-success">
+                                                        <i class="icon-check"></i> Đã donate
+                                                    </span>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <a href="${pageContext.request.contextPath}/volunteer/payment_volunteer.jsp">
+                                                        Ủng hộ <i class="ion-ios-add-circle"></i>
+                                                    </a>
+                                                </c:otherwise>
+                                            </c:choose>
                                         </p>
                                     </div>
 

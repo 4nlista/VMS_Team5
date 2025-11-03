@@ -44,4 +44,25 @@ public class DisplayEventService {
     public int getTotalActiveEvents() {
         return viewEventsDAO.getTotalActiveEvents();
     }
+
+    // phân trang với các trạng thái
+    public List<Event> getActiveEventsPagedWithStatus(int offset, int limit, Integer volunteerId) {
+        // 1. Lấy danh sách events
+        List<Event> events = viewEventsDAO.getActiveEventsPaged(offset, limit);
+
+        // 2. Nếu volunteer đã login → kiểm tra từng event
+        if (volunteerId != null) {
+            for (Event event : events) {
+                // Kiểm tra đã đăng ký chưa
+                boolean hasApplied = viewEventsDAO.hasVolunteerApplied(volunteerId, event.getId());
+                event.setHasApplied(hasApplied);
+
+                // Kiểm tra đã donate chưa
+                boolean hasDonated = viewEventsDAO.hasVolunteerDonated(volunteerId, event.getId());
+                event.setHasDonated(hasDonated);
+            }
+        }
+
+        return events;
+    }
 }
