@@ -8,13 +8,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 import java.io.IOException;
+import java.io.PrintWriter;
 import service.AdminAddAccountService;
 
 /**
  * Servlet for Admin to add new organization accounts
  * This servlet only handles request/response, all business logic is in AdminAddAccountService
  */
-@WebServlet(name = "AdminAddAccountServlet", urlPatterns = {"/AdminAddAccountServlet"})
+@WebServlet(name = "AdminAddAccountServlet", urlPatterns = {"/admin/AdminAddAccountServlet", "/admin/check-unique"})
 @MultipartConfig(
     fileSizeThreshold = 1024 * 1024,  // 1 MB
     maxFileSize = 1024 * 1024 * 5,  // 5 MB
@@ -32,12 +33,31 @@ public class AdminAddAccountServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String path = request.getServletPath();
+        System.out.println("AdminAddAccountServlet doGet - servletPath: " + path);
+        System.out.println("AdminAddAccountServlet doGet - requestURI: " + request.getRequestURI());
+
+        if ("/admin/check-unique".equals(path)) {
+            System.out.println("Handling check-unique request");
+            handleCheckUnique(request, response);
+            return;
+        }
+
+        // Set encoding BEFORE any output
+        request.setCharacterEncoding("UTF-8");
+
+        // Forward without setting response content-type (let JSP handle it)
         request.getRequestDispatcher("/admin/add_account_admin.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String path = request.getServletPath();
+        if ("/admin/check-unique".equals(path)) {
+            handleCheckUnique(request, response);
+            return;
+        }
         
         // Lấy dữ liệu từ request (chỉ extract data, không xử lý logic)
         String username = request.getParameter("username");
@@ -75,6 +95,42 @@ public class AdminAddAccountServlet extends HttpServlet {
         } else {
             String errorMsg = result.getErrorMessage() != null ? result.getErrorMessage() : "error_validation";
             response.sendRedirect(request.getContextPath() + "/admin/add_account_admin.jsp?msg=" + errorMsg);
+        }
+    }
+
+    private void handleCheckUnique(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setContentType("application/json;charset=UTF-8");
+        String type = trimOrNull(request.getParameter("type"));
+        String value = trimOrNull(request.getParameter("value"));
+
+        if (type == null || value == null || value.isEmpty()) {
+            writeJson(response, false, "invalid_params");
+            return;
+        }
+
+        Boolean exists = adminAddAccountService.checkUnique(type, value);
+        if (exists == null) {
+            writeJson(response, false, "invalid_type");
+            return;
+        }
+        writeJsonExists(response, exists);
+    }
+
+    private String trimOrNull(String v) {
+        if (v == null) return null;
+        String t = v.trim();
+        return t;
+    }
+
+    private void writeJson(HttpServletResponse resp, boolean ok, String msg) throws IOException {
+        try (PrintWriter out = resp.getWriter()) {
+            out.write("{\"ok\":" + ok + ",\"message\":\"" + msg + "\"}");
+        }
+    }
+
+    private void writeJsonExists(HttpServletResponse resp, boolean exists) throws IOException {
+        try (PrintWriter out = resp.getWriter()) {
+            out.write("{\"exists\":" + exists + "}");
         }
     }
 }

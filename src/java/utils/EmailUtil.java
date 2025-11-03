@@ -12,6 +12,8 @@ import jakarta.mail.Session;
 import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeUtility;
+import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
 /**
@@ -46,14 +48,52 @@ public class EmailUtil {
             Message msg = new MimeMessage(session);
             msg.setFrom(new InternetAddress(fromEmail));
             msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
-            msg.setSubject(subject);
+
+            // Encode subject to UTF-8
+            try {
+                msg.setSubject(MimeUtility.encodeText(subject, "UTF-8", "B"));
+            } catch (UnsupportedEncodingException ex) {
+                msg.setSubject(subject); // Fallback if encoding fails
+            }
+
             msg.setContent(messageContent, "text/html; charset=UTF-8");
-//            msg.setHeader("Content-Type", "text/html; charset=UTF-8"); 
             Transport.send(msg);
             System.out.println("Email sent successfully to " + toEmail);
         } catch (MessagingException e) {
             e.printStackTrace();
             System.out.println("Failed to send email: " + e.getMessage());
         }
+    }
+
+    // Gửi email thông báo admin đã cấp tài khoản kèm thông tin đăng nhập
+    public static void sendEmailWithAdmin(String toEmail, String organizationName, String username, String plainPassword) {
+        String safeOrg = organizationName == null ? "" : organizationName;
+        
+        
+        
+        String subject = "[Volunteer System] Tài khoản đã được cấp";
+        StringBuilder content = new StringBuilder();
+        content.append("<div style=\"font-family:Arial, Helvetica, sans-serif; line-height:1.6;\">")
+               .append("<h2>Xin chào ").append(escapeHtml(safeOrg)).append("</h2>")
+               .append("<p>Quản trị viên đã tạo tài khoản cho vai trò Người Tổ Chức của bạn trên hệ thống Volunteer System.</p>")
+               .append("<p><strong>Thông tin đăng nhập:</strong></p>")
+               .append("<ul>")
+               .append("<li><strong>Tên đăng nhập:</strong> ").append(escapeHtml(username)).append("</li>")
+               .append("<li><strong>Mật khẩu:</strong> ").append(escapeHtml(plainPassword)).append("</li>")
+               .append("</ul>")
+               .append("<p>Vui lòng đăng nhập và đổi mật khẩu ngay sau khi truy cập để bảo mật.</p>")
+               .append("<p>Trân trọng,<br/>Volunteer System</p>")
+               .append("</div>");
+
+        sendEmail(toEmail, subject, content.toString());
+    }
+
+    private static String escapeHtml(String s) {
+        if (s == null) return "";
+        return s.replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\"", "&quot;")
+                .replace("'", "&#39;");
     }
 }

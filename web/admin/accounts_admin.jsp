@@ -70,7 +70,7 @@
                         </a>
                     </form>
 
-                    <a href="<%= request.getContextPath() %>/admin/add_account_admin.jsp" class="btn btn-primary">
+                    <a href="<%= request.getContextPath() %>/admin/AdminAddAccountServlet" class="btn btn-primary">
                         <i class="bi bi-plus-circle"></i> Tạo tài khoản
                     </a>
                 </div>
