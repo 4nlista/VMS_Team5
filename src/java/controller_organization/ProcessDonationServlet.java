@@ -28,6 +28,7 @@ public class ProcessDonationServlet extends HttpServlet {
         String action = request.getParameter("action"); // "approve" hoặc "reject"
         String eventIdParam = request.getParameter("eventId");
 
+        String pageParam = request.getParameter("page");
         if (donationIdParam == null || action == null || eventIdParam == null) {
             response.sendRedirect(request.getContextPath() + "/organization/events_org.jsp");
             return;
@@ -61,6 +62,10 @@ public class ProcessDonationServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             request.getSession().setAttribute("errorMessage", "Có lỗi xảy ra!");
+        }
+        String redirectUrl = request.getContextPath() + "/OrganizationDetailEventServlet?eventId=" + eventIdParam;
+        if (pageParam != null && !pageParam.isEmpty()) {
+            redirectUrl += "&page=" + pageParam;
         }
 
         // Redirect về trang detail

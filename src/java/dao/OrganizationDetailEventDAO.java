@@ -158,16 +158,16 @@ public class OrganizationDetailEventDAO {
             java.sql.Date startDate, java.sql.Date endDate, int neededVolunteers,
             String status, String visibility, int categoryId) {
 
-        // *** VALIDATE 1: Ngày bắt đầu phải < Ngày kết thúc ***
+        // VALIDATE 1: Ngày bắt đầu phải < Ngày kết thúc 
         if (startDate.after(endDate) || startDate.equals(endDate)) {
-            System.out.println("Error: Start date must be before end date");
+            System.out.println("Lỗi : ngày bắt đầu phải < ngày kết thúc");
             return false;
         }
 
-        // *** VALIDATE 2: Ngày bắt đầu không được ở quá khứ (tùy yêu cầu) ***
+        //  VALIDATE 2: Ngày bắt đầu không được ở quá khứ (tùy yêu cầu, nếu không cần thì xóa)
         java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
         if (startDate.before(currentDate)) {
-            System.out.println("Error: Start date cannot be in the past");
+            System.out.println("Lỗi : ngày bắt đầu phải và kết thúc không đc ở quá khứ");
             return false;
         }
 
@@ -285,6 +285,100 @@ public class OrganizationDetailEventDAO {
             e.printStackTrace();
             return false;
         }
+    }
+
+    // Lấy danh sách donations CÓ PHÂN TRANG
+    public List<Donation> getDonationsByEventIdPaging(int eventId, int page, int pageSize) {
+        List<Donation> donations = new ArrayList<>();
+        int offset = (page - 1) * pageSize;
+
+        String sql = """ 
+                 SELECT 
+                     d.id,
+                     d.event_id,
+                     d.volunteer_id,
+                     d.amount,
+                     d.donate_date,
+                     d.status,
+                     d.payment_method,
+                     d.qr_code,
+                     d.note,
+                     a.username AS volunteer_username,
+                     u.full_name AS volunteer_full_name,
+                     e.title AS event_title
+                 FROM Donations d
+                 JOIN Accounts a ON d.volunteer_id = a.id
+                 JOIN Users u ON a.id = u.account_id
+                 JOIN Events e ON d.event_id = e.id
+                 WHERE d.event_id = ?
+                 ORDER BY d.donate_date DESC
+                 OFFSET ? ROWS
+                 FETCH NEXT ? ROWS ONLY
+                 """;
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, eventId);
+            ps.setInt(2, offset);     
+            ps.setInt(3, pageSize);    
+
+            System.out.println("Executing query...");
+
+            ResultSet rs = ps.executeQuery();
+
+            int count = 0;
+            while (rs.next()) {
+                count++;
+                Donation donation = new Donation();
+                donation.setId(rs.getInt("id"));
+                donation.setEventId(rs.getInt("event_id"));
+                donation.setVolunteerId(rs.getInt("volunteer_id"));
+                donation.setAmount(rs.getDouble("amount"));
+                donation.setDonateDate(rs.getDate("donate_date"));
+                donation.setStatus(rs.getString("status"));
+                donation.setPaymentMethod(rs.getString("payment_method"));
+                donation.setQrCode(rs.getString("qr_code"));
+                donation.setNote(rs.getString("note"));
+                donation.setVolunteerUsername(rs.getString("volunteer_username"));
+                donation.setVolunteerFullName(rs.getString("volunteer_full_name"));
+                donation.setEventTitle(rs.getString("event_title"));
+
+                donations.add(donation);
+            }
+            System.out.println("Đã lấy được " + count + " donations");
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            System.out.println("LỖI SQL: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return donations;
+    }
+
+// Đếm TỔNG SỐ donations của 1 event
+    public int countDonationsByEventId(int eventId) {
+        String sql = "SELECT COUNT(*) as total FROM Donations WHERE event_id = ?";
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, eventId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                int total = rs.getInt("total");
+                rs.close();
+                ps.close();
+                return total;
+            }
+
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return 0;
     }
 
     public void close() {

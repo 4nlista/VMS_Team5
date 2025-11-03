@@ -28,22 +28,40 @@ public class OrganizationDetailEventServlet extends HttpServlet {
 
         try {
             int eventId = Integer.parseInt(eventIdParam);
+            String pageParam = request.getParameter("page");
+            int currentPage = (pageParam != null) ? Integer.parseInt(pageParam) : 1;
+            int pageSize = 5; // số donates mỗi trang
             OrganizationDetailEventDAO dao = new OrganizationDetailEventDAO();
 
             Event event = dao.getEventById(eventId);
+            List<Event> categories = dao.getAllCategories();
+            List<Donation> donations;
+            int totalPages;
+            // tổng số donate
+            int totalDonations = dao.countDonationsByEventId(eventId);
+
+            if (totalDonations <= pageSize) {
+                donations = dao.getDonationsByEventId(eventId); // Lấy tất cả
+                totalPages = 1;
+                currentPage = 1;
+            } else {
+                donations = dao.getDonationsByEventIdPaging(eventId, currentPage, pageSize);
+                totalPages = (int) Math.ceil((double) totalDonations / pageSize);
+            }
             if (event == null) {
                 request.setAttribute("errorMessage", "Không tìm thấy sự kiện!");
                 request.getRequestDispatcher("/error.jsp").forward(request, response);
                 return;
             }
 
-            List<Donation> donations = dao.getDonationsByEventId(eventId);
-            List<Event> categories = dao.getAllCategories();
             dao.close();
 
             request.setAttribute("event", event);
             request.setAttribute("donations", donations);
             request.setAttribute("categories", categories);
+            request.setAttribute("currentPage", currentPage);
+            request.setAttribute("totalPages", totalPages);
+            request.setAttribute("totalDonations", totalDonations);
             request.getRequestDispatcher("/organization/detail_event_org.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {

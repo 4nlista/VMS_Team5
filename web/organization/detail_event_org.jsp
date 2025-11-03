@@ -286,28 +286,46 @@
                                         </c:if>
                                     </tbody>
                                 </table>
+                                <!-- PHÂN TRANG -->
+                                <c:if test="${totalPages > 1}">
+                                    <nav aria-label="Donation pagination">
+                                        <ul class="pagination justify-content-center">
+                                            <!-- Nút Previous -->
+                                            <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                                                <a class="page-link" 
+                                                   href="${pageContext.request.contextPath}/OrganizationDetailEventServlet?eventId=${event.id}&page=${currentPage - 1}">
+                                                    Trước
+                                                </a>
+                                            </li>
+
+                                            <!-- Các số trang -->
+                                            <c:forEach var="i" begin="1" end="${totalPages}">
+                                                <li class="page-item ${i == currentPage ? 'active' : ''}">
+                                                    <a class="page-link" 
+                                                       href="${pageContext.request.contextPath}/OrganizationDetailEventServlet?eventId=${event.id}&page=${i}">
+                                                        ${i}
+                                                    </a>
+                                                </li>
+                                            </c:forEach>
+
+                                            <!-- Nút Next -->
+                                            <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                                                <a class="page-link" 
+                                                   href="${pageContext.request.contextPath}/OrganizationDetailEventServlet?eventId=${event.id}&page=${currentPage + 1}">
+                                                    Sau
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+
+                                    <!-- Hiển thị thông tin -->
+                                    <div class="text-center text-muted">
+                                        Trang ${currentPage} / ${totalPages} (Tổng ${totalDonations} đơn donate)
+                                    </div>
+                                </c:if>
                             </div>
 
-                            <!-- Pagination -->
-                            <div class="d-flex justify-content-between align-items-center mt-4">
-                                <nav>
-                                    <ul class="pagination mb-0">
-                                        <li class="page-item disabled">
-                                            <a class="page-link" href="#" tabindex="-1">
-                                                <i class="bi bi-chevron-left"></i>
-                                            </a>
-                                        </li>
-                                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                        <li class="page-item">
-                                            <a class="page-link" href="#">
-                                                <i class="bi bi-chevron-right"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </nav>
-                            </div>
+
 
                         </div>
                     </div>
