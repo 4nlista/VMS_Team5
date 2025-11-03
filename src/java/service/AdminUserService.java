@@ -299,7 +299,7 @@ public class AdminUserService {
             }
 
             String uploadsRelative = "/uploads/user_avatars";
-            String uploadsAbsolute = "C:\\Users\\Admin\\Downloads\\uploads\\user_avatars";  // FIXED LOCAL PATH OUTSIDE PROJECT
+            String uploadsAbsolute = "C:\\Users\\DELL\\Downloads\\uploads\\user_avatars";  // FIXED LOCAL PATH OUTSIDE PROJECT
             // Fallback
             if (uploadsAbsolute == null) {
                 uploadsAbsolute = System.getProperty("java.io.tmpdir") + File.separator + "uploads" + File.separator + "user_avatars";

@@ -5,6 +5,8 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -23,7 +25,7 @@
                     <h3 class="fw-bold mb-4 text-center">Danh sách bài viết</h3>
 
                     <!-- Bộ lọc + nút tạo mới -->
-                    <form method="get" action="OrganizationListServlet" 
+                    <form method="get" action="OrganizationManageNews" 
                           class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
 
                         <div class="d-flex gap-2 align-items-end flex-wrap">
@@ -32,8 +34,8 @@
                                 <label class="form-label fw-semibold">Trạng thái</label>
                                 <select name="status" class="form-select form-select-sm" style="width: 140px;">
                                     <option value="">Tất cả</option>
-                                    <option value="published">Hiển thị</option>
-                                    <option value="hidden">Đã ẩn</option>
+                                    <option value="published" ${currentStatus == 'published' ? 'selected' : ''}>Đã hiển thị</option>
+                                    <option value="hidden" ${currentStatus == 'hidden' ? 'selected' : ''}>Đã bị ẩn</option>
                                 </select>
                             </div>
 
@@ -43,7 +45,7 @@
                             </button>
 
                             <!-- Nút Reset -->
-                            <a href="OrganizationListServlet" class="btn btn-secondary btn-sm" style="min-width:100px;">
+                            <a href="OrganizationManageNews" class="btn btn-secondary btn-sm" style="min-width:100px;">
                                 <i class="bi bi-arrow-counterclockwise"></i> Reset
                             </a>
                         </div>
@@ -67,48 +69,25 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            <c:forEach var="e" items="${eventsOrg}" varStatus="loop">
+                            <c:forEach var="newItem" items="${news}" varStatus="loop">
                                 <tr>
-                                    <td>1</td>
-                                    <td class="text-truncate" title="">Trồng cây gây rừng</td>
+                                    <td>${newItem.id}</td>
+                                    <td class="text-truncate" title="">${newItem.title}</td>
                                     <td>
                                 <c:choose>
-                                    <c:when test="${e.status == 'published'}">
+                                    <c:when test="${newItem.status == 'published'}">
                                         <span class="badge bg-success">Hiển thị</span>
                                     </c:when>
-<!--                                    <c:when test="${e.status == 'hidden'}">
-                                        <span class="badge bg-warning text-dark">Ẩn</span>
-                                    </c:when>-->
-                                    <c:otherwise>
-                                        <span class="badge bg-secondary">${e.status}</span>
-                                    </c:otherwise>
-                                </c:choose>
-                                </td>
-                                <td>
-                                    <a href="<%= request.getContextPath() %>/organization/detail_news_org.jsp?id=${e.id}" 
-                                       class="btn btn-primary btn-sm">Chi tiết</a>
-                                    <a href="#" class="btn btn-danger btn-sm">Xóa</a>
-                                </td>
-                                </tr>
-
-                                <tr>
-                                    <td>2</td>
-                                    <td class="text-truncate" title="">Chiến dịch bảo vệ rừng</td>
-                                    <td>
-                                <c:choose>
-    <!--                                    <c:when test="${e.status == 'published'}">
-                                            <span class="badge bg-success">Hiển thị</span>
-                                        </c:when>-->
-                                    <c:when test="${e.status == 'hidden'}">
-                                        <span class="badge bg-warning text-dark">Đã ẩn</span>
+                                    <c:when test="${newItem.status == 'hidden'}">
+                                        <span class="badge bg-warning text-dark">Bị Ẩn</span>
                                     </c:when>
                                     <c:otherwise>
-                                        <span class="badge bg-secondary">${e.status}</span>
+                                        <span class="badge bg-secondary">UNKNOWN</span>
                                     </c:otherwise>
                                 </c:choose>
                                 </td>
                                 <td>
-                                    <a href="<%= request.getContextPath() %>/organization/detail_news_org.jsp?id=${e.id}" 
+                                    <a href="<%= request.getContextPath() %>/organization/detail_news_org.jsp?id=${newItem.id}" 
                                        class="btn btn-primary btn-sm">Chi tiết</a>
                                     <a href="#" class="btn btn-danger btn-sm">Xóa</a>
                                 </td>
@@ -118,14 +97,60 @@
                         </table>
                     </div>
 
-                    <!-- Phân trang -->
-                    <div class="d-flex justify-content-between align-items-center mt-3">
-                        <span>Hiển thị 1 - 3 trong tổng số bài viết</span>
-                        <ul class="pagination pagination-sm mb-0">
-                            <li class="page-item disabled"><a class="page-link" href="#">Trước</a></li>
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">Sau</a></li>
-                        </ul>
+                    <!-- Pagination Section -->
+                    <div class="card shadow-sm border-0 p-3">
+                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+                            <!-- Left: Page info -->
+                            <div class="text-muted small">
+                                Trang số <strong>${currentPage}</strong> trong tổng số <strong>${totalPages}</strong>
+                            </div>
+
+                            <!-- Center: Pagination Controls -->
+                            <nav aria-label="User list pagination">
+                                <ul class="pagination mb-0 flex-wrap justify-content-center">
+                                    <!-- Previous -->
+                                    <c:url var="prevUrl" value="OrganizationManageNews">
+                                        <c:param name="page" value="${currentPage - 1}" />
+                                        <c:param name="status" value="${fn:escapeXml(currentStatus)}" />
+                                        <c:param name="search" value="${fn:escapeXml(currentSearch)}" />
+                                    </c:url>
+                                    <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                                        <a class="page-link" href="${prevUrl}">Trước</a>
+                                    </li>
+                                    <!-- Page numbers -->
+                                    <c:forEach var="i" begin="1" end="${totalPages}">
+                                        <c:url var="pageUrl" value="OrganizationManageNews">
+                                            <c:param name="page" value="${i}" />
+                                            <c:param name="status" value="${fn:escapeXml(currentStatus)}" />
+                                            <c:param name="search" value="${fn:escapeXml(currentSearch)}" />
+                                        </c:url>
+                                        <li class="page-item ${i == currentPage ? 'active' : ''}">
+                                            <a class="page-link" href="${pageUrl}">${i}</a>
+                                        </li>
+                                    </c:forEach>
+
+                                    <!-- Next -->
+                                    <c:url var="nextUrl" value="OrganizationManageNews">
+                                        <c:param name="page" value="${currentPage + 1}" />
+                                        <c:param name="status" value="${fn:escapeXml(currentStatus)}" />
+                                        <c:param name="search" value="${fn:escapeXml(currentSearch)}" />
+                                    </c:url>
+                                    <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                                        <a class="page-link" href="${nextUrl}">Tiếp</a>
+                                    </li>
+                                </ul>
+                            </nav>
+
+                            <!-- Right: Go to page -->
+                            <form action="OrganizationManageNews" method="get" class="d-flex align-items-center gap-2">
+                                <label for="gotoPage" class="form-label mb-0 small text-muted">Đi tới trang:</label>
+                                <input type="number" id="gotoPage" name="page" min="1" max="${totalPages}" value="${currentPage}"
+                                       class="form-control form-control-sm" style="width: 80px;">
+                                <input type="hidden" name="status" value="${fn:escapeXml(currentStatus)}" />
+                                <input type="hidden" name="search" value="${fn:escapeXml(currentSearch)}" />
+                                <button type="submit" class="btn btn-primary btn-sm">Đi!</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
