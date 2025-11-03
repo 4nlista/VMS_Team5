@@ -83,7 +83,7 @@
                             </div>
                             <c:remove var="errorMessage" scope="session"/>
                         </c:if>
-                        <a href="#" class="btn btn-outline-primary">
+                        <a href="<%= request.getContextPath() %>/OrganizationListServlet" class="btn btn-primary">
                             <i class="bi bi-arrow-left me-1"></i> Quay lại danh sách
                         </a>
                     </div>
@@ -112,8 +112,15 @@
                                         </div>
 
                                         <div class="mb-3">
-                                            <label class="form-label text-muted">Loại sự kiện</label>
-                                            <input type="text" class="form-control" value="${event.categoryName}" disabled>
+                                            <select name="categoryId" class="form-select" required>
+                                                <option value="">-- Chọn loại sự kiện --</option>
+                                                <c:forEach var="category" items="${categories}">
+                                                    <option value="${category.categoryId}" 
+                                                            ${category.categoryId == event.categoryId ? 'selected' : ''}>
+                                                        ${category.categoryName}
+                                                    </option>
+                                                </c:forEach>
+                                            </select>
                                         </div>
 
                                         <div class="mb-3">
@@ -208,13 +215,13 @@
                                 <table class="table table-hover donor-table mb-0">
                                     <thead>
                                         <tr>
-                                            <th style="width: 5%;">STT</th>
+                                            <th style="width: 7%;">STT</th>
                                             <th style="width: 15%;">Họ và Tên</th>
                                             <th style="width: 15%;">Số tiền</th>
-                                            <th style="width: 20%;">Thời gian</th>                             
-                                            <th style="width: 15%;">Phương thức</th>
-                                            <th style="width: 10%;">Trạng thái</th>
-                                            <th style="width: 20%;">Thao tác</th>
+                                            <th style="width: 19%;">Thời gian</th>                             
+                                            <th style="width: 13%;">Phương thức</th>
+                                            <th style="width: 15%;">Trạng thái</th>
+                                            <th style="width: 15%;">Thao tác</th>
                                         </tr>
                                     </thead>
                                     <!-- Thay thế phần <tbody> cũ bằng code này -->

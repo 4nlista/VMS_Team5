@@ -21,9 +21,6 @@ public class OrganizationDetailEventServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String eventIdParam = request.getParameter("eventId");
-    // DEBUG: In ra console
-        System.out.println("===== DEBUG =====");
-        System.out.println("eventIdParam: " + eventIdParam);
         if (eventIdParam == null || eventIdParam.isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/organization/events_org.jsp");
             return;
@@ -31,11 +28,9 @@ public class OrganizationDetailEventServlet extends HttpServlet {
 
         try {
             int eventId = Integer.parseInt(eventIdParam);
-            System.out.println("eventId parsed: " + eventId);
             OrganizationDetailEventDAO dao = new OrganizationDetailEventDAO();
 
             Event event = dao.getEventById(eventId);
-            System.out.println("Event từ DB: " + (event != null ? event.getTitle() : "NULL"));
             if (event == null) {
                 request.setAttribute("errorMessage", "Không tìm thấy sự kiện!");
                 request.getRequestDispatcher("/error.jsp").forward(request, response);
@@ -43,11 +38,12 @@ public class OrganizationDetailEventServlet extends HttpServlet {
             }
 
             List<Donation> donations = dao.getDonationsByEventId(eventId);
-            System.out.println("Số donations: " + (donations != null ? donations.size() : 0));
+            List<Event> categories = dao.getAllCategories();
             dao.close();
 
             request.setAttribute("event", event);
             request.setAttribute("donations", donations);
+            request.setAttribute("categories", categories);
             request.getRequestDispatcher("/organization/detail_event_org.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {
@@ -82,6 +78,7 @@ public class OrganizationDetailEventServlet extends HttpServlet {
                 int neededVolunteers = Integer.parseInt(request.getParameter("neededVolunteers"));
                 String status = request.getParameter("status");
                 String visibility = request.getParameter("visibility");
+                int categoryId = Integer.parseInt(request.getParameter("categoryId"));
 
                 // Parse dates
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -92,7 +89,7 @@ public class OrganizationDetailEventServlet extends HttpServlet {
                 boolean success = dao.updateEvent(eventId, title, description, location,
                         new java.sql.Date(startDate.getTime()),
                         new java.sql.Date(endDate.getTime()),
-                        neededVolunteers, status, visibility);
+                        neededVolunteers, status, visibility, categoryId);
 
                 if (success) {
                     request.getSession().setAttribute("successMessage", "Cập nhật sự kiện thành công!");
@@ -118,8 +115,6 @@ public class OrganizationDetailEventServlet extends HttpServlet {
         } finally {
             dao.close();
         }
-
-        // Redirect về trang detail
         response.sendRedirect(request.getContextPath() + "/OrganizationDetailEventServlet?eventId=" + eventId);
     }
 }

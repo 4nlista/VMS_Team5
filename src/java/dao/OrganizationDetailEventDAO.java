@@ -42,10 +42,6 @@ public class OrganizationDetailEventDAO {
                 + "LEFT JOIN Categories c ON e.category_id = c.category_id "
                 + "LEFT JOIN Users a ON e.organization_id = a.id "
                 + "WHERE e.id = ?";
-
-        System.out.println("===== DAO DEBUG =====");
-        System.out.println("Query event với id = " + eventId);
-
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, eventId);
@@ -81,6 +77,31 @@ public class OrganizationDetailEventDAO {
         }
 
         return event;
+    }
+
+    // Lấy tất cả categories (dùng class Event để chứa)
+    public List<Event> getAllCategories() {
+        List<Event> categories = new ArrayList<>();
+        String sql = "SELECT category_id, name FROM Categories ORDER BY name"; // Đổi category_name → name
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Event category = new Event();
+                category.setCategoryId(rs.getInt("category_id"));
+                category.setCategoryName(rs.getString("name")); // Đổi category_name → name
+                categories.add(category);
+            }
+
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return categories;
     }
 
     // Lấy danh sách donations của 1 sự kiện
@@ -135,10 +156,25 @@ public class OrganizationDetailEventDAO {
     // Cập nhật thông tin sự kiện
     public boolean updateEvent(int eventId, String title, String description, String location,
             java.sql.Date startDate, java.sql.Date endDate, int neededVolunteers,
-            String status, String visibility) {
+            String status, String visibility, int categoryId) {
+
+        // *** VALIDATE 1: Ngày bắt đầu phải < Ngày kết thúc ***
+        if (startDate.after(endDate) || startDate.equals(endDate)) {
+            System.out.println("Error: Start date must be before end date");
+            return false;
+        }
+
+        // *** VALIDATE 2: Ngày bắt đầu không được ở quá khứ (tùy yêu cầu) ***
+        java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
+        if (startDate.before(currentDate)) {
+            System.out.println("Error: Start date cannot be in the past");
+            return false;
+        }
+
         String sql = "UPDATE Events SET title = ?, description = ?, location = ?, "
                 + "start_date = ?, end_date = ?, needed_volunteers = ?, "
-                + "status = ?, visibility = ? WHERE id = ?";
+                + "status = ?, visibility = ?, category_id = ? "
+                + "WHERE id = ?";
 
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -150,12 +186,12 @@ public class OrganizationDetailEventDAO {
             ps.setInt(6, neededVolunteers);
             ps.setString(7, status);
             ps.setString(8, visibility);
-            ps.setInt(9, eventId);
+            ps.setInt(9, categoryId);
+            ps.setInt(10, eventId);
 
             int rowsAffected = ps.executeUpdate();
             ps.close();
             return rowsAffected > 0;
-
         } catch (Exception e) {
             e.printStackTrace();
             return false;
