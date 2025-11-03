@@ -56,8 +56,6 @@ public class OrganizationApplyServlet extends HttpServlet {
             statusFilter = "all";
         }
 
-        // Lấy danh sách volunteers của event này (chỉ thuộc org hiện tại)
-     //   List<EventVolunteer> volunteers = organizationApplyService.getVolunteersByEvent(eventId, organizationId);
         List<EventVolunteer> volunteers = organizationApplyService.getFilterVolunteersByEvent(organizationId, eventId, statusFilter);
         request.setAttribute("volunteers", volunteers);
         request.setAttribute("eventId", eventId);

@@ -143,14 +143,14 @@
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label class="form-label text-muted">Ngày bắt đầu</label>
-                                            <input type="date" name="startDate" class="form-control" 
-                                                   value="${event.startDate}" required>
+                                            <input type="datetime-local" name="startDate" class="form-control" 
+                                                   value="<fmt:formatDate value='${event.startDate}' pattern='yyyy-MM-dd\'T\'HH:mm' />" required>
                                         </div>
 
                                         <div class="mb-3">
                                             <label class="form-label text-muted">Ngày kết thúc</label>
-                                            <input type="date" name="endDate" class="form-control" 
-                                                   value="${event.endDate}" required>
+                                            <input type="datetime-local" name="endDate" class="form-control" 
+                                                   value="<fmt:formatDate value='${event.startDate}' pattern='yyyy-MM-dd\'T\'HH:mm' />" required>
                                         </div>
 
                                         <div class="mb-3">

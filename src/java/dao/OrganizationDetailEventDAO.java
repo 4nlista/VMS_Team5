@@ -54,8 +54,8 @@ public class OrganizationDetailEventDAO {
                 event.setTitle(rs.getString("title"));
                 event.setImages(rs.getString("images"));
                 event.setDescription(rs.getString("description"));
-                event.setStartDate(rs.getDate("start_date"));
-                event.setEndDate(rs.getDate("end_date"));
+                event.setStartDate(rs.getTimestamp("start_date"));
+                event.setEndDate(rs.getTimestamp("end_date"));
                 event.setLocation(rs.getString("location"));
                 event.setNeededVolunteers(rs.getInt("needed_volunteers"));
                 event.setStatus(rs.getString("status"));
@@ -132,7 +132,7 @@ public class OrganizationDetailEventDAO {
                 donation.setEventId(rs.getInt("event_id"));
                 donation.setVolunteerId(rs.getInt("volunteer_id"));
                 donation.setAmount(rs.getDouble("amount"));
-                donation.setDonateDate(rs.getDate("donate_date"));
+                donation.setDonateDate(rs.getTimestamp("donate_date"));
                 donation.setStatus(rs.getString("status"));
                 donation.setPaymentMethod(rs.getString("payment_method"));
                 donation.setQrCode(rs.getString("qr_code"));
@@ -155,7 +155,7 @@ public class OrganizationDetailEventDAO {
 
     // Cập nhật thông tin sự kiện
     public boolean updateEvent(int eventId, String title, String description, String location,
-            java.sql.Date startDate, java.sql.Date endDate, int neededVolunteers,
+            java.sql.Timestamp startDate, java.sql.Timestamp endDate, int neededVolunteers,
             String status, String visibility, int categoryId) {
 
         // VALIDATE 1: Ngày bắt đầu phải < Ngày kết thúc 
@@ -165,9 +165,9 @@ public class OrganizationDetailEventDAO {
         }
 
         //  VALIDATE 2: Ngày bắt đầu không được ở quá khứ (tùy yêu cầu, nếu không cần thì xóa)
-        java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
-        if (startDate.before(currentDate)) {
-            System.out.println("Lỗi : ngày bắt đầu phải và kết thúc không đc ở quá khứ");
+        java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(System.currentTimeMillis());
+        if (startDate.before(currentTimestamp)) {
+            System.out.println("Lỗi : ngày bắt đầu không được ở quá khứ");
             return false;
         }
 
@@ -181,8 +181,8 @@ public class OrganizationDetailEventDAO {
             ps.setString(1, title);
             ps.setString(2, description);
             ps.setString(3, location);
-            ps.setDate(4, startDate);
-            ps.setDate(5, endDate);
+            ps.setTimestamp(4, startDate);
+            ps.setTimestamp(5, endDate);
             ps.setInt(6, neededVolunteers);
             ps.setString(7, status);
             ps.setString(8, visibility);
@@ -319,8 +319,8 @@ public class OrganizationDetailEventDAO {
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, eventId);
-            ps.setInt(2, offset);     
-            ps.setInt(3, pageSize);    
+            ps.setInt(2, offset);
+            ps.setInt(3, pageSize);
 
             System.out.println("Executing query...");
 
