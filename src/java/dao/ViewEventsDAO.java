@@ -256,4 +256,13 @@ public class ViewEventsDAO {
         return false;
     }
 
+    public void close() {
+        try {
+            if (conn != null && !conn.isClosed()) {
+                conn.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

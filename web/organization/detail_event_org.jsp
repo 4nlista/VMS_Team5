@@ -112,6 +112,7 @@
                                         </div>
 
                                         <div class="mb-3">
+                                            <label class="form-label text-muted">Danh mục sự kiện</label>
                                             <select name="categoryId" class="form-select" required>
                                                 <option value="">-- Chọn loại sự kiện --</option>
                                                 <c:forEach var="category" items="${categories}">
