@@ -11,7 +11,10 @@ import java.util.Date;
  * @author Admin
  */
 public class ProfileVolunteer {
+    // User vs Events
+
     private int id;
+    private String images;
     private String fullName;
     private Date dob;
     private String gender;
@@ -24,6 +27,20 @@ public class ProfileVolunteer {
     private double totalDonated;    // tổng số tiền đã donated
 
     public ProfileVolunteer() {
+    }
+
+    public ProfileVolunteer(int id, String images, String fullName, Date dob, String gender, String phone, String email, String address, int totalEvents, int totalHours, double totalDonated) {
+        this.id = id;
+        this.images = images;
+        this.fullName = fullName;
+        this.dob = dob;
+        this.gender = gender;
+        this.phone = phone;
+        this.email = email;
+        this.address = address;
+        this.totalEvents = totalEvents;
+        this.totalHours = totalHours;
+        this.totalDonated = totalDonated;
     }
 
     public ProfileVolunteer(int id, String fullName, Date dob, String gender, String phone, String email, String address, int totalEvents, int totalHours, double totalDonated) {
@@ -45,6 +62,14 @@ public class ProfileVolunteer {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getImages() {
+        return images;
+    }
+
+    public void setImages(String images) {
+        this.images = images;
     }
 
     public String getFullName() {
@@ -119,5 +144,4 @@ public class ProfileVolunteer {
         this.totalDonated = totalDonated;
     }
 
-    
 }
