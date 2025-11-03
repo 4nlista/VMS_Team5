@@ -64,11 +64,10 @@
                                 <hr class="my-4">
 
                                 <div class="row">
-                                    <!-- Phương thức thanh toán (cứng: QR Code) -->
                                     <div class="col-md-6">
                                         <h5 class="mb-3">Phương thức thanh toán</h5>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="paymentMethod" value="QR Code" checked disabled>
+                                            <input class="form-check-input" type="radio" name="paymentMethod" value="QR Code" readonly="">
                                             <label class="form-check-label">
                                                 <i class="bi bi-qr-code"></i> Thanh toán bằng QR Code
                                             </label>
@@ -84,7 +83,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Ghi chú -->
                                 <div class="mb-3 mt-3">
                                     <label class="form-label">Ghi chú (tùy chọn)</label>
                                     <textarea class="form-control" name="note" rows="3" placeholder="Nhập lời nhắn của bạn..."></textarea>
@@ -93,22 +91,23 @@
                                 <hr class="my-4">
 
                                 <!-- Hiển thị QR Code -->
+                                <!-- Hiển thị QR Code -->
                                 <div class="text-center mb-4">
-                                    <h5 class="mb-3">Mã QR Code sẽ được tạo sau khi xác nhận</h5>
+                                    <h5 class="mb-3">Mã QR Code để thanh toán</h5>
                                     <div id="qr-placeholder" class="border rounded p-4 bg-light">
                                         <i class="bi bi-qr-code"></i>
                                         <p class="text-muted mt-2">Nhấn "Xác nhận thanh toán" để tạo mã QR</p>
+
+                                        <c:if test="${not empty event.id}">
+                                            <img src="${pageContext.request.contextPath}/GenerateQRServlet?content=${event.id}" alt="QR Code" class="img-fluid">
+                                        </c:if>
                                     </div>
                                 </div>
 
-                                <!-- Nút action -->
                                 <div class="d-flex justify-content-between">
-                                    <!-- Nút Quay lại -->
                                     <a href="<%= request.getContextPath() %>/GuessEventServlet" class="btn btn-secondary btn-lg">
                                         <i class="bi bi-arrow-left"></i> Quay lại
                                     </a>
-
-                                    <!-- Nút Xác nhận -->
                                     <button type="submit" class="btn btn-success btn-lg">
                                         <i class="bi bi-check-circle"></i> Xác nhận thanh toán
                                     </button>

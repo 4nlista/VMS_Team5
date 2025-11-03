@@ -82,7 +82,7 @@
                                                     </span>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <a href="${pageContext.request.contextPath}/volunteer/payment_volunteer.jsp">
+                                                    <a href="${pageContext.request.contextPath}/VolunteerPaymentServlet?eventId=${e.id}">
                                                         Ủng hộ <i class="ion-ios-add-circle"></i>
                                                     </a>
                                                 </c:otherwise>

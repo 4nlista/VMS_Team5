@@ -72,45 +72,4 @@ public class VolunteerDonationDAO {
             e.printStackTrace();
         }
     }
-
-    public static void main(String[] args) {
-        System.out.println("========== hàm test ==========");
-
-        VolunteerDonationDAO dao = new VolunteerDonationDAO();
-
-        // Test data
-        int eventId = 1;
-        int volunteerId = 5;
-        double amount = -100000; // Số âm để test validate
-        String note = "Test donate";
-
-        if (amount <= 0) {
-            System.out.println("Số tiền phải > 0 - amount = " + amount + ")");
-        } else {
-            System.out.println("số tiền hợp lệ - amount = " + amount + ")");
-        }
-
-        String qrCode = dao.generateQRCode(volunteerId, Math.abs(amount));
-        System.out.println("Mã QR: " + qrCode);
-        System.out.println("tạo mã QR thành công!");
-
-        System.out.println("\n3. TEST TẠO DONATION (với số tiền dương):");
-        double validAmount = 500000; // Số dương
-        String validQR = dao.generateQRCode(volunteerId, validAmount);
-        boolean success = dao.createDonation(eventId, volunteerId, validAmount,
-                "QR Code", validQR, note);
-
-        if (success) {
-            System.out.println(" pass: Tạo donation thành công!");
-            System.out.println("   - Event ID: " + eventId);
-            System.out.println("   - Volunteer ID: " + volunteerId);
-            System.out.println("   - Amount: " + validAmount);
-            System.out.println("   - QR Code: " + validQR);
-            System.out.println("   - Status: pending");
-        } else {
-            System.out.println(" fail: Tạo donation thất bại!");
-        }
-
-        dao.close();
-    }
 }

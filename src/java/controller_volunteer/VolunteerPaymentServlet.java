@@ -8,11 +8,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import model.Account;
 import model.Event;
 import service.VolunteerDonationService;
 
 @WebServlet(name = "VolunteerPaymentServlet", urlPatterns = {"/VolunteerPaymentServlet"})
-
 public class VolunteerPaymentServlet extends HttpServlet {
 
     private VolunteerDonationService donationService;
@@ -25,20 +25,27 @@ public class VolunteerPaymentServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-// Lấy eventId từ URL
+        // Lấy eventId từ URL
         String eventIdParam = request.getParameter("eventId");
         if (eventIdParam == null || eventIdParam.isEmpty()) {
-            response.sendRedirect(request.getContextPath() + "/GuessEventServlet");
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
 
         // Lấy volunteerId từ session
         HttpSession session = request.getSession();
-        Integer volunteerId = (Integer) session.getAttribute("volunteerId");
-        String volunteerName = (String) session.getAttribute("volunteerName"); // Tên volunteer
+        Integer volunteerId = (Integer) session.getAttribute("accountId");
+        String volunteerName = (String) session.getAttribute("username");
+
+        // FIX: Ưu tiên lấy từ Account object nếu có
+        Account account = (Account) session.getAttribute("account");
+        if (account != null) {
+            volunteerId = account.getId();
+            volunteerName = account.getUsername();
+        }
 
         if (volunteerId == null) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/VolunteerHomeServlet");
             return;
         }
 
@@ -75,7 +82,6 @@ public class VolunteerPaymentServlet extends HttpServlet {
     }
 
     @Override
-
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -88,7 +94,13 @@ public class VolunteerPaymentServlet extends HttpServlet {
 
         // Lấy volunteerId từ session
         HttpSession session = request.getSession();
-        Integer volunteerId = (Integer) session.getAttribute("volunteerId");
+        Integer volunteerId = (Integer) session.getAttribute("accountId");
+
+        // Ưu tiên lấy từ Account object nếu có
+        Account account = (Account) session.getAttribute("account");
+        if (account != null) {
+            volunteerId = account.getId();
+        }
 
         if (volunteerId == null) {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
@@ -99,9 +111,9 @@ public class VolunteerPaymentServlet extends HttpServlet {
             int eventId = Integer.parseInt(eventIdParam);
             double amount = Double.parseDouble(amountParam);
 
-            // Validate số tiền
-            if (amount <= 0) {
-                session.setAttribute("errorMessage", "Số tiền phải lớn hơn 0!");
+            // FIX: Validate số tiền (< 10000, không phải <=)
+            if (amount < 10000) {
+                session.setAttribute("errorMessage", "Số tiền phải lớn hơn hoặc bằng 10.000 VNĐ!");
                 response.sendRedirect(request.getContextPath() + "/VolunteerPaymentServlet?eventId=" + eventId);
                 return;
             }
@@ -112,7 +124,7 @@ public class VolunteerPaymentServlet extends HttpServlet {
             // Lưu donation vào DB
             boolean success = donationService.createDonation(
                     eventId, volunteerId, amount,
-                    "QR Code", qrCode, note
+                    "QR", qrCode, note
             );
 
             if (success) {
@@ -130,9 +142,15 @@ public class VolunteerPaymentServlet extends HttpServlet {
             e.printStackTrace();
             session.setAttribute("errorMessage", "Có lỗi xảy ra: " + e.getMessage());
             response.sendRedirect(request.getContextPath() + "/GuessEventServlet");
-        } finally {
-            donationService.close();
         }
 
+    }
+
+    @Override
+    public void destroy() {
+        // Đóng service khi servlet bị hủy (shutdown server)
+        if (donationService != null) {
+            donationService.close();
+        }
     }
 }
