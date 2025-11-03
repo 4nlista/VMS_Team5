@@ -83,9 +83,6 @@
                             </div>
                             <c:remove var="errorMessage" scope="session"/>
                         </c:if>
-                        <a href="<%= request.getContextPath() %>/OrganizationListServlet" class="btn btn-primary">
-                            <i class="bi bi-arrow-left me-1"></i> Quay lại danh sách
-                        </a>
                     </div>
                     <!-- Form Cập nhật Sự kiện -->
                     <form action="<%= request.getContextPath() %>/OrganizationDetailEventServlet" method="post">
@@ -189,6 +186,7 @@
 
                                 <!-- Action Buttons -->
                                 <div class="text-end">
+
                                     <a href="<%= request.getContextPath() %>/OrganizationListServlet" 
                                        class="btn btn-secondary me-2">
                                         <i></i>Hủy
@@ -201,6 +199,10 @@
                                         <i></i>Xóa
                                     </button>
                                 </div>
+
+                                <a href="<%= request.getContextPath() %>/OrganizationListServlet" class="btn btn-primary">
+                                    <i class="bi bi-arrow-left me-1"></i> Quay lại danh sách
+                                </a>
                             </div>
                         </div>
                     </form>
@@ -235,7 +237,7 @@
                                                     <fmt:formatNumber value="${donation.amount}" type="number" groupingUsed="true"/> VND
                                                 </td>
                                                 <td>
-                                                    <fmt:formatDate value="${donation.donateDate}" pattern="dd/MM/yyyy HH:mm"/>
+                                                    <fmt:formatDate value="${donation.donateDate}" pattern="dd/MM/yyyy HH:mm:ss"/>
                                                 </td>
                                                 <td>
                                                     <span class="badge bg-info">
