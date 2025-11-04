@@ -1,10 +1,6 @@
-<%-- 
-    Document   : history_attendance_volunteer
-    Created on : Nov 2, 2025, 4:35:34 PM
-    Author     : Admin
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.util.List"%>
+<%@page import="model.AttendanceHistory"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -34,31 +30,48 @@
                                 <th scope="col">Trạng thái</th>
                             </tr>
                         </thead>
+
                         <tbody>
+                            <%
+                                List<AttendanceHistory> attendanceList = (List<AttendanceHistory>) request.getAttribute("attendanceList");
+                                if (attendanceList != null && !attendanceList.isEmpty()) {
+                                    int index = 1;
+                                    for (AttendanceHistory a : attendanceList) {
+                                        String status = a.getStatus();
+                                        String badgeClass = "bg-secondary";
+                                        String statusText = "Không xác định";
+
+                                        if ("present".equalsIgnoreCase(status)) {
+                                            badgeClass = "bg-success";
+                                            statusText = "Đã tham gia";
+                                        } else if ("absent".equalsIgnoreCase(status)) {
+                                            badgeClass = "bg-danger text-white";
+                                            statusText = "Đã vắng";
+                                        } else if ("pending".equalsIgnoreCase(status)) {
+                                            badgeClass = "bg-warning text-white";
+                                            statusText = "Chưa điểm danh";
+                                        }
+                            %>
+
                             <tr>
-                                <td>1</td>
-                                <td>Tên sự kiện 1</td>
-                                <td>OrganizationName1</td>
-                                <td>2025/11/20 13:00</td>
-                                <td>2025/11/21 17:00</td>
-                                <td><span class="badge bg-success">Đã tham gia</span></td>                              
+                                <td><%= index++ %></td>
+                                <td><%= a.getEventTitle() %></td>
+                                <td><%= a.getOrganizationName() %></td>
+                                <td><%= new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm").format(a.getStartDate()) %></td>
+                                <td><%= new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm").format(a.getEndDate()) %></td>
+                                <td><span class="badge <%= badgeClass %>"><%= statusText %></span></td>
                             </tr>
+
+                            <%
+                                    }
+                                } else {
+                            %>
                             <tr>
-                                <td>2</td>
-                                <td>Tên sự kiện 2</td>
-                                <td>OrganizationName2</td>
-                                <td>2025/11/10 12:00</td>
-                                <td>2025/11/21 16:30</td>
-                                <td><span class="badge bg-danger text-white">Đã vắng</span></td>   
+                                <td colspan="6" class="text-center text-muted py-4">
+                                    Không có lịch sử điểm danh nào.
+                                </td>
                             </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>Tên sự kiện 3</td>
-                                <td>OrganizationName3</td>
-                                <td>2025/09/20 11:00</td>
-                                <td>2025/09/25 20:30</td>
-                                <td><span class="badge bg-warning text-white">Chưa điểm danh</span></td>   
-                            </tr>
+                            <% } %>
                         </tbody>
                     </table>
                 </div>

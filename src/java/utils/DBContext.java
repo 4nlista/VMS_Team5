@@ -16,7 +16,7 @@ public class DBContext {
 
 	private static final String URL = "jdbc:sqlserver://localhost:1433;databaseName=Database_Volunteer_System;encrypt=false";
 	private static final String USER = "sa";
-	private static final String PASSWORD = "123";
+	private static final String PASSWORD = "123456";
 
 	static {
 		try {
