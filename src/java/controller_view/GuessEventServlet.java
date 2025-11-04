@@ -57,15 +57,23 @@ public class GuessEventServlet extends HttpServlet {
             for (Event e : events) {
                 boolean hasApplied = volunteerapplyService.hasApplied(volunteerId, e.getId());
                 int rejectedCount = volunteerapplyService.countRejected(e.getId(), volunteerId);
+                boolean isFull = volunteerapplyService.isEventFull(e.getId());  
 
                 e.setHasApplied(hasApplied);
                 e.setRejectedCount(rejectedCount);
+                e.setIsFull(isFull);  // ✅ THÊM
+            }
+        } else {
+            // Nếu chưa login thì vẫn check full
+            for (Event e : events) {
+                boolean isFull = volunteerapplyService.isEventFull(e.getId());
+                e.setIsFull(isFull);
             }
         }
 
         int totalEvents = displayService.getTotalActiveEvents();
         int totalPages = (int) Math.ceil((double) totalEvents / limit);
-        
+
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("events", events);

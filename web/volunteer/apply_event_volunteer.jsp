@@ -109,7 +109,15 @@
                                 </div>
 
                                 <div class="d-flex justify-content-between">
-                                    <button type="submit" class="btn btn-primary">Đăng ký tham gia</button>
+                                    <c:if test="${isFull}">
+                                        <div class="alert alert-warning">
+                                            <i class="icon-info"></i> Sự kiện đã đủ slot. Không thể đăng ký thêm.
+                                        </div>
+                                    </c:if>
+
+                                    <button type="submit" class="btn btn-primary" ${isFull ? 'disabled' : ''}>
+                                        Đăng ký
+                                    </button>
                                     <button type="reset" class="btn btn-outline-secondary">Hủy</button>
                                 </div>
                             </form>

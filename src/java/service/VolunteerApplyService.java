@@ -23,12 +23,29 @@ public class VolunteerApplyService {
         displayEventService = new DisplayEventService();
     }
 
+    // kiêm tra xem đã apply chưa
     public boolean hasApplied(int volunteerId, int eventId) {
         return volunteerApplyDAO.hasApplied(volunteerId, eventId);
     }
-
+    // đếm số lần bị từ chối
     public int countRejected(int eventId, int volunteerId) {
         return volunteerApplyDAO.countRejected(eventId, volunteerId);
+    }
+
+    // đếm số slot đã đc approved
+    public int countApprovedVolunteers(int eventId) {
+        return volunteerApplyDAO.countApprovedVolunteers(eventId);
+    }
+
+    // kiểm tra sự kiện đã full slot chưa
+    public boolean isEventFull(int eventId) {
+        Event event = displayEventService.getEventById(eventId);
+        if (event == null) {
+            return false;
+        }
+
+        int approvedCount = volunteerApplyDAO.countApprovedVolunteers(eventId);
+        return approvedCount >= event.getNeededVolunteers();
     }
 
     public boolean applyToEvent(int volunteerId, int eventId, int hours, String note) {

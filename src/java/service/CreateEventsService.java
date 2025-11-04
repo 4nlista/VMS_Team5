@@ -48,8 +48,7 @@ public class CreateEventsService {
         }
         if (e.getVisibility() == null) {
             e.setVisibility("public");
-        }
-
+        } 
         return createEventsDAO.createEvent(e);
     }
 

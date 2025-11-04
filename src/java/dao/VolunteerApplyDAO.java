@@ -87,6 +87,24 @@ public class VolunteerApplyDAO {
             e.printStackTrace();
         }
     }
+    
+    // Đếm số volunteer đã được duyệt (approved) cho event
+    public int countApprovedVolunteers(int eventId) {
+        String sql = "SELECT COUNT(*) FROM Event_Volunteers WHERE event_id = ? AND status = 'approved'";
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, eventId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 
     // Lấy danh sách các event đã apply của volunteer
     public List<EventVolunteer> getMyApplications(int volunteerId) {

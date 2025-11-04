@@ -60,25 +60,32 @@
                                         <!-- Nút Tham gia sự kiện -->
                                         <p class="mb-0">
                                             <c:choose>
-                                                <%-- Đã đăng ký (pending hoặc approved) --%>
-                                                <c:when test="${e.hasApplied}">
-                                                    <span class="text-success">
-                                                        <i class="icon-check"></i> Đã đăng kí
+                                                <%-- 1. Full slot (ưu tiên cao nhất) --%>
+                                                <c:when test="${e.isFull}">
+                                                    <span class="text-secondary">
+                                                        <i class="icon-users"></i> Đã đủ slot
                                                     </span>
                                                 </c:when>
 
-                                                <%-- Bị từ chối quá 3 lần --%>
+                                                <%-- 2. Đã đăng ký (pending hoặc approved) --%>
+                                                <c:when test="${e.hasApplied}">
+                                                    <span class="text-success">
+                                                        <i class="icon-check"></i> Đã đăng ký
+                                                    </span>
+                                                </c:when>
+
+                                                <%-- 3. Bị từ chối >= 3 lần --%>
                                                 <c:when test="${e.rejectedCount >= 3}">
                                                     <span class="text-danger">
                                                         <i class="icon-ban"></i> Đã bị từ chối ${e.rejectedCount} lần
                                                     </span>
                                                 </c:when>
 
-                                                <%-- Bị từ chối <= 3 lần hoặc chưa đăng ký --%>
+                                                <%-- 4. Bị từ chối < 3 lần hoặc chưa đăng ký --%>
                                                 <c:otherwise>
                                                     <c:if test="${e.rejectedCount > 0}">
                                                         <small class="text-warning d-block">
-                                                            ️ Đơn bị từ chối (${e.rejectedCount}/3)
+                                                            ⚠️ Đơn trước bị từ chối (${e.rejectedCount}/3)
                                                         </small>
                                                     </c:if>
                                                     <a href="${pageContext.request.contextPath}/VolunteerApplyEventServlet?eventId=${e.id}">
