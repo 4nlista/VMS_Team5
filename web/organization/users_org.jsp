@@ -52,6 +52,13 @@
                             </a>
                         </div>
                         <div class="form-group">
+                            <label class="form-label fw-semibold">Tên sự kiện</label>
+                            <div class="d-flex align-items-center gap-2 mt-1">
+                                <input class="form-control w-auto" placeholder="Nhập tên sự kiện..." />
+                                <button class="btn btn-danger">Tìm kiếm</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="form-label fw-semibold">Tên tình nguyện viên</label>
                             <div class="d-flex align-items-center gap-2 mt-1">
                                 <input class="form-control w-auto" placeholder="Nhập tên..." />
@@ -65,17 +72,19 @@
                         <table class="table table-bordered table-hover" style="table-layout: fixed; width: 100%;">
                             <thead class="table-secondary">
                                 <tr>
-                                    <th style="width:4%;">STT</th>
+                                    <th style="width:5%;">STT</th>
+                                    <th style="width:25%;">Sự kiện</th>
                                     <th style="width:20%;">Tên</th>
-                                    <th style="width:15%;">Ngày sinh</th>
+                                    <th style="width:10%;">Ngày sinh</th>
                                     <th style="width:10%;">Giới tính</th>
-                                    <th style="width:25%;">Địa chỉ</th>
-                                    <th style="width:26%;">Thao tác</th>
+                                    <th style="width:10%;">Địa chỉ</th>
+                                    <th style="width:20%;">Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td>1</td>
+                                    <td title="">Trồng cây gây rừng</td>
                                     <td>Nguyễn Văn An</td>
                                     <td>2004/09/20</td>
                                     <td>Nam</td>
@@ -89,6 +98,7 @@
 
                                 <tr>
                                     <td>2</td>
+                                    <td title="">Trồng cây gây rừng</td>
                                     <td>Nguyễn Thị Linh</td>
                                     <td>1994/11/16</td>
                                     <td>Nữ</td>
