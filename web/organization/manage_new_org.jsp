@@ -63,16 +63,18 @@
                             <thead class="table-secondary">
                                 <tr>
                                     <th style="width:5%;">STT</th>
-                                    <th style="width:50%;">Tên bài viết</th>
-                                    <th style="width:15%;">Trạng thái</th>
-                                    <th style="width:30%;">Thao tác</th>
+                                    <th style="width:45%;">Tên bài viết</th>
+                                    <th style="width:20%">Ngày đăng</th>
+                                    <th style="width:10%;">Trạng thái</th>
+                                    <th style="width:20%;">Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <c:forEach var="newItem" items="${news}" varStatus="loop">
                                     <tr>
-                                        <td>${newItem.id}</td>
+                                        <td>${loop.index + 1}</td>
                                         <td class="text-truncate" title="">${newItem.title}</td>
+                                        <td class="text-truncate" title="">${newItem.createdAt}</td>
                                         <td>
                                             <c:choose>
                                                 <c:when test="${newItem.status == 'published'}">
@@ -93,7 +95,18 @@
                                                     Xem
                                                 </button>
                                             </form>
-                                            <a href="#" class="btn btn-danger btn-sm">Xóa</a>
+                                            <form action="edit this" method="get" style="display:inline;">
+                                                <input type="hidden" name="id" value="${newItem.id}">
+                                                <button type="submit" class="btn btn-primary btn-sm me-1" title="Sửa Thông Tin">
+                                                    Sửa
+                                                </button>
+                                            </form>
+                                            <form action="delete this" method="" style="display:inline;">
+                                                <input type="hidden" name="id" value="${newItem.id}">
+                                                <button type="submit" class="btn btn-primary btn-sm me-1" title="Xóa Tin Tức">
+                                                    Xóa
+                                                </button>
+                                            </form>
                                         </td>
                                     </tr>
                                 </c:forEach>
@@ -159,8 +172,6 @@
                 </div>
             </div>
         </div>
-
-
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

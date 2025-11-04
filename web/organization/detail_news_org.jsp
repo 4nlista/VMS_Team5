@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -32,13 +33,25 @@
                                         <label class="form-label fw-semibold">ID Bài viết</label>
                                         <input type="text" class="form-control" name="newsId" value="${news.id}" readonly>
                                     </div>
+                                    
+                                    <!-- Title -->
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">Tiêu đề</label>
+                                        <input type="text" class="form-control" name="title" value="${news.title}" readonly>
+                                    </div>
+                                    
+                                    <!-- Organization id -->
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">ID quản trị viên</label>
+                                        <input type="text" class="form-control" name="orgId" value="${news.organizationId}" readonly>
+                                    </div>
 
                                     <!-- Người đăng -->
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold">Người đăng</label>
                                         <input type="text" class="form-control" name="authorName" value="${news.organizationName}" readonly>
                                     </div>
-
+                                    
                                     <!-- Ngày tạo -->
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold">Ngày tạo</label>
@@ -48,18 +61,21 @@
                                     <!-- Trạng thái -->
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold">Trạng thái</label>
-                                        <select class="form-select" name="status">
-                                            <option value="published" ${news.status == 'published' ? 'selected' : ''}>Hiển thị</option>
-                                            <option value="hidden" ${news.status == 'hidden' ? 'selected' : ''}>Ẩn</option>
-                                        </select>
+                                        <c:choose>
+                                            <c:when test="${news.status == 'published'}">
+                                                <input type="text" class="form-control" value="Hiển Thị" readonly>
+                                            </c:when>
+                                            <c:when test="${news.status == 'hidden'}">
+                                                <input type="text" class="form-control" value="Ẩn" readonly>
+                                            </c:when>
+                                            <c:otherwise>Unknown</c:otherwise>
+                                        </c:choose>
                                     </div>
 
                                     <!-- Nội dung bài viết -->
                                     <div class="col-12">
                                         <label class="form-label fw-semibold">Nội dung</label>
-                                        <textarea class="form-control" name="content" rows="6" readonly>
-                                            ${news.content}
-                                        </textarea>
+                                        <textarea class="form-control" name="content" rows="12" style="resize:none;" readonly>${news.content}</textarea>
                                     </div>
 
                                     <!-- Nút thao tác -->
@@ -70,9 +86,12 @@
                                             </a>
 
                                             <div>
-                                                <button type="submit" class="btn btn-primary me-2">
-                                                    <i class="bi bi-save me-1"></i> Cập nhật
+                                                <form action="edit this" method="get" style="display:inline;">
+                                                <input type="hidden" name="id" value="${newItem.id}">
+                                                <button type="submit" class="btn btn-primary" title="Sửa Thông Tin">
+                                                    <i class="bi bi-pencil me-1"></i> Sửa
                                                 </button>
+                                            </form>
                                                 <a href="OrganizationManageNews" class="btn btn-outline-danger">
                                                     <i class="bi bi-x-circle me-1"></i> Hủy
                                                 </a>

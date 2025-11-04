@@ -70,10 +70,10 @@ public class OrganizationNewsManagementService {
 		if (acc != null) {
 			try {
 				// attempt common methods via reflection to avoid compile dependency
-				java.lang.reflect.Method m;
+				java.lang.reflect.Method method;
 				try {
-					m = acc.getClass().getMethod("getOrganizationId");
-					Object val = m.invoke(acc);
+					method = acc.getClass().getMethod("getOrganizationId");
+					Object val = method.invoke(acc);
 					if (val instanceof Integer) {
 						return (Integer) val;
 					}
@@ -84,8 +84,8 @@ public class OrganizationNewsManagementService {
 				}
 
 				try {
-					m = acc.getClass().getMethod("getOrgId");
-					Object val = m.invoke(acc);
+					method = acc.getClass().getMethod("getOrgId");
+					Object val = method.invoke(acc);
 					if (val instanceof Integer) {
 						return (Integer) val;
 					}
@@ -96,8 +96,8 @@ public class OrganizationNewsManagementService {
 				}
 
 				try {
-					m = acc.getClass().getMethod("getId");
-					Object val = m.invoke(acc);
+					method = acc.getClass().getMethod("getId");
+					Object val = method.invoke(acc);
 					if (val instanceof Integer) {
 						return (Integer) val;
 					}

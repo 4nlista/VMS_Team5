@@ -162,8 +162,8 @@ public class OrganizationNewsManagementDAO {
 					news.setTitle(rs.getString("title"));
 					news.setContent(rs.getString("content"));
 					news.setImages(rs.getString("images"));
-					news.setCreatedAt(rs.getTimestamp("createdAt"));
-					news.setUpdatedAt(rs.getTimestamp("updatedAt"));
+					news.setCreatedAt(rs.getDate("createdAt"));
+					news.setUpdatedAt(rs.getDate("updatedAt"));
 					news.setOrganizationId(rs.getInt("organizationId"));
 					news.setStatus(rs.getString("status"));
 					news.setOrganizationName(rs.getString("organizationName"));
@@ -241,8 +241,8 @@ public class OrganizationNewsManagementDAO {
 						    rs.getString("title"),
 						    rs.getString("content"),
 						    rs.getString("images"),
-						    rs.getDate("createdAt"),
-						    rs.getDate("updatedAt"),
+						    rs.getTimestamp("createdAt"),
+						    rs.getTimestamp("updatedAt"),
 						    rs.getInt("organizationId"),
 						    rs.getString("status"),
 						    rs.getString("organizationName"));
