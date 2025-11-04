@@ -9,7 +9,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import service.NewsManagementService;
+import service.OrganizationNewsManagementService;
 
 /**
  *
@@ -18,7 +18,7 @@ import service.NewsManagementService;
 @WebServlet(name = "OrganizationManageNews", urlPatterns = {"/OrganizationManageNews"})
 public class OrganizationManageNewsServlet extends HttpServlet {
 
-	private final NewsManagementService service = new NewsManagementService();
+	private final OrganizationNewsManagementService service = new OrganizationNewsManagementService();
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)

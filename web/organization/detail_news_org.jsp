@@ -25,32 +25,32 @@
 
                         <div class="card shadow-sm border-0">
                             <div class="card-body p-4">
-                                <form action="<%= request.getContextPath() %>/organization/update_news" method="post" class="row g-3">
+                                <form action="OrganizationNewsEdit" method="post" class="row g-3">
 
                                     <!-- ID bài viết -->
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold">ID Bài viết</label>
-                                        <input type="text" class="form-control" name="newsId" value="1" readonly>
+                                        <input type="text" class="form-control" name="newsId" value="${news.id}" readonly>
                                     </div>
 
                                     <!-- Người đăng -->
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold">Người đăng</label>
-                                        <input type="text" class="form-control" name="authorName" value="OrganizationName" readonly>
+                                        <input type="text" class="form-control" name="authorName" value="${news.organizationName}" readonly>
                                     </div>
 
                                     <!-- Ngày tạo -->
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold">Ngày tạo</label>
-                                        <input type="text" class="form-control" name="createdAt" value="01/11/2025" readonly>
+                                        <input type="text" class="form-control" name="createdAt" value="${news.createdAt}" readonly>
                                     </div>
 
                                     <!-- Trạng thái -->
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold">Trạng thái</label>
                                         <select class="form-select" name="status">
-                                            <option value="published">Hiển thị</option>
-                                            <option value="hidden">Ẩn</option>
+                                            <option value="published" ${news.status == 'published' ? 'selected' : ''}>Hiển thị</option>
+                                            <option value="hidden" ${news.status == 'hidden' ? 'selected' : ''}>Ẩn</option>
                                         </select>
                                     </div>
 
@@ -58,17 +58,14 @@
                                     <div class="col-12">
                                         <label class="form-label fw-semibold">Nội dung</label>
                                         <textarea class="form-control" name="content" rows="6" readonly>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                                        Phasellus euismod, justo nec consectetur malesuada, 
-                                        nisl nisi vehicula metus, ac facilisis mi eros in ligula.
+                                            ${news.content}
                                         </textarea>
                                     </div>
 
                                     <!-- Nút thao tác -->
                                     <div class="col-12 mt-3">
                                         <div class="d-flex justify-content-between align-items-center">
-                                            <a href="<%= request.getContextPath() %>/organization/manage_new_org.jsp" 
-                                               class="btn btn-secondary">
+                                            <a href="OrganizationManageNews" class="btn btn-secondary">
                                                 <i class="bi bi-arrow-left me-1"></i> Quay lại
                                             </a>
 
@@ -76,24 +73,19 @@
                                                 <button type="submit" class="btn btn-primary me-2">
                                                     <i class="bi bi-save me-1"></i> Cập nhật
                                                 </button>
-                                                <a href="<%= request.getContextPath() %>/organization/detail_news_org.jsp" 
-                                                   class="btn btn-outline-danger">
+                                                <a href="OrganizationManageNews" class="btn btn-outline-danger">
                                                     <i class="bi bi-x-circle me-1"></i> Hủy
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
-
                                 </form>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
-
-
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

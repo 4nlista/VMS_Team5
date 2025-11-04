@@ -16,11 +16,11 @@ import java.sql.SQLException;
  *
  * @author Mirinae
  */
-public class NewsManagementDAO {
+public class OrganizationNewsManagementDAO {
 
 	private Connection conn;
 
-	public NewsManagementDAO() {
+	public OrganizationNewsManagementDAO() {
 		try {
 			DBContext db = new DBContext();
 			this.conn = db.getConnection(); // lấy connection từ DBContext
@@ -211,4 +211,47 @@ public class NewsManagementDAO {
 
 		return 0;
 	}
+
+	//Detail
+	public New getNewsDetailById(int id, int organizationId){
+
+    String sql = """
+                    SELECT
+                        n.id,
+                        n.title,
+                        n.content,
+                        n.images,
+                        n.created_at AS createdAt,
+                        n.updated_at AS updatedAt,
+                        n.organization_id AS organizationId,
+                        n.status,
+                        u.full_name AS organizationName
+                    FROM News AS n
+                    JOIN Users AS u
+                        ON n.organization_id = u.id
+                    WHERE n.id = ? AND n.organization_id = ?;
+                 """;
+		try (PreparedStatement ps = conn.prepareStatement(sql)) {
+			ps.setInt(1, id);
+			ps.setInt(2, organizationId);
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					return new New(
+						    rs.getInt("id"),
+						    rs.getString("title"),
+						    rs.getString("content"),
+						    rs.getString("images"),
+						    rs.getDate("createdAt"),
+						    rs.getDate("updatedAt"),
+						    rs.getInt("organizationId"),
+						    rs.getString("status"),
+						    rs.getString("organizationName"));
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }
+

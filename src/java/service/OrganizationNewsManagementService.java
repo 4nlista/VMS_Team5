@@ -3,7 +3,7 @@
  */
 package service;
 
-import dao.NewsManagementDAO;
+import dao.OrganizationNewsManagementDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -15,9 +15,9 @@ import model.New;
  *
  * @author Mirinae
  */
-public class NewsManagementService {
+public class OrganizationNewsManagementService {
 
-	private final NewsManagementDAO newsManDAO = new NewsManagementDAO();
+	private final OrganizationNewsManagementDAO newsManDAO = new OrganizationNewsManagementDAO();
 	private final int pageSize = 7; // configurable if needed
 
 	public List<New> getNewsByPage(int page, int organizationId, String status, String search) throws SQLException {
@@ -65,23 +65,9 @@ public class NewsManagementService {
 		if (session == null) {
 			return null;
 		}
-
-		// 1) check direct attribute
-		Object orgIdAttr = session.getAttribute("organizationId");
-		if (orgIdAttr instanceof Integer) {
-			return (Integer) orgIdAttr;
-		}
-		if (orgIdAttr instanceof String) {
-			try {
-				return Integer.parseInt((String) orgIdAttr);
-			} catch (NumberFormatException ignored) {
-			}
-		}
-
-		// 2) check "account" attribute
+		//  check "account" attribute
 		Object acc = session.getAttribute("account");
 		if (acc != null) {
-			// if you have an Account class with getOrganizationId(), cast and call it:
 			try {
 				// attempt common methods via reflection to avoid compile dependency
 				java.lang.reflect.Method m;
@@ -121,44 +107,24 @@ public class NewsManagementService {
 				} catch (NoSuchMethodException ignored) {
 				}
 			} catch (Exception e) {
-				// reflection failed — ignore and try next option
+				return null;
 			}
 		}
-
-		// 3) check "user" attribute similarly
-		Object user = session.getAttribute("user");
-		if (user != null) {
-			try {
-				java.lang.reflect.Method m;
-				try {
-					m = user.getClass().getMethod("getOrganizationId");
-					Object val = m.invoke(user);
-					if (val instanceof Integer) {
-						return (Integer) val;
-					}
-					if (val instanceof Number) {
-						return ((Number) val).intValue();
-					}
-				} catch (NoSuchMethodException ignored) {
-				}
-
-				try {
-					m = user.getClass().getMethod("getId");
-					Object val = m.invoke(user);
-					if (val instanceof Integer) {
-						return (Integer) val;
-					}
-					if (val instanceof Number) {
-						return ((Number) val).intValue();
-					}
-				} catch (NoSuchMethodException ignored) {
-				}
-			} catch (Exception e) {
-				// ignore and return null
-			}
-		}
-
 		// nothing found
 		return null;
+	}
+
+	// Load the details of news
+	public New loadNewsDetail(HttpServletRequest request) throws Exception {
+		try {
+			int id = Integer.parseInt(request.getParameter("id"));
+			Integer organizationId = getOrganizationIdFromSession(request);
+			if (organizationId == null) {
+				return null;
+			}
+			return newsManDAO.getNewsDetailById(id, organizationId);
+		} catch (Exception e) {
+			return null;
+		}
 	}
 }

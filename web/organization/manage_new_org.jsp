@@ -69,30 +69,34 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            <c:forEach var="newItem" items="${news}" varStatus="loop">
-                                <tr>
-                                    <td>${newItem.id}</td>
-                                    <td class="text-truncate" title="">${newItem.title}</td>
-                                    <td>
-                                <c:choose>
-                                    <c:when test="${newItem.status == 'published'}">
-                                        <span class="badge bg-success">Hiển thị</span>
-                                    </c:when>
-                                    <c:when test="${newItem.status == 'hidden'}">
-                                        <span class="badge bg-warning text-dark">Bị Ẩn</span>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <span class="badge bg-secondary">UNKNOWN</span>
-                                    </c:otherwise>
-                                </c:choose>
-                                </td>
-                                <td>
-                                    <a href="<%= request.getContextPath() %>/organization/detail_news_org.jsp?id=${newItem.id}" 
-                                       class="btn btn-primary btn-sm">Chi tiết</a>
-                                    <a href="#" class="btn btn-danger btn-sm">Xóa</a>
-                                </td>
-                                </tr>
-                            </c:forEach>
+                                <c:forEach var="newItem" items="${news}" varStatus="loop">
+                                    <tr>
+                                        <td>${newItem.id}</td>
+                                        <td class="text-truncate" title="">${newItem.title}</td>
+                                        <td>
+                                            <c:choose>
+                                                <c:when test="${newItem.status == 'published'}">
+                                                    <span class="badge bg-success">Hiển thị</span>
+                                                </c:when>
+                                                <c:when test="${newItem.status == 'hidden'}">
+                                                    <span class="badge bg-warning text-dark">Bị Ẩn</span>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <span class="badge bg-secondary">UNKNOWN</span>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </td>
+                                        <td>
+                                            <form action="OrganizationNewsDetail" method="get" style="display:inline;">
+                                                <input type="hidden" name="id" value="${newItem.id}">
+                                                <button type="submit" class="btn btn-primary btn-sm me-1" title="Xem Thông Tin Chi Tiết">
+                                                    Xem
+                                                </button>
+                                            </form>
+                                            <a href="#" class="btn btn-danger btn-sm">Xóa</a>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
                             </tbody>
                         </table>
                     </div>
