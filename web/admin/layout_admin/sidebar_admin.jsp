@@ -62,17 +62,17 @@
             </a>
         </li>
         <li>
-            <a href="<%= request.getContextPath() %>/admin/feedback_admin.jsp"
-               class="nav-link text-white <%= currentPath.endsWith("/feedback_admin.jsp") ? "active" : "" %>">
+            <a href="<%= request.getContextPath() %>/admin/manage_feedback_admin.jsp"
+               class="nav-link text-white <%= currentPath.endsWith("/manage_feedback_admin.jsp") ? "active" : "" %>">
                 <i class="bi bi-file-earmark-bar-graph me-2"></i>
                 Kiểm duyệt nội dung
             </a>
         </li>
         <li>
-            <a href="<%= request.getContextPath() %>/admin/reports_admin.jsp"
-               class="nav-link text-white <%= currentPath.endsWith("/reports_admin.jsp") ? "active" : "" %>">
+            <a href="<%= request.getContextPath() %>/admin/manage_news_admin.jsp"
+               class="nav-link text-white <%= currentPath.endsWith("/manage_news_admin.jsp") ? "active" : "" %>">
                 <i class="bi bi-bar-chart-line me-2"></i>
-                Báo cáo và thống kê
+                Quản lí tin tức
             </a>
         </li>
         <li>
@@ -83,10 +83,10 @@
             </a>
         </li>
         <li>
-            <a href="<%= request.getContextPath() %>/admin/settings_admin.jsp"
-               class="nav-link text-white <%= currentPath.endsWith("/settings_admin.jsp") ? "active" : "" %>">
+            <a href="<%= request.getContextPath() %>/admin/notifications_admin.jsp"
+               class="nav-link text-white <%= currentPath.endsWith("/notifications_admin.jsp") ? "active" : "" %>">
                 <i class="bi bi-gear me-2"></i>
-                Cài đặt
+                Thông báo
             </a>
         </li>
         <li>
