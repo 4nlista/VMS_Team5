@@ -1,6 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.util.List"%>
-<%@page import="model.AttendanceHistory"%>
+<%@page import="model.Attendance"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -33,10 +33,10 @@
 
                         <tbody>
                             <%
-                                List<AttendanceHistory> attendanceList = (List<AttendanceHistory>) request.getAttribute("attendanceList");
+                                List<Attendance> attendanceList = (List<Attendance>) request.getAttribute("attendanceList");
                                 if (attendanceList != null && !attendanceList.isEmpty()) {
                                     int index = 1;
-                                    for (AttendanceHistory a : attendanceList) {
+                                    for (Attendance a : attendanceList) {
                                         String status = a.getStatus();
                                         String badgeClass = "bg-secondary";
                                         String statusText = "Không xác định";

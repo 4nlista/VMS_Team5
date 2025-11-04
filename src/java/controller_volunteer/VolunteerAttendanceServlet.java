@@ -30,7 +30,7 @@ public class VolunteerAttendanceServlet extends HttpServlet {
 
         request.setAttribute("attendanceList", attendanceList);
 
-        request.getRequestDispatcher("/views/volunteer/history_attendance.jsp")
+        request.getRequestDispatcher("/volunteer/history_attendance_volunteer.jsp")
                 .forward(request, response);
     }
 }

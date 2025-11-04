@@ -28,8 +28,8 @@ public class LoginServlet extends HttpServlet {
         // Hủy session để người dùng không thể back truy cập lại các trang bảo mật
         request.getSession().invalidate();
         // Sau khi hủy session, chuyển hướng người dùng về trang đăng nhập
-        response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
-        //  request.getRequestDispatcher("auth/login.jsp").forward(request, response);
+       // response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
+          request.getRequestDispatcher("auth/login.jsp").forward(request, response);
     }
 
     // POST: xử lý form login

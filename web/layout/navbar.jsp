@@ -122,9 +122,9 @@
                         Lịch sử
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="<%= request.getContextPath() %>/VolunteerAttendanceServlet">Lịch sử giao dịch</a></li>
+                        <li><a class="dropdown-item" href="<%= request.getContextPath() %>">Lịch sử giao dịch</a></li>
                         <li><a class="dropdown-item" href="<%= request.getContextPath() %>/volunteer/history_event_volunteer.jsp">Lịch sử sự kiện</a></li>
-                        <li><a class="dropdown-item" href="<%= request.getContextPath() %>/volunteer/history_attendance_volunteer.jsp">Lịch sử điểm danh</a></li>
+                        <li><a class="dropdown-item" href="<%= request.getContextPath() %>/VolunteerAttendanceServlet">Lịch sử điểm danh</a></li>
                     </ul>
                 </li>
                 <li class="nav-item">

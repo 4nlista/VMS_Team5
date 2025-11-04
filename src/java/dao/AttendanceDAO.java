@@ -12,22 +12,22 @@ public class AttendanceDAO {
         List<Attendance> list = new ArrayList<>();
 
         String sql = """
-                SELECT a.volunteer_id,
-                       acc.fullname AS volunteerName,
-                       a.status,
-                       e.title AS eventTitle,
-                       org.fullname AS organizationName,
-                       e.start_date,
-                       e.end_date
-                FROM Attendance a
-                JOIN Events e ON a.event_id = e.id
-                JOIN Accounts acc ON a.volunteer_id = acc.id
-                JOIN Accounts org ON e.organization_id = org.id
-                WHERE a.volunteer_id = ?
-                ORDER BY e.start_date DESC
-                """;
+            SELECT 
+                a.volunteer_id,
+                v.full_name AS volunteerName,
+                a.status,
+                e.title AS eventTitle,
+                o.full_name AS organizationName,
+                e.start_date,
+                e.end_date
+            FROM Attendance a
+            JOIN Events e ON a.event_id = e.id
+            JOIN Users v ON a.volunteer_id = v.account_id
+            JOIN Users o ON e.organization_id = o.account_id
+            WHERE a.volunteer_id = ?
+            ORDER BY e.start_date DESC
+        """;
 
-        // ✅ tạo connection từ utils.DBContext
         try (Connection connection = DBContext.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
@@ -41,8 +41,8 @@ public class AttendanceDAO {
                         rs.getString("status"),
                         rs.getString("eventTitle"),
                         rs.getString("organizationName"),
-                        rs.getDate("start_date"),
-                        rs.getDate("end_date")
+                        new java.util.Date(rs.getTimestamp("start_date").getTime()),
+                        new java.util.Date(rs.getTimestamp("end_date").getTime())
                 );
                 list.add(att);
             }
