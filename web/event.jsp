@@ -60,14 +60,29 @@
                                         <!-- Nút Tham gia sự kiện -->
                                         <p class="mb-0">
                                             <c:choose>
+                                                <%-- Đã đăng ký (pending hoặc approved) --%>
                                                 <c:when test="${e.hasApplied}">
                                                     <span class="text-success">
-                                                        <i class="icon-check"></i> Đã đăng ký
+                                                        <i class="icon-check"></i> Đã đăng kí
                                                     </span>
                                                 </c:when>
+
+                                                <%-- Bị từ chối quá 3 lần --%>
+                                                <c:when test="${e.rejectedCount >= 3}">
+                                                    <span class="text-danger">
+                                                        <i class="icon-ban"></i> Đã bị từ chối ${e.rejectedCount} lần
+                                                    </span>
+                                                </c:when>
+
+                                                <%-- Bị từ chối <= 3 lần hoặc chưa đăng ký --%>
                                                 <c:otherwise>
+                                                    <c:if test="${e.rejectedCount > 0}">
+                                                        <small class="text-warning d-block">
+                                                            ️ Đơn bị từ chối (${e.rejectedCount}/3)
+                                                        </small>
+                                                    </c:if>
                                                     <a href="${pageContext.request.contextPath}/VolunteerApplyEventServlet?eventId=${e.id}">
-                                                        Tham gia sự kiện <i class="ion-ios-arrow-forward"></i>
+                                                        ${e.rejectedCount > 0 ? 'Đăng ký lại' : 'Tham gia sự kiện'} <i class="ion-ios-arrow-forward"></i>
                                                     </a>
                                                 </c:otherwise>
                                             </c:choose>

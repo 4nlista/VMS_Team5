@@ -31,7 +31,12 @@ public class VolunteerApplyDAO {
 
     // Kiểm tra volunteer đã apply event chưa
     public boolean hasApplied(int volunteerId, int eventId) {
-        String sql = "SELECT COUNT(*) FROM Event_Volunteers WHERE volunteer_id = ? AND event_id = ?";
+        String sql = """
+                     select count(*) from Event_Volunteers
+                     WHERE volunteer_id = ? 
+                     AND event_id = ?
+                     AND status IN ('pending', 'approved')
+                     """;
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, volunteerId);
             ps.setInt(2, eventId);
@@ -43,6 +48,30 @@ public class VolunteerApplyDAO {
             e.printStackTrace();
         }
         return false;
+    }
+
+    // tổng số lần bị từ chối
+    public int countRejected(int eventId, int volunteerId) {
+        String sql = """
+                        select count(*) from Event_Volunteers 
+                        where event_id = ? 
+                        and volunteer_id = ? 
+                        and status = 'rejected'
+                     """;
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, eventId);
+            ps.setInt(2, volunteerId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     // Thêm một bản ghi apply mới

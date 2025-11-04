@@ -34,6 +34,7 @@ public class Event {
 
     private boolean hasApplied;  // Đã đăng ký chưa
     private boolean hasDonated;  // Đã donate chưa
+    private int rejectedCount;  // biến đếm số lần đăng kí
 
     public Event() {
     }
@@ -93,7 +94,7 @@ public class Event {
         this.donateVolunteer = donateVolunteer;
     }
 
-    public Event(int id, String images, String title, String description, Date startDate, Date endDate, String location, int neededVolunteers, String status, String visibility, int organizationId, int categoryId, double totalDonation, String organizationName, String categoryName, int volunteerHour, double donateVolunteer, boolean hasApplied, boolean hasDonated) {
+    public Event(int id, String images, String title, String description, Date startDate, Date endDate, String location, int neededVolunteers, String status, String visibility, int organizationId, int categoryId, double totalDonation, String organizationName, String categoryName, int volunteerHour, double donateVolunteer, boolean hasApplied, boolean hasDonated, int rejectedCount) {
         this.id = id;
         this.images = images;
         this.title = title;
@@ -113,7 +114,10 @@ public class Event {
         this.donateVolunteer = donateVolunteer;
         this.hasApplied = hasApplied;
         this.hasDonated = hasDonated;
+        this.rejectedCount = rejectedCount;
     }
+
+    
     
     
 
@@ -268,6 +272,15 @@ public class Event {
     public void setHasDonated(boolean hasDonated) {
         this.hasDonated = hasDonated;
     }
+
+    public int getRejectedCount() {
+        return rejectedCount;
+    }
+
+    public void setRejectedCount(int rejectedCount) {
+        this.rejectedCount = rejectedCount;
+    }
+    
     
 
 }

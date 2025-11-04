@@ -12,15 +12,18 @@ import java.util.List;
 import model.Account;
 import model.Event;
 import service.DisplayEventService;
+import service.VolunteerApplyService;
 
 @WebServlet(name = "GuessEventServlet", urlPatterns = {"/GuessEventServlet"})
 public class GuessEventServlet extends HttpServlet {
 
     private DisplayEventService displayService;
+    private VolunteerApplyService volunteerapplyService;
 
     @Override
     public void init() {
         displayService = new DisplayEventService();
+        volunteerapplyService = new VolunteerApplyService();
     }
 
     @Override
@@ -50,9 +53,19 @@ public class GuessEventServlet extends HttpServlet {
             }
         }
         List<Event> events = displayService.getActiveEventsPagedWithStatus(offset, limit, volunteerId);
+        if (volunteerId != null) {
+            for (Event e : events) {
+                boolean hasApplied = volunteerapplyService.hasApplied(volunteerId, e.getId());
+                int rejectedCount = volunteerapplyService.countRejected(e.getId(), volunteerId);
+
+                e.setHasApplied(hasApplied);
+                e.setRejectedCount(rejectedCount);
+            }
+        }
 
         int totalEvents = displayService.getTotalActiveEvents();
         int totalPages = (int) Math.ceil((double) totalEvents / limit);
+        
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("events", events);

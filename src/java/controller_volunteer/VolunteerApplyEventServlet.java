@@ -70,6 +70,9 @@ public class VolunteerApplyEventServlet extends HttpServlet {
             return;
         }
 
+        boolean isRegistered = volunteerApplyService.hasApplied(volunteerId, eventId);
+        int rejectedCount = volunteerApplyService.countRejected(eventId, volunteerId);
+
         // Lấy danh sách các sự kiện mà volunteer đã apply
         List<EventVolunteer> myApplications = volunteerApplyService.getMyApplications(volunteerId);
 
@@ -81,6 +84,8 @@ public class VolunteerApplyEventServlet extends HttpServlet {
         session.removeAttribute("message");
         session.removeAttribute("messageType");
 
+        request.setAttribute("isRegistered", isRegistered);
+        request.setAttribute("rejectedCount", rejectedCount);
         request.setAttribute("message", message);
         request.setAttribute("messageType", messageType);
         request.setAttribute("event", event);
@@ -139,6 +144,13 @@ public class VolunteerApplyEventServlet extends HttpServlet {
         }
 
         try {
+            int rejectedCount = volunteerApplyService.countRejected(eventId, acc.getId());
+            if (rejectedCount >= 3) {
+                session.setAttribute("message", "Bạn đã bị từ chối 3 lần. Không thể đăng ký lại!");
+                session.setAttribute("messageType", "error");
+                response.sendRedirect(request.getContextPath() + "/VolunteerApplyEventServlet?eventId=" + eventId);
+                return;
+            }
             boolean success = volunteerApplyService.applyToEvent(acc.getId(), eventId, hours, note);
 
             if (success) {
