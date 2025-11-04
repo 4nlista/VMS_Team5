@@ -37,12 +37,7 @@ public class OrganizationCreateEventServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // ✅ THÊM LOG KIỂM TRA
         HttpSession session = request.getSession(false);
-        System.out.println("========== doGet() được gọi ==========");
-        System.out.println("Session ID: " + (session != null ? session.getId() : "NULL"));
-        System.out.println("uploadedFileName trong session: " + (session != null ? session.getAttribute("uploadedFileName") : "NULL"));
-        System.out.println("======================================");
 
         if (session == null || session.getAttribute("account") == null) {
             response.sendRedirect(request.getContextPath() + "/LoginServlet");

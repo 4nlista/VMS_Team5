@@ -38,7 +38,6 @@ public class CreateEventsDAO {
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            // ✅ ĐÚNG THỨ TỰ THEO CÂU SQL
             ps.setString(1, e.getTitle());                    // title
             ps.setString(2, e.getDescription());              // description
             ps.setString(3, e.getImages());                   // images

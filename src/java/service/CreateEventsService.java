@@ -31,6 +31,7 @@ public class CreateEventsService {
         if (e.getStartDate() == null || e.getEndDate() == null) {
             return false;
         }
+        // ngày bắt đầu sau ngày kết thúc
         if (e.getStartDate().after(e.getEndDate())) {
             return false;
         }
