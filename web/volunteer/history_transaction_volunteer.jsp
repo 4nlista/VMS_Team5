@@ -1,10 +1,5 @@
-<%-- 
-    Document   : history_transaction_volunteer
-    Created on : Sep 29, 2025, 8:33:31 PM
-    Author     : Admin
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -15,6 +10,7 @@
     <body>
         <!-- Navbar -->
         <jsp:include page="/layout/navbar.jsp" />
+
         <div class="page-content container-fluid mt-5 pt-5 pb-5" style="max-width: 1400px;">
             <h1 class="mb-4 text-center">Lịch sử thanh toán</h1>
 
@@ -35,36 +31,41 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>QR-20250901-V5-500K</td>
-                                    <td>World Wide Donation</td>
-                                    <td>500,000</td>
-                                    <td>Momo</td>
-                                    <td>2025-09-20 10:30</td>
-                                    <td>Ủng hộ người nghèo, nội dung rất dài sẽ xuống dòng mà không kéo cột khác</td>
-                                    <td><span class="badge bg-success">Thành công</span></td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>QR987654</td>
-                                    <td>Clean the Beach</td>
-                                    <td>200,000</td>
-                                    <td>Ngân hàng</td>
-                                    <td>2025-09-18 14:10</td>
-                                    <td>Ủng hộ người đói khổ</td>
-                                    <td><span class="badge bg-warning text-dark">Đang xử lý</span></td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>QR555888</td>
-                                    <td>Charity Run</td>
-                                    <td>300,000</td>
-                                    <td>QR Pay</td>
-                                    <td>2025-09-10 09:00</td>
-                                    <td>Quyên góp từ thiện</td>
-                                    <td><span class="badge bg-danger">Bị từ chối</span></td>
-                                </tr>
+
+                                <c:if test="${empty allDonations}">
+                                    <tr>
+                                        <td colspan="8" class="text-center">Chưa có giao dịch nào.</td>
+                                    </tr>
+                                </c:if>
+
+                                <c:forEach var="d" items="${allDonations}" varStatus="status">
+                                    <tr>
+                                        <td>${status.index + 1}</td>
+                                        <td>${d.qrCode != null ? d.qrCode : "-"}</td>
+                                        <td>${d.eventTitle != null ? d.eventTitle : "-"}</td>
+                                        <td>${d.amount}</td>
+                                        <td>${d.paymentMethod != null ? d.paymentMethod : "-"}</td>
+                                        <td>${d.donateDate != null ? d.donateDate : "-"}</td>
+                                        <td>${d.note != null ? d.note : ""}</td>
+                                        <td>
+                                            <c:choose>
+                                                <c:when test="${d.status == 'success'}">
+                                                    <span class="badge bg-success">Thành công</span>
+                                                </c:when>
+                                                <c:when test="${d.status == 'pending'}">
+                                                    <span class="badge bg-warning text-dark">Đang xử lý</span>
+                                                </c:when>
+                                                <c:when test="${d.status == 'rejected'}">
+                                                    <span class="badge bg-danger">Bị từ chối</span>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <span class="badge bg-secondary">${d.status}</span>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+
                             </tbody>
                         </table>
                     </div>
