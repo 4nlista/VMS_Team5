@@ -76,9 +76,9 @@
                                         <th style="width:4%;">STT</th>
                                         <th style="width:25%;">Tên sự kiện</th>
                                         <th style="width:16%;">Tình nguyện viên</th>
-                                        <th style="width:25%;">Bình luận</th>
+                                        <th style="width:26%;">Bình luận</th>
                                         <th style="width:5%;">Điểm</th>
-                                        <th style="width:10%;">Trạng thái</th>
+                                        <th style="width:9%;">Trạng thái</th>
                                         <th style="width:15%;">Thao tác</th>
                                     </tr>
                                 </thead>
@@ -103,7 +103,7 @@
                                 <!-- Hàng 2: Đang Ẩn -->
                                 <tr>
                                     <td>2</td>
-                                    <td>Hỗ trợ người nghèo</td>
+                                    <td>Dọn rác bãi biển</td>
                                     <td>Nguyễn Bảo An</td>
                                     <td>Sự kiện rất tệ, tôi không muốn thấy nó</td>
                                     <td>1</td>

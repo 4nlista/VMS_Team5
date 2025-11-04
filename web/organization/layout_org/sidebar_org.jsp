@@ -49,7 +49,8 @@
                 <a href="<%= request.getContextPath() %>/organization/manage_feedback_org.jsp"
                    class="nav-link text-white <%= currentPath.endsWith("/manage_feedback_org.jsp") ? "active" : "" %>">
                     <i class="bi bi-pencil me-2"></i>
-                    Quản lí đánh giá
+                    Tạm thời mày đừng click vào đây.
+                    Coi như không có nút này
                 </a>
             </li>
             <li>

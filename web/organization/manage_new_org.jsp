@@ -19,7 +19,7 @@
             <jsp:include page="layout_org/sidebar_org.jsp" />
 
             <div class="main-content p-4 flex-grow-1">
-                <div class="container" style="max-width: 1000px;">
+                <div class="container" style="max-width: 1200px;">
                     <h3 class="fw-bold mb-4 text-center">Danh sách bài viết</h3>
 
                     <!-- Bộ lọc + nút tạo mới -->
@@ -61,18 +61,20 @@
                             <thead class="table-secondary">
                                 <tr>
                                     <th style="width:5%;">STT</th>
-                                    <th style="width:50%;">Tên bài viết</th>
+                                    <th style="width:40%;">Tên bài viết</th>
+                                    <th style="width:20%;">Ngày đăng</th>
                                     <th style="width:15%;">Trạng thái</th>
-                                    <th style="width:30%;">Thao tác</th>
+                                    <th style="width:20%;">Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody>
                             <c:forEach var="e" items="${eventsOrg}" varStatus="loop">
                                 <tr>
                                     <td>1</td>
-                                    <td class="text-truncate" title="">Trồng cây gây rừng</td>
+                                    <td title="">Trồng cây gây rừng</td>
+                                    <td>2025/11/18</td>
                                     <td>
-                                <c:choose>
+                                    <c:choose>
                                     <c:when test="${e.status == 'published'}">
                                         <span class="badge bg-success">Hiển thị</span>
                                     </c:when>
@@ -82,8 +84,8 @@
                                     <c:otherwise>
                                         <span class="badge bg-secondary">${e.status}</span>
                                     </c:otherwise>
-                                </c:choose>
-                                </td>
+                                    </c:choose>
+                                    </td>
                                 <td>
                                     <a href="<%= request.getContextPath() %>/organization/detail_news_org.jsp?id=${e.id}" 
                                        class="btn btn-primary btn-sm">Chi tiết</a>
@@ -94,6 +96,7 @@
                                 <tr>
                                     <td>2</td>
                                     <td class="text-truncate" title="">Chiến dịch bảo vệ rừng</td>
+                                    <td>2025/08/18</td>
                                     <td>
                                 <c:choose>
     <!--                                    <c:when test="${e.status == 'published'}">

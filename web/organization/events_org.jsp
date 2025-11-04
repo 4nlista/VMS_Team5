@@ -77,12 +77,12 @@
                         <table class="table table-bordered table-hover" style="table-layout: fixed; width: 100%;">
                             <thead class="table-secondary">
                                 <tr>
-                                    <th style="width:4%;">STT</th>
+                                    <th style="width:5%;">STT</th>
                                     <th style="width:30%;">Tên sự kiện</th>
                                     <th style="width:15%;">Loại sự kiện</th>
-                                    <th style="width:15%;">Chế độ</th>
-                                    <th style="width:16%;">Trạng thái</th>
-                                    <th style="width:20%;">Thao tác</th>
+                                    <th style="width:10%;">Chế độ</th>
+                                    <th style="width:15%;">Trạng thái</th>
+                                    <th style="width:30%;">Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -126,6 +126,8 @@
                                         <td>
                                             <a href="<%= request.getContextPath() %>/OrganizationDetailEventServlet?eventId=${e.id}" 
                                                class="btn btn-primary btn-sm">Xem chi tiết</a>
+                                               <a href="<%= request.getContextPath() %>/organization/manage_feedback_org.jsp" 
+                                               class="btn btn-info btn-sm">Bình luận</a>
                                             <a href="OrganizationApplyServlet?id=${e.id}" 
                                                class="btn btn-secondary btn-sm">Xử lý đơn</a>
                                             <a href="organization/delete_event?id=${e.id}" 
