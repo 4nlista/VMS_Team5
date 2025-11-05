@@ -32,8 +32,8 @@
                 </a>
             </li>
             <li>
-                <a href="<%= request.getContextPath() %>/organization/users_org.jsp"
-                   class="nav-link text-white <%= currentPath.endsWith("/users_org.jsp") ? "active" : "" %>">
+                <a href="<%= request.getContextPath() %>/OrganizationVolunteersServlet"
+                   class="nav-link text-white <%= currentPath.endsWith("/volunteers_org.jsp") || currentPath.endsWith("/OrganizationVolunteersServlet") || currentPath.endsWith("/volunteer_profile_org.jsp") ? "active" : "" %>">
                     <i class="bi bi-person-lines-fill me-2"></i>
                     Quản lí người dùng
                 </a>
