@@ -97,7 +97,9 @@
                                                     <c:otherwise><span class="badge bg-danger">Không hợp lệ</span></c:otherwise>
                                                 </c:choose>
                                             </td>
-                                            <td></td>
+                                            <td>
+                                                <a href="<%= request.getContextPath() %>/organization/send_report_org?feedbackId=${f.id}" class="btn btn-sm btn-warning text-white">Báo cáo</a>
+                                            </td>
                                         </tr>
                                     </c:forEach>
                                     <c:if test="${empty feedbacks}">
@@ -120,6 +122,11 @@
                             <li class="page-item"><a class="page-link" href="#">Sau</a></li>
                         </ul>
                     </div>
+                    <c:if test="${param.reported == '1'}">
+                        <div class="alert alert-success mt-3" role="alert">
+                            Gửi báo cáo thành công. Trạng thái đã được ghi nhận là pending.
+                        </div>
+                    </c:if>
                 </div>
             </div>
         </div>
