@@ -55,7 +55,7 @@
                                     <i class="bi bi-search"></i> Lọc và tìm kiếm
                                 </button>
                                 <a href="OrganizationVolunteersServlet" class="btn btn-secondary" style="min-width:110px;">
-                                    <i class="bi bi-arrow-counterclockwise"></i> Reset
+                                    <i class="bi bi-arrow-counterclockwise"></i> Làm mới
                                 </a>
                             </div>
                         </div>

@@ -24,48 +24,49 @@
                     <h3 class="fw-bold mb-4">Danh sách đánh giá</h3>
 
                     <!-- Bộ lọc + nút tạo mới -->
-                    <form method="get" action="OrganizationListServlet" class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
-                        <!-- Nhóm dropdown + nút lọc/reset -->
-                        <div class="d-flex gap-2 align-items-center flex-wrap">
+                    <form method="get" action="<%= request.getContextPath() %>/OrganizationManageFeedbackServlet" class="d-flex align-items-end mb-3 flex-wrap gap-3">
+                        <div class="d-flex align-items-end flex-wrap gap-3">
                             <!-- Loại sự kiện -->
                             <div class="form-group d-flex flex-column">
                                 <label class="form-label fw-semibold">Điểm đánh giá:</label>
-                                <select name="rating" class="form-select form-select-sm" style="width: 160px;">
-                                    <option value="">Tất cả</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
+                                <select name="rating" class="form-select" style="width: 160px;">
+                                    <option value="" ${empty rating ? 'selected' : ''}>Tất cả</option>
+                                    <option value="1" ${rating == '1' ? 'selected' : ''}>1</option>
+                                    <option value="2" ${rating == '2' ? 'selected' : ''}>2</option>
+                                    <option value="3" ${rating == '3' ? 'selected' : ''}>3</option>
+                                    <option value="4" ${rating == '4' ? 'selected' : ''}>4</option>
+                                    <option value="5" ${rating == '5' ? 'selected' : ''}>5</option>
                                 </select>
                             </div>
 
                             <!-- Trạng thái -->
                             <div class="form-group d-flex flex-column">
                                 <label class="form-label fw-semibold">Trạng thái:</label>
-                                <select name="status" class="form-select form-select-sm" style="width: 160px;">
-                                    <option value="" <c:if test="${param.status == null || param.status == ''}">selected</c:if>>Tất cả</option>
-                                        <option value="valid">Hợp lệ</option>
-                                        <option value="invalid">Không hợp lệ</option>
-                                    </select>
-                                </div>
-                                <!-- Nút Lọc -->
-                                <button type="submit" class="btn btn-primary btn-sm" style="min-width:110px; align-self:end;">
-                                    <i class="bi bi-search"></i> Lọc
-                                </button>
+                                <select name="status" class="form-select" style="width: 160px;">
+                                    <option value="" ${empty status ? 'selected' : ''}>Tất cả</option>
+                                    <option value="valid" ${status == 'valid' ? 'selected' : ''}>Hợp lệ</option>
+                                    <option value="invalid" ${status == 'invalid' ? 'selected' : ''}>Không hợp lệ</option>
+                                </select>
+                            </div>
 
-                                <!-- Nút Reset -->
-                                <a href="#" class="btn btn-secondary btn-sm" style="min-width:110px; align-self:end;">
-                                    <i class="bi bi-arrow-counterclockwise"></i> Reset
+                            <!-- Tên sự kiện -->
+                            <div class="form-group">
+                                <label class="form-label fw-semibold">Tên sự kiện</label>
+                                <div class="d-flex align-items-center gap-2 mt-1">
+                                    <input class="form-control" style="min-width:320px" name="q" value="${q}" placeholder="Nhập tên sự kiện..." />
+                                </div>
+                            </div>
+
+                            <!-- Buttons placed right after search fields -->
+                            <div class="d-flex align-items-end gap-2">
+                                <button type="submit" class="btn btn-primary" style="min-width:140px;">
+                                    <i class="bi bi-search"></i> Lọc và tìm kiếm
+                                </button>
+                                <a href="<%= request.getContextPath() %>/OrganizationManageFeedbackServlet" class="btn btn-secondary" style="min-width:110px;">
+                                    <i class="bi bi-arrow-counterclockwise"></i> Làm mới
                                 </a>
                             </div>
-                            <div class="form-group">
-                                <label class="form-label fw-semibold">Tên sự kiện:</label>
-                                <div class="d-flex align-items-center gap-2 mt-1">
-                                    <input class="form-control w-auto" placeholder="Nhập tên sự kiện" />
-                                    <button class="btn btn-danger">Tìm kiếm</button>
-                                </div>
-                            </div>
+                        </div>
                         </form>
 
                         <!-- Bảng dữ liệu -->
@@ -83,40 +84,28 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <!-- Hàng 1: Đang Hiện -->
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Dọn rác bãi biển</td>
-                                        <td>Cao Văn Huy</td>
-                                        <td>Sự kiện diễn ra rất hay và ý nghĩa</td>
-                                        <td>4</td>
-                                        <td><span class="badge bg-success">Hiện</span></td>
-                                        <td>
-                                            <select class="form-select form-select-sm w-auto d-inline">
-                                                <option selected>Hiện</option>
-                                                <option>Ẩn</option>
-                                            </select>
-                                            <a href="<%= request.getContextPath() %>/organization/send_report_org.jsp" class="btn btn-sm btn-secondary">Báo cáo</a>
-                                    </td>
-                                </tr>
-
-                                <!-- Hàng 2: Đang Ẩn -->
-                                <tr>
-                                    <td>2</td>
-                                    <td>Dọn rác bãi biển</td>
-                                    <td>Nguyễn Bảo An</td>
-                                    <td>Sự kiện rất tệ, tôi không muốn thấy nó</td>
-                                    <td>1</td>
-                                    <td><span class="badge bg-danger">Ẩn</span></td>
-                                    <td>
-                                        <select class="form-select form-select-sm w-auto d-inline">
-                                            <option>Hiện</option>
-                                            <option selected>Ẩn</option>
-                                        </select>
-                                        <a href="<%= request.getContextPath() %>/organization/send_report_org.jsp" class="btn btn-sm btn-secondary">Báo cáo</a>
-                                    </td>
-                                </tr>
-                            </tbody>
+                                    <c:forEach var="f" items="${feedbacks}" varStatus="loop">
+                                        <tr>
+                                            <td>${loop.index + 1}</td>
+                                            <td>${f.eventTitle}</td>
+                                            <td>${f.volunteerName}</td>
+                                            <td style="word-wrap: break-word; white-space: normal;">${f.comment}</td>
+                                            <td>${f.rating}</td>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${f.status == 'valid' || f.status == 'Valid'}"><span class="badge bg-success">Hợp lệ</span></c:when>
+                                                    <c:otherwise><span class="badge bg-danger">Không hợp lệ</span></c:otherwise>
+                                                </c:choose>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    </c:forEach>
+                                    <c:if test="${empty feedbacks}">
+                                        <tr>
+                                            <td colspan="7" class="text-center">Không có đánh giá phù hợp</td>
+                                        </tr>
+                                    </c:if>
+                                </tbody>
                         </table>
                     </div>
 
@@ -124,7 +113,7 @@
 
                     <!-- Phân trang -->
                     <div class="d-flex justify-content-between align-items-center mt-3">
-                        <span>Hiển thị 1 - 3 đánh giá</span>
+                        <span>Hiển thị ${empty feedbacks ? 0 : feedbacks.size()} đánh giá</span>
                         <ul class="pagination pagination-sm mb-0">
                             <li class="page-item disabled"><a class="page-link" href="#">Trước</a></li>
                             <li class="page-item active"><a class="page-link" href="#">1</a></li>
