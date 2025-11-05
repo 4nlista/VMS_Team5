@@ -127,4 +127,61 @@ public class OrganizationNewsManagementService {
 			return null;
 		}
 	}
+
+	//Update news
+	public boolean updateNews(HttpServletRequest request, String imageFileName) throws SQLException {
+		Integer organizationId = getOrganizationIdFromSession(request);
+		if (organizationId == null) {
+			return false;
+		}
+
+		int id = Integer.parseInt(request.getParameter("id"));
+		String title = request.getParameter("title");
+		String content = request.getParameter("content");
+		String status = request.getParameter("status");
+
+		if (title == null || title.trim().isEmpty()) {
+			return false;
+		}
+		if (content == null || content.trim().isEmpty()) {
+			return false;
+		}
+		if (status == null || status.trim().isEmpty()) {
+			return false;
+		}
+
+		return newsManDAO.updateNews(id, organizationId, title.trim(), content.trim(),
+			    imageFileName, status.trim());
+	}
+
+	// Create news
+	public int createNewsWithImage(HttpServletRequest request, String imageFileName) throws SQLException {
+		Integer organizationId = getOrganizationIdFromSession(request);
+		if (organizationId == null) {
+			return -1;
+		}
+
+		String title = request.getParameter("title");
+		String content = request.getParameter("content");
+		String status = request.getParameter("status");
+
+		if (title == null || content == null || status == null) {
+			return -1;
+		}
+
+		return newsManDAO.insertNews(
+			    organizationId,
+			    title.trim(),
+			    content.trim(),
+			    imageFileName,
+			    status.trim()
+		);
+	}
+
+	// Delete
+	public boolean deleteNews(HttpServletRequest request) throws Exception {
+		int id = Integer.parseInt(request.getParameter("id"));
+		newsManDAO.deleteNews(id);
+		return true;
+	}
 }

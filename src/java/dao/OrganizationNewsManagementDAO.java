@@ -11,6 +11,7 @@ import java.util.List;
 import utils.DBContext;
 import model.New;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  *
@@ -32,21 +33,21 @@ public class OrganizationNewsManagementDAO {
 	public List<New> getAllNews() {
 		List<New> list = new ArrayList<>();
 		String sql = """
-                        SELECT 
-                            n.id,
-                            n.title,
-                            n.content,
-                            n.images,
-                            n.created_at,
-                            n.updated_at,
-                            n.organization_id,
-                            n.status,
-                            u.full_name AS organization_name
-                        FROM News AS n
-                        JOIN Users AS u 
-                            ON n.organization_id = u.id
-                        ORDER BY n.created_at DESC;
-                     """;
+        SELECT 
+            n.id,
+            n.title,
+            n.content,
+            n.images,
+            n.created_at AS createdAt,
+            n.updated_at AS updatedAt,
+            n.organization_id AS organizationId,
+            n.status,
+            u.full_name AS organizationName
+        FROM News AS n
+        JOIN Users AS u 
+            ON n.organization_id = u.id
+        ORDER BY n.created_at DESC
+    """;
 		try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
 			while (rs.next()) {
@@ -55,8 +56,8 @@ public class OrganizationNewsManagementDAO {
 					    rs.getString("title"),
 					    rs.getString("content"),
 					    rs.getString("images"),
-					    rs.getDate("createdAt"),
-					    rs.getDate("updatedAt"),
+					    rs.getTimestamp("createdAt"),
+					    rs.getTimestamp("updatedAt"),
 					    rs.getInt("organizationId"),
 					    rs.getString("status"),
 					    rs.getString("organizationName")
@@ -213,9 +214,9 @@ public class OrganizationNewsManagementDAO {
 	}
 
 	//Detail
-	public New getNewsDetailById(int id, int organizationId){
+	public New getNewsDetailById(int id, int organizationId) {
 
-    String sql = """
+		String sql = """
                     SELECT
                         n.id,
                         n.title,
@@ -253,5 +254,83 @@ public class OrganizationNewsManagementDAO {
 		}
 		return null;
 	}
-}
 
+	//Update
+	public boolean updateNews(int id, int organizationId, String title, String content,String images, String status) {
+		String sql = """
+        UPDATE News
+        SET title = ?, content = ?, images = ?, status = ?, updated_at = GETDATE()
+        WHERE id = ? AND organization_id = ?
+				""";
+
+		try (PreparedStatement ps = conn.prepareStatement(sql)) {
+			ps.setString(1, title);
+			ps.setString(2, content);
+			ps.setString(3,images);
+			ps.setString(4, status);
+			ps.setInt(5, id);
+			ps.setInt(6, organizationId);
+
+			return ps.executeUpdate() > 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	// Create
+	public int insertNews(int organizationId, String title, String content, String imageFileName, String status) {
+		String sql = """
+        INSERT INTO News (title, content, images, created_at, updated_at, organization_id, status)
+        VALUES (?, ?, ?, GETDATE(), GETDATE(), ?, ?)
+    """;
+
+		try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+			ps.setString(1, title);
+			ps.setString(2, content);
+			ps.setString(3, imageFileName);
+			ps.setInt(4, organizationId);
+			ps.setString(5, status);
+
+			int affected = ps.executeUpdate();
+			if (affected == 0) {
+				return -1;
+			}
+
+			try (ResultSet rs = ps.getGeneratedKeys()) {
+				if (rs.next()) {
+					return rs.getInt(1);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+
+	public boolean updateNewsWithImage(int id, int organizationId, String title, String content, String status, String imageFileName) {
+		String sql = """
+        UPDATE News
+        SET title = ?, content = ?, status = ?, images = ?, updated_at = GETDATE()
+        WHERE id = ? AND organization_id = ?
+    """;
+
+		try (PreparedStatement ps = conn.prepareStatement(sql)) {
+			ps.setString(1, title);
+			ps.setString(2, content);
+			ps.setString(3, status);
+			ps.setString(4, imageFileName);
+			ps.setInt(5, id);
+			ps.setInt(6, organizationId);
+			return ps.executeUpdate() > 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	//Delete 
+	public void deleteNews(int id){
+		
+	}
+}
