@@ -256,7 +256,7 @@ public class OrganizationNewsManagementDAO {
 	}
 
 	//Update
-	public boolean updateNews(int id, int organizationId, String title, String content,String images, String status) {
+	public boolean updateNews(int id, int organizationId, String title, String content, String images, String status) {
 		String sql = """
         UPDATE News
         SET title = ?, content = ?, images = ?, status = ?, updated_at = GETDATE()
@@ -266,7 +266,7 @@ public class OrganizationNewsManagementDAO {
 		try (PreparedStatement ps = conn.prepareStatement(sql)) {
 			ps.setString(1, title);
 			ps.setString(2, content);
-			ps.setString(3,images);
+			ps.setString(3, images);
 			ps.setString(4, status);
 			ps.setInt(5, id);
 			ps.setInt(6, organizationId);
@@ -328,9 +328,17 @@ public class OrganizationNewsManagementDAO {
 			return false;
 		}
 	}
-	
+
 	//Delete 
-	public void deleteNews(int id){
-		
+	public boolean deleteNewsByIdAndOrgId(int id, int organizationId) {
+		String sql = "DELETE FROM News WHERE id = ? AND organization_id = ?";
+		try (PreparedStatement ps = conn.prepareStatement(sql)) {
+			ps.setInt(1, id);
+			ps.setInt(2, organizationId);
+			return ps.executeUpdate() > 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 }

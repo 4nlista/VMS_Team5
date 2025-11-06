@@ -180,8 +180,51 @@ public class OrganizationNewsManagementService {
 
 	// Delete
 	public boolean deleteNews(HttpServletRequest request) throws Exception {
-		int id = Integer.parseInt(request.getParameter("id"));
-		newsManDAO.deleteNews(id);
+		String idParam = request.getParameter("id");
+		if (idParam == null) {
+			return false;
+		}
+
+		int id;
+		try {
+			id = Integer.parseInt(idParam);
+		} catch (NumberFormatException ex) {
+			return false;
+		}
+
+		Integer organizationId = getOrganizationIdFromSession(request);
+		if (organizationId == null) {
+			// no org in session -> unauthorized
+			return false;
+		}
+
+		// ensure the news exists and belongs to this organization
+		New existing = newsManDAO.getNewsDetailById(id, organizationId);
+		if (existing == null) {
+			// not found or not owned by this org
+			return false;
+		}
+
+		// attempt DB delete
+		boolean deleted = newsManDAO.deleteNewsByIdAndOrgId(id, organizationId);
+		if (!deleted) {
+			return false;
+		}
+
+		// best-effort: try to delete image file from server if present
+		try {
+			String imageFile = existing.getImages(); // or getImages() / getImagesFileName() depending on your model
+			if (imageFile != null && !imageFile.trim().isEmpty()) {
+				String uploadsDir = request.getServletContext().getRealPath("/uploads/news");
+				java.io.File file = new java.io.File(uploadsDir, imageFile);
+				if (file.exists()) {
+					file.delete(); // ignore result; it's just cleanup
+				}
+			}
+		} catch (Exception e) {
+			// don't fail the delete because of file-system issues; log and continue
+			e.printStackTrace();
+		}
 		return true;
 	}
 }

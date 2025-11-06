@@ -25,19 +25,14 @@
                             <div class="card-body p-4">
                                 <form action="${pageContext.request.contextPath}/OrganizationNewsCreate"
                                       method="post" enctype="multipart/form-data" class="row g-3">
-                                    <input type="hidden" name="organizationId" value="${sessionScope.orgId}">
+                                    <input type="hidden" name="organizationId" value="${orgId}">
                                     <!-- Tiêu đề bài viết -->
                                     <div class="col-12">
                                         <label class="form-label fw-semibold">Tiêu đề</label>
                                         <input type="text" class="form-control" name="title" placeholder="Nhập tiêu đề bài viết" required>
                                     </div>
-                                    <!-- Tên người tạo -->
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-semibold">Tên người tạo</label>
-                                        <input type="text" class="form-control" name="author" value="${sessionScope.user.fullName}" readonly>
-                                    </div>
                                     <!-- Trạng thái -->
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <label class="form-label fw-semibold">Chế độ hiển thị</label>
                                         <select class="form-select" name="status" required>
                                             <option value="published">Hiển thị</option>

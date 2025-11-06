@@ -120,7 +120,4 @@ public class New {
         this.organizationName = organizationName;
     }
     
-    
-
-    
 }
