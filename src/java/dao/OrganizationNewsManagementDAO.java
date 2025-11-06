@@ -134,7 +134,7 @@ public class OrganizationNewsManagementDAO {
 			whereClauses.add("n.status = ?");
 		}
 		if (search != null && !search.trim().isEmpty()) {
-			whereClauses.add("n.title LIKE ?");
+			whereClauses.add("n.title COLLATE SQL_Latin1_General_CP1_CI_AI LIKE ?");
 		}
 
 		sql.append("WHERE ").append(String.join(" AND ", whereClauses)).append(" ");
@@ -187,7 +187,7 @@ public class OrganizationNewsManagementDAO {
 			whereClauses.add("n.status = ?");
 		}
 		if (search != null && !search.trim().isEmpty()) {
-			whereClauses.add("n.title LIKE ?");
+			whereClauses.add("n.title COLLATE SQL_Latin1_General_CP1_CI_AI LIKE ?");
 		}
 
 		sql.append("WHERE ").append(String.join(" AND ", whereClauses));
