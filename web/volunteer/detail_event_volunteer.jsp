@@ -71,7 +71,7 @@
 
                         <!-- Footer với nút quay lại -->
                         <div class="card-footer text-center bg-white border-0 pb-4">
-                            <a href="<%= request.getContextPath() %>/volunteer/history_event_volunteer.jsp" class="btn btn-primary px-4">
+                            <a href="<%= request.getContextPath() %>/VolunteerEventServlet" class="btn btn-primary px-4">
                                 ← Quay lại
                             </a>
                         </div>
