@@ -125,7 +125,15 @@
                                                 </span>
                                             </c:when>
                                             <c:otherwise>
-                                                <a href="<%= request.getContextPath() %>/AdminAccountServlet?action=toggle&id=${acc.id}"
+                                                <c:url var="toggleUrl" value="/AdminAccountServlet">
+                                                    <c:param name="action" value="toggle" />
+                                                    <c:param name="id" value="${acc.id}" />
+                                                    <c:param name="role" value="${selectedRole}" />
+                                                    <c:param name="status" value="${selectedStatus}" />
+                                                    <c:param name="search" value="${searchText}" />
+                                                    <c:param name="page" value="${currentPage}" />
+                                                </c:url>
+                                                <a href="${toggleUrl}"
                                                    class="btn ${acc.status ? 'btn-info' : 'btn-success'} btn-sm btn-icon" 
                                                    title="${acc.status ? 'Khóa tài khoản' : 'Mở khóa tài khoản'}">
                                                     <i class="bi ${acc.status ? 'bi-lock' : 'bi-unlock'}"></i>
