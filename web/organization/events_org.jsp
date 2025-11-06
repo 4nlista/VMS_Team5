@@ -126,7 +126,7 @@
                                         <td>
                                             <a href="<%= request.getContextPath() %>/OrganizationDetailEventServlet?eventId=${e.id}" 
                                                class="btn btn-primary btn-sm">Xem chi tiết</a>
-                                               <a href="<%= request.getContextPath() %>/organization/manage_feedback_org.jsp" 
+                                               <a href="<%= request.getContextPath() %>/OrganizationManageFeedbackServlet?eventId=${e.id}" 
                                                class="btn btn-info btn-sm">Bình luận</a>
                                             <a href="OrganizationApplyServlet?id=${e.id}" 
                                                class="btn btn-secondary btn-sm">Xử lý đơn</a>

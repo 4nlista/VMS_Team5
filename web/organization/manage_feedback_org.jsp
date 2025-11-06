@@ -21,10 +21,16 @@
 
             <div class="main-content p-4">
                 <div class="container-fluid">
-                    <h3 class="fw-bold mb-4">Danh sách đánh giá</h3>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="fw-bold mb-0">Danh sách đánh giá</h3>
+                        <a href="<%= request.getContextPath() %>/OrganizationListServlet" class="btn btn-secondary btn-sm">
+                            <i class="bi bi-arrow-left"></i> Quay về quản lí sự kiện
+                        </a>
+                    </div>
 
                     <!-- Bộ lọc + nút tạo mới -->
                     <form method="get" action="<%= request.getContextPath() %>/OrganizationManageFeedbackServlet" class="d-flex align-items-end mb-3 flex-wrap gap-3">
+                        <input type="hidden" name="eventId" value="${eventId}" />
                         <div class="d-flex align-items-end flex-wrap gap-3">
                             <!-- Loại sự kiện -->
                             <div class="form-group d-flex flex-column">

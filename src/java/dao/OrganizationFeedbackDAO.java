@@ -11,7 +11,7 @@ import utils.DBContext;
 
 public class OrganizationFeedbackDAO {
 
-    public List<Feedback> findByOrganization(int organizationId, Integer rating, String status, String eventTitleQuery) {
+    public List<Feedback> findByOrganization(int organizationId, Integer eventId, Integer rating, String status, String eventTitleQuery) {
         List<Feedback> results = new ArrayList<>();
 
         StringBuilder sql = new StringBuilder();
@@ -27,6 +27,11 @@ public class OrganizationFeedbackDAO {
 
         List<Object> params = new ArrayList<>();
         params.add(organizationId);
+
+        if (eventId != null) {
+            sql.append(" AND f.event_id = ? ");
+            params.add(eventId);
+        }
 
         if (rating != null) {
             sql.append(" AND f.rating = ? ");

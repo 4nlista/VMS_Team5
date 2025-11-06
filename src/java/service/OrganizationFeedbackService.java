@@ -12,11 +12,11 @@ public class OrganizationFeedbackService {
         this.feedbackDAO = new OrganizationFeedbackDAO();
     }
 
-    public List<Feedback> listFeedbacksForOrganization(int organizationAccountId, Integer rating, String status, String eventTitleQuery) {
+    public List<Feedback> listFeedbacksForOrganization(int organizationAccountId, Integer eventId, Integer rating, String status, String eventTitleQuery) {
         // Business rules could be added here (e.g., normalize inputs)
         String normalizedStatus = status == null ? null : status.trim();
         String trimmedQuery = eventTitleQuery == null ? null : eventTitleQuery.trim();
-        return feedbackDAO.findByOrganization(organizationAccountId, rating, normalizedStatus, trimmedQuery);
+        return feedbackDAO.findByOrganization(organizationAccountId, eventId, rating, normalizedStatus, trimmedQuery);
     }
 }
 

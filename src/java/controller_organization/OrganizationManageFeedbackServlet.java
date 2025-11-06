@@ -38,6 +38,7 @@ public class OrganizationManageFeedbackServlet extends HttpServlet {
             return;
         }
 
+        String eventIdParam = request.getParameter("eventId");
         String ratingParam = request.getParameter("rating");
         String status = request.getParameter("status");
         String q = request.getParameter("q");
@@ -49,9 +50,17 @@ public class OrganizationManageFeedbackServlet extends HttpServlet {
             }
         } catch (NumberFormatException ignore) {}
 
-        List<Feedback> feedbacks = feedbackService.listFeedbacksForOrganization(acc.getId(), rating, status, q);
+        Integer eventId = null;
+        try {
+            if (eventIdParam != null && !eventIdParam.isEmpty()) {
+                eventId = Integer.parseInt(eventIdParam);
+            }
+        } catch (NumberFormatException ignore) {}
+
+        List<Feedback> feedbacks = feedbackService.listFeedbacksForOrganization(acc.getId(), eventId, rating, status, q);
 
         request.setAttribute("feedbacks", feedbacks);
+        request.setAttribute("eventId", eventIdParam == null ? "" : eventIdParam);
         request.setAttribute("rating", ratingParam == null ? "" : ratingParam);
         request.setAttribute("status", status == null ? "" : status);
         request.setAttribute("q", q == null ? "" : q);

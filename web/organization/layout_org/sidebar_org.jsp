@@ -45,14 +45,6 @@
                     Quản lí sự kiện
                 </a>
             </li>
-            <!-- Tab mới: Quản lí đánh giá (Feedback) đặt ngay dưới Quản lí sự kiện -->
-            <li>
-                <a href="<%= request.getContextPath() %>/OrganizationManageFeedbackServlet"
-                   class="nav-link text-white <%= currentPath.endsWith("/OrganizationManageFeedbackServlet") || currentPath.endsWith("/manage_feedback_org.jsp") || currentPath.endsWith("/send_report_org") || currentPath.endsWith("/send_report_org.jsp") ? "active" : "" %>">
-                    <i class="bi bi-chat-dots me-2"></i>
-                    Quản lí đánh giá
-                </a>
-            </li>
             <li>
                 <a href="<%= request.getContextPath() %>/organization/manage_feedback_org.jsp"
                    class="nav-link text-white">
