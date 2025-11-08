@@ -129,6 +129,7 @@ public class OrganizationNewsManagementDAO {
 		// Build WHERE: organization filter is mandatory
 		List<String> whereClauses = new ArrayList<>();
 		whereClauses.add("n.organization_id = ?");
+		whereClauses.add("n.status <> 'pending'");
 
 		if (status != null && !status.trim().isEmpty()) {
 			whereClauses.add("n.status = ?");
@@ -277,37 +278,7 @@ public class OrganizationNewsManagementDAO {
 			return false;
 		}
 	}
-
-	// Create
-	public int insertNews(int organizationId, String title, String content, String imageFileName, String status) {
-		String sql = """
-        INSERT INTO News (title, content, images, created_at, updated_at, organization_id, status)
-        VALUES (?, ?, ?, GETDATE(), GETDATE(), ?, ?)
-    """;
-
-		try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-			ps.setString(1, title);
-			ps.setString(2, content);
-			ps.setString(3, imageFileName);
-			ps.setInt(4, organizationId);
-			ps.setString(5, status);
-
-			int affected = ps.executeUpdate();
-			if (affected == 0) {
-				return -1;
-			}
-
-			try (ResultSet rs = ps.getGeneratedKeys()) {
-				if (rs.next()) {
-					return rs.getInt(1);
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return -1;
-	}
-
+	
 	public boolean updateNewsWithImage(int id, int organizationId, String title, String content, String status, String imageFileName) {
 		String sql = """
         UPDATE News
@@ -328,6 +299,35 @@ public class OrganizationNewsManagementDAO {
 			return false;
 		}
 	}
+
+	// Create
+	public int insertNews(int organizationId, String title, String content, String imageFileName) {
+    String sql = """
+        INSERT INTO News (title, content, images, created_at, updated_at, organization_id)
+        VALUES (?, ?, ?, GETDATE(), GETDATE(), ?)
+    """;
+
+    try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        ps.setString(1, title);
+        ps.setString(2, content);
+        ps.setString(3, imageFileName);
+        ps.setInt(4, organizationId);
+
+        int affected = ps.executeUpdate();
+        if (affected == 0) {
+            return -1;
+        }
+
+        try (ResultSet rs = ps.getGeneratedKeys()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return -1;
+}
 
 	//Delete 
 	public boolean deleteNewsByIdAndOrgId(int id, int organizationId) {

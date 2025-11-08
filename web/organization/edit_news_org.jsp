@@ -32,20 +32,26 @@
                                       class="row g-3">
                                     <input type="hidden" name="id" value="${news.id}" />
                                     <input type="hidden" name="existingImage" value="${news.images}" />
-
                                     <div class="text-center">
                                         <!-- Serve image via /uploads/news/<filename> or an ImageServlet -->
                                         <img src="${pageContext.request.contextPath}/NewsImage?file=${news.images}"
-     style="max-width:250px;max-height:250px;object-fit:contain;" />
+                                             style="max-width:250px;max-height:250px;object-fit:contain;" />
                                     </div>
 
-                                    <label class="form-label fw-semibold">Thay đổi ảnh</label>
-                                    <input type="file" class="form-control" name="newsImage" accept="image/*" enctype="multipart/form-data">
-
+                                    <div class="col-12">
+    <label class="form-label fw-semibold">Thay đổi ảnh</label>
+    <input type="file" class="form-control" name="newsImage" accept="image/*">
+    <c:if test="${fieldErrors.image != null}">
+        <div class="text-danger small">${fieldErrors.image}</div>
+    </c:if>
+</div>
                                     <div class="col-md-6">
-                                        <label class="form-label fw-semibold">Tiêu đề</label>
-                                        <input type="text" class="form-control" name="title" value="${news.title}">
-                                    </div>
+    <label class="form-label fw-semibold">Tiêu đề</label>
+    <input type="text" class="form-control" name="title" value="${news.title}">
+    <c:if test="${fieldErrors.title != null}">
+        <div class="text-danger small">${fieldErrors.title}</div>
+    </c:if>
+</div>
 
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold">Trạng thái</label>
@@ -55,10 +61,14 @@
                                         </select>
                                     </div>
 
-                                    <div class="col-12">
-                                        <label class="form-label fw-semibold">Nội dung</label>
-                                        <textarea class="form-control" name="content" rows="12">${news.content}</textarea>
-                                    </div>
+                                    
+<div class="col-12">
+    <label class="form-label fw-semibold">Nội dung</label>
+    <textarea class="form-control" name="content" rows="12">${news.content}</textarea>
+    <c:if test="${fieldErrors.content != null}">
+        <div class="text-danger small">${fieldErrors.content}</div>
+    </c:if>
+</div>
 
                                     <div class="col-12 d-flex justify-content-between">
                                         <a href="${pageContext.request.contextPath}/OrganizationManageNews" class="btn btn-secondary">Quay lại</a>

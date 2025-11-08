@@ -7,8 +7,11 @@ import dao.OrganizationNewsManagementDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import model.New;
 
 /**
@@ -19,6 +22,37 @@ public class OrganizationNewsManagementService {
 
 	private final OrganizationNewsManagementDAO newsManDAO = new OrganizationNewsManagementDAO();
 	private final int pageSize = 7; // configurable if needed
+	private static final long MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
+
+	// Validate input and return field errors
+	public Map<String, String> validateNewsInput(HttpServletRequest request, Part filePart) {
+		Map<String, String> errors = new HashMap<>();
+
+		String title = request.getParameter("title");
+		String content = request.getParameter("content");
+
+		if (title == null || title.trim().isEmpty()) {
+			errors.put("title", "Tiêu đề không được để trống.");
+		}
+
+		if (content == null || content.trim().isEmpty()) {
+			errors.put("content", "Nội dung không được để trống.");
+		}
+
+		// Image validation (optional)
+		if (filePart != null && filePart.getSize() > 0) {
+			String fileName = filePart.getSubmittedFileName().toLowerCase();
+			if (!fileName.endsWith(".jpg") && !fileName.endsWith(".jpeg")
+				    && !fileName.endsWith(".png") && !fileName.endsWith(".gif")) {
+				errors.put("image", "Chỉ cho phép các định dạng ảnh JPG, PNG, GIF.");
+			}
+			if (filePart.getSize() > MAX_IMAGE_SIZE) {
+				errors.put("image", "Ảnh quá lớn. Kích thước tối đa 5MB.");
+			}
+		}
+
+		return errors;
+	}
 
 	public List<New> getNewsByPage(int page, int organizationId, String status, String search) throws SQLException {
 		if (page < 1) {
@@ -60,7 +94,7 @@ public class OrganizationNewsManagementService {
 		request.setAttribute("currentSearch", search == null ? "" : search);
 	}
 
-	private Integer getOrganizationIdFromSession(HttpServletRequest request) {
+	public Integer getOrganizationIdFromSession(HttpServletRequest request) {
 		HttpSession session = request.getSession(false);
 		if (session == null) {
 			return null;
@@ -116,65 +150,89 @@ public class OrganizationNewsManagementService {
 
 	// Load the details of news
 	public New loadNewsDetail(HttpServletRequest request) throws Exception {
-		try {
-			int id = Integer.parseInt(request.getParameter("id"));
-			Integer organizationId = getOrganizationIdFromSession(request);
-			if (organizationId == null) {
-				return null;
-			}
-			return newsManDAO.getNewsDetailById(id, organizationId);
-		} catch (Exception e) {
+		int id = Integer.parseInt(request.getParameter("id"));
+		Integer orgId = getOrganizationIdFromSession(request);
+		if (orgId == null) {
 			return null;
 		}
+		return newsManDAO.getNewsDetailById(id, orgId);
 	}
 
 	//Update news
-	public boolean updateNews(HttpServletRequest request, String imageFileName) throws SQLException {
-		Integer organizationId = getOrganizationIdFromSession(request);
-		if (organizationId == null) {
-			return false;
+	public boolean updateNews(HttpServletRequest request, String imageFileName) throws Exception {
+		Integer orgId = getOrganizationIdFromSession(request);
+		if (orgId == null) {
+			throw new Exception("Không tìm thấy tổ chức trong phiên đăng nhập.");
 		}
 
 		int id = Integer.parseInt(request.getParameter("id"));
-		String title = request.getParameter("title");
-		String content = request.getParameter("content");
-		String status = request.getParameter("status");
+		String title = request.getParameter("title").trim();
+		String content = request.getParameter("content").trim();
+		String status = request.getParameter("status").trim();
 
-		if (title == null || title.trim().isEmpty()) {
-			return false;
-		}
-		if (content == null || content.trim().isEmpty()) {
-			return false;
-		}
-		if (status == null || status.trim().isEmpty()) {
-			return false;
-		}
+		return newsManDAO.updateNews(id, orgId, title, content, imageFileName, status);
+	}
 
-		return newsManDAO.updateNews(id, organizationId, title.trim(), content.trim(),
-			    imageFileName, status.trim());
+	public New buildNewsFromRequest(HttpServletRequest request) {
+		Integer orgId = getOrganizationIdFromSession(request);
+		return new New(
+			    request.getParameter("id") != null ? Integer.parseInt(request.getParameter("id")) : 0,
+			    request.getParameter("title"),
+			    request.getParameter("content"),
+			    request.getParameter("existingImage"),
+			    null, null,
+			    orgId != null ? orgId : 0,
+			    request.getParameter("status"),
+			    null
+		);
 	}
 
 	// Create news
-	public int createNewsWithImage(HttpServletRequest request, String imageFileName) throws SQLException {
-		Integer organizationId = getOrganizationIdFromSession(request);
-		if (organizationId == null) {
-			return -1;
+	public int createNewsWithImage(HttpServletRequest request, String imageFileName) throws Exception {
+    Integer orgId = getOrganizationIdFromSession(request);
+    if (orgId == null) {
+        throw new Exception("Không tìm thấy tổ chức trong phiên đăng nhập.");
+    }
+
+    String title = request.getParameter("title");
+    String content = request.getParameter("content");
+
+    Map<String, String> errors = new HashMap<>();
+    if (title == null || title.trim().isEmpty()) {
+        errors.put("title", "Tiêu đề không được để trống.");
+    }
+    if (content == null || content.trim().isEmpty()) {
+        errors.put("content", "Nội dung không được để trống.");
+    }
+    if (!errors.isEmpty()) {
+        // throw a single exception or return the errors to the servlet — you already send fieldErrors separately,
+        // but to keep the old behavior, throw an exception
+        throw new Exception("Vui lòng điền đầy đủ thông tin.");
+    }
+
+    int newId = newsManDAO.insertNews(orgId, title.trim(), content.trim(), imageFileName);
+    if (newId <= 0) {
+        throw new Exception("Không thể tạo bài viết. Vui lòng thử lại.");
+    }
+
+    return newId;
+}
+
+	public New buildNewsFromRequest(HttpServletRequest request, Part filePart) {
+		Integer orgId = getOrganizationIdFromSession(request);
+		String uploadedImage = null;
+		if (filePart != null && filePart.getSize() > 0) {
+			uploadedImage = filePart.getSubmittedFileName(); // temporary preview only
 		}
-
-		String title = request.getParameter("title");
-		String content = request.getParameter("content");
-		String status = request.getParameter("status");
-
-		if (title == null || content == null || status == null) {
-			return -1;
-		}
-
-		return newsManDAO.insertNews(
-			    organizationId,
-			    title.trim(),
-			    content.trim(),
-			    imageFileName,
-			    status.trim()
+		return new New(
+			    0,
+			    request.getParameter("title"),
+			    request.getParameter("content"),
+			    uploadedImage,
+			    null, null,
+			    orgId != null ? orgId : 0,
+			    null, // status will not be set
+			    null
 		);
 	}
 

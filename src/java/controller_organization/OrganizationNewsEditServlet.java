@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.Map;
 import model.New;
 import service.FileStorageService;
 import service.OrganizationNewsManagementService;
@@ -25,74 +26,59 @@ import service.OrganizationNewsManagementService;
 @WebServlet(name = "OrganizationNewsEditServlet", urlPatterns = {"/OrganizationNewsEdit"})
 public class OrganizationNewsEditServlet extends HttpServlet {
 
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-    }
+	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+		    throws ServletException, IOException {
+		response.setContentType("text/html;charset=UTF-8");
+	}
 
-    private final OrganizationNewsManagementService service = new OrganizationNewsManagementService();
+	private final OrganizationNewsManagementService service = new OrganizationNewsManagementService();
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        try {
-            New news = service.loadNewsDetail(request);
-            if (news == null) {
-                response.sendRedirect("OrganizationManageNews?error=notfound");
-                return;
-            }
-            request.setAttribute("news", news);
-            request.getRequestDispatcher("/organization/edit_news_org.jsp").forward(request, response);
-        } catch (Exception e) {
-            response.sendRedirect("OrganizationManageNews?error=invalid");
-        }
-    }
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+		    throws ServletException, IOException {
+		try {
+			New news = service.loadNewsDetail(request);
+			if (news == null) {
+				response.sendRedirect("OrganizationManageNews?error=notfound");
+				return;
+			}
+			request.setAttribute("news", news);
+			request.getRequestDispatcher("/organization/edit_news_org.jsp").forward(request, response);
+		} catch (Exception e) {
+			response.sendRedirect("OrganizationManageNews?error=invalid");
+		}
+	}
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+		    throws ServletException, IOException {
 
-        req.setCharacterEncoding("UTF-8");
+		FileStorageService storage = new FileStorageService();
+		Part filePart = request.getPart("newsImage");
+		Map<String, String> fieldErrors = service.validateNewsInput(request, filePart);
 
-        // old image from hidden field
-        String existingImage = req.getParameter("existingImage");
-        String finalImageName = existingImage;
+		// Preserve input
+		New newsInput = service.buildNewsFromRequest(request);
+		request.setAttribute("news", newsInput);
+		request.setAttribute("fieldErrors", fieldErrors);
 
-        // new upload
-        Part imagePart = req.getPart("newsImage");
-        if (imagePart != null && imagePart.getSize() > 0) {
-            FileStorageService storage = new FileStorageService();
-            String saved = storage.saveNewsImage(imagePart.getInputStream(), imagePart.getSubmittedFileName());
-            if (saved != null) {
-                finalImageName = saved;
-            }
-        }
+		if (!fieldErrors.isEmpty()) {
+			request.getRequestDispatcher("/organization/edit_news_org.jsp").forward(request, response);
+			return;
+		}
 
-        try {
-            boolean success = service.updateNews(req, finalImageName);
+		// Save image if uploaded
+		String imageFileName = null;
+		if (filePart != null && filePart.getSize() > 0) {
+			imageFileName = storage.saveNewsImage(filePart.getInputStream(), filePart.getSubmittedFileName());
+		}
 
-            if (!success) {
-                req.setAttribute("error", "Vui lòng điền đầy đủ tiêu đề, nội dung và trạng thái.");
-
-                // Giữ lại dữ liệu user nhập
-                New news = new New();
-                news.setId(Integer.parseInt(req.getParameter("id")));
-                news.setTitle(req.getParameter("title"));
-                news.setContent(req.getParameter("content"));
-                news.setImages(finalImageName);
-                news.setStatus(req.getParameter("status"));
-
-                req.setAttribute("news", news);
-
-                req.getRequestDispatcher("/organization/edit_news_org.jsp").forward(req, resp);
-                return;
-            }
-
-            String id = req.getParameter("id");
-            resp.sendRedirect(req.getContextPath() + "/OrganizationNewsDetail?id=" + id);
-
-        } catch (Exception e) {
-            throw new ServletException(e);
-        }
-    }
+		try {
+			service.updateNews(request, imageFileName);
+			response.sendRedirect(request.getContextPath() + "/OrganizationManageNews?success=updated");
+		} catch (Exception e) {
+			request.setAttribute("errorMessage", e.getMessage());
+			request.getRequestDispatcher("/organization/edit_news_org.jsp").forward(request, response);
+		}
+	}
 }
