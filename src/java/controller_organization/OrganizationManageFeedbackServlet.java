@@ -19,7 +19,9 @@ public class OrganizationManageFeedbackServlet extends HttpServlet {
 
     @Override
     public void init() {
-        feedbackService = new OrganizationFeedbackService();
+        feedbackService = new OrganizationFeedbackService(); 
+        
+        // biết rồi
     }
 
     @Override
