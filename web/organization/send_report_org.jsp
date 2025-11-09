@@ -3,13 +3,6 @@
     Created on : Nov 2, 2025, 1:34:07 PM
     Author     : Admin
 --%>
-
-<%-- 
-    Document   : manage_feedback_org
-    Created on : Nov 2, 2025, 12:55:14 PM
-    Author     : Admin
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>

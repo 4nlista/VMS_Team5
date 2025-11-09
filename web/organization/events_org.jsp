@@ -83,7 +83,6 @@
                                     <th style="width:10%;">Chế độ</th>
                                     <th style="width:10%;">Trạng thái</th>
                                     <th style="width:35%;">Thao tác</th>
-
                                 </tr>
                             </thead>
                             <tbody>
@@ -127,7 +126,7 @@
                                         <td>
                                             <a href="<%= request.getContextPath() %>/OrganizationDetailEventServlet?eventId=${e.id}" 
                                                class="btn btn-primary btn-sm">Xem chi tiết</a>
-                                               <a href="<%= request.getContextPath() %>/OrganizationManageFeedbackServlet?eventId=${e.id}" 
+                                            <a href="<%= request.getContextPath() %>/OrganizationManageFeedbackServlet?eventId=${e.id}" 
                                                class="btn btn-info btn-sm">Bình luận</a>
                                             <a href="OrganizationApplyServlet?id=${e.id}" 
                                                class="btn btn-secondary btn-sm">Xử lý đơn</a>
@@ -159,7 +158,6 @@
                 </div>
             </div>
         </div>
-
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>
