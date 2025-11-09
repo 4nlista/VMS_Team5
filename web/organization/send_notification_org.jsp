@@ -22,7 +22,7 @@
             <jsp:include page="layout_org/sidebar_org.jsp" />
             <div class="main-content p-4">
                 <div class="container-fluid">
-                    <h3 class="fw-bold mb-4">Gửi thông báo</h3>
+                    <h3 class="fw-bold mb-4">Gửi thông báo cho tình nguyện viên</h3>
                 </div>
             </div>
         </div>

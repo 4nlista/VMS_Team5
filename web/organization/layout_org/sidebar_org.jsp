@@ -43,7 +43,7 @@
                    class="nav-link text-white">
                     <i class="bi bi-pencil me-2"></i>
                     Tạm thời mày đừng click vào đây.
-                    Coi như không có nút này
+                    Coi như không có nút này nha
                 </a>
             </li>
             <li>

@@ -23,6 +23,7 @@ public class OrganizationSendReportOrgServlet extends HttpServlet {
         feedbackDAO = new OrganizationFeedbackDAO();
         reportDAO = new OrganizationReportDAO();
     }
+    // ok em
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
