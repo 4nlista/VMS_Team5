@@ -32,6 +32,6 @@ public class VolunteerCancelApplicationServlet extends HttpServlet {
         }
 
         // Điều hướng trở lại trang lịch sử đăng ký
-        response.sendRedirect("volunteer_application_history.jsp");
+        response.sendRedirect("/volunteer/volunteer_application_history.jsp");
     }
 }

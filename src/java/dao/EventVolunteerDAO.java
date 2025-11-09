@@ -92,7 +92,7 @@ public class EventVolunteerDAO {
         try (Connection conn = DBContext.getConnection()) {
             conn.setAutoCommit(false); // bắt đầu transaction
 
-            // 1️⃣ Xóa đơn
+          
             try (PreparedStatement psDelete = conn.prepareStatement(deleteSql)) {
                 psDelete.setInt(1, eventId);
                 psDelete.setInt(2, volunteerId);
@@ -103,7 +103,7 @@ public class EventVolunteerDAO {
                 }
             }
 
-            // 2️⃣ Ghi log
+      
             try (PreparedStatement psLog = conn.prepareStatement(logSql)) {
                 psLog.setInt(1, volunteerId);
                 psLog.setInt(2, eventId);
