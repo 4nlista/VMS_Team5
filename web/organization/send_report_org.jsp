@@ -31,7 +31,7 @@
                         <h3 class="fw-bold mb-4 text-center">Gửi đơn báo cáo</h3>
                         <c:if test="${param.success == '1'}">
                             <div id="reportSuccessAlert" class="alert alert-success" role="alert">
-                                Gửi báo cáo thành công. Trạng thái đã được ghi nhận là pending.
+                                Gửi đơn báo cáo thành công. Trạng thái đã được ghi nhận là pending.
                             </div>
                             <script>
                                 setTimeout(function(){

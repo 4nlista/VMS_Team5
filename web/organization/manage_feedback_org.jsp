@@ -24,7 +24,7 @@
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h3 class="fw-bold mb-0">Danh sách đánh giá</h3>
                         <a href="<%= request.getContextPath() %>/OrganizationListServlet" class="btn btn-secondary btn-sm">
-                            <i class="bi bi-arrow-left"></i> Quay về quản lí sự kiện
+                            <i class="bi bi-arrow-left"></i> Về quản lí sự kiện
                         </a>
                     </div>
 

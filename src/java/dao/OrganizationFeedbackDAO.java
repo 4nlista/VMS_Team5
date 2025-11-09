@@ -9,6 +9,7 @@ import java.util.List;
 import model.Feedback;
 import utils.DBContext;
 
+// oke em
 public class OrganizationFeedbackDAO {
 
     public List<Feedback> findByOrganization(int organizationId, Integer eventId, Integer rating, String status, String eventTitleQuery) {

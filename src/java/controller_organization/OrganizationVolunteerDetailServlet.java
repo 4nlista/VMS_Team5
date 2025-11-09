@@ -17,7 +17,7 @@ public class OrganizationVolunteerDetailServlet extends HttpServlet {
 
     private AccountService accountService;
     private ProfileVolunteerDAO profileVolunteerDAO;
-
+// oke em
     @Override
     public void init() {
         accountService = new AccountService();

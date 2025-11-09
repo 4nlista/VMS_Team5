@@ -12,9 +12,8 @@ import java.util.List;
 import model.ProfileVolunteer;
 import utils.DBContext;
 
-/**
- * DAO to fetch read-only volunteer profile for organization viewing.
- */
+ // DAO to fetch read-only volunteer profile for organization viewing.
+ 
 public class ProfileVolunteerDAO {
 
     public ProfileVolunteer getProfileByAccountId(int accountId) {

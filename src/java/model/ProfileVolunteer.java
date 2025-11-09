@@ -24,6 +24,7 @@ public class ProfileVolunteer {
     private int totalEvents; // tổng số sự kiện đã tham gia
     private int totalHours;     // tổng số giờ tích lũy
     private double totalDonated;    // tổng số tiền đã donated của tất cả các sự kiện
+    
     private String eventName;       // sự kiện đó tên là gì
     private String organizationName;    // tên người tạo ra sự kiện đó
 
