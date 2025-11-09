@@ -77,12 +77,12 @@
                         <table class="table table-bordered table-hover" style="table-layout: fixed; width: 100%;">
                             <thead class="table-secondary">
                                 <tr>
-                                    <th style="width:5%;">STT</th>
+                                    <th style="width:4%;">STT</th>
                                     <th style="width:30%;">Tên sự kiện</th>
                                     <th style="width:10%;">Loại sự kiện</th>
                                     <th style="width:10%;">Chế độ</th>
                                     <th style="width:10%;">Trạng thái</th>
-                                    <th style="width:35%;">Thao tác</th>
+                                    <th style="width:36%;">Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -132,10 +132,6 @@
                                                class="btn btn-secondary btn-sm">Xử lý đơn</a>
                                             <a href="<%= request.getContextPath() %>/AttendanceEventServlet?eventId=${e.id}" 
                                                class="btn btn-danger btn-sm">Điểm danh</a>
-                                            <a href="<%= request.getContextPath() %>/OrganizationVolunteersServlet?eventId=${e.id}" 
-                                               class="btn btn-warning btn-sm">Tình nguyện viên</a>
-                                            <a href="organization/delete_event?id=${e.id}" 
-                                               class="btn btn-danger btn-sm">Xóa</a>
                                         </td>
 
                                     </tr>
