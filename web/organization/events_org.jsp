@@ -130,6 +130,8 @@
                                                class="btn btn-info btn-sm">Bình luận</a>
                                             <a href="OrganizationApplyServlet?id=${e.id}" 
                                                class="btn btn-secondary btn-sm">Xử lý đơn</a>
+                                            <a href="OrganizationApplyServlet?id=${e.id}" 
+                                               class="btn btn-warning btn-sm">Tình nguyện viên</a>
                                             <a href="organization/delete_event?id=${e.id}" 
                                                class="btn btn-danger btn-sm">Xóa</a>
                                         </td>

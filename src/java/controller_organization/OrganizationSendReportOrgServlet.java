@@ -61,7 +61,7 @@ public class OrganizationSendReportOrgServlet extends HttpServlet {
 
         reportDAO.insertPendingReport(feedbackId, acc.getId(), reason);
 
-        response.sendRedirect(request.getContextPath() + "/organization/send_report_org?feedbackId=" + feedbackId + "&success=1");
+        response.sendRedirect(request.getContextPath() + "/OrganizationManageFeedbackServlet?reported=1");
     }
 }
 

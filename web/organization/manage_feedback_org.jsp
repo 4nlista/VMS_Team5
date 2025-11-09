@@ -75,17 +75,29 @@
                         </div>
                         </form>
 
+                    <!-- Thông báo thành công -->
+                    <c:if test="${param.reported == '1'}">
+                        <div id="reportSuccessAlert" class="alert alert-success mb-3" role="alert">
+                            Gửi báo cáo thành công. Trạng thái đã được ghi nhận là pending.
+                        </div>
+                        <script>
+                            setTimeout(function(){
+                                var el = document.getElementById('reportSuccessAlert');
+                                if(el){ el.style.display = 'none'; }
+                            }, 5000);
+                        </script>
+                    </c:if>
+
                         <!-- Bảng dữ liệu -->
                         <div class="table-responsive">
                             <table class="table table-bordered table-hover align-middle" style="table-layout: fixed; width: 100%;">
                                 <thead class="table-secondary">
                                     <tr>
-                                        <th style="width:4%;">STT</th>
-                                        <th style="width:25%;">Tên sự kiện</th>
-                                        <th style="width:16%;">Tình nguyện viên</th>
-                                        <th style="width:26%;">Bình luận</th>
-                                        <th style="width:5%;">Điểm</th>
-                                        <th style="width:9%;">Trạng thái</th>
+                                        <th style="width:5%;">STT</th>
+                                        <th style="width:20%;">Tình nguyện viên</th>
+                                        <th style="width:40%;">Bình luận</th>
+                                        <th style="width:8%;">Điểm</th>
+                                        <th style="width:12%;">Trạng thái</th>
                                         <th style="width:15%;">Thao tác</th>
                                     </tr>
                                 </thead>
@@ -93,7 +105,6 @@
                                     <c:forEach var="f" items="${feedbacks}" varStatus="loop">
                                         <tr>
                                             <td>${loop.index + 1}</td>
-                                            <td>${f.eventTitle}</td>
                                             <td>${f.volunteerName}</td>
                                             <td style="word-wrap: break-word; white-space: normal;">${f.comment}</td>
                                             <td>${f.rating}</td>
@@ -110,7 +121,7 @@
                                     </c:forEach>
                                     <c:if test="${empty feedbacks}">
                                         <tr>
-                                            <td colspan="7" class="text-center">Không có đánh giá phù hợp</td>
+                                            <td colspan="6" class="text-center">Không có đánh giá phù hợp</td>
                                         </tr>
                                     </c:if>
                                 </tbody>
@@ -128,11 +139,6 @@
                             <li class="page-item"><a class="page-link" href="#">Sau</a></li>
                         </ul>
                     </div>
-                    <c:if test="${param.reported == '1'}">
-                        <div class="alert alert-success mt-3" role="alert">
-                            Gửi báo cáo thành công. Trạng thái đã được ghi nhận là pending.
-                        </div>
-                    </c:if>
                 </div>
             </div>
         </div>

@@ -47,6 +47,9 @@
                 <div class="d-flex justify-content-between align-items-center mb-3 gap-2 flex-nowrap">
                     <!-- Filter + Search (cùng một form) -->
                     <form action="AdminAccountServlet" method="get" class="d-flex align-items-center gap-3 flex-nowrap flex-grow-1" style="flex: 1;">
+                        <c:if test="${not empty sortParam}">
+                            <input type="hidden" name="sort" value="${sortParam}" />
+                        </c:if>
                         <select name="role" class="form-select" style="min-width: 180px;">
                             <option value="">-- Vai trò --</option>
                             <option value="admin" ${'admin' == selectedRole ? 'selected' : ''}>Admin</option>
@@ -80,8 +83,22 @@
                     <thead class="table-dark">
                         <tr>
                             <th>ID
-                                <a href="?sort=id_asc"><i class="bi bi-caret-up-fill text-white ms-1"></i></a>
-                                <a href="?sort=id_desc"><i class="bi bi-caret-down-fill text-white"></i></a>
+                                <c:url var="sortAscUrl" value="AdminAccountServlet">
+                                    <c:param name="sort" value="id_asc" />
+                                    <c:if test="${not empty selectedRole}"><c:param name="role" value="${selectedRole}" /></c:if>
+                                    <c:if test="${not empty selectedStatus}"><c:param name="status" value="${selectedStatus}" /></c:if>
+                                    <c:if test="${not empty searchText}"><c:param name="search" value="${searchText}" /></c:if>
+                                    <c:if test="${not empty currentPage}"><c:param name="page" value="${currentPage}" /></c:if>
+                                </c:url>
+                                <c:url var="sortDescUrl" value="AdminAccountServlet">
+                                    <c:param name="sort" value="id_desc" />
+                                    <c:if test="${not empty selectedRole}"><c:param name="role" value="${selectedRole}" /></c:if>
+                                    <c:if test="${not empty selectedStatus}"><c:param name="status" value="${selectedStatus}" /></c:if>
+                                    <c:if test="${not empty searchText}"><c:param name="search" value="${searchText}" /></c:if>
+                                    <c:if test="${not empty currentPage}"><c:param name="page" value="${currentPage}" /></c:if>
+                                </c:url>
+                                <a href="${sortAscUrl}"><i class="bi bi-caret-up-fill text-white ms-1"></i></a>
+                                <a href="${sortDescUrl}"><i class="bi bi-caret-down-fill text-white"></i></a>
                             </th>
                             <th>Tài khoản</th>
                             <th>Vai trò</th>
@@ -131,6 +148,7 @@
                                                     <c:param name="role" value="${selectedRole}" />
                                                     <c:param name="status" value="${selectedStatus}" />
                                                     <c:param name="search" value="${searchText}" />
+                                                    <c:if test="${not empty sortParam}"><c:param name="sort" value="${sortParam}" /></c:if>
                                                     <c:param name="page" value="${currentPage}" />
                                                 </c:url>
                                                 <a href="${toggleUrl}"
@@ -184,6 +202,7 @@
                                     <c:param name="role" value="${selectedRole}" />
                                     <c:param name="status" value="${selectedStatus}" />
                                     <c:param name="search" value="${searchText}" />
+                                    <c:if test="${not empty sortParam}"><c:param name="sort" value="${sortParam}" /></c:if>
                                     <c:param name="page" value="${currentPage - 1}" />
                                 </c:url>
                                 <a class="page-link" href="${prevUrl}">Trước</a>
@@ -194,6 +213,7 @@
                                     <c:param name="role" value="${selectedRole}" />
                                     <c:param name="status" value="${selectedStatus}" />
                                     <c:param name="search" value="${searchText}" />
+                                    <c:if test="${not empty sortParam}"><c:param name="sort" value="${sortParam}" /></c:if>
                                     <c:param name="page" value="${p}" />
                                 </c:url>
                                 <li class="page-item ${p == currentPage ? 'active' : ''}">
@@ -206,6 +226,7 @@
                                     <c:param name="role" value="${selectedRole}" />
                                     <c:param name="status" value="${selectedStatus}" />
                                     <c:param name="search" value="${searchText}" />
+                                    <c:if test="${not empty sortParam}"><c:param name="sort" value="${sortParam}" /></c:if>
                                     <c:param name="page" value="${currentPage + 1}" />
                                 </c:url>
                                 <a class="page-link" href="${nextUrl}">Sau</a>

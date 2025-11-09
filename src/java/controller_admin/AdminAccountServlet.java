@@ -36,6 +36,7 @@ public class AdminAccountServlet extends HttpServlet {
             String statusParam = request.getParameter("status");
             String search = request.getParameter("search");
             String pageParam = request.getParameter("page");
+            String sortParam = request.getParameter("sort");
             int page = 1;
             int pageSize = 5; // yêu cầu: 5 item/trang
             try {
@@ -67,12 +68,13 @@ public class AdminAccountServlet extends HttpServlet {
             if (page > totalPages) {
                 page = totalPages;
             }
-            List<Account> accounts = adminAccountService.findAccountsPaged(role, status, search, page, pageSize);
+            List<Account> accounts = adminAccountService.findAccountsPaged(role, status, search, page, pageSize, sortParam);
 
             // keep selections
             request.setAttribute("selectedRole", role);
             request.setAttribute("selectedStatus", statusParam);
             request.setAttribute("searchText", search);
+            request.setAttribute("sortParam", sortParam);
 
             request.setAttribute("accounts", accounts);
             request.setAttribute("currentPage", page);
@@ -95,6 +97,7 @@ public class AdminAccountServlet extends HttpServlet {
                 String status = request.getParameter("status");
                 String search = request.getParameter("search");
                 String page = request.getParameter("page");
+                String sort = request.getParameter("sort");
                 StringBuilder url = new StringBuilder(request.getContextPath()).append("/AdminAccountServlet");
                 boolean hasQuery = false;
                 if (role != null && !role.isEmpty()) {
@@ -107,6 +110,10 @@ public class AdminAccountServlet extends HttpServlet {
                 }
                 if (search != null && !search.isEmpty()) {
                     url.append(hasQuery ? "&" : "?").append("search=").append(java.net.URLEncoder.encode(search, java.nio.charset.StandardCharsets.UTF_8));
+                    hasQuery = true;
+                }
+                if (sort != null && !sort.isEmpty()) {
+                    url.append(hasQuery ? "&" : "?").append("sort=").append(java.net.URLEncoder.encode(sort, java.nio.charset.StandardCharsets.UTF_8));
                     hasQuery = true;
                 }
                 if (page != null && !page.isEmpty()) {

@@ -140,7 +140,7 @@ public class AdminAccountDAO {
     }
     
     // 4. Lấy danh sách theo trang (offset/limit) cùng tiêu chí lọc hiện tại
-    public List<Account> findAccountsPaged(String role, Boolean status, String search, int offset, int limit) {
+    public List<Account> findAccountsPaged(String role, Boolean status, String search, int offset, int limit, String sortOrder) {
         List<Account> result = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT id, username, password, role, status, created_at FROM Accounts WHERE 1=1");
         List<Object> params = new ArrayList<>();
@@ -158,7 +158,16 @@ public class AdminAccountDAO {
             params.add("%" + search + "%");
         }
         
-        sql.append(" ORDER BY id ASC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+        // Xử lý sắp xếp
+        String orderBy = "ORDER BY id ASC"; // Mặc định
+        if (sortOrder != null && !sortOrder.isEmpty()) {
+            if ("id_asc".equals(sortOrder)) {
+                orderBy = "ORDER BY id ASC";
+            } else if ("id_desc".equals(sortOrder)) {
+                orderBy = "ORDER BY id DESC";
+            }
+        }
+        sql.append(" ").append(orderBy).append(" OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
         
         try (PreparedStatement ps = conn.prepareStatement(sql.toString())) {
             int idx = 1;
