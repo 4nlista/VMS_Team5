@@ -69,7 +69,7 @@
             </a>
         </li>
         <li>
-            <a href="<%= request.getContextPath() %>/admin/manage_news_admin.jsp"
+            <a href="<%= request.getContextPath() %>/AdminNewsServlet"
                class="nav-link text-white <%= currentPath.endsWith("/manage_news_admin.jsp") ? "active" : "" %>">
                 <i class="bi bi-bar-chart-line me-2"></i>
                 Quản lí tin tức
