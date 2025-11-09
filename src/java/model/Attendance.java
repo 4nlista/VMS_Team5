@@ -12,6 +12,7 @@ import java.util.Date;
  */
 public class Attendance {
     // dùng cho lịch sử điểm danh + tích điểm danh(org)
+    private int eventId;
     private int volunteerId;
     private String volunteerName;
     private String status; 
@@ -20,19 +21,24 @@ public class Attendance {
     private String organizationName;    // tên người tạo sự kiện
     private Date startDate;                 // Ngày bắt đầu của sự kiện
     private Date endDate;                   // ngày kết thúc của sự kiện
+    
+    private String email;   // email của volunteer
+    private String phone;   // phone của volunteer
 
     public Attendance() {
     }
 
-    public Attendance(int volunteerId, String volunteerName, String status, String eventTitle, String organizationName) {
+    public Attendance(int eventId, int volunteerId, String volunteerName, String status, String email, String phone) {
+        this.eventId = eventId;
         this.volunteerId = volunteerId;
         this.volunteerName = volunteerName;
         this.status = status;
-        this.eventTitle = eventTitle;
-        this.organizationName = organizationName;
+        this.email = email;
+        this.phone = phone;
     }
 
-    public Attendance(int volunteerId, String volunteerName, String status, String eventTitle, String organizationName, Date startDate, Date endDate) {
+    public Attendance(int eventId, int volunteerId, String volunteerName, String status, String eventTitle, String organizationName, Date startDate, Date endDate, String email, String phone) {
+        this.eventId = eventId;
         this.volunteerId = volunteerId;
         this.volunteerName = volunteerName;
         this.status = status;
@@ -40,9 +46,22 @@ public class Attendance {
         this.organizationName = organizationName;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.email = email;
+        this.phone = phone;
     }
     
+    
 
+    public int getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(int eventId) {
+        this.eventId = eventId;
+    }
+
+    
+    
     public int getVolunteerId() {
         return volunteerId;
     }
@@ -98,7 +117,26 @@ public class Attendance {
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
     
+    
+    
+
     
     
     

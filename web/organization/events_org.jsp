@@ -79,10 +79,10 @@
                                 <tr>
                                     <th style="width:4%;">STT</th>
                                     <th style="width:30%;">Tên sự kiện</th>
-                                    <th style="width:15%;">Loại sự kiện</th>
-                                    <th style="width:15%;">Chế độ</th>
-                                    <th style="width:16%;">Trạng thái</th>
-                                    <th style="width:20%;">Thao tác</th>
+                                    <th style="width:10%;">Loại sự kiện</th>
+                                    <th style="width:10%;">Chế độ</th>
+                                    <th style="width:10%;">Trạng thái</th>
+                                    <th style="width:36%;">Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -128,8 +128,8 @@
                                                class="btn btn-primary btn-sm">Xem chi tiết</a>
                                             <a href="OrganizationApplyServlet?id=${e.id}" 
                                                class="btn btn-secondary btn-sm">Xử lý đơn</a>
-                                            <a href="organization/delete_event?id=${e.id}" 
-                                               class="btn btn-danger btn-sm">Xóa</a>
+                                            <a href="<%= request.getContextPath() %>/AttendanceEventServlet?eventId=${e.id}" 
+                                               class="btn btn-danger btn-sm">Điểm danh</a>
                                         </td>
 
                                     </tr>
