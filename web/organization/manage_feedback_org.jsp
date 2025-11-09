@@ -50,8 +50,8 @@
                                 <label class="form-label fw-semibold">Trạng thái:</label>
                                 <select name="status" class="form-select" style="width: 160px;">
                                     <option value="" ${empty status ? 'selected' : ''}>Tất cả</option>
-                                    <option value="valid" ${status == 'valid' ? 'selected' : ''}>Hợp lệ</option>
-                                    <option value="invalid" ${status == 'invalid' ? 'selected' : ''}>Không hợp lệ</option>
+                                    <option value="valid" ${status == 'valid' ? 'selected' : ''}>Hiện</option>
+                                    <option value="invalid" ${status == 'invalid' ? 'selected' : ''}>Ẩn</option>
                                 </select>
                             </div>
 
@@ -88,6 +88,19 @@
                         </script>
                     </c:if>
 
+                    <!-- Thông báo cập nhật trạng thái thành công -->
+                    <c:if test="${param.statusUpdated == '1'}">
+                        <div id="statusUpdateSuccessAlert" class="alert alert-success mb-3" role="alert">
+                            Cập nhật trạng thái thành công.
+                        </div>
+                        <script>
+                            setTimeout(function(){
+                                var el = document.getElementById('statusUpdateSuccessAlert');
+                                if(el){ el.style.display = 'none'; }
+                            }, 5000);
+                        </script>
+                    </c:if>
+
                         <!-- Bảng dữ liệu -->
                         <div class="table-responsive">
                             <table class="table table-bordered table-hover align-middle" style="table-layout: fixed; width: 100%;">
@@ -110,12 +123,26 @@
                                             <td>${f.rating}</td>
                                             <td>
                                                 <c:choose>
-                                                    <c:when test="${f.status == 'valid' || f.status == 'Valid'}"><span class="badge bg-success">Hợp lệ</span></c:when>
-                                                    <c:otherwise><span class="badge bg-danger">Không hợp lệ</span></c:otherwise>
+                                                    <c:when test="${f.status == 'valid' || f.status == 'Valid'}">
+                                                        <span class="badge bg-success rounded-pill px-3 py-2">Hiện</span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="badge bg-danger rounded-pill px-3 py-2">Ẩn</span>
+                                                    </c:otherwise>
                                                 </c:choose>
                                             </td>
                                             <td>
-                                                <a href="<%= request.getContextPath() %>/organization/send_report_org?feedbackId=${f.id}" class="btn btn-sm btn-warning text-white">Báo cáo</a>
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <form method="post" action="<%= request.getContextPath() %>/OrganizationUpdateFeedbackStatusServlet" class="d-inline">
+                                                        <input type="hidden" name="feedbackId" value="${f.id}" />
+                                                        <input type="hidden" name="eventId" value="${eventId}" />
+                                                        <select name="status" class="form-select form-select-sm" style="width: auto; min-width: 100px;" onchange="this.form.submit()">
+                                                            <option value="Hiện" ${(f.status == 'valid' || f.status == 'Valid') ? 'selected' : ''}>Hiện</option>
+                                                            <option value="Ẩn" ${(f.status != 'valid' && f.status != 'Valid') ? 'selected' : ''}>Ẩn</option>
+                                                        </select>
+                                                    </form>
+                                                    <a href="<%= request.getContextPath() %>/organization/send_report_org?feedbackId=${f.id}" class="btn btn-sm btn-secondary text-white">Báo cáo</a>
+                                                </div>
                                             </td>
                                         </tr>
                                     </c:forEach>
