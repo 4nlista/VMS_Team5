@@ -64,13 +64,13 @@ public class AdminAccountService {
     }
     
     // 6. Lấy danh sách account theo trang
-    public List<Account> findAccountsPaged(String role, Boolean status, String search, int page, int pageSize) {
+    public List<Account> findAccountsPaged(String role, Boolean status, String search, int page, int pageSize, String sortOrder) {
         String normalizedRole = role == null ? null : role.trim().toLowerCase();
         String trimmedSearch = search == null ? null : search.trim();
         int safePage = Math.max(1, page);
         int safePageSize = Math.max(1, pageSize);
         int offset = (safePage - 1) * safePageSize;
-        return adminAccountDAO.findAccountsPaged(normalizedRole, status, trimmedSearch, offset, safePageSize);
+        return adminAccountDAO.findAccountsPaged(normalizedRole, status, trimmedSearch, offset, safePageSize, sortOrder);
     }
     
     // 7. Xóa account (không cho xóa admin) và toàn bộ dữ liệu liên quan

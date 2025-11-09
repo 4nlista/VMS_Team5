@@ -26,16 +26,9 @@
             </li>
             <li>
                 <a href="<%= request.getContextPath() %>/organization/profile_org.jsp"
-                   class="nav-link text-white <%= currentPath.endsWith("/profile_org.jsp") ? "active" : "" %>">
+                   class="nav-link text-white">
                     <i class="bi bi-person-circle me-2"></i>
                     Hồ sơ cá nhân
-                </a>
-            </li>
-            <li>
-                <a href="<%= request.getContextPath() %>/organization/users_org.jsp"
-                   class="nav-link text-white <%= currentPath.endsWith("/users_org.jsp") ? "active" : "" %>">
-                    <i class="bi bi-person-lines-fill me-2"></i>
-                    Quản lí người dùng
                 </a>
             </li>
             <li>
@@ -47,9 +40,10 @@
             </li>
             <li>
                 <a href="<%= request.getContextPath() %>/organization/manage_feedback_org.jsp"
-                   class="nav-link text-white <%= currentPath.endsWith("/manage_feedback_org.jsp") ? "active" : "" %>">
+                   class="nav-link text-white">
                     <i class="bi bi-pencil me-2"></i>
-                    Quản lí đánh giá
+                    Tạm thời mày đừng click vào đây.
+                    Coi như không có nút này
                 </a>
             </li>
             <li>
@@ -66,6 +60,7 @@
                     Đổi mật khẩu
                 </a>
             </li>
+
 
             <li>
                 <a href="<%= request.getContextPath() %>/LogoutServlet"

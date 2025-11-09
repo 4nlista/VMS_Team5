@@ -29,40 +29,51 @@
                 <div class="container d-flex justify-content-center">
                     <div class="w-100" style="max-width: 800px;">
                         <h3 class="fw-bold mb-4 text-center">Gửi đơn báo cáo</h3>
+                        <c:if test="${param.success == '1'}">
+                            <div id="reportSuccessAlert" class="alert alert-success" role="alert">
+                                Gửi báo cáo thành công. Trạng thái đã được ghi nhận là pending.
+                            </div>
+                            <script>
+                                setTimeout(function(){
+                                    var el = document.getElementById('reportSuccessAlert');
+                                    if(el){ el.style.display = 'none'; }
+                                }, 3000);
+                            </script>
+                        </c:if>
 
                         <div class="card shadow-sm border-0">
                             <div class="card-body p-4">
-                                <form action="<%= request.getContextPath() %>/organization/submit_report" method="post" class="row g-3">
+                                <form action="<%= request.getContextPath() %>/organization/send_report_org" method="post" class="row g-3">
 
                                     <!-- ID bình luận -->
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold">ID bình luận</label>
-                                        <input type="text" class="form-control" name="commentId" value="1" required>
+                                        <input type="text" class="form-control" name="feedbackId" value="${feedback != null ? feedback.id : param.feedbackId}" readonly>
                                     </div>
 
                                     <!-- Người gửi -->
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold">Tên người gửi</label>
-                                        <input type="text" class="form-control" name="senderName" value="OrganizationName" required>
+                                        <input type="text" class="form-control" value="${feedback != null ? feedback.organizationName : ''}" readonly>
                                     </div>
 
                                     <!-- Người bị báo cáo -->
                                     <div class="col-12">
                                         <label class="form-label fw-semibold">Người bình luận</label>
-                                        <input type="text" class="form-control" name="commenterName" value="Nguyễn Bảo An" required>
+                                        <input type="text" class="form-control" value="${feedback != null ? feedback.volunteerName : ''}" readonly>
                                     </div>
 
                                     <!-- Lý do chi tiết -->
                                     <div class="col-12">
                                         <label class="form-label fw-semibold">Lý do chi tiết</label>
-                                        <textarea class="form-control" name="details" rows="4" placeholder="Nhập mô tả chi tiết về báo cáo..." required></textarea>
+                                        <textarea class="form-control" name="reason" rows="4" placeholder="Nhập mô tả chi tiết về báo cáo..." required></textarea>
                                     </div>
 
                                     <!-- Nút thao tác -->
                                     <div class="col-12 mt-3">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <!-- Bên trái -->
-                                            <a href="<%= request.getContextPath() %>/organization/manage_feedback_org.jsp" 
+                                            <a href="<%= request.getContextPath() %>/OrganizationManageFeedbackServlet" 
                                                class="btn btn-secondary">
                                                 <i class="bi bi-arrow-left me-1"></i> Quay lại
                                             </a>
@@ -72,7 +83,7 @@
                                                 <button type="submit" class="btn btn-primary me-2">
                                                     <i></i> Gửi báo cáo
                                                 </button>
-                                                <a href="<%= request.getContextPath() %>/organization/send_report_org.jsp" 
+                                                <a href="<%= request.getContextPath() %>/OrganizationManageFeedbackServlet" 
                                                    class="btn btn-outline-danger">
                                                     <i class="bi bi-x-circle me-1"></i> Hủy
                                                 </a>
