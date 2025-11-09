@@ -178,6 +178,73 @@ public class ProfileVolunteerDAO {
         return titles;
     }
 
+    // Lấy danh sách hồ sơ TNV của một sự kiện cụ thể (có filter)
+    public List<ProfileVolunteer> getProfilesByEvent(int organizationId, int eventId, String genderFilter, String nameQuery) {
+        List<ProfileVolunteer> list = new ArrayList<>();
+        String sql = """
+            SELECT DISTINCT
+                u.account_id AS account_id,
+                u.full_name,
+                u.dob,
+                u.gender,
+                u.phone,
+                u.email,
+                u.address,
+                u.avatar AS images,
+                e.title AS event_name,
+                o.username AS organization_name
+            FROM Event_Volunteers ev
+            JOIN Events e ON ev.event_id = e.id
+            JOIN Accounts o ON e.organization_id = o.id
+            JOIN Users u ON ev.volunteer_id = u.account_id
+            WHERE e.organization_id = ? AND e.id = ?
+        """;
+
+        if (genderFilter != null && !genderFilter.equals("all") && !genderFilter.isEmpty()) {
+            sql += " AND u.gender = ?";
+        }
+        if (nameQuery != null && !nameQuery.trim().isEmpty()) {
+            sql += " AND u.full_name LIKE ?";
+        }
+
+        sql += " ORDER BY u.full_name";
+
+        try (Connection con = DBContext.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, organizationId);
+            ps.setInt(2, eventId);
+            int idx = 3;
+            if (genderFilter != null && !genderFilter.equals("all") && !genderFilter.isEmpty()) {
+                ps.setString(idx++, genderFilter);
+            }
+            if (nameQuery != null && !nameQuery.trim().isEmpty()) {
+                ps.setString(idx++, "%" + nameQuery.trim() + "%");
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    ProfileVolunteer p = new ProfileVolunteer();
+                    p.setId(rs.getInt("account_id"));
+                    p.setImages(rs.getString("images"));
+                    p.setFullName(rs.getString("full_name"));
+                    java.sql.Date dob = rs.getDate("dob");
+                    if (dob != null) {
+                        p.setDob(new java.util.Date(dob.getTime()));
+                    }
+                    p.setGender(rs.getString("gender"));
+                    p.setPhone(rs.getString("phone"));
+                    p.setEmail(rs.getString("email"));
+                    p.setAddress(rs.getString("address"));
+                    p.setEventName(rs.getString("event_name"));
+                    p.setOrganizationName(rs.getString("organization_name"));
+                    list.add(p);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     // Lấy danh sách hồ sơ TNV của tất cả sự kiện thuộc 1 organization (có filter)
     public List<ProfileVolunteer> getProfilesByOrganization(int organizationId, String genderFilter, String nameQuery, String eventTitleQuery) {
         List<ProfileVolunteer> list = new ArrayList<>();

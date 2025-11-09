@@ -43,6 +43,7 @@ public class OrganizationVolunteersServlet extends HttpServlet {
 
         int organizationId = acc.getId();
         
+        String eventIdParam = request.getParameter("eventId");
         String genderFilter = request.getParameter("gender");
         if (genderFilter == null || genderFilter.isEmpty()) {
             genderFilter = "all";
@@ -50,13 +51,30 @@ public class OrganizationVolunteersServlet extends HttpServlet {
         String nameQuery = request.getParameter("q");
         String eventTitleQuery = request.getParameter("eventTitle");
 
-        List<ProfileVolunteer> profiles = profileVolunteerDAO.getProfilesByOrganization(
-                organizationId, genderFilter, nameQuery, eventTitleQuery);
+        List<ProfileVolunteer> profiles;
+        Integer eventId = null;
+        
+        // Nếu có eventId, lấy volunteers của sự kiện đó
+        if (eventIdParam != null && !eventIdParam.isEmpty()) {
+            try {
+                eventId = Integer.parseInt(eventIdParam);
+                profiles = profileVolunteerDAO.getProfilesByEvent(organizationId, eventId, genderFilter, nameQuery);
+            } catch (NumberFormatException e) {
+                // Nếu eventId không hợp lệ, lấy tất cả volunteers
+                profiles = profileVolunteerDAO.getProfilesByOrganization(
+                        organizationId, genderFilter, nameQuery, eventTitleQuery);
+            }
+        } else {
+            // Không có eventId, lấy tất cả volunteers của organization
+            profiles = profileVolunteerDAO.getProfilesByOrganization(
+                    organizationId, genderFilter, nameQuery, eventTitleQuery);
+        }
 
         request.setAttribute("profiles", profiles);
         request.setAttribute("gender", genderFilter);
         request.setAttribute("q", nameQuery);
         request.setAttribute("eventTitle", eventTitleQuery);
+        request.setAttribute("eventId", eventId);
         request.setAttribute("account", acc);
         
         request.getRequestDispatcher("/organization/users_org.jsp").forward(request, response);

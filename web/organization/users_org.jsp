@@ -26,10 +26,18 @@
             <!-- Main Content -->
             <div class="main-content p-4">
                 <div class="container-fluid">
-                    <h3 class="fw-bold mb-4">Danh sách tình nguyện viên</h3>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="fw-bold mb-0">Danh sách tình nguyện viên</h3>
+                        <a href="<%= request.getContextPath() %>/OrganizationListServlet" class="btn btn-secondary btn-sm">
+                            <i class="bi bi-arrow-left"></i> Quay về quản lí sự kiện
+                        </a>
+                    </div>
 
                     <!-- Bộ lọc + nút tạo mới (nếu cần) -->
                     <form method="get" action="OrganizationVolunteersServlet" class="d-flex align-items-end mb-3 flex-wrap gap-3">
+                        <c:if test="${not empty eventId}">
+                            <input type="hidden" name="eventId" value="${eventId}" />
+                        </c:if>
                         <!-- Inputs row + buttons ngay sau thanh search -->
                         <div class="d-flex align-items-end flex-wrap gap-3">
                             <!-- Giới tính -->
@@ -54,7 +62,12 @@
                                 <button type="submit" class="btn btn-primary" style="min-width:140px;">
                                     <i class="bi bi-search"></i> Lọc và tìm kiếm
                                 </button>
-                                <a href="OrganizationVolunteersServlet" class="btn btn-secondary" style="min-width:110px;">
+                                <c:url var="resetUrl" value="OrganizationVolunteersServlet">
+                                    <c:if test="${not empty eventId}">
+                                        <c:param name="eventId" value="${eventId}" />
+                                    </c:if>
+                                </c:url>
+                                <a href="${resetUrl}" class="btn btn-secondary" style="min-width:110px;">
                                     <i class="bi bi-arrow-counterclockwise"></i> Làm mới
                                 </a>
                             </div>
@@ -80,7 +93,7 @@
                                     <tr>
                                         <td>${loop.index + 1}</td>
                                         <td>
-                                            <a href="${pageContext.request.contextPath}/OrganizationVolunteerDetailServlet?volunteerId=${p.id}" class="text-decoration-none">${p.fullName}</a>
+                                            <a href="${pageContext.request.contextPath}/OrganizationVolunteerDetailServlet?volunteerId=${p.id}" class="text-decoration-none text-dark">${p.fullName}</a>
                                         </td>
                                         <td>
                                             <c:choose>
