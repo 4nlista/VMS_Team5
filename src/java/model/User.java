@@ -72,6 +72,22 @@ public class User {
         this.account = account;
     }
 
+	public User(int id, int account_id, String full_name, String gender, String phone, String email, String address, String avatar, String job_title, String bio, Date dob) {
+		this.id = id;
+		this.account_id = account_id;
+		this.full_name = full_name;
+		this.gender = gender;
+		this.phone = phone;
+		this.email = email;
+		this.address = address;
+		this.avatar = avatar;
+		this.job_title = job_title;
+		this.bio = bio;
+		this.dob = dob;
+	}
+    
+    
+
     public int getId() {
         return id;
     }
