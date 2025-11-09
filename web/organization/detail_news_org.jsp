@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -17,83 +18,81 @@
     <body>
         <div class="content-container">
             <jsp:include page="layout_org/sidebar_org.jsp" />
-
             <div class="main-content p-4">
                 <div class="container d-flex justify-content-center">
                     <div class="w-100" style="max-width: 800px;">
                         <h3 class="fw-bold mb-4 text-center">Chi tiết bài viết</h3>
-
                         <div class="card shadow-sm border-0">
                             <div class="card-body p-4">
-                                <form action="<%= request.getContextPath() %>/organization/update_news" method="post" class="row g-3">
-
+                                <div class="row g-3">
+                                    <div class="text-center">
+                                        <img src="${pageContext.request.contextPath}/NewsImage?file=${news.images}" style="max-width:250px;max-height:250px;object-fit:contain;">
+                                    </div>
                                     <!-- ID bài viết -->
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold">ID Bài viết</label>
-                                        <input type="text" class="form-control" name="newsId" value="1" readonly>
+                                        <input type="text" class="form-control" value="${news.id}" readonly>
                                     </div>
-
+                                    <!-- Title -->
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">Tiêu đề</label>
+                                        <input type="text" class="form-control" value="${news.title}" readonly>
+                                    </div>
+                                    <!-- Organization id -->
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">ID quản trị viên</label>
+                                        <input type="text" class="form-control" value="${news.organizationId}" readonly>
+                                    </div>
                                     <!-- Người đăng -->
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold">Người đăng</label>
-                                        <input type="text" class="form-control" name="authorName" value="OrganizationName" readonly>
+                                        <input type="text" class="form-control" value="${news.organizationName}" readonly>
                                     </div>
-
                                     <!-- Ngày tạo -->
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold">Ngày tạo</label>
-                                        <input type="text" class="form-control" name="createdAt" value="01/11/2025" readonly>
+                                        <input type="text" class="form-control" value="${news.createdAt}" readonly>
                                     </div>
-
                                     <!-- Trạng thái -->
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold">Trạng thái</label>
-                                        <select class="form-select" name="status">
-                                            <option value="published">Hiển thị</option>
-                                            <option value="hidden">Ẩn</option>
-                                        </select>
+                                        <c:choose>
+                                            <c:when test="${news.status == 'published'}">
+                                                <input type="text" class="form-control" value="Hiển Thị" readonly>
+                                            </c:when>
+                                            <c:when test="${news.status == 'hidden'}">
+                                                <input type="text" class="form-control" value="Ẩn" readonly>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <input type="text" class="form-control" value="Unknown" readonly>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </div>
-
                                     <!-- Nội dung bài viết -->
                                     <div class="col-12">
                                         <label class="form-label fw-semibold">Nội dung</label>
-                                        <textarea class="form-control" name="content" rows="6" readonly>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                                        Phasellus euismod, justo nec consectetur malesuada, 
-                                        nisl nisi vehicula metus, ac facilisis mi eros in ligula.
-                                        </textarea>
+                                        <textarea class="form-control" rows="12" style="resize:none;" readonly>${news.content}</textarea>
                                     </div>
-
                                     <!-- Nút thao tác -->
                                     <div class="col-12 mt-3">
                                         <div class="d-flex justify-content-between align-items-center">
-                                            <a href="<%= request.getContextPath() %>/organization/manage_new_org.jsp" 
-                                               class="btn btn-secondary">
+                                            <a href="${pageContext.request.contextPath}/OrganizationManageNews" class="btn btn-secondary">
                                                 <i class="bi bi-arrow-left me-1"></i> Quay lại
                                             </a>
-
                                             <div>
-                                                <button type="submit" class="btn btn-primary me-2">
-                                                    <i class="bi bi-save me-1"></i> Cập nhật
-                                                </button>
-                                                <a href="<%= request.getContextPath() %>/organization/detail_news_org.jsp" 
-                                                   class="btn btn-outline-danger">
-                                                    <i class="bi bi-x-circle me-1"></i> Hủy
+                                                <a href="${pageContext.request.contextPath}/OrganizationNewsEdit?id=${news.id}" class="btn btn-primary">
+                                                    <i class="bi bi-pencil me-1"></i> Sửa
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
-
-                                </form>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
-
-
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

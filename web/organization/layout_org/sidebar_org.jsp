@@ -53,8 +53,10 @@
                 </a>
             </li>
             <li>
-                <a href="<%= request.getContextPath() %>/organization/manage_new_org.jsp"
-                   class="nav-link text-white <%= currentPath.endsWith("/manage_new_org.jsp") ? "active" : "" %>">
+                <a href="<%= request.getContextPath() %>/OrganizationManageNews"
+                   class="nav-link text-white <%= (currentPath.endsWith("/manage_new_org.jsp")
+                             || currentPath.endsWith("/detail_news_org.jsp"))
+                             ? "active" : "" %>">
                     <i class="bi bi-file-earmark-bar-graph me-2"></i>
                     Quản lí tin tức
                 </a>

@@ -12,13 +12,10 @@ import java.util.List;
 import java.util.Map;
 import model.Account;
 import model.Event;
-//<<<<<<< HEAD
 import model.Event;
 import service.AccountService;
 import service.AdminHomeService;
-//=======
 import service.AdminAccountService;
-//>>>>>>> hoang
 
 @WebServlet(name = "AdminHomeServlet", urlPatterns = {"/AdminHomeServlet"})
 
