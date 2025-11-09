@@ -22,6 +22,17 @@
                 <div class="container d-flex justify-content-center">
                     <div class="w-100" style="max-width: 800px;">
                         <h3 class="fw-bold mb-4 text-center">Gửi đơn báo cáo</h3>
+                        <c:if test="${param.success == '1'}">
+                            <div id="reportSuccessAlert" class="alert alert-success" role="alert">
+                                Gửi đơn báo cáo thành công. Trạng thái đã được ghi nhận là pending.
+                            </div>
+                            <script>
+                                setTimeout(function(){
+                                    var el = document.getElementById('reportSuccessAlert');
+                                    if(el){ el.style.display = 'none'; }
+                                }, 3000);
+                            </script>
+                        </c:if>
 
                         <div class="card shadow-sm border-0">
                             <div class="card-body p-4">
