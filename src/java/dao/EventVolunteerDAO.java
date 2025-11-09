@@ -8,14 +8,9 @@ import utils.DBContext;
 
 public class EventVolunteerDAO {
 
-    /**
-     * Lấy danh sách lịch sử đăng ký sự kiện của volunteer theo ID
-     * @param volunteerId ID của volunteer (trong Accounts.id)
-     * @return danh sách EventVolunteer
-     */
+    // --- Phần code cũ giữ nguyên ---
     public List<EventVolunteer> getEventRegistrationsByVolunteerId(int volunteerId) {
         List<EventVolunteer> list = new ArrayList<>();
-
         String sql = """
             SELECT ev.id, ev.event_id, ev.volunteer_id, ev.apply_date, ev.status, ev.hours, ev.note,
                    e.title AS eventTitle,
@@ -63,5 +58,66 @@ public class EventVolunteerDAO {
         }
 
         return list;
+    }
+
+    // --- Lấy trạng thái đơn ---
+    public String getApplicationStatus(int eventId, int volunteerId) {
+        String sql = "SELECT status FROM Event_Volunteers WHERE event_id = ? AND volunteer_id = ?";
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, eventId);
+            ps.setInt(2, volunteerId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("status");
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // --- Xóa đơn + ghi log ---
+    public boolean deleteApplicationWithLog(int eventId, int volunteerId) {
+        String status = getApplicationStatus(eventId, volunteerId);
+        if (status == null) return false; // không tìm thấy đơn
+
+        String deleteSql = "DELETE FROM Event_Volunteers WHERE event_id = ? AND volunteer_id = ?";
+        String logSql = "INSERT INTO event_volunteer_log (volunteer_id, event_id, status, action) VALUES (?, ?, ?, ?)";
+
+        try (Connection conn = DBContext.getConnection()) {
+            conn.setAutoCommit(false); // bắt đầu transaction
+
+            // 1️⃣ Xóa đơn
+            try (PreparedStatement psDelete = conn.prepareStatement(deleteSql)) {
+                psDelete.setInt(1, eventId);
+                psDelete.setInt(2, volunteerId);
+                int rows = psDelete.executeUpdate();
+                if (rows == 0) {
+                    conn.rollback();
+                    return false;
+                }
+            }
+
+            // 2️⃣ Ghi log
+            try (PreparedStatement psLog = conn.prepareStatement(logSql)) {
+                psLog.setInt(1, volunteerId);
+                psLog.setInt(2, eventId);
+                psLog.setString(3, status);
+                psLog.setString(4, "Deleted");
+                psLog.executeUpdate();
+            }
+
+            conn.commit(); // commit transaction
+            return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
