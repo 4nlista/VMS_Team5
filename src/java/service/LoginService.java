@@ -56,7 +56,7 @@ public class LoginService {
             session.removeAttribute("redirectAfterLogin");
             switch (redirect) {
                 case "donate":
-                    return "/donate.jsp";
+                    return "/GuessDonateServlet";
                 case "be_a_volunteer":
                     return "/VolunteerHomeServlet";
             }
@@ -105,7 +105,7 @@ public class LoginService {
             switch (actLower) {
                 case "donate":
                     if ("volunteer".equals(role)) {
-                        return "/donate.jsp";
+                        return "/GuessDonateServlet";
                     } else {
                         break;      // admin/org không được đi trang volunteer -> fallback về dashboard
                     }
@@ -115,8 +115,6 @@ public class LoginService {
                     } else {
                         break;      // admin/org không được đi trang volunteer -> fallback về dashboard
                     }
-                default:
-                    return "/index.jsp";
             }
         }
 
