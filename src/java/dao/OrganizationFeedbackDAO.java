@@ -9,7 +9,6 @@ import java.util.List;
 import model.Feedback;
 import utils.DBContext;
 
-// oke em
 public class OrganizationFeedbackDAO {
 
     public List<Feedback> findByOrganization(int organizationId, Integer eventId, Integer rating, String status, String eventTitleQuery) {
@@ -114,6 +113,19 @@ public class OrganizationFeedbackDAO {
             throw new RuntimeException("Error fetching feedback by id", e);
         }
         return null;
+    }
+
+    public boolean updateFeedbackStatus(int feedbackId, String status) {
+        String sql = "UPDATE Feedback SET status = ? WHERE id = ?";
+        try (Connection con = DBContext.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, status);
+            ps.setInt(2, feedbackId);
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error updating feedback status", e);
+        }
     }
 }
 

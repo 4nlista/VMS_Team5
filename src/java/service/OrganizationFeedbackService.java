@@ -18,6 +18,13 @@ public class OrganizationFeedbackService {
         String trimmedQuery = eventTitleQuery == null ? null : eventTitleQuery.trim();
         return feedbackDAO.findByOrganization(organizationAccountId, eventId, rating, normalizedStatus, trimmedQuery);
     }
+
+    public boolean updateFeedbackStatus(int feedbackId, String status) {
+        if (status == null || (!status.equalsIgnoreCase("valid") && !status.equalsIgnoreCase("invalid"))) {
+            return false;
+        }
+        return feedbackDAO.updateFeedbackStatus(feedbackId, status.toLowerCase());
+    }
 }
 
 // ok em

@@ -47,11 +47,19 @@
                             <!-- Trạng thái -->
                             <div class="form-group d-flex flex-column">
                                 <label class="form-label fw-semibold">Trạng thái:</label>
-                                <select name="status" class="form-select form-select-sm" style="width: 160px;">
-                                    <option value="" <c:if test="${param.status == null || param.status == ''}">selected</c:if>>Tất cả</option>
-                                        <option value="valid">Hợp lệ</option>
-                                        <option value="invalid">Không hợp lệ</option>
-                                    </select>
+                                <select name="status" class="form-select" style="width: 160px;">
+                                    <option value="" ${empty status ? 'selected' : ''}>Tất cả</option>
+                                    <option value="valid" ${status == 'valid' ? 'selected' : ''}>Hiện</option>
+                                    <option value="invalid" ${status == 'invalid' ? 'selected' : ''}>Ẩn</option>
+                                </select>
+                            </div>
+
+                            <!-- Tên sự kiện -->
+                            <div class="form-group">
+                                <label class="form-label fw-semibold">Tên sự kiện</label>
+                                <div class="d-flex align-items-center gap-2 mt-1">
+                                    <input class="form-control" style="min-width:320px" name="q" value="${q}" placeholder="Nhập tên sự kiện..." />
+
                                 </div>
                                 <!-- Nút Lọc -->
                                 <button type="submit" class="btn btn-primary btn-sm" style="min-width:110px; align-self:end;">
@@ -72,6 +80,32 @@
                             </div>
                         </form>
 
+                    <!-- Thông báo thành công -->
+                    <c:if test="${param.reported == '1'}">
+                        <div id="reportSuccessAlert" class="alert alert-success mb-3" role="alert">
+                            Gửi báo cáo thành công. Trạng thái đã được ghi nhận là pending.
+                        </div>
+                        <script>
+                            setTimeout(function(){
+                                var el = document.getElementById('reportSuccessAlert');
+                                if(el){ el.style.display = 'none'; }
+                            }, 5000);
+                        </script>
+                    </c:if>
+
+                    <!-- Thông báo cập nhật trạng thái thành công -->
+                    <c:if test="${param.statusUpdated == '1'}">
+                        <div id="statusUpdateSuccessAlert" class="alert alert-success mb-3" role="alert">
+                            Cập nhật trạng thái thành công.
+                        </div>
+                        <script>
+                            setTimeout(function(){
+                                var el = document.getElementById('statusUpdateSuccessAlert');
+                                if(el){ el.style.display = 'none'; }
+                            }, 5000);
+                        </script>
+                    </c:if>
+
                         <!-- Bảng dữ liệu -->
                         <div class="table-responsive">
                             <table class="table table-bordered table-hover align-middle" style="table-layout: fixed; width: 100%;">
@@ -87,40 +121,43 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <!-- Hàng 1: Đang Hiện -->
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Dọn rác bãi biển</td>
-                                        <td>Cao Văn Huy</td>
-                                        <td>Sự kiện diễn ra rất hay và ý nghĩa</td>
-                                        <td>4</td>
-                                        <td><span class="badge bg-success">Hiện</span></td>
-                                        <td>
-                                            <select class="form-select form-select-sm w-auto d-inline">
-                                                <option selected>Hiện</option>
-                                                <option>Ẩn</option>
-                                            </select>
-                                            <a href="<%= request.getContextPath() %>/organization/send_report_org.jsp" class="btn btn-sm btn-secondary">Báo cáo</a>
-                                    </td>
-                                </tr>
-
-                                <!-- Hàng 2: Đang Ẩn -->
-                                <tr>
-                                    <td>2</td>
-                                    <td>Hỗ trợ người nghèo</td>
-                                    <td>Nguyễn Bảo An</td>
-                                    <td>Sự kiện rất tệ, tôi không muốn thấy nó</td>
-                                    <td>1</td>
-                                    <td><span class="badge bg-danger">Ẩn</span></td>
-                                    <td>
-                                        <select class="form-select form-select-sm w-auto d-inline">
-                                            <option>Hiện</option>
-                                            <option selected>Ẩn</option>
-                                        </select>
-                                        <a href="<%= request.getContextPath() %>/organization/send_report_org.jsp" class="btn btn-sm btn-secondary">Báo cáo</a>
-                                    </td>
-                                </tr>
-                            </tbody>
+                                    <c:forEach var="f" items="${feedbacks}" varStatus="loop">
+                                        <tr>
+                                            <td>${loop.index + 1}</td>
+                                            <td>${f.volunteerName}</td>
+                                            <td style="word-wrap: break-word; white-space: normal;">${f.comment}</td>
+                                            <td>${f.rating}</td>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${f.status == 'valid' || f.status == 'Valid'}">
+                                                        <span class="badge bg-success rounded-pill px-3 py-2">Hiện</span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="badge bg-danger rounded-pill px-3 py-2">Ẩn</span>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <form method="post" action="<%= request.getContextPath() %>/OrganizationUpdateFeedbackStatusServlet" class="d-inline">
+                                                        <input type="hidden" name="feedbackId" value="${f.id}" />
+                                                        <input type="hidden" name="eventId" value="${eventId}" />
+                                                        <select name="status" class="form-select form-select-sm" style="width: auto; min-width: 100px;" onchange="this.form.submit()">
+                                                            <option value="Hiện" ${(f.status == 'valid' || f.status == 'Valid') ? 'selected' : ''}>Hiện</option>
+                                                            <option value="Ẩn" ${(f.status != 'valid' && f.status != 'Valid') ? 'selected' : ''}>Ẩn</option>
+                                                        </select>
+                                                    </form>
+                                                    <a href="<%= request.getContextPath() %>/organization/send_report_org?feedbackId=${f.id}" class="btn btn-sm btn-secondary text-white">Báo cáo</a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                    <c:if test="${empty feedbacks}">
+                                        <tr>
+                                            <td colspan="6" class="text-center">Không có đánh giá phù hợp</td>
+                                        </tr>
+                                    </c:if>
+                                </tbody>
                         </table>
                     </div>
 
