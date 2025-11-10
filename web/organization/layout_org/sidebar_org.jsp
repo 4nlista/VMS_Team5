@@ -46,7 +46,7 @@
                 </a>
             </li>
             <li>
-                <a href="<%= request.getContextPath() %>/organization/manage_feedback_org.jsp"
+                <a href="<%= request.getContextPath() %>/OrganizationManageFeedbackServlet"
                    class="nav-link text-white <%= currentPath.endsWith("/manage_feedback_org.jsp") ? "active" : "" %>">
                     <i class="bi bi-pencil me-2"></i>
                     Quản lí đánh giá

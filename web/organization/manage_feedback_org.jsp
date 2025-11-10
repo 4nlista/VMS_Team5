@@ -16,6 +16,7 @@
         <link href="<%= request.getContextPath() %>/organization/css/org.css" rel="stylesheet" />
     </head>
     <body>
+    
         <div class="content-container">
             <jsp:include page="layout_org/sidebar_org.jsp" />
 
@@ -27,20 +28,21 @@
                             <i class="bi bi-arrow-left"></i> Về quản lí sự kiện
                         </a>
                     </div>
-                    <!-- Bộ lọc + nút tạo mới -->
-                    <form method="get" action="OrganizationListServlet" class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
-                        <!-- Nhóm dropdown + nút lọc/reset -->
-                        <div class="d-flex gap-2 align-items-center flex-wrap">
+
+                    <!-- Bộ lọc + nút tạo mới ok rồi -->
+                    <form method="get" action="<%= request.getContextPath() %>/OrganizationManageFeedbackServlet" class="d-flex align-items-end mb-3 flex-wrap gap-3">
+                        <input type="hidden" name="eventId" value="${eventId}" />
+                        <div class="d-flex align-items-end flex-wrap gap-3">
                             <!-- Loại sự kiện -->
                             <div class="form-group d-flex flex-column">
                                 <label class="form-label fw-semibold">Điểm đánh giá:</label>
-                                <select name="rating" class="form-select form-select-sm" style="width: 160px;">
-                                    <option value="">Tất cả</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
+                                <select name="rating" class="form-select" style="width: 160px;">
+                                    <option value="" ${empty rating ? 'selected' : ''}>Tất cả</option>
+                                    <option value="1" ${rating == '1' ? 'selected' : ''}>1</option>
+                                    <option value="2" ${rating == '2' ? 'selected' : ''}>2</option>
+                                    <option value="3" ${rating == '3' ? 'selected' : ''}>3</option>
+                                    <option value="4" ${rating == '4' ? 'selected' : ''}>4</option>
+                                    <option value="5" ${rating == '5' ? 'selected' : ''}>5</option>
                                 </select>
                             </div>
 
@@ -59,25 +61,19 @@
                                 <label class="form-label fw-semibold">Tên sự kiện</label>
                                 <div class="d-flex align-items-center gap-2 mt-1">
                                     <input class="form-control" style="min-width:320px" name="q" value="${q}" placeholder="Nhập tên sự kiện..." />
-
                                 </div>
-                                <!-- Nút Lọc -->
-                                <button type="submit" class="btn btn-primary btn-sm" style="min-width:110px; align-self:end;">
-                                    <i class="bi bi-search"></i> Lọc
-                                </button>
+                            </div>
 
-                                <!-- Nút Reset -->
-                                <a href="#" class="btn btn-secondary btn-sm" style="min-width:110px; align-self:end;">
-                                    <i class="bi bi-arrow-counterclockwise"></i> Reset
+                            <!-- Buttons placed right after search fields -->
+                            <div class="d-flex align-items-end gap-2">
+                                <button type="submit" class="btn btn-primary" style="min-width:140px;">
+                                    <i class="bi bi-search"></i> Lọc và tìm kiếm
+                                </button>
+                                <a href="<%= request.getContextPath() %>/OrganizationManageFeedbackServlet" class="btn btn-secondary" style="min-width:110px;">
+                                    <i class="bi bi-arrow-counterclockwise"></i> Làm mới
                                 </a>
                             </div>
-                            <div class="form-group">
-                                <label class="form-label fw-semibold">Tên sự kiện:</label>
-                                <div class="d-flex align-items-center gap-2 mt-1">
-                                    <input class="form-control w-auto" placeholder="Nhập tên sự kiện" />
-                                    <button class="btn btn-danger">Tìm kiếm</button>
-                                </div>
-                            </div>
+                        </div>
                         </form>
 
                     <!-- Thông báo thành công -->
@@ -89,7 +85,7 @@
                             setTimeout(function(){
                                 var el = document.getElementById('reportSuccessAlert');
                                 if(el){ el.style.display = 'none'; }
-                            }, 5000);
+                            }, 2000);
                         </script>
                     </c:if>
 
@@ -102,7 +98,7 @@
                             setTimeout(function(){
                                 var el = document.getElementById('statusUpdateSuccessAlert');
                                 if(el){ el.style.display = 'none'; }
-                            }, 5000);
+                            }, 2000);
                         </script>
                     </c:if>
 
@@ -111,12 +107,11 @@
                             <table class="table table-bordered table-hover align-middle" style="table-layout: fixed; width: 100%;">
                                 <thead class="table-secondary">
                                     <tr>
-                                        <th style="width:4%;">STT</th>
-                                        <th style="width:25%;">Tên sự kiện</th>
-                                        <th style="width:16%;">Tình nguyện viên</th>
-                                        <th style="width:25%;">Bình luận</th>
-                                        <th style="width:5%;">Điểm</th>
-                                        <th style="width:10%;">Trạng thái</th>
+                                        <th style="width:5%;">STT</th>
+                                        <th style="width:20%;">Tình nguyện viên</th>
+                                        <th style="width:40%;">Bình luận</th>
+                                        <th style="width:8%;">Điểm</th>
+                                        <th style="width:12%;">Trạng thái</th>
                                         <th style="width:15%;">Thao tác</th>
                                     </tr>
                                 </thead>
@@ -165,7 +160,7 @@
 
                     <!-- Phân trang -->
                     <div class="d-flex justify-content-between align-items-center mt-3">
-                        <span>Hiển thị 1 - 3 đánh giá</span>
+                        <span>Hiển thị ${empty feedbacks ? 0 : feedbacks.size()} đánh giá</span>
                         <ul class="pagination pagination-sm mb-0">
                             <li class="page-item disabled"><a class="page-link" href="#">Trước</a></li>
                             <li class="page-item active"><a class="page-link" href="#">1</a></li>
