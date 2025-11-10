@@ -14,7 +14,6 @@ import model.ProfileVolunteer;
 import dao.ProfileVolunteerDAO;
 import service.AccountService;
 
-
 @WebServlet(name = "OrganizationVolunteersServlet", urlPatterns = {"/OrganizationVolunteersServlet"})
 public class OrganizationVolunteersServlet extends HttpServlet {
 
@@ -43,7 +42,7 @@ public class OrganizationVolunteersServlet extends HttpServlet {
         }
 
         int organizationId = acc.getId();
-        
+
         String eventIdParam = request.getParameter("eventId");
         String genderFilter = request.getParameter("gender");
         if (genderFilter == null || genderFilter.isEmpty()) {
@@ -54,7 +53,7 @@ public class OrganizationVolunteersServlet extends HttpServlet {
 
         List<ProfileVolunteer> profiles;
         Integer eventId = null;
-        
+
         // Nếu có eventId, lấy volunteers của sự kiện đó
         if (eventIdParam != null && !eventIdParam.isEmpty()) {
             try {
@@ -70,14 +69,13 @@ public class OrganizationVolunteersServlet extends HttpServlet {
             profiles = profileVolunteerDAO.getProfilesByOrganization(
                     organizationId, genderFilter, nameQuery, eventTitleQuery);
         }
-
         request.setAttribute("profiles", profiles);
         request.setAttribute("gender", genderFilter);
         request.setAttribute("q", nameQuery);
         request.setAttribute("eventTitle", eventTitleQuery);
         request.setAttribute("eventId", eventId);
         request.setAttribute("account", acc);
-        
+
         request.getRequestDispatcher("/organization/users_org.jsp").forward(request, response);
     }
 
@@ -99,5 +97,3 @@ public class OrganizationVolunteersServlet extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/OrganizationVolunteersServlet");
     }
 }
-
-
