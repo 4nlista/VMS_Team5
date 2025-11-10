@@ -62,8 +62,8 @@
             </a>
         </li>
         <li>
-            <a href="<%= request.getContextPath() %>/admin/manage_feedback_admin.jsp"
-               class="nav-link text-white <%= currentPath.endsWith("/manage_feedback_admin.jsp") ? "active" : "" %>">
+            <a href="<%= request.getContextPath() %>/AdminReportServlet"
+               class="nav-link text-white <%= currentPath.endsWith("/manage_report_admin.jsp") ? "active" : "" %>">
                 <i class="bi bi-file-earmark-bar-graph me-2"></i>
                 Kiểm duyệt nội dung
             </a>
