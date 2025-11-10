@@ -100,18 +100,18 @@
                                     <td>${user.id}</td>
                                     <td>
                                         <c:choose>
-    <c:when test="${not empty user.avatar && fn:contains(user.avatar, '://')}">
-        <img src="${user.avatar}" alt="avatar" class="rounded-circle avatar-lg mb-3 border border-2 border-light shadow-sm" width="50" height="50"/>
-    </c:when>
+                                            <c:when test="${not empty user.avatar && fn:contains(user.avatar, '://')}">
+                                                <img src="${user.avatar}" alt="avatar" class="rounded-circle avatar-lg mb-3 border border-2 border-light shadow-sm" width="50" height="50"/>
+                                            </c:when>
 
-    <c:when test="${not empty user.avatar}">
-        <img src="${pageContext.request.contextPath}/UserAvatar?file=${user.avatar}" alt="avatar" class="rounded-circle avatar-lg mb-3 border border-2 border-light shadow-sm" width="50" height="50"/>
-    </c:when>
+                                            <c:when test="${not empty user.avatar}">
+                                                <img src="${pageContext.request.contextPath}/UserAvatar?file=${user.avatar}" alt="avatar" class="rounded-circle avatar-lg mb-3 border border-2 border-light shadow-sm" width="50" height="50"/>
+                                            </c:when>
 
-    <c:otherwise>
-        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="avatar" class="rounded-circle avatar-lg mb-3 border border-2 border-light shadow-sm" width="50" height="50"/>
-    </c:otherwise>
-</c:choose>
+                                            <c:otherwise>
+                                                <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="avatar" class="rounded-circle avatar-lg mb-3 border border-2 border-light shadow-sm" width="50" height="50"/>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </td>
                                     <td>${user.account.username}</td>
                                     <td>${user.full_name}</td>
