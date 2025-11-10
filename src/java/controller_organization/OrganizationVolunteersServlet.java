@@ -14,7 +14,7 @@ import model.ProfileVolunteer;
 import dao.ProfileVolunteerDAO;
 import service.AccountService;
 
-// ok em
+
 @WebServlet(name = "OrganizationVolunteersServlet", urlPatterns = {"/OrganizationVolunteersServlet"})
 public class OrganizationVolunteersServlet extends HttpServlet {
 
