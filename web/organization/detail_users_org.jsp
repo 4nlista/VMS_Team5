@@ -32,8 +32,9 @@
                                 <div class="row g-0">
                                     <!-- LEFT: Avatar + name -->
                                     <div class="col-md-4 d-flex flex-column align-items-center justify-content-center text-center p-4">
-                                        <img src="${not empty profile.images ? profile.images : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}"
-                                             alt="avatar" class="rounded-circle mb-3 border" style="width:160px;height:160px;object-fit:cover;"/>
+
+                                        <img src="${profile.images}" alt="avatar" class="rounded-circle avatar-lg mb-3 border border-2 border-light shadow-sm" width="50" height="50"/>
+
                                         <div class="fw-semibold fs-5">${profile.fullName}</div>
                                         <div class="mt-2 text-muted small">${profile.organizationName}</div>
                                     </div>
