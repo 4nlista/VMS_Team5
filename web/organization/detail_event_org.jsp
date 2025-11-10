@@ -150,7 +150,7 @@
                                         <div class="mb-3">
                                             <label class="form-label text-muted">Ngày kết thúc</label>
                                             <input type="datetime-local" name="endDate" class="form-control" 
-                                                   value="<fmt:formatDate value='${event.startDate}' pattern='yyyy-MM-dd\'T\'HH:mm' />" required>
+                                                   value="<fmt:formatDate value='${event.endDate}' pattern='yyyy-MM-dd\'T\'HH:mm' />" required>
                                         </div>
 
                                         <div class="mb-3">

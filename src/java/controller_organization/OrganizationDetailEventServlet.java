@@ -87,7 +87,6 @@ public class OrganizationDetailEventServlet extends HttpServlet {
 
         try {
             if ("update".equals(action)) {
-                // Lấy dữ liệu từ form
                 String title = request.getParameter("title");
                 String description = request.getParameter("description");
                 String location = request.getParameter("location");
@@ -98,11 +97,28 @@ public class OrganizationDetailEventServlet extends HttpServlet {
                 String visibility = request.getParameter("visibility");
                 int categoryId = Integer.parseInt(request.getParameter("categoryId"));
 
-                // Parse dates
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
                 java.util.Date startDate = sdf.parse(startDateStr);
                 java.util.Date endDate = sdf.parse(endDateStr);
 
+                // ✅ THÊM VALIDATION
+                java.util.Date now = new java.util.Date();
+
+                // Kiểm tra ngày bắt đầu phải >= hiện tại
+                if (startDate.before(now)) {
+                    request.getSession().setAttribute("errorMessage",
+                            "Ngày bắt đầu không được ở quá khứ!");
+                    response.sendRedirect(request.getContextPath() + "/OrganizationDetailEventServlet?eventId=" + eventId);
+                    return;
+                }
+
+                // Kiểm tra ngày kết thúc > ngày bắt đầu
+                if (endDate.before(startDate) || endDate.equals(startDate)) {
+                    request.getSession().setAttribute("errorMessage",
+                            "Ngày kết thúc phải sau ngày bắt đầu!");
+                    response.sendRedirect(request.getContextPath() + "/OrganizationDetailEventServlet?eventId=" + eventId);
+                    return;
+                }
 
                 // Update event
                 boolean success = dao.updateEvent(eventId, title, description, location,
@@ -134,6 +150,7 @@ public class OrganizationDetailEventServlet extends HttpServlet {
         } finally {
             dao.close();
         }
+
         response.sendRedirect(request.getContextPath() + "/OrganizationDetailEventServlet?eventId=" + eventId);
     }
 }
