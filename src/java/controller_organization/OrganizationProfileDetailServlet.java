@@ -28,7 +28,7 @@ public class OrganizationProfileDetailServlet extends HttpServlet {
         try {
             User profile = service.loadProfile(request);
             request.setAttribute("profile", profile);
-
+	 request.getSession().setAttribute("user", profile);
             request.getRequestDispatcher("/organization/profile_org.jsp")
                    .forward(request, response);
 
@@ -36,10 +36,5 @@ public class OrganizationProfileDetailServlet extends HttpServlet {
             request.setAttribute("error", e.getMessage());
             request.getRequestDispatcher("/error.jsp").forward(request, response);
         }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
     }
 }

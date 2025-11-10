@@ -5,6 +5,7 @@
 --%>
 
 <%@ page contentType="text/html; charset=UTF-8" language="java" pageEncoding="UTF-8" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
     String currentPath = request.getRequestURI();
 %>
@@ -26,7 +27,9 @@
             </li>
             <li>
                 <a href="<%= request.getContextPath() %>/OrganizationProfileDetail"
-                   class="nav-link text-white <%= currentPath.endsWith("/profile_org.jsp") ? "active" : "" %>">
+                   class="nav-link text-white <%= (currentPath.endsWith("/profile_org.jsp")
+                             || currentPath.endsWith("/edit_org_profile.jsp"))
+                             ? "active" : "" %>">
                     <i class="bi bi-person-circle me-2"></i>
                     Hồ sơ cá nhân
                 </a>

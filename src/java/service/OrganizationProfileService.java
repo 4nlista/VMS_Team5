@@ -122,9 +122,9 @@ public class OrganizationProfileService {
         }
         // Job title
         if (jobTitle == null || jobTitle.isEmpty()) {
-            errors.put("job_title", "Lĩnh vực hoạt động không được để trống.");
+            errors.put("job_title", "Nghề nghiệp không được để trống.");
         } else if (jobTitle.length() <= 3) {
-            errors.put("job_title", "Lĩnh vực hoạt động phải chi tiết hơn.");
+            errors.put("job_title", "Nghề nghiệp quá ngắn.");
         }
         // DOB parsing (optional)
         java.sql.Date dob = null;

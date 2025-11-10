@@ -39,8 +39,8 @@
                         <div class="row">
                             <!-- Cột trái: Logo -->
                             <div class="col-md-4 text-center border-end">
-                                <img src="${pageContext.request.contextPath}/Avatar?file=${profile.avatar}"
-                                     class="rounded-circle mb-3" style="width:180px;height:180px;object-fit:cover;" />
+                                <img src="${pageContext.request.contextPath}/OrganizationAvatar?file=${profile.avatar}&t=${now}" 
+     style="max-width:250px;max-height:250px;object-fit:contain;" />
 
                                 <h4 class="fw-bold">${profile.full_name}</h4>
                                 <p class="text-muted">Mã tổ chức: ORG${profile.id}</p>
@@ -78,7 +78,7 @@
                                 <!-- Buttons -->
                                 <div class="mt-4">
                                     <a href="${pageContext.request.contextPath}/OrganizationProfileEdit?id=${profile.id}" class="btn btn-primary">Chỉnh sửa</a>
-                                    <a href="dashboard_org.jsp" class="btn btn-secondary">Quay lại Dashboard</a>
+                                    <a href="home_org.jsp" class="btn btn-secondary">Quay lại Dashboard</a>
                                 </div>
                             </div>
                         </div>
