@@ -85,7 +85,7 @@
                             setTimeout(function(){
                                 var el = document.getElementById('reportSuccessAlert');
                                 if(el){ el.style.display = 'none'; }
-                            }, 5000);
+                            }, 2000);
                         </script>
                     </c:if>
 
@@ -98,7 +98,7 @@
                             setTimeout(function(){
                                 var el = document.getElementById('statusUpdateSuccessAlert');
                                 if(el){ el.style.display = 'none'; }
-                            }, 5000);
+                            }, 2000);
                         </script>
                     </c:if>
 
