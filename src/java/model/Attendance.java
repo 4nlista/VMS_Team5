@@ -27,6 +27,28 @@ public class Attendance {
 
     public Attendance() {
     }
+   
+    public Attendance(int volunteerId, String volunteerName, String status, String eventTitle, String organizationName, Date startDate, Date endDate) {
+        this.volunteerId = volunteerId;
+        this.volunteerName = volunteerName;
+        this.status = status;
+        this.eventTitle = eventTitle;
+        this.organizationName = organizationName;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+    
+    
+
+    public Attendance(int volunteerId, String volunteerName, String eventTitle, String organizationName, Date startDate) {
+        this.volunteerId = volunteerId;
+        this.volunteerName = volunteerName;
+        this.eventTitle = eventTitle;
+        this.organizationName = organizationName;
+        this.startDate = startDate;
+    }
+    
+    
 
     public Attendance(int eventId, int volunteerId, String volunteerName, String status, String email, String phone) {
         this.eventId = eventId;
