@@ -12,6 +12,7 @@ import java.util.Date;
  * @author ADDMIN
  */
 public class Donation {
+
     private int id;
     private int eventId;
     private int volunteerId;
@@ -25,6 +26,7 @@ public class Donation {
     // Thông tin bổ sung để hiển thị
     private String volunteerUsername;       // tài khoản volunteer
     private String volunteerFullName;       // tên của volunteer
+    private String volunteerAvatar;        // avartar của volunteer
     private String eventTitle;              // tiêu đề sự kiện
 
     // Thống kê
@@ -34,7 +36,7 @@ public class Donation {
     public Donation() {
     }
 
-    public Donation(int id, int eventId, int volunteerId, double amount, Date donateDate, String status, String paymentMethod, String qrCode, String note, String volunteerUsername, String volunteerFullName, String eventTitle, double totalAmountDonated, int numberOfEventsDonated) {
+    public Donation(int id, int eventId, int volunteerId, double amount, Date donateDate, String status, String paymentMethod, String qrCode, String note, String volunteerUsername, String volunteerFullName, String volunteerAvatar, String eventTitle, double totalAmountDonated, int numberOfEventsDonated) {
         this.id = id;
         this.eventId = eventId;
         this.volunteerId = volunteerId;
@@ -46,10 +48,13 @@ public class Donation {
         this.note = note;
         this.volunteerUsername = volunteerUsername;
         this.volunteerFullName = volunteerFullName;
+        this.volunteerAvatar = volunteerAvatar;
         this.eventTitle = eventTitle;
         this.totalAmountDonated = totalAmountDonated;
         this.numberOfEventsDonated = numberOfEventsDonated;
     }
+
+    
 
     public int getId() {
         return id;
@@ -139,6 +144,16 @@ public class Donation {
         this.volunteerFullName = volunteerFullName;
     }
 
+    public String getVolunteerAvatar() {
+        return volunteerAvatar;
+    }
+
+    public void setVolunteerAvatar(String volunteerAvatar) {
+        this.volunteerAvatar = volunteerAvatar;
+    }
+    
+    
+
     public String getEventTitle() {
         return eventTitle;
     }
@@ -163,8 +178,4 @@ public class Donation {
         this.numberOfEventsDonated = numberOfEventsDonated;
     }
 
-   
-    
-
-    
 }

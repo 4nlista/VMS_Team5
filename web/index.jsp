@@ -15,7 +15,6 @@
     <body>
 
         <!-- Hiển thị thông báo -->
-        <!-- Hiển thị thông báo -->
         <c:if test="${not empty message}">
             <div class="alert alert-${messageType} alert-dismissible fade show" role="alert" 
                  style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; min-width: 400px; max-width: 600px;">

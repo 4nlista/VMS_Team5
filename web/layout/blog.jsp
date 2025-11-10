@@ -7,6 +7,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <section class="ftco-section">
     <div class="container">
@@ -19,29 +20,51 @@
         <div class="row d-flex">
             <c:forEach var="e" items="${allNews}">
                 <div class="col-md-4 d-flex ftco-animate">
-                    <div class="blog-entry align-self-stretch">
-                        <a href="blog-single.html" class="block-20" 
-                           style="background-image: url('images/event-1.jpg');"> 
+                    <div class="blog-entry align-self-stretch w-100">
+                        <!-- Ảnh thumbnail -->
+                        <c:choose>
+                            <c:when test="${not empty e.images}">
+                                <a href="ViewNewsDetailServlet?id=${e.id}" class="block-20 d-block" 
+                                   style="background-image: url('<%= request.getContextPath() %>/viewImage?type=news&file=${e.images}'); min-height: 250px;">
+                                </a>
+                            </c:when>
+                            <c:otherwise>
+                                <a href="ViewNewsDetailServlet?id=${e.id}" class="block-20 d-block" 
+                                   style="background-image: url('<%= request.getContextPath() %>/images/no-image.jpg'); min-height: 250px;">
+                                </a>
+                            </c:otherwise>
+                        </c:choose>
 
-                        </a>
-                        <div class="text p-4 d-block">
+                        <!-- Nội dung -->
+                        <div class="text p-4 d-flex flex-column">
                             <div class="meta mb-3">
-                                <div>
+                                <div class="text-truncate">
                                     <strong class="text-success">Ngày đăng:</strong>
-                                        <fmt:formatDate value="${e.createdAt}" pattern="dd/MM/yyyy HH:mm" />
+                                    <fmt:formatDate value="${e.createdAt}" pattern="dd/MM/yyyy HH:mm" />
                                     <br/>
-                                    &nbsp;•&nbsp;
-                                    <strong class="text-primary">${e.organizationName}</strong>
+                                    <span class="text-primary">• ${e.organizationName}</span>
                                 </div>
-<!--                                <div>
-                                    <a href="#" class="meta-chat">
-                                        <span class="icon-chat"></span> 3
-                                    </a>
-                                </div>-->
                             </div>
 
-                            <h3 class="heading mt-3"><a href="#">${e.title}</a></h3>
-                            <p>${e.content}</p>
+                            <h3 class="heading mt-3 text-truncate" style="max-height: 3.6em; overflow: hidden;">
+                                <a href="ViewNewsDetailServlet?id=${e.id}" title="${e.title}">${e.title}</a>
+                            </h3>
+
+                            <!-- Nội dung giới hạn -->
+                            <p class="flex-grow-1 text-truncate" style="max-height: 4.5em; overflow: hidden;">
+                                <c:choose>
+                                    <c:when test="${fn:length(e.content) > 150}">
+                                        ${fn:substring(e.content, 0, 150)}...
+                                    </c:when>
+                                    <c:otherwise>
+                                        ${e.content}
+                                    </c:otherwise>
+                                </c:choose>
+                            </p>
+
+                            <a href="ViewNewsDetailServlet?id=${e.id}" class="btn btn-primary btn-sm mt-auto">
+                                Đọc thêm
+                            </a>
                         </div>
                     </div>
                 </div>

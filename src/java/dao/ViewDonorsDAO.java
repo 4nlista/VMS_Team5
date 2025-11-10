@@ -62,6 +62,7 @@ public class ViewDonorsDAO {
                     ld.volunteer_id,
                     ld.event_id,
                     u.full_name AS volunteer_name,
+                    u.avatar AS volunteer_avatar,
                     a.username AS volunteer_username,
                     td.total_amount,
                     td.events_count,
@@ -95,6 +96,7 @@ public class ViewDonorsDAO {
                         rs.getString("note"),
                         rs.getString("volunteer_username"),
                         rs.getString("volunteer_name"),
+                        rs.getString("volunteer_avatar"),
                         rs.getString("event_title"),
                         rs.getDouble("total_amount"),
                         rs.getInt("events_count")
@@ -141,6 +143,7 @@ public class ViewDonorsDAO {
                                          ld.volunteer_id,
                                          ld.event_id,
                                          u.full_name AS volunteer_name,
+                                         u.avatar AS volunteer_avatar,
                                          a.username AS volunteer_username,
                                          td.total_amount,
                                          td.events_count,
@@ -174,6 +177,7 @@ public class ViewDonorsDAO {
                         rs.getString("note"),
                         rs.getString("volunteer_username"),
                         rs.getString("volunteer_name"),
+                        rs.getString("volunteer_avatar"),
                         rs.getString("event_title"),
                         rs.getDouble("total_amount"),
                         rs.getInt("events_count")
@@ -221,6 +225,7 @@ public class ViewDonorsDAO {
                             rs.getString("note"),
                             rs.getString("volunteer_username"),
                             rs.getString("volunteer_name"),
+                            rs.getString("volunteer_avatar"),
                             rs.getString("event_title"),
                             rs.getDouble("total_amount"),
                             rs.getInt("event_title")
@@ -234,7 +239,7 @@ public class ViewDonorsDAO {
         return list;
     }
 
-    //tính tổng News đã đăng để chia trang
+    //tính tổng số donors đã đăng để chia trang
     public int getTotalDonors() {
         String sql = "SELECT COUNT(*) FROM ( "
                 + "  SELECT volunteer_id "

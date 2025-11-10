@@ -38,7 +38,7 @@
                                 <span><i class="icon-map-o"></i> Địa điểm : ${e.location}</span>
                             </p>
                             <p>${e.description}</p>
-                            <div class="d-flex justify-content-between mt-auto">
+<!--                            <div class="d-flex justify-content-between mt-auto">
                                 <p class="mb-0">
                                     <a href="${pageContext.request.contextPath}/VolunteerApplyEventServlet?eventId=${e.id}">
                                         Tham gia sự kiện <i class="ion-ios-arrow-forward"></i>
@@ -49,7 +49,7 @@
                                         Ủng hộ <i class="ion-ios-add-circle"></i>
                                     </a>
                                 </p>
-                            </div>
+                            </div>-->
                         </div>
                     </div>
                 </div>
