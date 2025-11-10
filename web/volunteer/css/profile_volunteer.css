@@ -16,15 +16,106 @@ body {
     padding: 30px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
+.profile-card h5 {
+    font-weight: 600;
+    color: #1f2937;
+}
 .profile-avatar {
     width: 100%;
+    max-width: 220px;
     aspect-ratio: 1/1;
     object-fit: cover;
     border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.08);
 }
 .form-label {
     font-weight: 500;
 }
-.form-control, .form-select {
+.profile-card .form-control,
+.profile-card .form-select {
     font-size: 14px;
+    padding: 0.625rem 0.75rem;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    background-color: #fff;
+    min-height: 44px; /* đồng bộ chiều cao giữa input và select */
+}
+.profile-card .form-control:focus,
+.profile-card .form-select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+.profile-card .form-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%2355637a' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.4' class='feather feather-chevron-down'%3E%3Cpolyline points='4 6 8 10 12 6'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.9rem center;
+    background-size: 12px;
+    padding: 0.625rem 2.2rem 0.625rem 0.75rem;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    line-height: 1.5;
+    height: auto; /* để min-height chi phối */
+}
+.profile-card input[type="file"] {
+    width: 100%;
+    font-size: 14px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    line-height: 1.4;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+.profile-card input[type="file"]::file-selector-button,
+.profile-card input[type="file"]::-webkit-file-upload-button {
+    padding: 0.45rem 1rem;
+    margin: 0;
+    border: none;
+    border-radius: 6px;
+    background-color: #6b7280;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+}
+.profile-card input[type="file"]::file-selector-button:hover,
+.profile-card input[type="file"]::-webkit-file-upload-button:hover {
+    background-color: #4b5563;
+}
+.profile-card input[type="file"]:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+}
+.stat-item {
+    padding: 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    background-color: #f9fafb;
+}
+.stat-label {
+    font-size: 13px;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+}
+.stat-value {
+    font-size: 26px;
+    font-weight: 700;
+}
+.page-content {
+    background-color: #f9fafc;
+    min-height: 100vh;
+    padding-bottom: 60px;
+}
+.alert {
+    border-radius: 999px;
 }
