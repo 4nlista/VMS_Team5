@@ -20,9 +20,30 @@ public class Report {
     
     // khai báo thêm tùy chọn dùng
     private String organizationName;
+    private String username;  // tài khoản tình nguyện viên bình luận;
+    private String volunteerName;   // tên của tình nguyện viên đánh giá
+    private String comment;     // comment của tình nguyện viên để admin sẽ check
+    private int rating;         // điểm đánh giá của tình nguyện viên
     
     public Report() {
     }
+
+    public Report(int id, int feedbackId, int organizationId, String reason, String status, Date createdAt, String organizationName, String username, String volunteerName, String comment, int rating) {
+        this.id = id;
+        this.feedbackId = feedbackId;
+        this.organizationId = organizationId;
+        this.reason = reason;
+        this.status = status;
+        this.createdAt = createdAt;
+        this.organizationName = organizationName;
+        this.username = username;
+        this.volunteerName = volunteerName;
+        this.comment = comment;
+        this.rating = rating;
+    }
+
+    
+
 
     public Report(int id, int feedbackId, int organizationId, String reason, String status, Date createdAt, String organizationName) {
         this.id = id;
@@ -89,5 +110,40 @@ public class Report {
     public void setOrganizationName(String organizationName) {
         this.organizationName = organizationName;
     }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getVolunteerName() {
+        return volunteerName;
+    }
+
+    public void setVolunteerName(String volunteerName) {
+        this.volunteerName = volunteerName;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+    
+    
+    
     
 }
