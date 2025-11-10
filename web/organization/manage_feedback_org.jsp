@@ -16,6 +16,7 @@
         <link href="<%= request.getContextPath() %>/organization/css/org.css" rel="stylesheet" />
     </head>
     <body>
+    
         <div class="content-container">
             <jsp:include page="layout_org/sidebar_org.jsp" />
 
@@ -28,7 +29,7 @@
                         </a>
                     </div>
 
-                    <!-- Bộ lọc + nút tạo mới -->
+                    <!-- Bộ lọc + nút tạo mới ok rồi -->
                     <form method="get" action="<%= request.getContextPath() %>/OrganizationManageFeedbackServlet" class="d-flex align-items-end mb-3 flex-wrap gap-3">
                         <input type="hidden" name="eventId" value="${eventId}" />
                         <div class="d-flex align-items-end flex-wrap gap-3">
@@ -76,7 +77,7 @@
                             setTimeout(function(){
                                 var el = document.getElementById('reportSuccessAlert');
                                 if(el){ el.style.display = 'none'; }
-                            }, 5000);
+                            }, 2000);
                         </script>
                     </c:if>
 
@@ -89,7 +90,7 @@
                             setTimeout(function(){
                                 var el = document.getElementById('statusUpdateSuccessAlert');
                                 if(el){ el.style.display = 'none'; }
-                            }, 5000);
+                            }, 2000);
                         </script>
                     </c:if>
 

@@ -121,47 +121,10 @@
                                 <div class="mt-3 text-end">
                                     <a href="javascript:history.back()" class="btn btn-secondary btn-sm">Quay lại</a>
                                 </div>
-                            </div>
+                            </div> 
                         </div>
                     </c:when>
-                    <c:otherwise>
-                        <h1 class="mb-4">Hồ sơ tổ chức</h1>
-                        <div class="container py-4">
-                            <div class="card shadow-sm p-4">
-                                <div class="row">
-                                    <div class="col-md-4 text-center border-end">
-                                        <img src="https://via.placeholder.com/180x180.png?text=Logo" 
-                                             alt="Logo tổ chức" class="rounded-circle mb-3" />
-                                        <h4 class="fw-bold">Tên tổ chức</h4>
-                                        <p class="text-muted">Mã tổ chức: ORG001</p>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <h5 class="mb-3">Thông tin chi tiết</h5>
-                                        <div class="row mb-2">
-                                            <label class="col-sm-4 fw-bold">Người đại diện:</label>
-                                            <div class="col-sm-8">Nguyễn Văn A</div>
-                                        </div>
-                                        <div class="row mb-2">
-                                            <label class="col-sm-4 fw-bold">Email:</label>
-                                            <div class="col-sm-8">org@example.com</div>
-                                        </div>
-                                        <div class="row mb-2">
-                                            <label class="col-sm-4 fw-bold">Số điện thoại:</label>
-                                            <div class="col-sm-8">0123 456 789</div>
-                                        </div>
-                                        <div class="row mb-2">
-                                            <label class="col-sm-4 fw-bold">Địa chỉ:</label>
-                                            <div class="col-sm-8">Tầng 5, Tòa nhà ABC, Hà Nội</div>
-                                        </div>
-                                        <div class="row mb-2">
-                                            <label class="col-sm-4 fw-bold">Mô tả:</label>
-                                            <div class="col-sm-8">Tổ chức phi lợi nhuận chuyên hỗ trợ trẻ em vùng cao.</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </c:otherwise>
+                        
                 </c:choose>
             </div>
 
@@ -169,3 +132,4 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>
+

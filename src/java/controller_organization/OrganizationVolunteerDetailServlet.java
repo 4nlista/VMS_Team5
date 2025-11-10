@@ -12,12 +12,13 @@ import model.Account;
 import model.ProfileVolunteer;
 import service.AccountService;
 
+
 @WebServlet(name = "OrganizationVolunteerDetailServlet", urlPatterns = {"/OrganizationVolunteerDetailServlet"})
 public class OrganizationVolunteerDetailServlet extends HttpServlet {
 
     private AccountService accountService;
     private ProfileVolunteerDAO profileVolunteerDAO;
-// oke em
+// oke em nhé 
     @Override
     public void init() {
         accountService = new AccountService();
