@@ -81,14 +81,6 @@
                     </div>
                 </div>
 
-                <!-- Biểu đồ tổng tiền -->
-                <div class="card border rounded shadow-sm p-3 bg-white mb-4">
-                    <h6 class="fw-bold text-primary mb-3">
-                        <i class="bi bi-bar-chart-line"></i> Tổng số tiền tài trợ theo tháng (6 tháng gần nhất)
-                    </h6>
-                    <canvas id="donationChart" height="100"></canvas>
-                </div>
-
                 <!-- Hàng biểu đồ phụ -->
                 <div class="row g-3">
                     <!-- Top 3 sự kiện donate -->
