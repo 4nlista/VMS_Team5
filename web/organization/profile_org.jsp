@@ -75,10 +75,11 @@
                                     <a href="edit_org_profile.jsp" class="btn btn-primary me-2">Chỉnh sửa hồ sơ</a>
                                     <a href="dashboard_org.jsp" class="btn btn-secondary">Quay lại Dashboard</a>
                                 </div>
-                            </div>
+                            </div> 
                         </div>
                     </div>
                 </div>
+
             </div>
 
 

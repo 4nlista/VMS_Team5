@@ -15,6 +15,7 @@
         <link href="<%= request.getContextPath() %>/organization/css/org.css" rel="stylesheet" />
     </head>
     <body>
+        
         <div class="content-container">
             <jsp:include page="layout_org/sidebar_org.jsp" />
 
@@ -33,7 +34,6 @@
                                 }, 3000);
                             </script>
                         </c:if>
-
                         <div class="card shadow-sm border-0">
                             <div class="card-body p-4">
                                 <form action="<%= request.getContextPath() %>/organization/submit_report" method="post" class="row g-3">
