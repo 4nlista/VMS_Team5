@@ -36,7 +36,10 @@ public class OrganizationSendReportOrgServlet extends HttpServlet {
 
         String feedbackIdParam = request.getParameter("feedbackId");
         Integer feedbackId = null;
-        try { feedbackId = Integer.parseInt(feedbackIdParam); } catch (Exception ignored) {}
+        try {
+            feedbackId = Integer.parseInt(feedbackIdParam);
+        } catch (Exception ignored) {
+        }
 
         Feedback fb = feedbackId == null ? null : feedbackDAO.findByIdWithJoin(feedbackId);
         request.setAttribute("feedback", fb);
@@ -65,5 +68,3 @@ public class OrganizationSendReportOrgServlet extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/OrganizationManageFeedbackServlet?reported=1");
     }
 }
-
-

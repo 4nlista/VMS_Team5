@@ -143,6 +143,7 @@
                                                         </select>
                                                     </form>
                                                     <a href="<%= request.getContextPath() %>/organization/send_report_org?feedbackId=${f.id}" class="btn btn-sm btn-secondary text-white">Báo cáo</a>
+                                                    
                                                 </div>
                                             </td>
                                         </tr>

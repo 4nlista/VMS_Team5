@@ -15,7 +15,7 @@
         <link href="<%= request.getContextPath() %>/organization/css/org.css" rel="stylesheet" />
     </head>
     <body>
-        
+
         <div class="content-container">
             <jsp:include page="layout_org/sidebar_org.jsp" />
 
@@ -28,9 +28,11 @@
                                 Gửi đơn báo cáo thành công. Trạng thái đã được ghi nhận là pending.
                             </div>
                             <script>
-                                setTimeout(function(){
+                                setTimeout(function () {
                                     var el = document.getElementById('reportSuccessAlert');
-                                    if(el){ el.style.display = 'none'; }
+                                    if (el) {
+                                        el.style.display = 'none';
+                                    }
                                 }, 3000);
                             </script>
                         </c:if>
