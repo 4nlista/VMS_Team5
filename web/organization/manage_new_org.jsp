@@ -93,7 +93,7 @@
                                                     Xem
                                                 </button>
                                             </form>
-                                            <a href="${pageContext.request.contextPath}/OrganizationNewsEdit?id=${newItem.id}" class="btn btn-primary btn-sm me-1">Sửa</a>
+                                            <a href="${pageContext.request.contextPath}/OrganizationNewsEdit?id=${newItem.id}" class="btn btn-warning btn-sm me-1">Sửa</a>
                                             <form action="${pageContext.request.contextPath}/OrganizationNewsDelete" method="post" style="display:inline;" onsubmit="return confirm('Bạn có chắc muốn xóa bài viết này?');">
                                                 <input type="hidden" name="id" value="${newItem.id}">
                                                 <button type="submit" class="btn btn-danger btn-sm me-1" title="Xóa Tin Tức">
