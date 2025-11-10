@@ -1,10 +1,4 @@
-<%-- 
-    Document   : index
-    Created on : Sep 16, 2025, 12:43:17 PM
-    Author     : Admin
---%>
-
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html; charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
@@ -17,18 +11,18 @@
         <!-- Hiển thị thông báo -->
         <!-- Hiển thị thông báo -->
         <c:if test="${not empty message}">
-            <div class="alert alert-${messageType} alert-dismissible fade show" role="alert" 
+            <div class="alert alert-${messageType}" role="alert" 
                  style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; min-width: 400px; max-width: 600px;">
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <span style="color: #166534; font-weight: 600;"><c:out value="${message}"/></span>
             </div>
             <script>
-                // Tự động ẩn sau 3 giây
                 setTimeout(function () {
-                    var alert = document.querySelector('.alert');
-                    if (alert) {
-                        var bsAlert = new bootstrap.Alert(alert);
-                        bsAlert.close();
+                    var alertEl = document.querySelector('.alert');
+                    if (alertEl) {
+                        alertEl.classList.add('fade');
+                        alertEl.addEventListener('transitionend', function () {
+                            alertEl.remove();
+                        }, {once: true});
                     }
                 }, 3000);
             </script>

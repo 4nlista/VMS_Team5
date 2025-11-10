@@ -55,18 +55,10 @@
                                 </select>
                             </div>
 
-                            <!-- Tên sự kiện -->
-                            <div class="form-group">
-                                <label class="form-label fw-semibold">Tên sự kiện</label>
-                                <div class="d-flex align-items-center gap-2 mt-1">
-                                    <input class="form-control" style="min-width:320px" name="q" value="${q}" placeholder="Nhập tên sự kiện..." />
-                                </div>
-                            </div>
-
                             <!-- Buttons placed right after search fields -->
                             <div class="d-flex align-items-end gap-2">
                                 <button type="submit" class="btn btn-primary" style="min-width:140px;">
-                                    <i class="bi bi-search"></i> Lọc và tìm kiếm
+                                    <i class="bi bi-search"></i> Lọc
                                 </button>
                                 <a href="<%= request.getContextPath() %>/OrganizationManageFeedbackServlet" class="btn btn-secondary" style="min-width:110px;">
                                     <i class="bi bi-arrow-counterclockwise"></i> Làm mới

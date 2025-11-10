@@ -26,6 +26,8 @@ public class ProfileVolunteerDAO {
                     u.phone,
                     u.email,
                     u.address,
+                    u.job_title,
+                    u.bio,
                     u.avatar
                 FROM Users u
                 JOIN Accounts a ON u.account_id = a.id
@@ -47,6 +49,8 @@ public class ProfileVolunteerDAO {
                     p.setPhone(rs.getString("phone"));
                     p.setEmail(rs.getString("email"));
                     p.setAddress(rs.getString("address"));
+                    p.setJobTitle(rs.getString("job_title"));
+                    p.setBio(rs.getString("bio"));
                     return p;
                 }
             }
@@ -54,6 +58,161 @@ public class ProfileVolunteerDAO {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public ProfileVolunteer getDetailedProfileByAccountId(int accountId) {
+        String sql = """
+                SELECT 
+                    a.id AS account_id,
+                    u.full_name,
+                    u.dob,
+                    u.gender,
+                    u.phone,
+                    u.email,
+                    u.address,
+                    u.job_title,
+                    u.bio,
+                    u.avatar,
+                    COALESCE(stats.total_events, 0) AS total_events,
+                    COALESCE(stats.total_hours, 0) AS total_hours,
+                    COALESCE(don.total_donated, 0) AS total_donated,
+                    last_event.title AS last_event_title,
+                    last_event.org_name AS last_organization_name
+                FROM Accounts a
+                JOIN Users u ON u.account_id = a.id
+                LEFT JOIN (
+                    SELECT volunteer_id,
+                           COUNT(DISTINCT event_id) AS total_events,
+                           COALESCE(SUM(hours), 0) AS total_hours
+                    FROM Event_Volunteers
+                    WHERE status = 'approved'
+                    GROUP BY volunteer_id
+                ) stats ON stats.volunteer_id = a.id
+                LEFT JOIN (
+                    SELECT volunteer_id,
+                           COALESCE(SUM(amount), 0) AS total_donated
+                    FROM Donations
+                    WHERE status = 'success'
+                    GROUP BY volunteer_id
+                ) don ON don.volunteer_id = a.id
+                OUTER APPLY (
+                    SELECT TOP 1 e.title AS title, acc.username AS org_name
+                    FROM Event_Volunteers ev
+                    JOIN Events e ON ev.event_id = e.id
+                    JOIN Accounts acc ON e.organization_id = acc.id
+                    WHERE ev.volunteer_id = a.id AND ev.status = 'approved'
+                    ORDER BY ev.apply_date DESC
+                ) last_event
+                WHERE a.id = ?
+                """;
+
+        try (Connection con = DBContext.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, accountId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    ProfileVolunteer p = new ProfileVolunteer();
+                    p.setId(rs.getInt("account_id"));
+                    p.setImages(rs.getString("avatar"));
+                    p.setFullName(rs.getString("full_name"));
+                    java.sql.Date dob = rs.getDate("dob");
+                    if (dob != null) {
+                        p.setDob(new java.util.Date(dob.getTime()));
+                    }
+                    p.setGender(rs.getString("gender"));
+                    p.setPhone(rs.getString("phone"));
+                    p.setEmail(rs.getString("email"));
+                    p.setAddress(rs.getString("address"));
+                    p.setJobTitle(rs.getString("job_title"));
+                    p.setBio(rs.getString("bio"));
+                    p.setTotalEvents(rs.getInt("total_events"));
+                    p.setTotalHours(rs.getInt("total_hours"));
+                    p.setTotalDonated(rs.getDouble("total_donated"));
+                    p.setEventName(rs.getString("last_event_title"));
+                    p.setOrganizationName(rs.getString("last_organization_name"));
+                    return p;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean updateVolunteerProfile(int accountId, String avatarPath, String fullName, java.sql.Date dob, String gender, String phone, String email, String address, String jobTitle, String bio) {
+        String sql = """
+                UPDATE Users
+                SET full_name = ?,
+                    dob = ?,
+                    gender = ?,
+                    phone = ?,
+                    email = ?,
+                    address = ?,
+                    job_title = ?,
+                    bio = ?,
+                    avatar = ?
+                WHERE account_id = ?
+                """;
+        try (Connection con = DBContext.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, fullName);
+            if (dob != null) {
+                ps.setDate(2, dob);
+            } else {
+                ps.setNull(2, java.sql.Types.DATE);
+            }
+            ps.setString(3, gender);
+            ps.setString(4, phone);
+            ps.setString(5, email);
+            ps.setString(6, address);
+            ps.setString(7, jobTitle);
+            ps.setString(8, bio);
+            if (avatarPath != null && !avatarPath.trim().isEmpty()) {
+                ps.setString(9, avatarPath);
+            } else {
+                ps.setNull(9, java.sql.Types.VARCHAR);
+            }
+            ps.setInt(10, accountId);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // Backward-compatible overload (without jobTitle & bio)
+    public boolean updateVolunteerProfile(int accountId, String avatarPath, String fullName, java.sql.Date dob, String gender, String phone, String email, String address) {
+        return updateVolunteerProfile(accountId, avatarPath, fullName, dob, gender, phone, email, address, null, null);
+    }
+
+    public boolean emailExistsForOther(String email, int accountId) {
+        String sql = "SELECT COUNT(*) FROM Users WHERE email = ? AND account_id <> ?";
+        try (Connection con = DBContext.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ps.setInt(2, accountId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean phoneExistsForOther(String phone, int accountId) {
+        String sql = "SELECT COUNT(*) FROM Users WHERE phone = ? AND account_id <> ?";
+        try (Connection con = DBContext.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, phone);
+            ps.setInt(2, accountId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     // Lấy hồ sơ TNV theo tài khoản nhưng chỉ trong phạm vi các sự kiện do tổ chức hiện tại tạo
