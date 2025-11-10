@@ -110,7 +110,7 @@
 
                                 <div class="d-flex justify-content-between">
                                     <button type="submit" class="btn btn-primary">Đăng ký tham gia</button>
-                                    <button type="reset" class="btn btn-outline-secondary">Hủy</button>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="history.back()">Hủy</button>
                                 </div>
                             </form>
                         </div>

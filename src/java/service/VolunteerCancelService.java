@@ -20,7 +20,7 @@ public class VolunteerCancelService {
 
         switch (status.toLowerCase()) {
             case "pending":
-                boolean success = eventVolunteerDAO.deleteApplicationWithLog(eventId, volunteerId);
+                boolean success = eventVolunteerDAO.deletePendingApplication(eventId, volunteerId);
                 return success ? "Hủy đơn thành công!" : "Không thể hủy đơn. Vui lòng thử lại!";
             case "approved":
                 return "Không thể hủy vì đơn đã được tổ chức duyệt!";

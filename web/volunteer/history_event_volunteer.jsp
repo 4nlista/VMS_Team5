@@ -17,6 +17,15 @@
         <div class="page-content container mt-5 pt-5 pb-5">
             <h1 class="mb-4 text-center">Lịch sử sự kiện đã tham gia</h1>
 
+            <!-- Hiển thị thông báo nếu có -->
+            <c:if test="${not empty sessionScope.message}">
+                <div class="alert alert-info alert-dismissible fade show" role="alert">
+                    ${sessionScope.message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <c:remove var="message" scope="session"/>
+            </c:if>
+
             <div class="card shadow-sm border">
                 <div class="card-body">
                     <table class="table table-striped table-hover align-middle">
@@ -60,10 +69,44 @@
                                                 </c:choose>
                                             </td>
                                             <td>
-                                                <a href="${pageContext.request.contextPath}/volunteer/detail_event_volunteer.jsp?eventId=${ev.eventId}" 
-                                                   class="btn btn-sm btn-outline-primary">
+                                                <a href="${pageContext.request.contextPath}/VolunteerEventDetailServlet?eventId=${ev.eventId}&volunteerId=${sessionScope.account.id}" 
+                                                   class="btn btn-sm btn-outline-primary me-2">
                                                     Xem chi tiết
                                                 </a>
+
+                                                <!-- Hiển thị nút hủy nếu đơn đang pending -->
+                                                <c:if test="${ev.status == 'pending'}">
+                                                    <button type="button" 
+                                                            class="btn btn-sm btn-outline-danger"
+                                                            data-bs-toggle="modal" 
+                                                            data-bs-target="#cancelModal${ev.eventId}">
+                                                        Hủy đăng ký
+                                                    </button>
+
+                                                    <!-- Modal xác nhận -->
+                                                    <div class="modal fade" id="cancelModal${ev.eventId}" tabindex="-1" aria-labelledby="cancelModalLabel${ev.eventId}" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-centered">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="cancelModalLabel${ev.eventId}">Xác nhận hủy đăng ký</h5>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    Bạn có chắc chắn muốn hủy đơn đăng ký sự kiện 
+                                                                    <strong>${ev.eventTitle}</strong> không?
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <form action="${pageContext.request.contextPath}/CancelApplicationServlet" method="post">
+                                                                        <input type="hidden" name="eventId" value="${ev.eventId}">
+                                                                        <input type="hidden" name="volunteerId" value="${sessionScope.account.id}">
+                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                                                        <button type="submit" class="btn btn-danger">Xác nhận hủy</button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </c:if>
                                             </td>
                                         </tr>
                                     </c:forEach>
