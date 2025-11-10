@@ -18,19 +18,16 @@
         <link href="<%= request.getContextPath() %>/admin/css/admin.css" rel="stylesheet">
     </head>
     <body>
-        <div class="d-flex" style="min-height: 100vh;">
+        <div class="content-container">
             <!-- Sidebar -->
             <jsp:include page="layout_admin/sidebar_admin.jsp" />
-
+            
             <!-- Main Content -->
-            <div class="flex-grow-1 p-4" style="background-color: #f8f9fa; min-height: 100vh;">
+            <div class="main-content" style="background-color: #f8f9fa; padding: 20px;">
                 <div class="container-fluid">
                     <!-- Header -->
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h3 class="fw-bold mb-0">Chi tiết bài đăng</h3>
-                        <a href="<%= request.getContextPath() %>/AdminNewsServlet" class="btn btn-secondary">
-                            <i class="bi bi-arrow-left"></i> Quay lại
-                        </a>
                     </div>
 
                     <!-- Thông tin bài đăng -->
@@ -143,7 +140,7 @@
                         <div class="card-body">
                             <form method="post" action="AdminNewsServlet" onsubmit="return confirm('Bạn có chắc chắn muốn thực hiện hành động này?');">
                                 <input type="hidden" name="newsId" value="${news.id}">
-
+                                
                                 <div class="d-flex gap-2 flex-wrap">
                                     <c:choose>
                                         <c:when test="${news.status == 'pending'}">
@@ -154,26 +151,26 @@
                                                 <i class="bi bi-x-circle"></i> Từ chối
                                             </button>
                                         </c:when>
-
+                                        
                                         <c:when test="${news.status == 'published'}">
                                             <button type="submit" name="action" value="hide" class="btn btn-warning">
                                                 <i class="bi bi-eye-slash"></i> Ẩn bài
                                             </button>
                                         </c:when>
-
+                                        
                                         <c:when test="${news.status == 'rejected'}">
                                             <button type="submit" name="action" value="approve" class="btn btn-success">
                                                 <i class="bi bi-check-circle"></i> Duyệt lại
                                             </button>
                                         </c:when>
-
+                                        
                                         <c:when test="${news.status == 'hidden'}">
                                             <button type="submit" name="action" value="publish" class="btn btn-primary">
                                                 <i class="bi bi-eye"></i> Hiển thị lại
                                             </button>
                                         </c:when>
                                     </c:choose>
-
+                                    
                                     <a href="<%= request.getContextPath() %>/AdminNewsServlet" class="btn btn-secondary">
                                         <i class="bi bi-arrow-left"></i> Quay lại
                                     </a>
