@@ -5,6 +5,7 @@
 --%>
 
 <%@ page contentType="text/html; charset=UTF-8" language="java" pageEncoding="UTF-8" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
     String currentPath = request.getRequestURI();
 %>
@@ -25,8 +26,10 @@
                 </a>
             </li>
             <li>
-                <a href="<%= request.getContextPath() %>/organization/profile_org.jsp"
-                   class="nav-link text-white <%= currentPath.endsWith("/profile_org.jsp") ? "active" : "" %>">
+                <a href="<%= request.getContextPath() %>/OrganizationProfileDetail"
+                   class="nav-link text-white <%= (currentPath.endsWith("/profile_org.jsp")
+                             || currentPath.endsWith("/edit_org_profile.jsp"))
+                             ? "active" : "" %>">
                     <i class="bi bi-person-circle me-2"></i>
                     Hồ sơ cá nhân
                 </a>
@@ -55,7 +58,9 @@
             <li>
                 <a href="<%= request.getContextPath() %>/OrganizationManageNews"
                    class="nav-link text-white <%= (currentPath.endsWith("/manage_new_org.jsp")
-                             || currentPath.endsWith("/detail_news_org.jsp"))
+                             || currentPath.endsWith("/detail_news_org.jsp")
+                             || currentPath.endsWith("/create_news_org.jsp")
+                             || currentPath.endsWith("/edit_news_org.jsp"))
                              ? "active" : "" %>">
                     <i class="bi bi-file-earmark-bar-graph me-2"></i>
                     Quản lí tin tức

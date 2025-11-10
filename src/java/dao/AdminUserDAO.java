@@ -453,4 +453,36 @@ public class AdminUserDAO {
         }
         return false;
     }
+    
+    // CHeck uniqueness for validation
+    public boolean isPhoneUnique(String phone, int currentUserId) {
+    String sql = "SELECT COUNT(*) FROM Users WHERE phone = ? AND id <> ?";
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        ps.setString(1, phone);
+        ps.setInt(2, currentUserId);
+
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            return rs.getInt(1) == 0;
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return false;
+}
+
+public boolean isEmailUnique(String email, int currentUserId) {
+    String sql = "SELECT COUNT(*) FROM Users WHERE email = ? AND id <> ?";
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        ps.setString(1, email);
+        ps.setInt(2, currentUserId);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            return rs.getInt(1) == 0;
+        }
+    } catch (Exception ignored) {}
+    return false;
+}
 }

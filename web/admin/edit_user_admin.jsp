@@ -6,6 +6,7 @@
 
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -25,9 +26,19 @@
 
                     <!-- Left: Avatar section -->
                     <div class="profile-side">
-                        <img id="avatarPreview"
-                             src="${not empty user.avatar ? user.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}"
-                             alt="Avatar" />
+                        <c:choose>
+    <c:when test="${not empty user.avatar && fn:contains(user.avatar, '://')}">
+        <img src="${user.avatar}" alt="avatar" class="rounded-circle avatar-lg mb-3 border border-2 border-light shadow-sm"/>
+    </c:when>
+
+    <c:when test="${not empty user.avatar}">
+        <img src="${pageContext.request.contextPath}/UserAvatar?file=${user.avatar}" alt="avatar" class="rounded-circle avatar-lg mb-3 border border-2 border-light shadow-sm" id="avatarPreview"/>
+    </c:when>
+
+    <c:otherwise>
+        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="avatar" class="rounded-circle avatar-lg mb-3 border border-2 border-light shadow-sm" />
+    </c:otherwise>
+</c:choose>
                         <h5>${user.full_name}</h5>
                         <small>@${user.account.username}</small>
 

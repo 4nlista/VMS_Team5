@@ -39,10 +39,11 @@
                         <div class="row">
                             <!-- Cột trái: Logo -->
                             <div class="col-md-4 text-center border-end">
-                                <img src="https://via.placeholder.com/180x180.png?text=Logo" 
-                                     alt="Logo tổ chức" class="rounded-circle mb-3" />
-                                <h4 class="fw-bold">Tên tổ chức</h4>
-                                <p class="text-muted">Mã tổ chức: ORG001</p>
+                                <img src="${pageContext.request.contextPath}/OrganizationAvatar?file=${profile.avatar}&t=${now}" 
+                                     style="max-width:250px;max-height:250px;object-fit:contain;" />
+
+                                <h4 class="fw-bold">${profile.full_name}</h4>
+                                <p class="text-muted">Mã tổ chức: ORG${profile.id}</p>
                             </div>
 
                             <!-- Cột phải: Thông tin -->
@@ -50,30 +51,53 @@
                                 <h5 class="mb-3">Thông tin chi tiết</h5>
 
                                 <div class="row mb-2">
-                                    <label class="col-sm-4 fw-bold">Người đại diện:</label>
-                                    <div class="col-sm-8">Nguyễn Văn A</div>
+                                    <label class="col-sm-4 fw-bold">Họ tên:</label>
+                                    <div class="col-sm-8">${profile.full_name}</div>
                                 </div>
+
                                 <div class="row mb-2">
                                     <label class="col-sm-4 fw-bold">Email:</label>
-                                    <div class="col-sm-8">org@example.com</div>
+                                    <div class="col-sm-8">${profile.email}</div>
                                 </div>
+
                                 <div class="row mb-2">
                                     <label class="col-sm-4 fw-bold">Số điện thoại:</label>
-                                    <div class="col-sm-8">0123 456 789</div>
+                                    <div class="col-sm-8">${profile.phone}</div>
                                 </div>
+
                                 <div class="row mb-2">
                                     <label class="col-sm-4 fw-bold">Địa chỉ:</label>
-                                    <div class="col-sm-8">Tầng 5, Tòa nhà ABC, Hà Nội</div>
+                                    <div class="col-sm-8">${profile.address}</div>
                                 </div>
+
+                                <div class="row mb-2">
+                                    <label class="col-sm-4 fw-bold">Nghề nghiệp:</label>
+                                    <div class="col-sm-8">${profile.job_title}</div>
+                                </div>
+
+                                <div class="row mb-2">
+                                    <label class="col-sm-4 fw-bold">Ngày sinh:</label>
+                                    <div class="col-sm-8">
+                                        <c:choose>
+                                            <c:when test="${not empty profile.dob}">
+                                                <fmt:formatDate value="${profile.dob}" pattern="dd/MM/yyyy" />
+                                            </c:when>
+                                            <c:otherwise>
+                                                N/A
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
+                                </div>
+
                                 <div class="row mb-2">
                                     <label class="col-sm-4 fw-bold">Mô tả:</label>
-                                    <div class="col-sm-8">Tổ chức phi lợi nhuận chuyên hỗ trợ trẻ em vùng cao.</div>
+                                    <div class="col-sm-8">${profile.bio}</div>
                                 </div>
 
                                 <!-- Buttons -->
                                 <div class="mt-4">
-                                    <a href="edit_org_profile.jsp" class="btn btn-primary me-2">Chỉnh sửa hồ sơ</a>
-                                    <a href="dashboard_org.jsp" class="btn btn-secondary">Quay lại Dashboard</a>
+                                    <a href="${pageContext.request.contextPath}/OrganizationProfileEdit?id=${profile.id}" class="btn btn-primary">Chỉnh sửa</a>
+                                    <a href="home_org.jsp" class="btn btn-secondary">Quay lại Dashboard</a>
                                 </div>
                             </div> 
                         </div>
@@ -81,11 +105,6 @@
                 </div>
 
             </div>
-
-
-
-
-
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>
