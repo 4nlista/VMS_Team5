@@ -61,7 +61,7 @@ public class OrganizationVolunteerDetailServlet extends HttpServlet {
                 volunteerAccountId, acc.getId());
         request.setAttribute("profile", profile);
         request.setAttribute("eventsTitles", eventsTitles);
-        request.getRequestDispatcher("/organization/profile_org.jsp").forward(request, response);
+        request.getRequestDispatcher("/organization/detail_users_org.jsp").forward(request, response);
     }
 }
 
