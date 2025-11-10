@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Optional;
 
+// servlet giao diện hiển thị ảnh cho toàn bộ các phần
 @WebServlet(name = "ViewImageServlet", urlPatterns = {"/viewImage"})
 
 public class ViewImageServlet extends HttpServlet {
