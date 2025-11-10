@@ -1,4 +1,4 @@
-<%-- 
+<%--
     Document   : user_detail
     Created on : 10 Oct 2025, 05:46:20
     Author     : Mirinesa
@@ -29,8 +29,19 @@
                     <div class="row g-0">
                         <!-- LEFT: Avatar -->
                         <div class="col-md-4 profile-left d-flex flex-column align-items-center justify-content-center text-center p-4">
-                            <img src="${not empty user.avatar ? user.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}"
-                                 alt="avatar" class="rounded-circle avatar-lg mb-3 border border-2 border-light shadow-sm"/>
+                            <c:choose>
+    <c:when test="${not empty user.avatar && fn:contains(user.avatar, '://')}">
+        <img src="${user.avatar}" alt="avatar" class="rounded-circle avatar-lg mb-3 border border-2 border-light shadow-sm" />
+    </c:when>
+
+    <c:when test="${not empty user.avatar}">
+        <img src="${pageContext.request.contextPath}/UserAvatar?file=${user.avatar}" alt="avatar" class="rounded-circle avatar-lg mb-3 border border-2 border-light shadow-sm" />
+    </c:when>
+
+    <c:otherwise>
+        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="avatar" class="rounded-circle avatar-lg mb-3 border border-2 border-light shadow-sm" />
+    </c:otherwise>
+</c:choose>
                             <div class="fw-semibold fs-5">${fn:escapeXml(user.full_name)}</div>
                             <div class="text-muted small">@${user.account.username}</div>
                             <div class="mt-3 text-muted small fst-italic">${fn:escapeXml(user.job_title)}</div>

@@ -19,30 +19,7 @@
     <body>
         <div class="content-container">
             <jsp:include page="layout_admin/sidebar_admin.jsp" />
-<!--<<<<<<< HEAD
-            <div class="card mx-auto shadow-sm border-0" style= "margin-top: 15px">
-                <div class="card-header bg-dark text-white text-center py-1 rounded-top">
-                    <h6 class="mb-0"><i class="bi bi-person-circle me-1"></i>Chỉnh sửa tài khoản ${user.account.username}</h6>
-                </div>
-                <form action="AdminProfileEditServlet" method="post" class="mt-1">
-                    <div class="card-body bg-light py-1">
-                        <div class="container py-1">
-                            <div class="profile-card bg-white rounded-3 shadow-sm p-2">
-                                <div class="row align-items-start">
-                                     Avatar 
-                                    <div class="col-md-3 text-center border-end pe-2">
-                                        <img src="${not empty user.avatar ? user.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}" 
-                                             name="avatar"
-                                             class="img-fluid rounded-circle border border-2 border-secondary-subtle shadow-sm mb-1"
-                                             style="width: 100px; height: 100px; object-fit: cover;"
-                                             alt="Avatar" />
-                                        <p class="fw-semibold mt-0 small">${user.full_name}</p>
-                                    </div>
 
-                                     Info 
-                                    <div class="col-md-9 ps-md-2 mt-1 mt-md-0">
-                                        <h6 class="fw-bold mb-1 text-dark">Chỉnh sửa chi tiết</h6>
-=======-->
 
             <div class="edit-wrapper">
                 <form action="AdminProfileEditServlet" method="post" enctype="multipart/form-data" class="w-100 d-flex gap-3">
@@ -55,102 +32,6 @@
                         <h5>${user.full_name}</h5>
                         <small>@${user.account.username}</small>
 
-<!--<<<<<<< HEAD
-                                             Row 1 
-                                            <div class="col-md-6 position-relative">
-                                                <label class="fw-bold form-label small text-muted mb-0">Họ tên</label>
-                                                <div class="error-container" style="height: 1rem; position: relative;">
-                                                    <span class="field-error small text-danger"
-                                                          style="${empty errors['full_name'] ? 'opacity: 0;' : ''}">
-                                                        ${errors['full_name']}
-                                                    </span>
-                                                </div>
-                                                <input type="text" name="full_name" class="form-control form-control-sm"
-                                                       value="${not empty param.full_name ? param.full_name : user.full_name}">
-                                            </div>
-
-                                            <div class="col-md-6 position-relative">
-                                                <label class="fw-bold form-label small text-muted mb-0">Nghề nghiệp</label>
-                                                <div class="error-container" style="height: 1rem; position: relative;">
-                                                    <span class="field-error small text-danger"
-                                                          style="${empty errors['job_title'] ? 'opacity: 0;' : ''}">
-                                                        ${errors['job_title']}
-                                                    </span>
-                                                </div>
-                                                <input type="text" name="job_title" class="form-control form-control-sm"
-                                                       value="${not empty param.job_title ? param.job_title : user.job_title}">
-                                            </div>
-
-                                             Row 2 
-                                            <div class="col-md-6">
-                                                <label class="fw-bold form-label small text-muted mb-3">Giới tính</label>
-                                                <select name="gender" class="form-select form-select-sm">
-                                                    <option value="male" ${user.gender == 'male' ? 'selected' : ''}>Nam</option>
-                                                    <option value="female" ${user.gender == 'female' ? 'selected' : ''}>Nữ</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="fw-bold form-label small text-muted mb-3">Ngày sinh</label>
-                                                <input type="date" name="dob" class="form-control form-control-sm"
-                                                       value="${not empty param.dob ? param.dob : user.dob}">
-                                                <c:if test="${not empty errors.dob}">
-                                                    <div class="field-error">${errors.dob}</div>
-                                                </c:if>
-                                            </div>
-
-                                                 Row 3 
-                                            <div class="col-md-6 position-relative">
-                                                <label class="fw-bold form-label small text-muted mb-0">Địa chỉ</label>
-                                                <div class="error-container" style="height: 1rem; position: relative;">
-                                                    <span class="field-error small text-danger"
-                                                          style="${empty errors['address'] ? 'opacity: 0;' : ''}">
-                                                        ${errors['address']}
-                                                    </span>
-                                                </div>
-                                                <input type="text" name="address" class="form-control form-control-sm"
-                                                       value="${not empty param.address ? param.address : user.address}">
-                                            </div>
-
-                                            <div class="col-md-6 position-relative">
-                                                <label class="fw-bold form-label small text-muted mb-0">Số điện thoại</label>
-                                                <div class="error-container" style="height: 1rem; position: relative;">
-                                                    <span class="field-error small text-danger"
-                                                          style="${empty errors['phone'] ? 'opacity: 0;' : ''}">
-                                                        ${errors['phone']}
-                                                    </span>
-                                                </div>
-                                                <input type="text" name="phone" class="form-control form-control-sm"
-                                                       value="${not empty param.phone ? param.phone : user.phone}">
-                                            </div>
-
-                                             Row 4 
-                                            <div class="col-md-12 position-relative">
-                                                <label class="fw-bold form-label small text-muted mb-0">Email</label>
-                                                <div class="error-container" style="height: 1rem; position: relative;">
-                                                    <span class="field-error small text-danger"
-                                                          style="${empty errors['email'] ? 'opacity: 0;' : ''}">
-                                                        ${errors['email']}
-                                                    </span>
-                                                </div>
-                                                <input type="email" name="email" class="form-control form-control-sm"
-                                                       value="${not empty param.email ? param.email : user.email}">
-                                            </div>
-                                            
-                                             Row 5 
-                                        <hr class="my-1">
-                                        <h6 class="fw-bold text-dark mb-3 mt-3">Giới thiệu</h6>
-                                        <textarea class="form-control form-control-sm" style="resize:none;"name="bio" rows="6">${user.bio}</textarea>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="text-center mt-1 mt-2">
-                                <a href="AdminProfileServlet?id=1" class="btn btn-warning btn-sm px-2 rounded-pill shadow-sm">
-                                    Quay lại
-                                </a>
-                                <button type="submit" class="btn btn-success btn-sm px-2 rounded-pill shadow-sm">Cập nhật</button>
-                            </div>
-=======-->
                         <div class="upload-section">
                             <label class="form-label">Đổi Ảnh</label>
                             <input type="file" name="avatar" id="avatarInput" class="form-control form-control-sm mt-1" />
