@@ -1,0 +1,27 @@
+/*
+A friendly reminder to drink enough water
+*/
+/* 
+    Created on : 11 Nov 2025, 01:35:31
+    Author     : Mirinae
+*/
+
+.sidebar-user {
+    text-align: center;
+    padding: 15px 0;
+}
+
+.sidebar-avatar {
+    width: 55px;
+    height: 55px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    margin-bottom: 8px;
+}
+
+.sidebar-user p {
+    color: #fff;
+    font-weight: bold;
+    font-size: 14px;
+}

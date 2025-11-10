@@ -11,7 +11,7 @@
 
     <ul class="nav flex-column mb-auto">
         <li class="nav-item">
-            <a href="<%= request.getContextPath() %>/admin/home_admin.jsp"
+            <a href="<%= request.getContextPath() %>/AdminHomeServlet"
                class="nav-link text-white <%= currentPath.endsWith("/home_admin.jsp") ? "active" : "" %>">
                 <i class="bi bi-speedometer2 me-2"></i>
                 Bảng điều khiển
