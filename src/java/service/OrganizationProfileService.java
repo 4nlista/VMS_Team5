@@ -101,16 +101,18 @@ public class OrganizationProfileService {
 		String dobStr = safeTrim(request.getParameter("dob"));
 		// Full name validation
 		if (fullName == null || fullName.isEmpty()) {
-			errors.put("full_name", "Tên tổ chức không được để trống.");
+			errors.put("full_name", "Họ tên không được để trống.");
 		} else if (fullName.length() > 100) {
-			errors.put("full_name", "Tên tổ chức phải dưới 100 ký tự.");
+			errors.put("full_name", "Họ tên phải dưới 100 ký tự.");
+		} else if (!fullName.matches("^[\\p{L}\\s-]+$")) {
+			errors.put("full_name", "Họ tên không được chứa ký tự.");
 		}
 		// Phone
 		if (phone != null && !phone.isEmpty()) {
 			if (!phone.matches("^[0-9]+$")) {
 				errors.put("phone", "Số điện thoại phải là số.");
-			} else if (phone.length() > 20) {
-				errors.put("phone", "Số điện thoại tối đa 20 ký tự.");
+			} else if (phone.length() < 10 || phone.length() > 11) {
+				errors.put("phone", "Số điện thoại được chứa 10-11 ký tự.");
 			} else {
 				if (!dao.isPhoneUnique(phone, id)) {
 					errors.put("phone", "Số điện thoại đã tồn tại trong hệ thống.");
@@ -133,15 +135,27 @@ public class OrganizationProfileService {
 		if (address != null && !address.isEmpty()) {
 			if (address.length() > 255) {
 				errors.put("address", "Địa chỉ tối đa 255 ký tự.");
+			} else if (address.length() <= 2) {
+				errors.put("address", "Địa chỉ cần dài hơn 2 ký tự.");
+			} else if (!address.matches("^[\\p{L}\\s-]+$")) {
+				errors.put("address", "Địa chỉ không được chứa ký tự đặc biệt.");
 			}
 		}
 		// Job title
 		if (jobTitle != null && !jobTitle.isEmpty()) {
 			if (jobTitle.length() > 100) {
 				errors.put("job_title", "Nghề nghiệp tối đa 100 ký tự.");
+			} else if (jobTitle.length() <= 2) {
+				errors.put("job_title", "Nghề nghiệp cần dài hơn 2 ký tự.");
+			} else if (!jobTitle.matches("^[\\p{L}\\s-]+$")) {
+				errors.put("job_title", "Nghề nghiệp chỉ được chứa chữ cái.");
 			}
 		}
-		// DOB parsing (optional)
+		// Bio
+		if (bio != null && !bio.isEmpty() && bio.length() > 1000) {
+        errors.put("bio", "Mục này cần nhỏ hơn 1000 ký tự.");
+    }
+		// DOB parsing
 		java.sql.Date dob = null;
 		if (dobStr != null && !dobStr.isEmpty()) {
 			String s = dobStr.trim();
