@@ -16,6 +16,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
         <link href="<%= request.getContextPath() %>/organization/css/org.css" rel="stylesheet" />
     </head>
+    
     <body>
         <div class="content-container">
             <!-- Sidebar -->

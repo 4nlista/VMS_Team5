@@ -88,6 +88,7 @@
                                     <th style="width:15%;">Thao tác</th>
                                 </tr>
                             </thead>
+                            
                             <tbody>
                                 <c:forEach var="p" items="${profiles}" varStatus="loop">
                                     <tr>

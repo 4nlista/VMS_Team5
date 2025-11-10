@@ -12,6 +12,7 @@ import model.Account;
 import model.ProfileVolunteer;
 import service.AccountService;
 
+
 @WebServlet(name = "OrganizationVolunteerDetailServlet", urlPatterns = {"/OrganizationVolunteerDetailServlet"})
 public class OrganizationVolunteerDetailServlet extends HttpServlet {
 

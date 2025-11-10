@@ -124,6 +124,8 @@
                             </div>
                         </div>
                     </c:when>
+                        
+                        
                     <c:otherwise>
                         <h1 class="mb-4">Hồ sơ tổ chức</h1>
                         <div class="container py-4">

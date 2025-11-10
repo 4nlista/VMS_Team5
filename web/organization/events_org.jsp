@@ -129,9 +129,9 @@
                                                <a href="<%= request.getContextPath() %>/OrganizationManageFeedbackServlet?eventId=${e.id}" 
                                                class="btn btn-info btn-sm">Bình luận</a>
                                             <a href="OrganizationApplyServlet?id=${e.id}" 
-                                               class="btn btn-secondary btn-sm">Xử lý đơn</a>
+                                               class="btn btn-secondary btn-sm">Xử lý đơn </a> 
                                             <a href="<%= request.getContextPath() %>/OrganizationVolunteersServlet?eventId=${e.id}" 
-                                               class="btn btn-warning btn-sm">Tình nguyện viên</a>
+                                               class="btn btn-warning btn-sm">Tình nguyện viên </a>
                                             <a href="organization/delete_event?id=${e.id}" 
                                                class="btn btn-danger btn-sm">Xóa</a>
                                         </td>
