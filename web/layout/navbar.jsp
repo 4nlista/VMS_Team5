@@ -128,7 +128,7 @@
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="<%= request.getContextPath() %>/volunteer/profile_volunteer.jsp" 
+                    <a href="<%= request.getContextPath() %>//VolunteerProfileServlet" 
                        class="nav-link <%= currentPage.contains("/volunteer/profile_volunteer.jsp") ? "active" : "" %>">
                         Hồ sơ của <%= acc.getUsername() %>
                     </a>

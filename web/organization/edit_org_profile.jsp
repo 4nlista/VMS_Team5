@@ -77,38 +77,66 @@
                             <c:set var="bioValue" value="${not empty param.bio ? param.bio : user.bio}"/>
 
                             <div class="mb-2">
-                                <label class="form-label">Tên tổ chức</label>
+                                <label class="form-label">Tên tổ chức
+                                <c:if test="${not empty requestScope.errors['full_name']}">
+    <div class="text-danger small">${requestScope.errors['full_name']}</div>
+                                </c:if>
+                                </label>
                                 <input type="text" name="full_name" class="form-control"
                                        value="${fullNameValue}">
                             </div>
 
                             <div class="mb-2">
-                                <label class="form-label">Email</label>
-                                <input type="email" name="email" class="form-control" value="${emailValue}">
+                                <label class="form-label">Email
+                                <c:if test="${not empty requestScope.errors['email']}">
+    <div class="text-danger small">${requestScope.errors['email']}</div>
+                                </c:if>
+                                </label>
+                                <input type="text" name="email" class="form-control" value="${emailValue}">
                             </div>
 
                             <div class="mb-2">
-                                <label class="form-label">Số điện thoại</label>
+                                <label class="form-label">Số điện thoại
+                                <c:if test="${not empty requestScope.errors['phone']}">
+    <div class="text-danger small">${requestScope.errors['phone']}</div>
+                                </c:if>
+                                </label>
                                 <input type="text" name="phone" class="form-control" value="${phoneValue}">
                             </div>
 
                             <div class="mb-2">
-                                <label class="form-label">Địa chỉ</label>
+                                <label class="form-label">Địa chỉ
+                                <c:if test="${not empty requestScope.errors['address']}">
+    <div class="text-danger small">${requestScope.errors['address']}</div>
+                                </c:if>
+                                </label>
                                 <input type="text" name="address" class="form-control" value="${addressValue}">
                             </div>
 
                             <div class="mb-2">
-                                <label class="form-label">Nghề nghiệp</label>
+                                <label class="form-label">Nghề nghiệp
+                                <c:if test="${not empty requestScope.errors['job_title']}">
+    <div class="text-danger small">${requestScope.errors['job_title']}</div>
+                                </c:if>
+                                </label>
                                 <input type="text" name="job_title" class="form-control" value="${jobTitleValue}">
                             </div>
 
                             <div class="mb-2">
-                                <label class="form-label">Ngày sinh</label>
+                                <label class="form-label">Ngày sinh
+                                <c:if test="${not empty requestScope.errors['dob']}">
+    <div class="text-danger small">${requestScope.errors['dob']}</div>
+                                </c:if>
+                                </label>
                                 <input type="date" name="dob" class="form-control" value="${dobValue}">
                             </div>
 
                             <div class="mb-2">
-                                <label class="form-label">Giới thiệu</label>
+                                <label class="form-label">Giới thiệu
+                                <c:if test="${not empty requestScope.errors['bio']}">
+    <div class="text-danger small">${requestScope.errors['bio']}</div>
+                                </c:if>
+                                </label>
                                 <textarea class="form-control" name="bio" rows="5">${bioValue}</textarea>
                             </div>
 
