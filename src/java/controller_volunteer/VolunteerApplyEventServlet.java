@@ -127,6 +127,13 @@ public class VolunteerApplyEventServlet extends HttpServlet {
 
         try {
             int rejectedCount = volunteerApplyService.countRejected(eventId, acc.getId());
+
+            if (volunteerApplyService.hasConflictingEvent(acc.getId(), eventId)) {
+                session.setAttribute("message", "Bạn đã đăng ký sự kiện khác trùng lịch đó bạn nhỏ!");
+                session.setAttribute("messageType", "error");
+                response.sendRedirect(request.getContextPath() + "/VolunteerApplyEventServlet?eventId=" + eventId);
+                return;
+            }
             if (rejectedCount >= 3) {
                 session.setAttribute("message", "Bạn đã bị từ chối 3 lần. Không thể đăng ký lại!");
                 session.setAttribute("messageType", "error");

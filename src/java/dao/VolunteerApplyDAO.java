@@ -104,16 +104,16 @@ public class VolunteerApplyDAO {
     public void applyToEvent(int volunteerId, int eventId, String note) {
         String sql = "INSERT INTO Event_Volunteers (volunteer_id, event_id, note, apply_date) VALUES (?, ?, ?, GETDATE())";
         try (Connection con = DBContext.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, eventId);
-            ps.setInt(2, volunteerId);
+            ps.setInt(1, volunteerId);
+            ps.setInt(2, eventId);
             ps.setString(3, note);
             ps.executeUpdate();
         } catch (Exception e) {
             if (e.getMessage().contains("Không thể tham gia")) {
-                throw new IllegalArgumentException("Bạn đã đăng ký một sự kiện khác trùng thời gian!");
+                throw new IllegalArgumentException("Bạn đã đăng ký một sự kiện khác trùng thời gian đó bạn hiền!");
             } else {
                 e.printStackTrace();
-                throw new IllegalArgumentException("Lỗi khi đăng ký sự kiện!");
+                throw new IllegalArgumentException("Lỗi khi đăng ký sự kiện đó nha!");
             }
         }
     }

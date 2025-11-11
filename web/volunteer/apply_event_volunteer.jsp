@@ -28,10 +28,20 @@
                      ${messageType == 'success' ? 'alert-success' : 
                        messageType == 'warning' ? 'alert-warning' : 
                        'alert-danger'}
-                     alert-dismissible fade show" role="alert">
+                     alert-dismissible fade show" role="alert" id="autoHideAlert">
                     ${message}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
+                <script>
+                    // Sau 2 giây thì tự động ẩn thông báo
+                    setTimeout(function () {
+                        var alertBox = document.getElementById("autoHideAlert");
+                        if (alertBox) {
+                            var alert = bootstrap.Alert.getOrCreateInstance(alertBox);
+                            alert.close();
+                        }
+                    }, 2000);
+                </script>
             </c:if>
             <div class="row">
                 <!-- Cột trái: Thông tin sự kiện -->
@@ -103,18 +113,13 @@
                                             <i class="icon-info"></i> Sự kiện đã đủ slot. Không thể đăng ký thêm.
                                         </div>
                                     </c:if>
-
-                                    <!-- Nếu volunteer đã trùng lịch -->
-                                    <c:if test="${isApplyExistEvents}">
-                                        <div class="alert alert-warning w-100">
-                                            <i class="bi bi-exclamation-triangle"></i> Bạn đã đăng ký sự kiện khác trùng thời gian. Không thể đăng ký sự kiện này!
-                                        </div>
-                                    </c:if>
-
                                     <button type="submit" class="btn btn-primary" ${isFull ? 'disabled' : ''}>
                                         Đăng ký
                                     </button>
-                                    <button type="button" class="btn btn-outline-secondary" onclick="history.back()">Hủy</button>
+                                    <button type="button" class="btn btn-outline-secondary"
+                                            onclick="window.location.href = '${pageContext.request.contextPath}/VolunteerHomeServlet'">
+                                        Hủy
+                                    </button>
                                 </div>
                             </form>
                         </div>

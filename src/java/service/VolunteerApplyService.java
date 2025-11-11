@@ -76,7 +76,7 @@ public class VolunteerApplyService {
         }
         // 4. Kiểm tra trùng thời gian với sự kiện khác
         if (hasConflictingEvent(volunteerId, eventId)) {
-            throw new IllegalArgumentException("Bạn đã đăng ký sự kiện khác trùng thời gian!");
+            throw new IllegalArgumentException("Bạn đã đăng ký sự kiện khác trùng thời gian đó bạn nhỏ!");
         }
 
         // 5. Nếu chưa thì thêm vào DB
