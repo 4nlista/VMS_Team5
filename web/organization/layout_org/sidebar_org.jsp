@@ -26,10 +26,10 @@
 <div class="content-container">
     <!-- Sidebar -->
     <div class="sidebar">
-    <div class="sidebar-user">
-    <img src="<%= avatarUrl %>" alt="Avatar" class="sidebar-avatar" />
-    <p><%= currentUser != null ? currentUser.getFull_name() : "Unknown User" %></p>
-</div>
+        <div class="sidebar-user">
+            <img src="<%= avatarUrl %>" alt="Avatar" class="sidebar-avatar" />
+            <p><%= currentUser != null ? currentUser.getFull_name() : "Unknown User" %></p>
+        </div>
         <ul class="nav flex-column mb-auto">
             <li class="nav-item">
                 <a href="<%= request.getContextPath() %>/OrganizationHomeServlet"
@@ -47,13 +47,13 @@
                     Hồ sơ cá nhân
                 </a>
             </li>
-            <li>
+<!--            <li>
                 <a href="<%= request.getContextPath() %>/organization/users_org.jsp"
                    class="nav-link text-white <%= currentPath.endsWith("/users_org.jsp") ? "active" : "" %>">
                     <i class="bi bi-person-lines-fill me-2"></i>
                     Quản lí người dùng
                 </a>
-            </li>
+            </li>-->
             <li>
                 <a href="<%= request.getContextPath() %>/OrganizationListServlet"
                    class="nav-link text-white <%= currentPath.endsWith("/OrganizationListServlet") ? "active" : "" %>">
@@ -61,13 +61,13 @@
                     Quản lí sự kiện
                 </a>
             </li>
-            <li>
+<!--            <li>
                 <a href="<%= request.getContextPath() %>/OrganizationManageFeedbackServlet"
                    class="nav-link text-white <%= currentPath.endsWith("/manage_feedback_org.jsp") ? "active" : "" %>">
                     <i class="bi bi-pencil me-2"></i>
                     Quản lí đánh giá
                 </a>
-            </li>
+            </li>-->
             <li>
                 <a href="<%= request.getContextPath() %>/OrganizationManageNews"
                    class="nav-link text-white <%= (currentPath.endsWith("/manage_new_org.jsp")
