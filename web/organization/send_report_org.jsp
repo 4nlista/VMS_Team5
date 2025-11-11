@@ -48,6 +48,9 @@
                             <div class="card-body p-4">
                                 <form action="<%= request.getContextPath() %>/organization/send_report_org" method="post" class="row g-3">
 
+                                    <!-- Hidden input để truyền eventId -->
+                                    <input type="hidden" name="eventId" value="${feedback != null ? feedback.eventId : param.eventId}" />
+
                                     <!-- ID bình luận -->
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold">ID bình luận</label>
@@ -76,20 +79,52 @@
                                     <div class="col-12 mt-3">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <!-- Bên trái -->
-                                            <a href="<%= request.getContextPath() %>/OrganizationManageFeedbackServlet" 
-                                               class="btn btn-secondary">
-                                                <i class="bi bi-arrow-left me-1"></i> Quay lại
-                                            </a>
+                                            <c:choose>
+                                                <c:when test="${feedback != null && feedback.eventId != null}">
+                                                    <a href="<%= request.getContextPath() %>/OrganizationManageFeedbackServlet?eventId=${feedback.eventId}" 
+                                                       class="btn btn-secondary">
+                                                        <i class="bi bi-arrow-left me-1"></i> Quay lại
+                                                    </a>
+                                                </c:when>
+                                                <c:when test="${param.eventId != null}">
+                                                    <a href="<%= request.getContextPath() %>/OrganizationManageFeedbackServlet?eventId=${param.eventId}" 
+                                                       class="btn btn-secondary">
+                                                        <i class="bi bi-arrow-left me-1"></i> Quay lại
+                                                    </a>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <a href="<%= request.getContextPath() %>/OrganizationManageFeedbackServlet" 
+                                                       class="btn btn-secondary">
+                                                        <i class="bi bi-arrow-left me-1"></i> Quay lại
+                                                    </a>
+                                                </c:otherwise>
+                                            </c:choose>
 
                                             <!-- Bên phải -->
                                             <div>
                                                 <button type="submit" class="btn btn-primary me-2">
                                                     <i></i> Gửi báo cáo
                                                 </button>
-                                                <a href="<%= request.getContextPath() %>/OrganizationManageFeedbackServlet" 
-                                                   class="btn btn-outline-danger">
-                                                    <i class="bi bi-x-circle me-1"></i> Hủy
-                                                </a>
+                                                <c:choose>
+                                                    <c:when test="${feedback != null && feedback.eventId != null}">
+                                                        <a href="<%= request.getContextPath() %>/OrganizationManageFeedbackServlet?eventId=${feedback.eventId}" 
+                                                           class="btn btn-outline-danger">
+                                                            <i class="bi bi-x-circle me-1"></i> Hủy
+                                                        </a>
+                                                    </c:when>
+                                                    <c:when test="${param.eventId != null}">
+                                                        <a href="<%= request.getContextPath() %>/OrganizationManageFeedbackServlet?eventId=${param.eventId}" 
+                                                           class="btn btn-outline-danger">
+                                                            <i class="bi bi-x-circle me-1"></i> Hủy
+                                                        </a>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <a href="<%= request.getContextPath() %>/OrganizationManageFeedbackServlet" 
+                                                           class="btn btn-outline-danger">
+                                                            <i class="bi bi-x-circle me-1"></i> Hủy
+                                                        </a>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </div>
                                         </div>
                                     </div>

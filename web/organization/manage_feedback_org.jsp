@@ -134,7 +134,7 @@
                                                             <option value="Ẩn" ${(f.status != 'valid' && f.status != 'Valid') ? 'selected' : ''}>Ẩn</option>
                                                         </select>
                                                     </form>
-                                                    <a href="<%= request.getContextPath() %>/organization/send_report_org?feedbackId=${f.id}" class="btn btn-sm btn-secondary text-white">Báo cáo</a>
+                                                    <a href="<%= request.getContextPath() %>/organization/send_report_org?feedbackId=${f.id}<c:if test="${not empty eventId}">&eventId=${eventId}</c:if>" class="btn btn-sm btn-secondary text-white">Báo cáo</a>
                                                 </div>
                                             </td>
                                         </tr>
