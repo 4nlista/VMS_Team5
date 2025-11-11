@@ -20,6 +20,14 @@
 
         <div class="page-content container mt-5 pt-5">
             <h1 class="mb-4 text-center">Trang đánh giá sự kiện</h1>
+            <!-- Thêm vào đầu trang history_event_volunteer.jsp, sau thẻ <h1> -->
+            <c:if test="${not empty sessionScope.errorMessage}">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    ${sessionScope.errorMessage}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <c:remove var="errorMessage" scope="session"/>
+            </c:if>
 
             <!-- Thông tin sự kiện -->
             <div class="row justify-content-center">

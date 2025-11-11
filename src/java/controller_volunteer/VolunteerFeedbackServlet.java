@@ -49,10 +49,11 @@ public class VolunteerFeedbackServlet extends HttpServlet {
         int eventId = Integer.parseInt(eventIdParam);
         int volunteerId = account.getId();
 
-        // Kiểm tra điều kiện được feedback
-        if (!feedbackService.canVolunteerFeedback(eventId, volunteerId)) {
-            request.setAttribute("errorMessage", "Bạn chưa đủ điều kiện để đánh giá sự kiện này!");
-            request.getRequestDispatcher("VolunteerEventServlet").forward(request, response);
+        // Kiểm tra điều kiện được feedback với thông báo chi tiết
+        String errorMessage = feedbackService.checkFeedbackEligibilityMessage(eventId, volunteerId);
+        if (errorMessage != null) {
+            session.setAttribute("errorMessage", errorMessage);
+            response.sendRedirect("VolunteerEventServlet");
             return;
         }
 
@@ -60,8 +61,8 @@ public class VolunteerFeedbackServlet extends HttpServlet {
         Feedback feedback = feedbackService.getFeedbackOrEventInfo(eventId, volunteerId);
 
         if (feedback == null) {
-            request.setAttribute("errorMessage", "Không tìm thấy thông tin sự kiện!");
-            request.getRequestDispatcher("VolunteerEventServlet").forward(request, response);
+            session.setAttribute("errorMessage", "Không tìm thấy thông tin sự kiện!");
+            response.sendRedirect("VolunteerEventServlet");
             return;
         }
 

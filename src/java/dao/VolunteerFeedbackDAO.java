@@ -33,7 +33,6 @@ public class VolunteerFeedbackDAO {
      * @return Feedback nếu đã có, null nếu chưa
      */
     public Feedback getFeedbackByEventAndVolunteer(int eventId, int volunteerId) {
-        // BỎ ĐIỀU KIỆN status != 'deleted' vì không tồn tại trong database
         String sql = "SELECT f.id, f.event_id, f.volunteer_id, f.rating, f.comment, "
                 + "f.feedback_date, f.status, "
                 + "e.title AS event_title, "
@@ -153,17 +152,17 @@ public class VolunteerFeedbackDAO {
     }
 
     /**
-     * Kiểm tra volunteer có đủ điều kiện feedback không: - Đã tham gia event
-     * (status = 'approved' trong Event_Volunteers) - Event đã kết thúc
+     * Kiểm tra volunteer có đủ điều kiện feedback không Trả về mã lỗi cụ thể để
+     * hiển thị thông báo phù hợp
      *
-     * @return true nếu đủ điều kiện
+     * @return 0 = Được phép feedback 1 = Chưa đăng ký sự kiện 2 = Đơn chưa được
+     * duyệt (pending/rejected) 3 = Sự kiện chưa bắt đầu
      */
-    public boolean canFeedback(int eventId, int volunteerId) {
-        String sql = "SELECT COUNT(*) AS can_feedback "
+    public int checkFeedbackEligibility(int eventId, int volunteerId) {
+        String sql = "SELECT ev.status, e.start_date "
                 + "FROM Event_Volunteers ev "
                 + "JOIN Events e ON ev.event_id = e.id "
-                + "WHERE ev.event_id = ? AND ev.volunteer_id = ? "
-                + "AND ev.status = 'approved' AND e.end_date < GETDATE()";
+                + "WHERE ev.event_id = ? AND ev.volunteer_id = ?";
 
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -171,12 +170,37 @@ public class VolunteerFeedbackDAO {
             ps.setInt(2, volunteerId);
             ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
-                return rs.getInt("can_feedback") > 0;
+            if (!rs.next()) {
+                return 1; // Chưa đăng ký sự kiện
             }
+
+            String status = rs.getString("status");
+            if (!"approved".equals(status)) {
+                return 2; // Đơn chưa được duyệt
+            }
+
+            java.sql.Timestamp startDate = rs.getTimestamp("start_date");
+            java.sql.Timestamp now = new java.sql.Timestamp(System.currentTimeMillis());
+
+            if (startDate.after(now)) {
+                return 3; // Sự kiện chưa bắt đầu
+            }
+
+            return 0; // Được phép feedback
+
         } catch (SQLException e) {
             e.printStackTrace();
+            return -1; // Lỗi hệ thống
         }
-        return false;
+    }
+
+    /**
+     * Kiểm tra volunteer có đủ điều kiện feedback không (phương thức cũ - giữ
+     * lại để tương thích) Logic mới: Cho phép feedback khi sự kiện ĐÃ BẮT ĐẦU
+     *
+     * @return true nếu đủ điều kiện
+     */
+    public boolean canFeedback(int eventId, int volunteerId) {
+        return checkFeedbackEligibility(eventId, volunteerId) == 0;
     }
 }

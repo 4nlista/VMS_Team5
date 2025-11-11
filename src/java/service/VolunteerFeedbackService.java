@@ -8,8 +8,7 @@ import dao.VolunteerFeedbackDAO;
 import model.Feedback;
 
 /**
- *
- * @author Admin
+ * Service xử lý logic nghiệp vụ cho Feedback của Volunteer
  */
 public class VolunteerFeedbackService {
 
@@ -30,7 +29,7 @@ public class VolunteerFeedbackService {
         Feedback existingFeedback = feedbackDAO.getFeedbackByEventAndVolunteer(eventId, volunteerId);
 
         if (existingFeedback != null) {
-            // Đã có feedback → trả về để hiển thị form sửa/xóa
+            // Đã có feedback → trả về để hiển thị form sửa
             return existingFeedback;
         } else {
             // Chưa có feedback → lấy thông tin event để hiển thị form tạo mới
@@ -41,10 +40,32 @@ public class VolunteerFeedbackService {
     /**
      * Kiểm tra volunteer có đủ điều kiện feedback không
      *
-     * @return true nếu đủ điều kiện (approved + event ended)
+     * @return true nếu đủ điều kiện (approved + event started)
      */
     public boolean canVolunteerFeedback(int eventId, int volunteerId) {
         return feedbackDAO.canFeedback(eventId, volunteerId);
+    }
+
+    /**
+     * Kiểm tra điều kiện feedback và trả về thông báo lỗi cụ thể
+     *
+     * @return null nếu OK, hoặc thông báo lỗi cụ thể
+     */
+    public String checkFeedbackEligibilityMessage(int eventId, int volunteerId) {
+        int code = feedbackDAO.checkFeedbackEligibility(eventId, volunteerId);
+
+        switch (code) {
+            case 0:
+                return null; // OK, không có lỗi
+            case 1:
+                return "Bạn chưa đăng ký tham gia sự kiện này!";
+            case 2:
+                return "Đơn đăng ký của bạn chưa được duyệt. Vui lòng đợi tổ chức phê duyệt!";
+            case 3:
+                return "Sự kiện chưa bắt đầu! Bạn chỉ có thể đánh giá sau khi sự kiện diễn ra.";
+            default:
+                return "Có lỗi xảy ra. Vui lòng thử lại sau!";
+        }
     }
 
     /**
@@ -121,11 +142,10 @@ public class VolunteerFeedbackService {
         return feedbackDAO.updateFeedback(feedback);
     }
 
-
     /**
      * Kiểm tra volunteer đã feedback cho event này chưa
      *
-     * @return true nếu đã feedback (và chưa bị xóa)
+     * @return true nếu đã feedback
      */
     public boolean hasFeedback(int eventId, int volunteerId) {
         return feedbackDAO.getFeedbackByEventAndVolunteer(eventId, volunteerId) != null;

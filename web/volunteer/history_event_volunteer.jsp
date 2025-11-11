@@ -22,13 +22,17 @@
         <div class="page-content container mt-5 pt-5 pb-5">
             <h1 class="mb-4 text-center">Lịch sử sự kiện đã tham gia</h1>
 
-            <!-- Hiển thị thông báo nếu có -->
-            <c:if test="${not empty sessionScope.message}">
-                <div class="alert alert-info alert-dismissible fade show" role="alert">
-                    ${sessionScope.message}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <!-- Thêm vào đầu trang history_event_volunteer.jsp, sau thẻ <h1> -->
+            <c:if test="${not empty sessionScope.errorMessage}">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert" id="errAlert">
+                    ${sessionScope.errorMessage}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
-                <c:remove var="message" scope="session"/>
+                <c:remove var="errorMessage" scope="session"/>
+
+                <script>
+                    setTimeout(() => bootstrap.Alert.getOrCreateInstance('#errAlert').close(), 3000);
+                </script>
             </c:if>
 
             <div class="card shadow-sm border">
