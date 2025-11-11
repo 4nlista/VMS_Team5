@@ -106,9 +106,9 @@
                                     <th style="width:5%;">STT</th>
                                     <th style="width:20%;">Tình nguyện viên</th>
                                     <th style="width:40%;">Bình luận</th>
-                                    <th style="width:8%;">Điểm</th>
+                                    <th style="width:5%;">Điểm</th>
                                     <th style="width:12%;">Trạng thái</th>
-                                    <th style="width:15%;">Thao tác</th>
+                                    <th style="width:18%;">Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody>

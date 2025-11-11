@@ -52,7 +52,7 @@
                             <!-- Bỏ tìm kiếm theo tên sự kiện -->
                             <!-- Tên tình nguyện viên -->
                             <div class="form-group">
-                <label class="form-label fw-semibold">Tên tình nguyện viên</label>
+                                <label class="form-label fw-semibold">Tên tình nguyện viên</label>
                                 <div class="d-flex align-items-center gap-2 mt-1">
                                     <input class="form-control" style="min-width:320px" name="q" value="${q}" placeholder="Nhập tên..." />
                                 </div>
@@ -70,9 +70,14 @@
                                 <a href="${resetUrl}" class="btn btn-secondary" style="min-width:110px;">
                                     <i class="bi bi-arrow-counterclockwise"></i> Làm mới
                                 </a>
+
+
                             </div>
                         </div>
                     </form>
+                    <button type="submit" class="btn btn-warnings mb-3" style="min-width:140px;">
+                        <i class="bi bi-send"></i> Thông báo chung
+                    </button>
 
                     <!-- Bảng dữ liệu -->
                     <div class="table-responsive">
@@ -88,7 +93,7 @@
                                     <th style="width:15%;">Thao tác</th>
                                 </tr>
                             </thead>
-                            
+
                             <tbody>
                                 <c:forEach var="p" items="${profiles}" varStatus="loop">
                                     <tr>
@@ -98,7 +103,7 @@
                                         </td>
                                         <td>
                                             <c:choose>
-<c:when test="${p.gender == 'Male' || p.gender == 'male' || p.gender == 'Nam'}">Nam</c:when>
+                                                <c:when test="${p.gender == 'Male' || p.gender == 'male' || p.gender == 'Nam'}">Nam</c:when>
                                                 <c:when test="${p.gender == 'Female' || p.gender == 'female' || p.gender == 'Nữ'}">Nữ</c:when>
                                                 <c:otherwise>Khác</c:otherwise>
                                             </c:choose>
