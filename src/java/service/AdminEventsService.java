@@ -99,5 +99,10 @@ public class AdminEventsService {
     public boolean lockEvent(int eventId) {
         return adminEventsDAO.updateEventStatus(eventId, "inactive");
     }
+
+    // Mở khóa sự kiện (set status = active)
+    public boolean unlockEvent(int eventId) {
+        return adminEventsDAO.updateEventStatus(eventId, "active");
+    }
 }
 

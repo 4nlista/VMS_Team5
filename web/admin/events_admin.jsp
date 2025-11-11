@@ -73,6 +73,18 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 </c:if>
+                <c:if test="${param.unlockSuccess == 'true'}">
+                    <div class="alert alert-success alert-dismissible fade show" role="alert" id="unlock-success-alert">
+                        <i class="bi bi-check-circle me-2"></i>Mở khóa sự kiện thành công!
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </c:if>
+                <c:if test="${param.unlockError == 'true'}">
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="bi bi-exclamation-circle me-2"></i>Có lỗi xảy ra khi mở khóa sự kiện!
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </c:if>
 
                 <!-- Filter Section -->
                 <div class="filter-bar mb-4 d-flex flex-wrap justify-content-between align-items-end gap-3">
@@ -203,7 +215,17 @@
                                             </form>
                                         </c:if>
                                         <c:if test="${event.status == 'inactive'}">
-                                            <span class="badge bg-secondary">Đã khóa</span>
+                                            <form action="AdminEventUnlockServlet" method="post" style="display:inline;" 
+                                                  onsubmit="return confirm('Bạn có chắc chắn muốn mở khóa sự kiện này?');">
+                                                <input type="hidden" name="id" value="${event.id}">
+                                                <input type="hidden" name="status" value="${currentStatus}">
+                                                <input type="hidden" name="category" value="${currentCategory}">
+                                                <input type="hidden" name="visibility" value="${currentVisibility}">
+                                                <input type="hidden" name="page" value="${currentPage}">
+                                                <button type="submit" class="btn btn-success btn-sm" title="Mở khóa sự kiện">
+                                                    <i class="bi bi-unlock"></i> Mở khóa
+                                                </button>
+                                            </form>
                                         </c:if>
                                     </td>
                                 </tr>
@@ -263,6 +285,14 @@
             if (lockSuccessAlert) {
                 setTimeout(() => {
                     const alert = new bootstrap.Alert(lockSuccessAlert);
+                    alert.close();
+                }, 3000);
+            }
+            
+            const unlockSuccessAlert = document.getElementById('unlock-success-alert');
+            if (unlockSuccessAlert) {
+                setTimeout(() => {
+                    const alert = new bootstrap.Alert(unlockSuccessAlert);
                     alert.close();
                 }, 3000);
             }
