@@ -77,7 +77,7 @@ public class VolunteerFeedbackServlet extends HttpServlet {
     }
 
     /**
-     * POST: Xử lý tạo mới, cập nhật, hoặc xóa feedback
+     * POST: Xử lý tạo mới hoặc cập nhật feedback
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -121,11 +121,6 @@ public class VolunteerFeedbackServlet extends HttpServlet {
                 message = success ? "Cập nhật đánh giá thành công!" : "Cập nhật đánh giá thất bại!";
                 break;
 
-            case "delete":
-                success = handleDelete(eventId, volunteerId);
-                message = success ? "Xóa đánh giá thành công!" : "Xóa đánh giá thất bại!";
-                break;
-
             default:
                 response.sendRedirect("VolunteerEventServlet");
                 return;
@@ -165,13 +160,6 @@ public class VolunteerFeedbackServlet extends HttpServlet {
             e.printStackTrace();
             return false;
         }
-    }
-
-    /**
-     * Xử lý xóa feedback
-     */
-    private boolean handleDelete(int eventId, int volunteerId) {
-        return feedbackService.deleteFeedback(eventId, volunteerId);
     }
 
     @Override

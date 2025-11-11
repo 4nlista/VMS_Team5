@@ -121,21 +121,6 @@ public class VolunteerFeedbackService {
         return feedbackDAO.updateFeedback(feedback);
     }
 
-    /**
-     * Xóa mềm feedback (set status = 'deleted')
-     *
-     * @return true nếu xóa thành công
-     */
-    public boolean deleteFeedback(int eventId, int volunteerId) {
-        // Kiểm tra feedback có tồn tại không
-        Feedback existing = feedbackDAO.getFeedbackByEventAndVolunteer(eventId, volunteerId);
-        if (existing == null) {
-            System.out.println("Không tìm thấy feedback để xóa");
-            return false;
-        }
-
-        return feedbackDAO.deleteFeedback(eventId, volunteerId);
-    }
 
     /**
      * Kiểm tra volunteer đã feedback cho event này chưa

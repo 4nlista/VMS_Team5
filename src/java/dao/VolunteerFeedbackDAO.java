@@ -8,14 +8,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import model.Feedback;
 import utils.DBContext;
 
 /**
- *
- * @author Admin
+ * DAO cho việc quản lý Feedback của Volunteer
  */
 public class VolunteerFeedbackDAO {
 
@@ -24,19 +21,19 @@ public class VolunteerFeedbackDAO {
     public VolunteerFeedbackDAO() {
         try {
             DBContext db = new DBContext();
-            this.conn = db.getConnection(); // lấy connection từ DBContext
+            this.conn = db.getConnection();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * Kiểm tra volunteer đã feedback cho event này chưa (chỉ lấy status !=
-     * 'deleted')
+     * Kiểm tra volunteer đã feedback cho event này chưa
      *
      * @return Feedback nếu đã có, null nếu chưa
      */
     public Feedback getFeedbackByEventAndVolunteer(int eventId, int volunteerId) {
+        // BỎ ĐIỀU KIỆN status != 'deleted' vì không tồn tại trong database
         String sql = "SELECT f.id, f.event_id, f.volunteer_id, f.rating, f.comment, "
                 + "f.feedback_date, f.status, "
                 + "e.title AS event_title, "
@@ -46,7 +43,7 @@ public class VolunteerFeedbackDAO {
                 + "JOIN Events e ON f.event_id = e.id "
                 + "JOIN Users u_vol ON f.volunteer_id = u_vol.account_id "
                 + "JOIN Users u_org ON e.organization_id = u_org.account_id "
-                + "WHERE f.event_id = ? AND f.volunteer_id = ? AND f.status != 'deleted'";
+                + "WHERE f.event_id = ? AND f.volunteer_id = ?";
 
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -148,26 +145,6 @@ public class VolunteerFeedbackDAO {
             ps.setString(2, feedback.getComment());
             ps.setInt(3, feedback.getEventId());
             ps.setInt(4, feedback.getVolunteerId());
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    /**
-     * Xóa mềm feedback (set status = 'deleted')
-     *
-     * @return true nếu xóa thành công
-     */
-    public boolean deleteFeedback(int eventId, int volunteerId) {
-        String sql = "UPDATE Feedback SET status = 'deleted' "
-                + "WHERE event_id = ? AND volunteer_id = ?";
-
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, eventId);
-            ps.setInt(2, volunteerId);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();

@@ -115,12 +115,7 @@
                                             <div>
                                                 <button type="submit" class="btn btn-success">
                                                     <i class="bi bi-check-lg"></i> Lưu thay đổi
-                                                </button>
-                                                <button type="submit" class="btn btn-danger" 
-                                                        onclick="return confirm('Bạn có chắc chắn muốn xóa đánh giá này?')"
-                                                        formaction="VolunteerFeedbackServlet?action=delete&eventId=${feedback.eventId}">
-                                                    <i class="bi bi-trash"></i> Xóa
-                                                </button>
+                                                </button>    
                                             </div>
                                         </div>
                                     </form>
