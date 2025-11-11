@@ -6,20 +6,33 @@
 
 <%@ page contentType="text/html; charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="model.User" %>
 <%
     String currentPath = request.getRequestURI();
 %>
+<%
+    User currentUser = (User) session.getAttribute("user");
+
+    String avatarUrl;
+    if (currentUser != null && currentUser.getAvatar() != null && !currentUser.getAvatar().isEmpty()) {
+        avatarUrl = request.getContextPath() + "/OrganizationAvatar?file=" + currentUser.getAvatar();
+    } else {
+        avatarUrl = request.getContextPath() + "/organization/images/default_avatar.png";
+    }
+%>
+
+<link rel="stylesheet" href="<%= request.getContextPath() %>/organization/css/sidebar_org.css">
 
 <div class="content-container">
     <!-- Sidebar -->
     <div class="sidebar">
-        <div class="logo">
-            <img src="<%= request.getContextPath() %>/organization/images/logo_org.jpg" alt="Logo" />
-            <span>Organization Panel</span>
-        </div>
+    <div class="sidebar-user">
+    <img src="<%= avatarUrl %>" alt="Avatar" class="sidebar-avatar" />
+    <p><%= currentUser != null ? currentUser.getFull_name() : "Unknown User" %></p>
+</div>
         <ul class="nav flex-column mb-auto">
             <li class="nav-item">
-                <a href="<%= request.getContextPath() %>/organization/home_org.jsp"
+                <a href="<%= request.getContextPath() %>/OrganizationHomeServlet"
                    class="nav-link text-white <%= currentPath.endsWith("/home_org.jsp") ? "active" : "" %>">
                     <i class="bi bi-house-door me-2"></i>
                     Bảng điều khiển

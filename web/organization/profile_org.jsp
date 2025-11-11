@@ -97,7 +97,7 @@
                                 <!-- Buttons -->
                                 <div class="mt-4">
                                     <a href="${pageContext.request.contextPath}/OrganizationProfileEdit?id=${profile.id}" class="btn btn-primary">Chỉnh sửa</a>
-                                    <a href="home_org.jsp" class="btn btn-secondary">Quay lại Dashboard</a>
+                                    <a href="${pageContext.request.contextPath}/OrganizationHomeServlet" class="btn btn-secondary">Quay lại Dashboard</a>
                                 </div>
                             </div> 
                         </div>
