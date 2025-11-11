@@ -23,8 +23,8 @@
                         <a class="block-20" style="background-image: url('${pageContext.request.contextPath}/UploadImagesServlet?file=${e.images}');"></a>
                         <div class="text p-4 d-block h-100">
                             <div class="meta d-flex justify-content-end">
-                                <a href="" class="meta-chat">
-                                    <span class="icon-star text-warning"></span> 3
+                                <a href="${pageContext.request.contextPath}/feedback_events.jsp" class="meta-chat">
+                                    <span class="icon-comment text-warning"></span> Bình luận
                                 </a>
                             </div>
                             <div class="meta mb-3">
@@ -38,18 +38,6 @@
                                 <span><i class="icon-map-o"></i> Địa điểm : ${e.location}</span>
                             </p>
                             <p>${e.description}</p>
-<!--                            <div class="d-flex justify-content-between mt-auto">
-                                <p class="mb-0">
-                                    <a href="${pageContext.request.contextPath}/VolunteerApplyEventServlet?eventId=${e.id}">
-                                        Tham gia sự kiện <i class="ion-ios-arrow-forward"></i>
-                                    </a>
-                                </p>
-                                <p class="mb-0">
-                                    <a href="${pageContext.request.contextPath}/volunteer/payment_volunteer.jsp">
-                                        Ủng hộ <i class="ion-ios-add-circle"></i>
-                                    </a>
-                                </p>
-                            </div>-->
                         </div>
                     </div>
                 </div>
