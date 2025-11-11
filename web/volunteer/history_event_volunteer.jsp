@@ -1,3 +1,8 @@
+<%-- 
+    Document   : history_event_volunteer
+    Created on : Nov 02, 2025, 3:18:00 PM
+    Author     : ADMIN
+--%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -36,7 +41,7 @@
                                 <th scope="col">Tổ chức</th>
                                 <th scope="col">Danh mục</th>
                                 <th scope="col">Ngày đăng ký</th>
-                                <th scope="col">Số giờ</th>
+                                <!--                                <th scope="col">Số giờ</th>-->
                                 <th scope="col">Trạng thái</th>
                                 <th scope="col">Thao tác</th>
                             </tr>
@@ -51,7 +56,7 @@
                                             <td>${ev.organizationName}</td>
                                             <td>${ev.categoryName}</td>
                                             <td><fmt:formatDate value="${ev.applyDate}" pattern="dd/MM/yyyy" /></td>
-                                            <td>${ev.hours}</td>
+<!--                                            <td>${ev.hours}</td>-->
                                             <td>
                                                 <c:choose>
                                                     <c:when test="${ev.status == 'approved'}">
@@ -70,7 +75,7 @@
                                             </td>
                                             <td>
                                                 <a href="${pageContext.request.contextPath}/VolunteerEventDetailServlet?eventId=${ev.eventId}&volunteerId=${sessionScope.account.id}" 
-                                                   class="btn btn-sm btn-outline-primary me-2">
+                                                   class="btn btn-sm btn-outline-warning me-2">
                                                     Xem chi tiết
                                                 </a>
 
@@ -107,6 +112,15 @@
                                                         </div>
                                                     </div>
                                                 </c:if>
+
+                                                <!-- Hiển thị nút bình luận nếu không phải pending hoặc reject -->
+                                                <c:if test="${ev.status == 'approved'}">
+                                                    <a href="${pageContext.request.contextPath}/VolunteerFeedbackServlet?eventId=${ev.eventId}" 
+                                                       class="btn btn-sm btn-outline-info">
+                                                        Bình luận
+                                                    </a>
+                                                </c:if>
+
                                             </td>
                                         </tr>
                                     </c:forEach>

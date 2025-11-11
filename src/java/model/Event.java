@@ -30,7 +30,7 @@ public class Event {
 
     // khai báo thêm
     private int volunteerHour;  // số giờ tích lũy
-    private double donateVolunteer;  // số tiền donate
+    private double donateVolunteer;  // tổng số tiền donate
 
     private boolean hasApplied;  // Đã đăng ký chưa
     private boolean hasDonated;  // Đã donate chưa

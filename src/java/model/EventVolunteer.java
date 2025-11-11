@@ -19,7 +19,30 @@ public class EventVolunteer {
     private int hours;               // Số giờ tham gia
     private String note;             // Ghi chú
 
+    private double totalDonate;                 // số tiền donate của volunteer vs sự kiện đó
+    private Date startDateEvent;                 // Ngày bắt đầu
+    private Date endDateEvent;                   // Ngày kết thúc
+    private String attendanceReport;            // trạng thái điểm danh
+
     public EventVolunteer() {
+    }
+
+    public EventVolunteer(int id, int eventId, String eventTitle, String categoryName, String organizationName, int volunteerId, String volunteerName, Date applyDate, String status, int hours, String note, double totalDonate, Date startDateEvent, Date endDateEvent, String attendanceReport) {
+        this.id = id;
+        this.eventId = eventId;
+        this.eventTitle = eventTitle;
+        this.categoryName = categoryName;
+        this.organizationName = organizationName;
+        this.volunteerId = volunteerId;
+        this.volunteerName = volunteerName;
+        this.applyDate = applyDate;
+        this.status = status;
+        this.hours = hours;
+        this.note = note;
+        this.totalDonate = totalDonate;
+        this.startDateEvent = startDateEvent;
+        this.endDateEvent = endDateEvent;
+        this.attendanceReport = attendanceReport;
     }
 
     public EventVolunteer(int id, int eventId, String eventTitle, String categoryName, String organizationName,
@@ -138,4 +161,37 @@ public class EventVolunteer {
     public void setNote(String note) {
         this.note = note;
     }
+
+    public double getTotalDonate() {
+        return totalDonate;
+    }
+
+    public void setTotalDonate(double totalDonate) {
+        this.totalDonate = totalDonate;
+    }
+
+    public Date getStartDateEvent() {
+        return startDateEvent;
+    }
+
+    public void setStartDateEvent(Date startDateEvent) {
+        this.startDateEvent = startDateEvent;
+    }
+
+    public Date getEndDateEvent() {
+        return endDateEvent;
+    }
+
+    public void setEndDateEvent(Date endDateEvent) {
+        this.endDateEvent = endDateEvent;
+    }
+
+    public String getAttendanceReport() {
+        return attendanceReport;
+    }
+
+    public void setAttendanceReport(String attendanceReport) {
+        this.attendanceReport = attendanceReport;
+    }
+
 }

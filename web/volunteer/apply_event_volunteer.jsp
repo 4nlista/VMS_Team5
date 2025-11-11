@@ -92,16 +92,16 @@
                                     </div>
                                     <div class="col-md-6 mb-2">
                                         <label class="form-label fw-bold">Email</label>
-                                        <input type="email" class="form-control" value="${user.email}" readonly>
+                                        <input type="text" class="form-control" value="${user.email}" readonly>
                                     </div>
                                 </div>
-
-                                <div class="row">
-                                    <div class="col-md-6 mb-2">
-                                        <label class="form-label fw-bold">Số giờ đăng ký</label>
-                                        <input type="number" class="form-control" name="hours" placeholder="Nhập số giờ" required>
-                                    </div>
-                                </div>
+                                <!--
+                                                                <div class="row">
+                                                                    <div class="col-md-6 mb-2">
+                                                                        <label class="form-label fw-bold">Số giờ đăng ký</label>
+                                                                        <input type="number" class="form-control" name="hours" placeholder="Nhập số giờ" required>
+                                                                    </div>
+                                                                </div>-->
 
                                 <div class="mb-2">
                                     <label class="form-label fw-bold">Ghi chú</label>
@@ -119,8 +119,6 @@
                                         Đăng ký
                                     </button>
                                     <button type="button" class="btn btn-outline-secondary" onclick="history.back()">Hủy</button>
-                                    <button type="reset" class="btn btn-outline-secondary">Hủy</button>
-
                                 </div>
                             </form>
                         </div>
