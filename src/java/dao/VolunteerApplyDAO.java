@@ -29,10 +29,7 @@ public class VolunteerApplyDAO {
         }
     }
 
-    /**
-     * Kiểm tra volunteer có sự kiện nào trùng thời gian không CHỈ KIỂM TRA VỚI
-     * CÁC ĐƠN approved/pending
-     */
+    // Kiểm tra volunteer có sự kiện nào trùng thời gian không CHỈ KIỂM TRA VỚI CÁC trạng thái approved/pending
     public boolean hasConflictingEvent(int volunteerId, int eventId) {
         String sql = """
             SELECT COUNT(*) FROM Event_Volunteers ev
@@ -40,6 +37,7 @@ public class VolunteerApplyDAO {
             JOIN Events e_new ON e_new.id = ?
             WHERE ev.volunteer_id = ?
               AND ev.status IN ('approved', 'pending')
+              AND e_existing.id <> e_new.id
               AND e_new.start_date < e_existing.end_date
               AND e_new.end_date > e_existing.start_date
         """;
@@ -138,7 +136,7 @@ public class VolunteerApplyDAO {
         return 0;
     }
 
-    // Lấy danh sách các event đã apply của volunteer
+    // Lấy danh sách các event đã apply của volunteer dùng cho phần history ?
     public List<EventVolunteer> getMyApplications(int volunteerId) {
         List<EventVolunteer> list = new ArrayList<>();
         String sql = """

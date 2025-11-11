@@ -104,6 +104,13 @@
                                         </div>
                                     </c:if>
 
+                                    <!-- Nếu volunteer đã trùng lịch -->
+                                    <c:if test="${isApplyExistEvents}">
+                                        <div class="alert alert-warning w-100">
+                                            <i class="bi bi-exclamation-triangle"></i> Bạn đã đăng ký sự kiện khác trùng thời gian. Không thể đăng ký sự kiện này!
+                                        </div>
+                                    </c:if>
+
                                     <button type="submit" class="btn btn-primary" ${isFull ? 'disabled' : ''}>
                                         Đăng ký
                                     </button>

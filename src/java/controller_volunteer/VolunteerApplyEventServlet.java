@@ -73,6 +73,7 @@ public class VolunteerApplyEventServlet extends HttpServlet {
         boolean isRegistered = volunteerApplyService.hasApplied(volunteerId, eventId);
         int rejectedCount = volunteerApplyService.countRejected(eventId, volunteerId);
         boolean isFull = volunteerApplyService.isEventFull(eventId);
+        boolean isApplyExistEvents = volunteerApplyService.hasConflictingEvent(volunteerId, eventId);
 
         // Lấy danh sách các sự kiện mà volunteer đã apply
         List<EventVolunteer> myApplications = volunteerApplyService.getMyApplications(volunteerId);
@@ -88,6 +89,7 @@ public class VolunteerApplyEventServlet extends HttpServlet {
         request.setAttribute("isRegistered", isRegistered);
         request.setAttribute("rejectedCount", rejectedCount);
         request.setAttribute("isFull", isFull);
+        request.setAttribute("isApplyExistEvents", isApplyExistEvents);
         request.setAttribute("message", message);
         request.setAttribute("messageType", messageType);
         request.setAttribute("event", event);
