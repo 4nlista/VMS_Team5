@@ -55,10 +55,12 @@
             </a>
         </li>
         <li>
-            <a href="<%= request.getContextPath() %>/admin/events_admin.jsp"
-               class="nav-link text-white <%= currentPath.endsWith("/events_admin.jsp") ? "active" : "" %>">
+            <a href="<%= request.getContextPath() %>/AdminEventsServlet"
+               class="nav-link text-white <%= (currentPath.endsWith("/AdminEventsServlet") 
+                       || currentPath.endsWith("/events_admin.jsp")
+                       || currentPath.endsWith("/detail_events_admin.jsp")) ? "active" : "" %>">
                 <i class="bi bi-calendar-event me-2"></i>
-                Thống kê sự kiện
+                Quản lí sự kiện
             </a>
         </li>
         <li>

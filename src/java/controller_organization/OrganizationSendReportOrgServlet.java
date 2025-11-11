@@ -65,6 +65,18 @@ public class OrganizationSendReportOrgServlet extends HttpServlet {
 
         reportDAO.insertPendingReport(feedbackId, acc.getId(), reason);
 
-        response.sendRedirect(request.getContextPath() + "/OrganizationManageFeedbackServlet?reported=1");
+        // Lấy eventId từ feedback để redirect về đúng trang
+        Feedback fb = feedbackDAO.findByIdWithJoin(feedbackId);
+        String redirectUrl = request.getContextPath() + "/OrganizationManageFeedbackServlet?reported=1";
+        if (fb != null && fb.getEventId() > 0) {
+            redirectUrl += "&eventId=" + fb.getEventId();
+        } else {
+            // Nếu không lấy được từ feedback, thử lấy từ request parameter
+            String eventIdParam = request.getParameter("eventId");
+            if (eventIdParam != null && !eventIdParam.isEmpty()) {
+                redirectUrl += "&eventId=" + eventIdParam;
+            }
+        }
+        response.sendRedirect(redirectUrl);
     }
 }
