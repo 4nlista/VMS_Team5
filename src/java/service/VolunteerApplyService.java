@@ -48,7 +48,7 @@ public class VolunteerApplyService {
         return approvedCount >= event.getNeededVolunteers();
     }
 
-    public boolean applyToEvent(int volunteerId, int eventId, int hours, String note) {
+    public boolean applyToEvent(int volunteerId, int eventId, String note) {
         // 1️. Kiểm tra sự kiện có tồn tại
         Event event = displayEventService.getEventById(eventId);
         if (event == null) {
@@ -70,7 +70,7 @@ public class VolunteerApplyService {
         }
 
         // 4. Nếu chưa thì thêm vào DB
-        volunteerApplyDAO.applyToEvent(volunteerId, eventId, hours, note);
+        volunteerApplyDAO.applyToEvent(volunteerId, eventId, note);
         return true;
     }
 

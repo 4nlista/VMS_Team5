@@ -65,7 +65,6 @@ public class OrganizationHomeServlet extends HttpServlet {
 
 		// Total statistics
 		int totalEvents = organizationHomeService.getTotalEvents(organizationId);
-		int totalVolunteerHours = organizationHomeService.getTotalVolunteerHours(organizationId);
 		int totalVolunteers = organizationHomeService.getTotalVolunteers(organizationId);
 		double totalDonations = organizationHomeService.getTotalDonations(organizationId);
 
@@ -81,7 +80,6 @@ public class OrganizationHomeServlet extends HttpServlet {
 
 		// Set attributes for JSP
 		request.setAttribute("totalEvents", totalEvents);
-		request.setAttribute("totalVolunteerHours", totalVolunteerHours);
 		request.setAttribute("totalVolunteers", totalVolunteers);
 		request.setAttribute("totalDonations", totalDonations);
 		request.setAttribute("topEvents", topEvents);

@@ -83,7 +83,7 @@
                     <div class="col-md-4">
                         <div class="p-3 border rounded bg-white text-center shadow-sm">
                             <h2 class="text-info fw-bold mb-1">450</h2>
-                            <p class="text-muted mb-0">Tổng giờ tham gia</p>
+                            <p class="text-muted mb-0">Tổng ....</p>
                         </div>
                     </div>
                 </div>

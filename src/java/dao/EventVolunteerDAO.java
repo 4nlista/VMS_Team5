@@ -12,7 +12,7 @@ public class EventVolunteerDAO {
     public List<EventVolunteer> getEventRegistrationsByVolunteerId(int volunteerId) {
         List<EventVolunteer> list = new ArrayList<>();
         String sql = """
-            SELECT ev.id, ev.event_id, ev.volunteer_id, ev.apply_date, ev.status, ev.hours, ev.note,
+            SELECT ev.id, ev.event_id, ev.volunteer_id, ev.apply_date, ev.status, ev.note,
                    e.title AS eventTitle,
                    c.name AS categoryName,
                    u_org.full_name AS organizationName,
@@ -41,7 +41,6 @@ public class EventVolunteerDAO {
                     Timestamp ts = rs.getTimestamp("apply_date");
                     ev.setApplyDate(ts != null ? new java.util.Date(ts.getTime()) : null);
                     ev.setStatus(rs.getString("status"));
-                    ev.setHours(rs.getInt("hours"));
                     ev.setNote(rs.getString("note"));
                     ev.setEventTitle(rs.getString("eventTitle"));
                     ev.setCategoryName(rs.getString("categoryName"));
@@ -105,7 +104,6 @@ public class EventVolunteerDAO {
             v.username AS volunteerName,
             ev.apply_date,
             ev.status,
-            ev.hours,
             ev.note,
             ISNULL(d.totalDonate, 0) AS totalDonate,
             e.start_date AS startDateEvent,
@@ -144,7 +142,6 @@ public class EventVolunteerDAO {
                     Timestamp ts = rs.getTimestamp("apply_date");
                     ev.setApplyDate(ts != null ? new java.util.Date(ts.getTime()) : null);
                     ev.setStatus(rs.getString("status"));
-                    ev.setHours(rs.getInt("hours"));
                     ev.setNote(rs.getString("note"));
                     ev.setEventTitle(rs.getString("eventTitle"));
                     ev.setCategoryName(rs.getString("categoryName"));

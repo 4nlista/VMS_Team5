@@ -78,13 +78,10 @@
                                             </div>
 
                                             <div class="col-md-4">
-                                                <label class="form-label">Tổng sự kiện</label>
+                                                <label class="form-label">Tổng sự kiện tham gia</label>
                                                 <input type="text" class="form-control form-control-sm" value="${profile.totalEvents}" readonly>
                                             </div>
-                                            <div class="col-md-4">
-                                                <label class="form-label">Tổng giờ</label>
-                                                <input type="text" class="form-control form-control-sm" value="${profile.totalHours}" readonly>
-                                            </div>
+
                                             <div class="col-md-4">
                                                 <label class="form-label">Tổng quyên góp</label>
                                                 <input type="text" class="form-control form-control-sm" value="${profile.totalDonated}" readonly>

@@ -69,7 +69,6 @@
                                     <th style="width:15%;">Tên</th>
                                     <th style="width:15%;">Ngày nộp đơn</th>
                                     <th style="width:15%;">Trạng thái</th>
-                                    <th style="width:15%;">Số giờ đăng ký</th>
                                     <th style="width:20%;">Ghi chú</th>
                                     <th style="width:15%;">Thao tác</th>
                                 </tr>
@@ -96,7 +95,6 @@
                                                 </c:otherwise>
                                             </c:choose>
                                         </td>
-                                        <td>${v.hours}</td>
                                         <td>${v.note}</td>
 
                                         <!--                                        thao tác xử lý-->

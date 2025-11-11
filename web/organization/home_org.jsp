@@ -58,15 +58,6 @@
                         </div>
                     </div>
 
-                    <!-- Tổng giờ tham gia -->
-                    <div class="col-md-3">
-                        <div class="bg-info rounded shadow p-3 text-start text-white position-relative">
-                            <h2 class="fw-bold">${totalVolunteerHours}</h2>
-                            <h5 class="">Tổng giờ tham gia</h5>
-                            <i class="bi bi-clock-history"
-                               style="font-size: 5rem; position: absolute; bottom:5px; right: 10px; opacity: 0.15;"></i>
-                        </div>
-                    </div>
 
                     <!-- Tổng tiền donate -->
                     <div class="col-md-3">

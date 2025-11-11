@@ -24,9 +24,6 @@ public class OrganizationHomeService {
         return orgHomeDAO.getTotalEventsByOrganization(organizationId);
     }
     
-    public int getTotalVolunteerHours(int organizationId) {
-        return orgHomeDAO.getTotalVolunteerHoursByOrganization(organizationId);
-    }
     
     public int getTotalVolunteers(int organizationId) {
         return orgHomeDAO.getTotalVolunteersByOrganization(organizationId);

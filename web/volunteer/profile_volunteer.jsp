@@ -180,10 +180,6 @@
                                     <div class="stat-value text-primary">${profile.totalEvents}</div>
                                 </div>
                                 <div class="stat-item">
-                                    <div class="stat-label">Tổng số giờ tích lũy</div>
-                                    <div class="stat-value text-success">${profile.totalHours}</div>
-                                </div>
-                                <div class="stat-item">
                                     <div class="stat-label">Tổng số tiền đã quyên góp</div>
                                     <div class="stat-value text-warning">${totalDonatedFormatted} VNĐ</div>
                                 </div>

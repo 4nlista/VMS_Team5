@@ -16,7 +16,6 @@ public class EventVolunteer {
     private String volunteerName;    // Tên volunteer
     private Date applyDate;          // Ngày đăng ký
     private String status;           // Trạng thái: pending, approved, rejected, cancelled
-    private int hours;               // Số giờ tham gia
     private String note;             // Ghi chú
 
     private double totalDonate;                 // số tiền donate của volunteer vs sự kiện đó
@@ -27,7 +26,7 @@ public class EventVolunteer {
     public EventVolunteer() {
     }
 
-    public EventVolunteer(int id, int eventId, String eventTitle, String categoryName, String organizationName, int volunteerId, String volunteerName, Date applyDate, String status, int hours, String note, double totalDonate, Date startDateEvent, Date endDateEvent, String attendanceReport) {
+    public EventVolunteer(int id, int eventId, String eventTitle, String categoryName, String organizationName, int volunteerId, String volunteerName, Date applyDate, String status, String note, double totalDonate, Date startDateEvent, Date endDateEvent, String attendanceReport) {
         this.id = id;
         this.eventId = eventId;
         this.eventTitle = eventTitle;
@@ -37,7 +36,6 @@ public class EventVolunteer {
         this.volunteerName = volunteerName;
         this.applyDate = applyDate;
         this.status = status;
-        this.hours = hours;
         this.note = note;
         this.totalDonate = totalDonate;
         this.startDateEvent = startDateEvent;
@@ -46,7 +44,7 @@ public class EventVolunteer {
     }
 
     public EventVolunteer(int id, int eventId, String eventTitle, String categoryName, String organizationName,
-            int volunteerId, String volunteerName, Date applyDate, String status, int hours, String note) {
+            int volunteerId, String volunteerName, Date applyDate, String status, String note) {
         this.id = id;
         this.eventId = eventId;
         this.eventTitle = eventTitle;
@@ -56,17 +54,15 @@ public class EventVolunteer {
         this.volunteerName = volunteerName;
         this.applyDate = applyDate;
         this.status = status;
-        this.hours = hours;
         this.note = note;
     }
 
-    public EventVolunteer(int id, int eventId, int volunteerId, Date applyDate, String status, int hours, String note, String organizationName, String categoryName, String volunteerName) {
+    public EventVolunteer(int id, int eventId, int volunteerId, Date applyDate, String status,String note, String organizationName, String categoryName, String volunteerName) {
         this.id = id;
         this.eventId = eventId;
         this.volunteerId = volunteerId;
         this.applyDate = applyDate;
         this.status = status;
-        this.hours = hours;
         this.note = note;
         this.organizationName = organizationName;
         this.categoryName = categoryName;
@@ -144,14 +140,6 @@ public class EventVolunteer {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public int getHours() {
-        return hours;
-    }
-
-    public void setHours(int hours) {
-        this.hours = hours;
     }
 
     public String getNote() {

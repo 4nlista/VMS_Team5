@@ -90,12 +90,7 @@
                                         <label class="form-label fw-bold">Họ tên</label>
                                         <input type="text" class="form-control" value="${user.full_name}" readonly>
                                     </div>
-                                    <div class="col-md-6 mb-2">
-                                        <label class="form-label fw-bold">Số giờ đăng ký</label>
-                                        <input type="number" class="form-control" name="hours" placeholder="Nhập số giờ" required>
-                                    </div>
                                 </div>
-
 
                                 <div class="mb-2">
                                     <label class="form-label fw-bold">Ghi chú</label>

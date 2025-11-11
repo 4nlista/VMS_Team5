@@ -25,16 +25,15 @@ public class ProfileVolunteer {
     private String bio;
 
     private int totalEvents; // tổng số sự kiện đã tham gia
-    private int totalHours;     // tổng số giờ tích lũy
     private double totalDonated;    // tổng số tiền đã donated của tất cả các sự kiện
-    
+
     private String eventName;       // sự kiện đó tên là gì
     private String organizationName;    // tên người tạo ra sự kiện đó
 
     public ProfileVolunteer() {
     }
 
-    public ProfileVolunteer(String images, String fullName, Date dob, String gender, String phone, String email, String address, String jobTitle, String bio, int totalEvents, int totalHours, double totalDonated) {
+    public ProfileVolunteer(String images, String fullName, Date dob, String gender, String phone, String email, String address, String jobTitle, String bio, int totalEvents, double totalDonated) {
         this.images = images;
         this.fullName = fullName;
         this.dob = dob;
@@ -45,12 +44,10 @@ public class ProfileVolunteer {
         this.jobTitle = jobTitle;
         this.bio = bio;
         this.totalEvents = totalEvents;
-        this.totalHours = totalHours;
         this.totalDonated = totalDonated;
     }
 
-
-    public ProfileVolunteer(int id, String images, String fullName, Date dob, String gender, String phone, String email, String address, String jobTitle, String bio, int totalEvents, int totalHours, double totalDonated) {
+    public ProfileVolunteer(int id, String images, String fullName, Date dob, String gender, String phone, String email, String address, String jobTitle, String bio, int totalEvents, double totalDonated) {
         this.id = id;
         this.fullName = fullName;
         this.dob = dob;
@@ -61,11 +58,10 @@ public class ProfileVolunteer {
         this.jobTitle = jobTitle;
         this.bio = bio;
         this.totalEvents = totalEvents;
-        this.totalHours = totalHours;
         this.totalDonated = totalDonated;
     }
 
-    public ProfileVolunteer(int id, String images, String fullName, Date dob, String gender, String phone, String email, String address, String jobTitle, String bio, int totalEvents, int totalHours, double totalDonated, String eventName, String organizationName) {
+    public ProfileVolunteer(int id, String images, String fullName, Date dob, String gender, String phone, String email, String address, String jobTitle, String bio, int totalEvents, double totalDonated, String eventName, String organizationName) {
         this.id = id;
         this.images = images;
         this.fullName = fullName;
@@ -77,7 +73,6 @@ public class ProfileVolunteer {
         this.jobTitle = jobTitle;
         this.bio = bio;
         this.totalEvents = totalEvents;
-        this.totalHours = totalHours;
         this.totalDonated = totalDonated;
     }
 
@@ -169,14 +164,6 @@ public class ProfileVolunteer {
         this.totalEvents = totalEvents;
     }
 
-    public int getTotalHours() {
-        return totalHours;
-    }
-
-    public void setTotalHours(int totalHours) {
-        this.totalHours = totalHours;
-    }
-
     public double getTotalDonated() {
         return totalDonated;
     }
@@ -200,6 +187,5 @@ public class ProfileVolunteer {
     public void setOrganizationName(String organizationName) {
         this.organizationName = organizationName;
     }
-    
 
 }

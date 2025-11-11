@@ -112,38 +112,16 @@ public class VolunteerApplyEventServlet extends HttpServlet {
 
         // Validate và parse parameters
         String eventIdParam = request.getParameter("eventId");
-        String hoursParam = request.getParameter("hours");
         String note = request.getParameter("note");
 
         // Validation
-        if (eventIdParam == null || hoursParam == null) {
+        if (eventIdParam == null) {
             session.setAttribute("message", "Thiếu thông tin bắt buộc!");
             session.setAttribute("messageType", "error");
             response.sendRedirect(request.getContextPath() + "/VolunteerHomeServlet");
             return;
         }
-
-        int eventId;
-        int hours;
-
-        try {
-            eventId = Integer.parseInt(eventIdParam);
-            hours = Integer.parseInt(hoursParam);
-
-            // Validate hours phải là số dương
-            if (hours <= 0) {
-                session.setAttribute("message", "Số giờ tình nguyện phải lớn hơn 0!");
-                session.setAttribute("messageType", "error");
-                response.sendRedirect(request.getContextPath() + "/VolunteerApplyEventServlet?eventId=" + eventIdParam);
-                return;
-            }
-
-        } catch (NumberFormatException e) {
-            session.setAttribute("message", "Dữ liệu không hợp lệ!");
-            session.setAttribute("messageType", "error");
-            response.sendRedirect(request.getContextPath() + "/VolunteerHomeServlet");
-            return;
-        }
+        int eventId = Integer.parseInt(eventIdParam);
 
         try {
             int rejectedCount = volunteerApplyService.countRejected(eventId, acc.getId());
@@ -153,7 +131,7 @@ public class VolunteerApplyEventServlet extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/VolunteerApplyEventServlet?eventId=" + eventId);
                 return;
             }
-            boolean success = volunteerApplyService.applyToEvent(acc.getId(), eventId, hours, note);
+            boolean success = volunteerApplyService.applyToEvent(acc.getId(), eventId, note);
 
             if (success) {
                 session.setAttribute("message", "Đăng ký sự kiện thành công!");

@@ -163,7 +163,6 @@ public class VolunteerProfileService {
                 jobTitle,
                 bio,
                 existingProfile.getTotalEvents(),
-                existingProfile.getTotalHours(),
                 existingProfile.getTotalDonated()
         );
         pendingProfile.setEventName(existingProfile.getEventName());
@@ -204,6 +203,7 @@ public class VolunteerProfileService {
     }
 
     public static class UpdateResult {
+
         private final boolean success;
         private final ProfileVolunteer profile;
         private final Map<String, String> errors;
@@ -233,5 +233,3 @@ public class VolunteerProfileService {
         }
     }
 }
-
-

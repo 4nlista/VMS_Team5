@@ -29,7 +29,6 @@ public class Event {
     private String categoryName;
 
     // khai báo thêm
-    private int volunteerHour;  // số giờ tích lũy
     private double donateVolunteer;  // tổng số tiền donate
 
     private boolean hasApplied;  // Đã đăng ký chưa
@@ -75,7 +74,7 @@ public class Event {
         this.categoryName = categoryName;
     }
 
-    public Event(int id, String images, String title, String description, Date startDate, Date endDate, String location, int neededVolunteers, String status, String visibility, int organizationId, int categoryId, double totalDonation, String organizationName, String categoryName, int volunteerHour, double donateVolunteer) {
+    public Event(int id, String images, String title, String description, Date startDate, Date endDate, String location, int neededVolunteers, String status, String visibility, int organizationId, int categoryId, double totalDonation, String organizationName, String categoryName, double donateVolunteer) {
         this.id = id;
         this.images = images;
         this.title = title;
@@ -91,11 +90,10 @@ public class Event {
         this.totalDonation = totalDonation;
         this.organizationName = organizationName;
         this.categoryName = categoryName;
-        this.volunteerHour = volunteerHour;
         this.donateVolunteer = donateVolunteer;
     }
 
-    public Event(int id, String images, String title, String description, Date startDate, Date endDate, String location, int neededVolunteers, String status, String visibility, int organizationId, int categoryId, double totalDonation, String organizationName, String categoryName, int volunteerHour, double donateVolunteer, boolean hasApplied, boolean hasDonated, int rejectedCount, boolean isFull) {
+    public Event(int id, String images, String title, String description, Date startDate, Date endDate, String location, int neededVolunteers, String status, String visibility, int organizationId, int categoryId, double totalDonation, String organizationName, String categoryName, double donateVolunteer, boolean hasApplied, boolean hasDonated, int rejectedCount, boolean isFull) {
         this.id = id;
         this.images = images;
         this.title = title;
@@ -111,7 +109,6 @@ public class Event {
         this.totalDonation = totalDonation;
         this.organizationName = organizationName;
         this.categoryName = categoryName;
-        this.volunteerHour = volunteerHour;
         this.donateVolunteer = donateVolunteer;
         this.hasApplied = hasApplied;
         this.hasDonated = hasDonated;
@@ -239,13 +236,6 @@ public class Event {
         this.categoryName = categoryName;
     }
 
-    public int getVolunteerHour() {
-        return volunteerHour;
-    }
-
-    public void setVolunteerHour(int volunteerHour) {
-        this.volunteerHour = volunteerHour;
-    }
 
     public double getDonateVolunteer() {
         return donateVolunteer;

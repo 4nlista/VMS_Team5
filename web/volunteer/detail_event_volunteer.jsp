@@ -76,7 +76,6 @@
                                                     </c:choose>
                                                 </span>
                                             </li>
-                                            <li class="list-group-item"><strong>Số giờ tích lũy:</strong> ${ev.hours}</li>
                                             <li class="list-group-item">
                                                 <strong>Tổng donate:</strong> 
                                                 <fmt:formatNumber value="${ev.totalDonate}" type="number" groupingUsed="true" maxFractionDigits="0"/> đồng

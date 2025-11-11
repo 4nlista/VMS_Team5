@@ -12,8 +12,7 @@ import java.util.List;
 import model.ProfileVolunteer;
 import utils.DBContext;
 
- // DAO to fetch read-only volunteer profile for organization viewing.
- 
+// DAO to fetch read-only volunteer profile for organization viewing.
 public class ProfileVolunteerDAO {
 
     public ProfileVolunteer getProfileByAccountId(int accountId) {
@@ -74,7 +73,6 @@ public class ProfileVolunteerDAO {
                     u.bio,
                     u.avatar,
                     COALESCE(stats.total_events, 0) AS total_events,
-                    COALESCE(stats.total_hours, 0) AS total_hours,
                     COALESCE(don.total_donated, 0) AS total_donated,
                     last_event.title AS last_event_title,
                     last_event.org_name AS last_organization_name
@@ -82,8 +80,7 @@ public class ProfileVolunteerDAO {
                 JOIN Users u ON u.account_id = a.id
                 LEFT JOIN (
                     SELECT volunteer_id,
-                           COUNT(DISTINCT event_id) AS total_events,
-                           COALESCE(SUM(hours), 0) AS total_hours
+                           COUNT(DISTINCT event_id) AS total_events
                     FROM Event_Volunteers
                     WHERE status = 'approved'
                     GROUP BY volunteer_id
@@ -125,7 +122,6 @@ public class ProfileVolunteerDAO {
                     p.setJobTitle(rs.getString("job_title"));
                     p.setBio(rs.getString("bio"));
                     p.setTotalEvents(rs.getInt("total_events"));
-                    p.setTotalHours(rs.getInt("total_hours"));
                     p.setTotalDonated(rs.getDouble("total_donated"));
                     p.setEventName(rs.getString("last_event_title"));
                     p.setOrganizationName(rs.getString("last_organization_name"));
@@ -246,13 +242,6 @@ public class ProfileVolunteerDAO {
                         JOIN Events e3 ON ev3.event_id = e3.id
                         WHERE ev3.volunteer_id = u.account_id AND e3.organization_id = ?
                     ) AS total_events,
-                    -- tổng giờ tích lũy trong tổ chức này
-                    (
-                        SELECT COALESCE(SUM(ev4.hours), 0)
-                        FROM Event_Volunteers ev4
-                        JOIN Events e4 ON ev4.event_id = e4.id
-                        WHERE ev4.volunteer_id = u.account_id AND e4.organization_id = ?
-                    ) AS total_hours,
                     -- tổng donate trong tổ chức này (nếu có bảng donate thì cập nhật lại)
                     0.0 AS total_donated
                 FROM Users u
@@ -264,8 +253,7 @@ public class ProfileVolunteerDAO {
             ps.setInt(1, organizationId);
             ps.setInt(2, organizationId);
             ps.setInt(3, organizationId);
-            ps.setInt(4, organizationId);
-            ps.setInt(5, accountId);
+            ps.setInt(4, accountId);
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -284,7 +272,6 @@ public class ProfileVolunteerDAO {
                     p.setEventName(rs.getString("event_name"));
                     p.setOrganizationName(rs.getString("organization_name"));
                     p.setTotalEvents(rs.getInt("total_events"));
-                    p.setTotalHours(rs.getInt("total_hours"));
                     p.setTotalDonated(rs.getDouble("total_donated"));
                     return p;
                 }
@@ -483,7 +470,6 @@ public class ProfileVolunteerDAO {
     }
 
     // ---- Organization event applications (moved from OrganizationApplyDAO) ----
-
     // Lấy danh sách volunteer apply theo event (lọc theo status)
     public List<model.EventVolunteer> getEventVolunteersByEvent(int organizationId, int eventId, String statusFilter) {
         List<model.EventVolunteer> list = new ArrayList<>();
@@ -494,7 +480,6 @@ public class ProfileVolunteerDAO {
                 ev.volunteer_id,
                 ev.apply_date,
                 ev.status,
-                ev.hours,
                 ev.note,
                 o.username AS organizationName,
                 c.name AS categoryName,
@@ -526,7 +511,6 @@ public class ProfileVolunteerDAO {
                             rs.getInt("volunteer_id"),
                             rs.getTimestamp("apply_date"),
                             rs.getString("status"),
-                            rs.getInt("hours"),
                             rs.getString("note"),
                             rs.getString("organizationName"),
                             rs.getString("categoryName"),
@@ -575,5 +559,3 @@ public class ProfileVolunteerDAO {
         }
     }
 }
-
-

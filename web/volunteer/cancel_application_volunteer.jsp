@@ -72,9 +72,6 @@
                                     <strong>Email:</strong> ${registration.volunteerEmail}
                                 </li>
                                 <li class="list-group-item">
-                                    <strong>Số giờ đăng ký:</strong> ${registration.hours}
-                                </li>
-                                <li class="list-group-item">
                                     <strong>Ghi chú:</strong> ${registration.note}
                                 </li>
                                 <li class="list-group-item">

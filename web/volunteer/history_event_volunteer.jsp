@@ -45,7 +45,6 @@
                                 <th scope="col">Tổ chức</th>
                                 <th scope="col">Danh mục</th>
                                 <th scope="col">Ngày đăng ký</th>
-                                <!--                                <th scope="col">Số giờ</th>-->
                                 <th scope="col">Trạng thái</th>
                                 <th scope="col">Thao tác</th>
                             </tr>
@@ -60,7 +59,6 @@
                                             <td>${ev.organizationName}</td>
                                             <td>${ev.categoryName}</td>
                                             <td><fmt:formatDate value="${ev.applyDate}" pattern="dd/MM/yyyy" /></td>
-<!--                                            <td>${ev.hours}</td>-->
                                             <td>
                                                 <c:choose>
                                                     <c:when test="${ev.status == 'approved'}">

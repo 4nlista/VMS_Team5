@@ -41,23 +41,6 @@ public class OrganizationHomeDAO extends DBContext{
         return 0;
     }
     
-    // Get total volunteer hours for all events by organization
-    public int getTotalVolunteerHoursByOrganization(int organizationId) {
-        String sql = "SELECT ISNULL(SUM(ev.hours), 0) as total_hours " +
-                     "FROM Event_Volunteers ev " +
-                     "INNER JOIN Events e ON ev.event_id = e.id " +
-                     "WHERE e.organization_id = ? AND ev.status = 'approved'";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, organizationId);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getInt("total_hours");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
     
     // Get total volunteers across all organization events
     public int getTotalVolunteersByOrganization(int organizationId) {

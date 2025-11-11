@@ -75,13 +75,12 @@ public class VolunteerApplyDAO {
     }
 
     // Thêm một bản ghi apply mới
-    public void applyToEvent(int volunteerId, int eventId, int hours, String note) {
-        String sql = "INSERT INTO Event_Volunteers (volunteer_id, event_id, hours, note, apply_date) VALUES (?, ?, ?, ?, GETDATE())";
+    public void applyToEvent(int volunteerId, int eventId, String note) {
+        String sql = "INSERT INTO Event_Volunteers (volunteer_id, event_id, note, apply_date) VALUES (?, ?, ?, GETDATE())";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, volunteerId);
             ps.setInt(2, eventId);
-            ps.setInt(3, hours);
-            ps.setString(4, note);
+            ps.setString(3, note);
             ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -116,7 +115,6 @@ public class VolunteerApplyDAO {
             ev.volunteer_id,
             ev.apply_date,
             ev.status,
-            ev.hours,
             ev.note,
             o.username AS organization_name,
             c.name AS category_name,
@@ -142,7 +140,6 @@ public class VolunteerApplyDAO {
                         rs.getInt("volunteer_id"),
                         rs.getTimestamp("apply_date"),
                         rs.getString("status"),
-                        rs.getInt("hours"),
                         rs.getString("note"),
                         rs.getString("organization_name"),
                         rs.getString("category_name"),
