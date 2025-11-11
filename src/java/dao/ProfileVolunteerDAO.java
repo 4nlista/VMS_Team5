@@ -342,7 +342,7 @@ public class ProfileVolunteerDAO {
             JOIN Events e ON ev.event_id = e.id
             JOIN Accounts o ON e.organization_id = o.id
             JOIN Users u ON ev.volunteer_id = u.account_id
-            WHERE e.organization_id = ? AND e.id = ?
+            WHERE e.organization_id = ? AND e.id = ? AND ev.status = 'approved'
         """;
 
         if (genderFilter != null && !genderFilter.equals("all") && !genderFilter.isEmpty()) {

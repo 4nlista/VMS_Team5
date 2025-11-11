@@ -191,7 +191,7 @@ public class OrganizationDetailEventDAO {
 
     // số lượng volunteer đã đăng kí theo từng sự kiện để không cho giảm
     public int countRegisteredVolunteers(int eventId) {
-        String sql = "SELECT COUNT(*) \n"
+        String sql = "SELECT count(*) \n"
                 + "FROM Event_Volunteers\n"
                 + "WHERE event_id = ? AND status = 'approved';";
         try {
