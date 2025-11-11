@@ -48,14 +48,14 @@ public class CreateEventsDAO {
             ps.setInt(8, e.getOrganizationId());              // organization_id
             ps.setInt(9, e.getNeededVolunteers());            // needed_volunteers
 
-            // Convert java.util.Date sang java.sql.Date
+            // Convert sang java.sql.Timestamp
             Date start = e.getStartDate();
             Date end = e.getEndDate();
             if (start == null || end == null) {
                 return false;
             }
-            ps.setDate(10, new java.sql.Date(start.getTime())); // start_date
-            ps.setDate(11, new java.sql.Date(end.getTime()));   // end_date
+            ps.setTimestamp(10, new java.sql.Timestamp(start.getTime())); // start_date
+            ps.setTimestamp(11, new java.sql.Timestamp(end.getTime()));   // end_date
             ps.setDouble(12, e.getTotalDonation());              // total_donation
 
             int rows = ps.executeUpdate();

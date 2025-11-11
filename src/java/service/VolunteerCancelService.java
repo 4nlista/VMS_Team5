@@ -1,21 +1,36 @@
 package service;
 
 import dao.EventVolunteerDAO;
+import dao.ViewEventsDAO;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+import model.Event;
 
 public class VolunteerCancelService {
 
     private final EventVolunteerDAO eventVolunteerDAO = new EventVolunteerDAO();
+    private final ViewEventsDAO viewsEventDAO = new ViewEventsDAO();
 
     /**
-     * Hủy đơn đăng ký sự kiện
-     * Chỉ cho phép hủy nếu status = Pending
-     * Xóa bản ghi và ghi log hành động
+     * Hủy đơn đăng ký sự kiện Chỉ cho phép hủy nếu status = Pending và còn >
+     * 24h trước sự kiện
      */
     public String cancelApplication(int eventId, int volunteerId) {
         String status = eventVolunteerDAO.getApplicationStatus(eventId, volunteerId);
 
         if (status == null) {
             return "Không tìm thấy đơn đăng ký!";
+        }
+
+        // Kiểm tra thời gian còn lại trước sự kiện
+        Event event = viewsEventDAO.getEventById(eventId);
+        if (event != null && event.getStartDate() != null) {
+            long diff = event.getStartDate().getTime() - new Date().getTime();
+            long hoursRemaining = TimeUnit.MILLISECONDS.toHours(diff);
+
+            if (hoursRemaining <= 24) {
+                return "Không thể hủy đơn vì sự kiện sắp diễn ra trong vòng 24 giờ!";
+            }
         }
 
         switch (status.toLowerCase()) {

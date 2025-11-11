@@ -137,11 +137,11 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label required">Ngày Bắt Đầu</label>
-                                        <input type="date" class="form-control" name="startDate" required>
+                                        <input type="datetime-local" class="form-control" name="startDate" required>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label required">Ngày Kết Thúc</label>
-                                        <input type="date" class="form-control" name="endDate" required>
+                                        <input type="datetime-local" class="form-control" name="endDate" required>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label required">Số Lượng Tình Nguyện Viên</label>

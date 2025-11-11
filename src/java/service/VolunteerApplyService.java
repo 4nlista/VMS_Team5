@@ -27,6 +27,7 @@ public class VolunteerApplyService {
     public boolean hasApplied(int volunteerId, int eventId) {
         return volunteerApplyDAO.hasApplied(volunteerId, eventId);
     }
+
     // đếm số lần bị từ chối
     public int countRejected(int eventId, int volunteerId) {
         return volunteerApplyDAO.countRejected(eventId, volunteerId);
@@ -46,6 +47,11 @@ public class VolunteerApplyService {
 
         int approvedCount = volunteerApplyDAO.countApprovedVolunteers(eventId);
         return approvedCount >= event.getNeededVolunteers();
+    }
+
+    // Kiểm tra xem volunteer có đang tham gia sự kiện nào trùng thời gian không
+    public boolean hasConflictingEvent(int volunteerId, int eventId) {
+        return volunteerApplyDAO.hasConflictingEvent(volunteerId, eventId);
     }
 
     public boolean applyToEvent(int volunteerId, int eventId, String note) {
@@ -68,8 +74,12 @@ public class VolunteerApplyService {
             System.out.println("Volunteer " + volunteerId + " đã bị từ chối 3 lần cho event " + eventId);
             return false;
         }
+        // 4. Kiểm tra trùng thời gian với sự kiện khác
+        if (hasConflictingEvent(volunteerId, eventId)) {
+            throw new IllegalArgumentException("Bạn đã đăng ký sự kiện khác trùng thời gian!");
+        }
 
-        // 4. Nếu chưa thì thêm vào DB
+        // 5. Nếu chưa thì thêm vào DB
         volunteerApplyDAO.applyToEvent(volunteerId, eventId, note);
         return true;
     }

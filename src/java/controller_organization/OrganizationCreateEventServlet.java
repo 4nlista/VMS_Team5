@@ -100,7 +100,7 @@ public class OrganizationCreateEventServlet extends HttpServlet {
             int neededVolunteers = Integer.parseInt(neededVolunteersStr);
 
             // Parse java.util.Date
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
             java.util.Date startDate = sdf.parse(startDateStr);
             java.util.Date endDate = sdf.parse(endDateStr);
 

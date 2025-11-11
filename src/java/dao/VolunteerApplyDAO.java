@@ -29,6 +29,34 @@ public class VolunteerApplyDAO {
         }
     }
 
+    /**
+     * Kiểm tra volunteer có sự kiện nào trùng thời gian không CHỈ KIỂM TRA VỚI
+     * CÁC ĐƠN approved/pending
+     */
+    public boolean hasConflictingEvent(int volunteerId, int eventId) {
+        String sql = """
+            SELECT COUNT(*) FROM Event_Volunteers ev
+            JOIN Events e_existing ON ev.event_id = e_existing.id
+            JOIN Events e_new ON e_new.id = ?
+            WHERE ev.volunteer_id = ?
+              AND ev.status IN ('approved', 'pending')
+              AND e_new.start_date < e_existing.end_date
+              AND e_new.end_date > e_existing.start_date
+        """;
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, eventId);
+            ps.setInt(2, volunteerId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     // Kiểm tra volunteer đã apply event chưa
     public boolean hasApplied(int volunteerId, int eventId) {
         String sql = """
@@ -77,16 +105,21 @@ public class VolunteerApplyDAO {
     // Thêm một bản ghi apply mới
     public void applyToEvent(int volunteerId, int eventId, String note) {
         String sql = "INSERT INTO Event_Volunteers (volunteer_id, event_id, note, apply_date) VALUES (?, ?, ?, GETDATE())";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, volunteerId);
-            ps.setInt(2, eventId);
+        try (Connection con = DBContext.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, eventId);
+            ps.setInt(2, volunteerId);
             ps.setString(3, note);
             ps.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            if (e.getMessage().contains("Không thể tham gia")) {
+                throw new IllegalArgumentException("Bạn đã đăng ký một sự kiện khác trùng thời gian!");
+            } else {
+                e.printStackTrace();
+                throw new IllegalArgumentException("Lỗi khi đăng ký sự kiện!");
+            }
         }
     }
-    
+
     // Đếm số volunteer đã được duyệt (approved) cho event
     public int countApprovedVolunteers(int eventId) {
         String sql = "SELECT COUNT(*) FROM Event_Volunteers WHERE event_id = ? AND status = 'approved'";
