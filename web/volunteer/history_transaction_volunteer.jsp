@@ -1,5 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -32,20 +33,27 @@
                             </thead>
                             <tbody>
 
-                                <c:if test="${empty allDonations}">
+                                <c:if test="${empty volunteerDonations}">
                                     <tr>
                                         <td colspan="8" class="text-center">Chưa có giao dịch nào.</td>
                                     </tr>
                                 </c:if>
 
-                                <c:forEach var="d" items="${allDonations}" varStatus="status">
+                                <c:forEach var="d" items="${volunteerDonations}" varStatus="status">
                                     <tr>
-                                        <td>${status.index + 1}</td>
+                                        <td>${status.index + 1 + (currentPage - 1) * pageSize}</td>
                                         <td>${d.qrCode != null ? d.qrCode : "-"}</td>
                                         <td>${d.eventTitle != null ? d.eventTitle : "-"}</td>
                                         <td>${d.amount}</td>
                                         <td>${d.paymentMethod != null ? d.paymentMethod : "-"}</td>
-                                        <td>${d.donateDate != null ? d.donateDate : "-"}</td>
+                                        <td>
+                                            <c:choose>
+                                                <c:when test="${d.donateDate != null}">
+                                                    <fmt:formatDate value="${d.donateDate}" pattern="dd/MM/yyyy HH:mm" />
+                                                </c:when>
+                                                <c:otherwise>-</c:otherwise>
+                                            </c:choose>
+                                        </td>
                                         <td>${d.note != null ? d.note : ""}</td>
                                         <td>
                                             <c:choose>
@@ -55,7 +63,7 @@
                                                 <c:when test="${d.status == 'pending'}">
                                                     <span class="badge bg-warning text-dark">Đang xử lý</span>
                                                 </c:when>
-                                                <c:when test="${d.status == 'rejected'}">
+                                                <c:when test="${d.status == 'cancelled'}">
                                                     <span class="badge bg-danger">Bị từ chối</span>
                                                 </c:when>
                                                 <c:otherwise>
@@ -68,6 +76,40 @@
 
                             </tbody>
                         </table>
+
+                        <!-- LUÔN HIỂN THỊ PHÂN TRANG -->
+                        <c:if test="${totalPages >= 1}">
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination justify-content-center mt-3">
+
+                                    <!-- Nút Trước (disabled nếu ở trang 1) -->
+                                    <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                                        <a class="page-link" 
+                                           href="${currentPage > 1 ? '?page='+(currentPage - 1) : '#'}" 
+                                           ${currentPage == 1 ? 'tabindex="-1" aria-disabled="true"' : ''}>
+                                            &lt; Trước
+                                        </a>
+                                    </li>
+
+                                    <!-- Các nút số trang -->
+                                    <c:forEach var="i" begin="1" end="${totalPages}">
+                                        <li class="page-item ${i == currentPage ? 'active' : ''}">
+                                            <a class="page-link" href="?page=${i}">${i}</a>
+                                        </li>
+                                    </c:forEach>
+
+                                    <!-- Nút Sau (disabled nếu ở trang cuối) -->
+                                    <li class="page-item ${currentPage >= totalPages ? 'disabled' : ''}">
+                                        <a class="page-link" 
+                                           href="${currentPage < totalPages ? '?page='+(currentPage + 1) : '#'}" 
+                                           ${currentPage >= totalPages ? 'tabindex="-1" aria-disabled="true"' : ''}>
+                                            Sau &gt;
+                                        </a>
+                                    </li>
+
+                                </ul>
+                            </nav>
+                        </c:if>
                     </div>
                 </div>
             </div>

@@ -27,6 +27,9 @@ public class VolunteerDonationDAO {
         }
     }
 
+    
+    
+    
     // Tạo donation mới
     public boolean createDonation(int eventId, int volunteerId, double amount,
             String paymentMethod, String qrCode, String note) {
@@ -73,3 +76,7 @@ public class VolunteerDonationDAO {
         }
     }
 }
+
+
+
+

@@ -43,6 +43,8 @@ public class DonationDAO {
         return total;
     }
     
+    
+    // dùng cho org xem đc tổng tiền donate của volunteer
      public List<Donation> getDonationHistoryByVolunteerId(int volunteerId) {
         List<Donation> list = new ArrayList<>();
 

@@ -111,6 +111,76 @@ public class ViewDonorsDAO {
         }
         return list;
     }
+    // lấy danh sách cá nhân volunteer donate để xem lịch sử 
+    // Thay thế phương thức getUserDonationsPaged() trong ViewDonorsDAO.java
+
+    public List<Donation> getUserDonationsPaged(int volunteerId, int pageIndex, int pageSize) {
+        List<Donation> list = new ArrayList<>();
+
+        String sql = """
+    SELECT 
+        d.id AS donation_id,
+        d.volunteer_id,
+        d.event_id,
+        d.amount AS donate_amount,
+        d.donate_date,
+        d.status AS donation_status,
+        d.payment_method,
+        d.note,
+        d.qr_code,
+        u.full_name AS volunteer_name,
+        u.avatar AS volunteer_avatar,
+        a.username AS volunteer_username,
+        e.title AS event_title,
+        (SELECT SUM(amount) FROM Donations WHERE volunteer_id = ? AND status = 'success') AS total_amount,
+        (SELECT COUNT(DISTINCT event_id) FROM Donations WHERE volunteer_id = ?) AS events_count
+    FROM Donations d
+    JOIN Events e ON d.event_id = e.id
+    JOIN Accounts a ON d.volunteer_id = a.id
+    JOIN Users u ON a.id = u.account_id
+    WHERE d.volunteer_id = ?
+    ORDER BY d.donate_date DESC
+    OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
+    """;
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, volunteerId);  // cho subquery total_amount
+            ps.setInt(2, volunteerId);  // cho subquery events_count
+            ps.setInt(3, volunteerId);  // cho WHERE chính
+            ps.setInt(4, (pageIndex - 1) * pageSize);  // OFFSET
+            ps.setInt(5, pageSize);  // FETCH NEXT
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Donation d = new Donation(
+                            rs.getInt("donation_id"),
+                            rs.getInt("event_id"),
+                            rs.getInt("volunteer_id"),
+                            rs.getDouble("donate_amount"),
+                            rs.getTimestamp("donate_date"),
+                            rs.getString("donation_status"),
+                            rs.getString("payment_method"),
+                            rs.getString("qr_code"),
+                            rs.getString("note"),
+                            rs.getString("volunteer_username"),
+                            rs.getString("volunteer_name"),
+                            rs.getString("volunteer_avatar"),
+                            rs.getString("event_title"),
+                            rs.getDouble("total_amount"),
+                            rs.getInt("events_count")
+                    );
+                    list.add(d);
+                }
+            }
+
+            System.out.println("==> getUserDonationsPaged() trả về: " + list.size() + " bản ghi (Page: " + pageIndex + ")");
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return list;
+    }
 
     // lấy danh sách những người donate + số sự kiện họ donate
     public List<Donation> getAllUserDonation() {
@@ -237,6 +307,22 @@ public class ViewDonorsDAO {
             ex.printStackTrace();
         }
         return list;
+    }
+
+    // tổng số đơn donate cho mỗi cá nhân volunteer để phân trang
+    public int getTotalDonationsByVolunteer(int volunteerId) {
+        String sql = "SELECT COUNT(*) FROM Donations WHERE volunteer_id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, volunteerId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return 0;
     }
 
     //tính tổng số donors đã đăng để chia trang

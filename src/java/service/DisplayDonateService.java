@@ -25,9 +25,27 @@ public class DisplayDonateService {
     public List<Donation> getTop3UserDonation() {
         return viewUserDonationDAO.getTop3UserDonation();
     }
-    
+
     // trả về danh sách những người donate + tổng số sự kiện họ donate
     public List<Donation> getAllUserDonation() {
         return viewUserDonationDAO.getAllUserDonation();
+    }
+
+    // trả về danh sách vá nhân xem lịch sử donate
+    public List<Donation> getUserDonationsPaged(int volunteerId, int pageIndex, int pageSize) {
+        return viewUserDonationDAO.getUserDonationsPaged(volunteerId, pageIndex, pageSize);
+    }
+    
+    public int getTotalDonationsByVolunteer(int volunteerId) {
+        return viewUserDonationDAO.getTotalDonationsByVolunteer(volunteerId);
+    }
+    
+    // trả về phân trang
+    public int getTotalDonors(){
+        return viewUserDonationDAO.getTotalDonors();
+    }
+    
+    public List<Donation> getDonorsPaged() {
+        return viewUserDonationDAO.getDonorsPaged(1, 3);
     }
 }

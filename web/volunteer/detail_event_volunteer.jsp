@@ -40,11 +40,11 @@
                                             <li class="list-group-item"><strong>Danh mục:</strong> ${ev.categoryName}</li>
                                             <li class="list-group-item">
                                                 <strong>Ngày bắt đầu:</strong> 
-                                                <fmt:formatDate value="${ev.startDateEvent}" pattern="dd/MM/yyyy"/>
+                                                <fmt:formatDate value="${ev.startDateEvent}" pattern="dd/MM/yyyy HH:mm"/>
                                             </li>
                                             <li class="list-group-item">
                                                 <strong>Ngày kết thúc:</strong> 
-                                                <fmt:formatDate value="${ev.endDateEvent}" pattern="dd/MM/yyyy"/>
+                                                <fmt:formatDate value="${ev.endDateEvent}" pattern="dd/MM/yyyy HH:mm"/>
                                             </li>
                                         </ul>
                                     </div>
@@ -69,7 +69,11 @@
                                                           <c:when test="${ev.status eq 'pending'}">bg-warning text-dark</c:when>
                                                           <c:otherwise>bg-danger</c:otherwise>
                                                       </c:choose>">
-                                                    ${ev.status}
+                                                    <c:choose>
+                                                        <c:when test="${ev.status eq 'approved'}">Tham gia</c:when>
+                                                        <c:when test="${ev.status eq 'pending'}">Đang xử lý</c:when>
+                                                        <c:otherwise>Hủy / Không hợp lệ</c:otherwise>
+                                                    </c:choose>
                                                 </span>
                                             </li>
                                             <li class="list-group-item"><strong>Số giờ tích lũy:</strong> ${ev.hours}</li>
@@ -83,9 +87,13 @@
                                                       <c:choose>
                                                           <c:when test="${ev.attendanceReport eq 'present'}">bg-success</c:when>
                                                           <c:when test="${ev.attendanceReport eq 'absent'}">bg-danger</c:when>
-                                                          <c:otherwise>bg-secondary</c:otherwise>
+                                                          <c:otherwise>bg-warning text-dark</c:otherwise>
                                                       </c:choose>">
-                                                    <c:out value="${ev.attendanceReport != null ? ev.attendanceReport : 'Chưa điểm danh'}"/>
+                                                    <c:choose>
+                                                        <c:when test="${ev.attendanceReport eq 'present'}">Đã có mặt</c:when>
+                                                        <c:when test="${ev.attendanceReport eq 'absent'}">Đã vắng</c:when>
+                                                        <c:otherwise>Chưa điểm danh</c:otherwise>
+                                                    </c:choose>
                                                 </span>
                                             </li>
                                             <li class="list-group-item">
