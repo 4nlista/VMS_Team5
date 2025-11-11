@@ -36,6 +36,26 @@ public class Donation {
     public Donation() {
     }
 
+    public Donation(int id, int eventId, int volunteerId, double amount, Date donateDate, String status, String paymentMethod, String qrCode, String note, String volunteerUsername, String volunteerFullName, String eventTitle, double totalAmountDonated, int numberOfEventsDonated) {
+        this.id = id;
+        this.eventId = eventId;
+        this.volunteerId = volunteerId;
+        this.amount = amount;
+        this.donateDate = donateDate;
+        this.status = status;
+        this.paymentMethod = paymentMethod;
+        this.qrCode = qrCode;
+        this.note = note;
+        this.volunteerUsername = volunteerUsername;
+        this.volunteerFullName = volunteerFullName;
+        this.eventTitle = eventTitle;
+        this.totalAmountDonated = totalAmountDonated;
+        this.numberOfEventsDonated = numberOfEventsDonated;
+    }
+    
+    
+    
+
     public Donation(int id, int eventId, int volunteerId, double amount, Date donateDate, String status, String paymentMethod, String qrCode, String note, String volunteerUsername, String volunteerFullName, String volunteerAvatar, String eventTitle, double totalAmountDonated, int numberOfEventsDonated) {
         this.id = id;
         this.eventId = eventId;

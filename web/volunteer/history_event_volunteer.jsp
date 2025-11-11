@@ -1,9 +1,3 @@
-<%-- 
-    Document   : history_event_volunteer.jsp
-    Created on : Sep 29, 2025, 8:33:40 PM
-    Author     : Admin
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -23,6 +17,15 @@
         <div class="page-content container mt-5 pt-5 pb-5">
             <h1 class="mb-4 text-center">Lịch sử sự kiện đã tham gia</h1>
 
+            <!-- Hiển thị thông báo nếu có -->
+            <c:if test="${not empty sessionScope.message}">
+                <div class="alert alert-info alert-dismissible fade show" role="alert">
+                    ${sessionScope.message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <c:remove var="message" scope="session"/>
+            </c:if>
+
             <div class="card shadow-sm border">
                 <div class="card-body">
                     <table class="table table-striped table-hover align-middle">
@@ -30,34 +33,90 @@
                             <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">Tên sự kiện</th>
-                                <th scope="col">Thời gian</th>
+                                <th scope="col">Tổ chức</th>
+                                <th scope="col">Danh mục</th>
+                                <th scope="col">Ngày đăng ký</th>
+                                <th scope="col">Số giờ</th>
                                 <th scope="col">Trạng thái</th>
                                 <th scope="col">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>World Wide Donation</td>
-                                <td>10/09/2018 - 10/09/2018</td>
-                                <td><span class="badge bg-success">Approved</span></td>
-                                <td>
-                                    <a href="<%= request.getContextPath() %>/volunteer/detail_event_volunteer.jsp" class="btn btn-sm btn-outline-primary">
-                                        Xem chi tiết
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Chiến dịch Xanh</td>
-                                <td>15/11/2019 - 20/11/2019</td>
-                                <td><span class="badge bg-warning text-dark">Pending</span></td>
-                                <td>
-                                    <a href="<%= request.getContextPath() %>/volunteer/detail_event_volunteer.jsp" class="btn btn-sm btn-outline-primary">
-                                        Xem chi tiết
-                                    </a>
-                                </td>
-                            </tr>
+                            <c:choose>
+                                <c:when test="${not empty eventRegistrations}">
+                                    <c:forEach var="ev" items="${eventRegistrations}" varStatus="status">
+                                        <tr>
+                                            <td>${status.index + 1}</td>
+                                            <td>${ev.eventTitle}</td>
+                                            <td>${ev.organizationName}</td>
+                                            <td>${ev.categoryName}</td>
+                                            <td><fmt:formatDate value="${ev.applyDate}" pattern="dd/MM/yyyy" /></td>
+                                            <td>${ev.hours}</td>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${ev.status == 'approved'}">
+                                                        <span class="badge bg-success">Được duyệt</span>
+                                                    </c:when>
+                                                    <c:when test="${ev.status == 'pending'}">
+                                                        <span class="badge bg-warning text-dark">Chờ duyệt</span>
+                                                    </c:when>
+                                                    <c:when test="${ev.status == 'rejected'}">
+                                                        <span class="badge bg-danger">Từ chối</span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="badge bg-secondary">${ev.status}</span>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
+                                            <td>
+                                                <a href="${pageContext.request.contextPath}/VolunteerEventDetailServlet?eventId=${ev.eventId}&volunteerId=${sessionScope.account.id}" 
+                                                   class="btn btn-sm btn-outline-primary me-2">
+                                                    Xem chi tiết
+                                                </a>
+
+                                                <!-- Hiển thị nút hủy nếu đơn đang pending -->
+                                                <c:if test="${ev.status == 'pending'}">
+                                                    <button type="button" 
+                                                            class="btn btn-sm btn-outline-danger"
+                                                            data-bs-toggle="modal" 
+                                                            data-bs-target="#cancelModal${ev.eventId}">
+                                                        Hủy đăng ký
+                                                    </button>
+
+                                                    <!-- Modal xác nhận -->
+                                                    <div class="modal fade" id="cancelModal${ev.eventId}" tabindex="-1" aria-labelledby="cancelModalLabel${ev.eventId}" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-centered">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="cancelModalLabel${ev.eventId}">Xác nhận hủy đăng ký</h5>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    Bạn có chắc chắn muốn hủy đơn đăng ký sự kiện 
+                                                                    <strong>${ev.eventTitle}</strong> không?
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <form action="${pageContext.request.contextPath}/CancelApplicationServlet" method="post">
+                                                                        <input type="hidden" name="eventId" value="${ev.eventId}">
+                                                                        <input type="hidden" name="volunteerId" value="${sessionScope.account.id}">
+                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                                                        <button type="submit" class="btn btn-danger">Xác nhận hủy</button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </c:if>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                </c:when>
+                                <c:otherwise>
+                                    <tr>
+                                        <td colspan="8" class="text-center">Chưa đăng ký sự kiện nào.</td>
+                                    </tr>
+                                </c:otherwise>
+                            </c:choose>
                         </tbody>
                     </table>
                 </div>

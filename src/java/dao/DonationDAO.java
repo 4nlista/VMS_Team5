@@ -7,6 +7,9 @@ package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+import model.Donation;
 import utils.DBContext;
 
 /**
@@ -40,6 +43,62 @@ public class DonationDAO {
         return total;
     }
     
-    
+     public List<Donation> getDonationHistoryByVolunteerId(int volunteerId) {
+        List<Donation> list = new ArrayList<>();
+
+        String sql = """
+            SELECT 
+                d.id,
+                d.event_id,
+                d.volunteer_id,
+                d.amount,
+                d.donate_date,
+                d.status,
+                d.payment_method,
+                d.qr_code,
+                d.note,
+                a.username AS volunteerUsername,
+                u.full_name AS volunteerFullName,
+                e.title AS eventTitle
+            FROM Donations d
+            JOIN Accounts a ON d.volunteer_id = a.id
+            JOIN Users u ON a.id = u.account_id
+            JOIN Events e ON d.event_id = e.id
+            WHERE d.volunteer_id = ?
+            ORDER BY d.donate_date DESC
+        """;
+
+        try (Connection connection = DBContext.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, volunteerId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Donation donation = new Donation(
+                        rs.getInt("id"),
+                        rs.getInt("event_id"),
+                        rs.getInt("volunteer_id"),
+                        rs.getDouble("amount"),
+                        rs.getTimestamp("donate_date") != null ? new java.util.Date(rs.getTimestamp("donate_date").getTime()) : null,
+                        rs.getString("status"),
+                        rs.getString("payment_method"),
+                        rs.getString("qr_code"),
+                        rs.getString("note"),
+                        rs.getString("volunteerUsername"),
+                        rs.getString("volunteerFullName"),
+                        rs.getString("eventTitle"),
+                        0, // totalAmountDonated, có thể tính thêm nếu muốn
+                        0  // numberOfEventsDonated, có thể tính thêm nếu muốn
+                );
+                list.add(donation);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
 
 }

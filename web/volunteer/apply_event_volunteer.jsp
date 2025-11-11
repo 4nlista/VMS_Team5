@@ -118,15 +118,14 @@
                                     <button type="submit" class="btn btn-primary" ${isFull ? 'disabled' : ''}>
                                         Đăng ký
                                     </button>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="history.back()">Hủy</button>
                                     <button type="reset" class="btn btn-outline-secondary">Hủy</button>
+
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
-
-
-
             </div>
         </div>
         <jsp:include page="/layout/footer.jsp" />
