@@ -33,7 +33,23 @@
                                     <!-- LEFT: Avatar + name -->
                                     <div class="col-md-4 d-flex flex-column align-items-center justify-content-center text-center p-4">
 
-                                        <img src="${profile.images}" alt="avatar" class="rounded-circle avatar-lg mb-3 border border-2 border-light shadow-sm" width="50" height="50"/>
+                                        <c:choose>
+                                            <c:when test="${not empty profile.images}">
+                                                <img src="<%= request.getContextPath() %>/viewImage?file=${profile.images}&type=avatar" 
+                                                     alt="avatar" 
+                                                     class="rounded-circle avatar-lg mb-3 border border-2 border-light shadow-sm" 
+                                                     width="150" 
+                                                     height="150"
+                                                     onerror="this.src='<%= request.getContextPath() %>/images/default-avatar.png'"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <img src="<%= request.getContextPath() %>/images/default-avatar.png" 
+                                                     alt="default avatar" 
+                                                     class="rounded-circle avatar-lg mb-3 border border-2 border-light shadow-sm" 
+                                                     width="150" 
+                                                     height="150"/>
+                                            </c:otherwise>
+                                        </c:choose>
 
                                         <div class="fw-semibold fs-5">${profile.fullName}</div>
                                         <div class="mt-2 text-muted small">${profile.organizationName}</div>

@@ -1,4 +1,4 @@
-package service;
+package controller_view;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -11,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Optional;
+import service.FileStorageService;
 
 // servlet giao diện hiển thị ảnh cho toàn bộ các phần
 @WebServlet(name = "ViewImageServlet", urlPatterns = {"/viewImage"})
