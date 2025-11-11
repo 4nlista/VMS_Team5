@@ -60,10 +60,22 @@ public class VolunteerCancelApplicationServlet extends HttpServlet {
             String message = volunteerCancelService.cancelApplication(eventId, volunteerId);
 
             // Lưu thông báo
+            HttpSession session = request.getSession();
             request.getSession().setAttribute("message", message);
 
+            // Xác định kiểu message dựa trên nội dung trả về
+            if (message.contains("thành công")) {
+                session.setAttribute("messageType", "success");
+            } else if (message.contains("Không thể")) {
+                session.setAttribute("messageType", "error");
+            } else {
+                session.setAttribute("messageType", "warning");
+            }
+
         } catch (NumberFormatException e) {
-            request.getSession().setAttribute("message", "Dữ liệu không hợp lệ!");
+            HttpSession session = request.getSession();
+            session.setAttribute("message", "Dữ liệu không hợp lệ!");
+            session.setAttribute("messageType", "error");
             e.printStackTrace();
         }
 

@@ -23,15 +23,28 @@
             <h1 class="mb-4 text-center">Lịch sử sự kiện đã tham gia</h1>
 
             <!-- Thêm vào đầu trang history_event_volunteer.jsp, sau thẻ <h1> -->
-            <c:if test="${not empty sessionScope.errorMessage}">
-                <div class="alert alert-danger alert-dismissible fade show" role="alert" id="errAlert">
-                    ${sessionScope.errorMessage}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <!-- Alert thông báo hủy đơn hoặc lỗi/success -->
+            <c:if test="${not empty sessionScope.message}">
+                <div class="alert
+                     ${sessionScope.messageType == 'success' ? 'alert-success' :
+                       sessionScope.messageType == 'warning' ? 'alert-warning' :
+                       'alert-danger'}
+                     alert-dismissible fade show" role="alert" id="autoHideAlert">
+                    ${sessionScope.message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-                <c:remove var="errorMessage" scope="session"/>
+                <c:remove var="message" scope="session"/>
+                <c:remove var="messageType" scope="session"/>
 
                 <script>
-                    setTimeout(() => bootstrap.Alert.getOrCreateInstance('#errAlert').close(), 3000);
+                    // Tự động ẩn sau 2 giây
+                    setTimeout(function () {
+                        var alertBox = document.getElementById("autoHideAlert");
+                        if (alertBox) {
+                            var alert = bootstrap.Alert.getOrCreateInstance(alertBox);
+                            alert.close();
+                        }
+                    }, 2000);
                 </script>
             </c:if>
 

@@ -62,7 +62,7 @@
                 <div class="col-md-6">
                     <div class="card border shadow-sm">
                         <div class="card-body">
-                            <h5 class="card-title fw-bold mb-3 text-danger">Xác nhận hủy đơn đăng ký</h5>
+                            <h5 class="card-title fw-bold mb-3 text-danger">Xác nhận hủy đơn đăng ký </h5>
 
                             <ul class="list-group list-group-flush mb-3">
                                 <li class="list-group-item">
@@ -98,7 +98,7 @@
                                         <i class="bi bi-arrow-left"></i> Quay lại
                                     </a>
                                     <button type="submit" class="btn btn-danger">
-                                        <i class="bi bi-trash"></i> Xác nhận hủy đăng ký
+                                        <i class="bi bi-trash"></i> Xác nhận hủy đăng ký nhé
                                     </button>
                                 </div>
                             </form>
