@@ -33,10 +33,10 @@ public class RegisterServlet extends HttpServlet {
     }
 
     @Override
-
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
+
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirmPassword");
@@ -48,32 +48,40 @@ public class RegisterServlet extends HttpServlet {
         String role = request.getParameter("role");
         String dobStr = request.getParameter("dob");
 
-        // 2️. Kiểm tra mật khẩu khớp
-        if (username == null || password == null || confirmPassword == null
-                || !password.equals(confirmPassword)) {
+        //  Kiểm tra mật khẩu khớp
+        if (password == null || confirmPassword == null || !password.equals(confirmPassword)) {
             request.setAttribute("error", "Mật khẩu xác nhận không khớp!");
             request.getRequestDispatcher("auth/register.jsp").forward(request, response);
             return;
         }
 
-        // 3️. Chuyển đổi DOB sang java.sql.Date
+        //  Kiểm tra độ dài mật khẩu (tối thiểu 6 ký tự)
+        if (password.length() < 6) {
+            request.setAttribute("error", "Mật khẩu phải có ít nhất 6 ký tự!");
+            request.getRequestDispatcher("auth/register.jsp").forward(request, response);
+            return;
+        }
+
+        // Chuyển đổi DOB sang java.sql.Date
         Date dob = null;
         if (dobStr != null && !dobStr.isEmpty()) {
             try {
-                dob = Date.valueOf(dobStr); // format yyyy-MM-dd
+                dob = Date.valueOf(dobStr);
             } catch (IllegalArgumentException e) {
-                e.printStackTrace();
+                request.setAttribute("error", "Định dạng ngày sinh không hợp lệ!");
+                request.getRequestDispatcher("auth/register.jsp").forward(request, response);
+                return;
             }
         }
 
-        // 4️ Tạo đối tượng Account
+        // Tạo đối tượng Account
         Account acc = new Account();
         acc.setUsername(username);
         acc.setPassword(password);
         acc.setRole(role);
-        acc.setStatus(true); // mặc định kích hoạt
+        acc.setStatus(true);
 
-        // 5️ Tạo đối tượng User
+        // Tạo đối tượng User
         User user = new User();
         user.setFull_name(fullName);
         user.setEmail(email);
@@ -82,18 +90,18 @@ public class RegisterServlet extends HttpServlet {
         user.setGender(gender);
         user.setDob(dob);
 
-        // 6️ Gọi service để xử lý đăng ký
+        // Gọi service để xử lý đăng ký
         String result = registerService.register(acc, user);
 
-        // 7️ Xử lý kết quả
+        // Xử lý kết quả
         if ("success".equals(result)) {
-            response.sendRedirect("auth/login.jsp");    // chuyển hẳn sang một trang mới (trình duyệt gửi request mới).
+            request.getSession().setAttribute("successMessage", "Đăng ký thành công! Vui lòng đăng nhập.");
+            response.sendRedirect("auth/login.jsp");
         } else {
             request.setAttribute("error", result);
             request.setAttribute("acc", acc);
-            request.setAttribute("user", user); // giữ lại dữ liệu nhập
-            request.getRequestDispatcher("auth/register.jsp").forward(request, response); //Giữ nguyên request hiện tại, không reload trang
+            request.setAttribute("user", user);
+            request.getRequestDispatcher("auth/register.jsp").forward(request, response);
         }
-
     }
 }
