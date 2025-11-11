@@ -153,6 +153,64 @@ public class OrganizationDetailEventDAO {
         return donations;
     }
 
+    // Kiểm tra xem có sự kiện khác cùng organization đang active trùng thời gian không
+    public boolean checkOverlapWithOtherEvents(int organizationId, java.util.Date newStart, java.util.Date newEnd, int excludeEventId) {
+        String sql = "SELECT COUNT(*) FROM Events "
+                + "WHERE organization_id = ? "
+                + "AND status = 'active' "
+                + "AND id <> ? "
+                + "AND ((start_date <= ? AND end_date >= ?) "
+                + "     OR (start_date <= ? AND end_date >= ?) "
+                + "     OR (start_date >= ? AND end_date <= ?))";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, organizationId);
+            ps.setInt(2, excludeEventId);
+            java.sql.Timestamp startTs = new java.sql.Timestamp(newStart.getTime());
+            java.sql.Timestamp endTs = new java.sql.Timestamp(newEnd.getTime());
+            ps.setTimestamp(3, startTs);
+            ps.setTimestamp(4, startTs);
+            ps.setTimestamp(5, endTs);
+            ps.setTimestamp(6, endTs);
+            ps.setTimestamp(7, startTs);
+            ps.setTimestamp(8, endTs);
+
+            ResultSet rs = ps.executeQuery();
+            boolean overlap = false;
+            if (rs.next()) {
+                overlap = rs.getInt(1) > 0;
+            }
+            rs.close();
+            ps.close();
+            return overlap;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return true; // an toàn, trả về true nếu có lỗi
+        }
+    }
+
+    // số lượng volunteer đã đăng kí theo từng sự kiện để không cho giảm
+    public int countRegisteredVolunteers(int eventId) {
+        String sql = "SELECT COUNT(*) \n"
+                + "FROM Event_Volunteers\n"
+                + "WHERE event_id = ? AND status = 'approved';";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, eventId);
+            ResultSet rs = ps.executeQuery();
+            int count = 0;
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+            rs.close();
+            ps.close();
+            return count;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Integer.MAX_VALUE; // an toàn, không cho update
+        }
+    }
+
     // Cập nhật thông tin sự kiện
     public boolean updateEvent(int eventId, String title, String description, String location,
             java.sql.Timestamp startDate, java.sql.Timestamp endDate, int neededVolunteers,

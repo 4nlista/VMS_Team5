@@ -98,9 +98,7 @@
                                 <c:forEach var="p" items="${profiles}" varStatus="loop">
                                     <tr>
                                         <td>${loop.index + 1}</td>
-                                        <td>
-                                            <a href="${pageContext.request.contextPath}/OrganizationVolunteerDetailServlet?volunteerId=${p.id}" class="text-decoration-none text-dark">${p.fullName}</a>
-                                        </td>
+                                        <td>${p.fullName}</td>
                                         <td>
                                             <c:choose>
                                                 <c:when test="${p.gender == 'Male' || p.gender == 'male' || p.gender == 'Nam'}">Nam</c:when>
