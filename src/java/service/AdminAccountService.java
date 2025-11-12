@@ -35,6 +35,7 @@ public class AdminAccountService {
     }
     
     // 3. Khóa / Mở khóa tài khoản (business rule: không cho tự khóa admin hiện hành)
+    // Không cho phép khóa Organization nếu có sự kiện active trong 48h tới
     public boolean toggleAccountStatus(int id) {
         Account acc = accountDAO.getAccountById(id);
         if (acc == null) {
@@ -44,6 +45,13 @@ public class AdminAccountService {
         // Không cho phép khóa tài khoản có role admin
         if ("admin".equalsIgnoreCase(acc.getRole()) && !newStatus) {
             return false;
+        }
+        // Kiểm tra nếu đang cố khóa tài khoản Organization
+        if ("organization".equalsIgnoreCase(acc.getRole()) && !newStatus) {
+            // Kiểm tra xem Organization có sự kiện active trong 48h tới không
+            if (adminAccountDAO.hasActiveEventsWithin48Hours(id)) {
+                return false; // Không cho phép khóa
+            }
         }
         return adminAccountDAO.updateAccountStatus(id, newStatus);
     }

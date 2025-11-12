@@ -43,6 +43,18 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 </c:if>
+                <c:if test="${param.msg == 'lock_org_48h_error'}">
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="bi bi-exclamation-circle me-2"></i>Không thể khóa tài khoản Organization! Tổ chức này có sự kiện đang active trong vòng 48 giờ tới. Admin không được khóa tài khoản Organization khi có sự kiện active trong 48h sắp tới.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </c:if>
+                <c:if test="${param.msg == 'lock_error'}">
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="bi bi-exclamation-circle me-2"></i>Không thể khóa/mở khóa tài khoản. Vui lòng thử lại!
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </c:if>
                 <!-- Yêu cầu 1: Thêm nút Add Account + Filter + Search -->
                 <div class="d-flex justify-content-between align-items-center mb-3 gap-2 flex-nowrap">
                     <!-- Filter + Search (cùng một form) -->
@@ -125,7 +137,23 @@
                                                 </span>
                                             </c:when>
                                             <c:otherwise>
-                                                <a href="<%= request.getContextPath() %>/AdminAccountServlet?action=toggle&id=${acc.id}"
+                                                <c:url var="toggleUrl" value="/AdminAccountServlet">
+                                                    <c:param name="action" value="toggle"/>
+                                                    <c:param name="id" value="${acc.id}"/>
+                                                    <c:if test="${not empty selectedRole}">
+                                                        <c:param name="role" value="${selectedRole}"/>
+                                                    </c:if>
+                                                    <c:if test="${not empty selectedStatus}">
+                                                        <c:param name="status" value="${selectedStatus}"/>
+                                                    </c:if>
+                                                    <c:if test="${not empty searchText}">
+                                                        <c:param name="search" value="${searchText}"/>
+                                                    </c:if>
+                                                    <c:if test="${not empty currentPage}">
+                                                        <c:param name="page" value="${currentPage}"/>
+                                                    </c:if>
+                                                </c:url>
+                                                <a href="${toggleUrl}"
                                                    class="btn ${acc.status ? 'btn-info' : 'btn-success'} btn-sm btn-icon" 
                                                    title="${acc.status ? 'Khóa tài khoản' : 'Mở khóa tài khoản'}">
                                                     <i class="bi ${acc.status ? 'bi-lock' : 'bi-unlock'}"></i>
@@ -148,9 +176,25 @@
                                                 </span>
                                             </c:when>
                                             <c:otherwise>
+                                                <c:url var="deleteUrl" value="/AdminAccountServlet">
+                                                    <c:param name="action" value="delete"/>
+                                                    <c:param name="id" value="${acc.id}"/>
+                                                    <c:if test="${not empty selectedRole}">
+                                                        <c:param name="role" value="${selectedRole}"/>
+                                                    </c:if>
+                                                    <c:if test="${not empty selectedStatus}">
+                                                        <c:param name="status" value="${selectedStatus}"/>
+                                                    </c:if>
+                                                    <c:if test="${not empty searchText}">
+                                                        <c:param name="search" value="${searchText}"/>
+                                                    </c:if>
+                                                    <c:if test="${not empty currentPage}">
+                                                        <c:param name="page" value="${currentPage}"/>
+                                                    </c:if>
+                                                </c:url>
                                                 <button type="button" class="btn btn-danger btn-sm btn-icon" title="Xóa tài khoản"
                                                         data-bs-toggle="modal" data-bs-target="#confirmDeleteModal"
-                                                        data-delete-url="<%= request.getContextPath() %>/AdminAccountServlet?action=delete&id=${acc.id}"
+                                                        data-delete-url="${deleteUrl}"
                                                         data-username="${acc.username}" data-id="${acc.id}">
                                                     <i class="bi bi-trash"></i>
                                                 </button>

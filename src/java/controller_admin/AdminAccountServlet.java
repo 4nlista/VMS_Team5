@@ -86,28 +86,129 @@ public class AdminAccountServlet extends HttpServlet {
         switch (action) {
             case "toggle": {
                 String idRaw = request.getParameter("id");
+                // Lấy các tham số filter và page để giữ lại
+                String role = request.getParameter("role");
+                String statusParam = request.getParameter("status");
+                String search = request.getParameter("search");
+                String pageParam = request.getParameter("page");
+                
                 try {
                     int id = Integer.parseInt(idRaw);
-                    adminAccountService.toggleAccountStatus(id);
+                    boolean success = adminAccountService.toggleAccountStatus(id);
+                    if (!success) {
+                        // Kiểm tra lý do thất bại để hiển thị thông báo phù hợp
+                        Account acc = adminAccountService.getAccountById(id);
+                        StringBuilder redirectUrl = new StringBuilder(request.getContextPath() + "/AdminAccountServlet?");
+                        if (acc != null && "organization".equalsIgnoreCase(acc.getRole()) && acc.isStatus()) {
+                            // Đang cố khóa Organization nhưng có sự kiện trong 48h
+                            redirectUrl.append("msg=lock_org_48h_error");
+                        } else {
+                            // Lỗi khác (có thể là admin hoặc lỗi khác)
+                            redirectUrl.append("msg=lock_error");
+                        }
+                        // Giữ lại các tham số filter và page
+                        if (role != null && !role.isEmpty()) {
+                            redirectUrl.append("&role=").append(role);
+                        }
+                        if (statusParam != null && !statusParam.isEmpty()) {
+                            redirectUrl.append("&status=").append(statusParam);
+                        }
+                        if (search != null && !search.isEmpty()) {
+                            redirectUrl.append("&search=").append(java.net.URLEncoder.encode(search, "UTF-8"));
+                        }
+                        if (pageParam != null && !pageParam.isEmpty()) {
+                            redirectUrl.append("&page=").append(pageParam);
+                        }
+                        response.sendRedirect(redirectUrl.toString());
+                        break;
+                    }
                 } catch (NumberFormatException ignored) {
                 }
-                response.sendRedirect(request.getContextPath() + "/AdminAccountServlet");
+                
+                // Build redirect URL với các tham số filter và page
+                StringBuilder redirectUrl = new StringBuilder(request.getContextPath() + "/AdminAccountServlet");
+                boolean hasParams = false;
+                if (role != null && !role.isEmpty()) {
+                    redirectUrl.append(hasParams ? "&" : "?").append("role=").append(role);
+                    hasParams = true;
+                }
+                if (statusParam != null && !statusParam.isEmpty()) {
+                    redirectUrl.append(hasParams ? "&" : "?").append("status=").append(statusParam);
+                    hasParams = true;
+                }
+                if (search != null && !search.isEmpty()) {
+                    redirectUrl.append(hasParams ? "&" : "?").append("search=").append(java.net.URLEncoder.encode(search, "UTF-8"));
+                    hasParams = true;
+                }
+                if (pageParam != null && !pageParam.isEmpty()) {
+                    redirectUrl.append(hasParams ? "&" : "?").append("page=").append(pageParam);
+                }
+                response.sendRedirect(redirectUrl.toString());
                 break;
             }
             case "delete": {
                 String idRaw = request.getParameter("id");
+                // Lấy các tham số filter và page để giữ lại
+                String role = request.getParameter("role");
+                String statusParam = request.getParameter("status");
+                String search = request.getParameter("search");
+                String pageParam = request.getParameter("page");
+                
                 try {
                     int id = Integer.parseInt(idRaw);
                     boolean ok = adminAccountService.deleteAccount(id);
                     if (!ok) {
-                        response.sendRedirect(request.getContextPath() + "/AdminAccountServlet?msg=delete_failed");
+                        // Build redirect URL với thông báo lỗi và các tham số filter và page
+                        StringBuilder redirectUrl = new StringBuilder(request.getContextPath() + "/AdminAccountServlet?msg=delete_failed");
+                        if (role != null && !role.isEmpty()) {
+                            redirectUrl.append("&role=").append(role);
+                        }
+                        if (statusParam != null && !statusParam.isEmpty()) {
+                            redirectUrl.append("&status=").append(statusParam);
+                        }
+                        if (search != null && !search.isEmpty()) {
+                            redirectUrl.append("&search=").append(java.net.URLEncoder.encode(search, "UTF-8"));
+                        }
+                        if (pageParam != null && !pageParam.isEmpty()) {
+                            redirectUrl.append("&page=").append(pageParam);
+                        }
+                        response.sendRedirect(redirectUrl.toString());
                         break;
                     }
                 } catch (NumberFormatException ignored) {
-                    response.sendRedirect(request.getContextPath() + "/AdminAccountServlet?msg=delete_failed");
+                    // Build redirect URL với thông báo lỗi và các tham số filter và page
+                    StringBuilder redirectUrl = new StringBuilder(request.getContextPath() + "/AdminAccountServlet?msg=delete_failed");
+                    if (role != null && !role.isEmpty()) {
+                        redirectUrl.append("&role=").append(role);
+                    }
+                    if (statusParam != null && !statusParam.isEmpty()) {
+                        redirectUrl.append("&status=").append(statusParam);
+                    }
+                    if (search != null && !search.isEmpty()) {
+                        redirectUrl.append("&search=").append(java.net.URLEncoder.encode(search, "UTF-8"));
+                    }
+                    if (pageParam != null && !pageParam.isEmpty()) {
+                        redirectUrl.append("&page=").append(pageParam);
+                    }
+                    response.sendRedirect(redirectUrl.toString());
                     break;
                 }
-                response.sendRedirect(request.getContextPath() + "/AdminAccountServlet?msg=deleted");
+                
+                // Build redirect URL với thông báo thành công và các tham số filter và page
+                StringBuilder redirectUrl = new StringBuilder(request.getContextPath() + "/AdminAccountServlet?msg=deleted");
+                if (role != null && !role.isEmpty()) {
+                    redirectUrl.append("&role=").append(role);
+                }
+                if (statusParam != null && !statusParam.isEmpty()) {
+                    redirectUrl.append("&status=").append(statusParam);
+                }
+                if (search != null && !search.isEmpty()) {
+                    redirectUrl.append("&search=").append(java.net.URLEncoder.encode(search, "UTF-8"));
+                }
+                if (pageParam != null && !pageParam.isEmpty()) {
+                    redirectUrl.append("&page=").append(pageParam);
+                }
+                response.sendRedirect(redirectUrl.toString());
                 break;
             }
             default: {

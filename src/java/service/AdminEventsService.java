@@ -7,6 +7,7 @@ package service;
 import dao.AdminEventsDAO;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Date;
 import model.Category;
 import model.Event;
 
@@ -96,7 +97,27 @@ public class AdminEventsService {
     }
 
     // Khóa sự kiện (set status = inactive)
+    // Không cho phép khóa sự kiện nếu còn < 24h trước khi diễn ra
     public boolean lockEvent(int eventId) {
+        // Lấy start_date của sự kiện
+        java.sql.Timestamp startDate = adminEventsDAO.getEventStartDate(eventId);
+        if (startDate == null) {
+            return false; // Sự kiện không tồn tại
+        }
+        
+        // Kiểm tra nếu sự kiện còn < 24h trước khi diễn ra
+        Date now = new Date();
+        Date eventStart = new Date(startDate.getTime());
+        
+        // Tính số milliseconds trong 24 giờ
+        long hours24InMillis = 24 * 60 * 60 * 1000L;
+        long timeDifference = eventStart.getTime() - now.getTime();
+        
+        // Nếu sự kiện còn < 24h trước khi diễn ra, không cho phép khóa
+        if (timeDifference > 0 && timeDifference < hours24InMillis) {
+            return false;
+        }
+        
         return adminEventsDAO.updateEventStatus(eventId, "inactive");
     }
 

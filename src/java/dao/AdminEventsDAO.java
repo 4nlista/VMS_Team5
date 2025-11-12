@@ -249,6 +249,22 @@ public class AdminEventsDAO {
         }
     }
 
+    // Lấy start_date của sự kiện để kiểm tra thời gian
+    public java.sql.Timestamp getEventStartDate(int eventId) {
+        String sql = "SELECT start_date FROM Events WHERE id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, eventId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getTimestamp("start_date");
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
     // Lấy tất cả categories để hiển thị trong filter
     public List<Category> getAllCategories() {
         List<Category> list = new ArrayList<>();
