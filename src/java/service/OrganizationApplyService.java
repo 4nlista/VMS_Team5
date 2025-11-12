@@ -29,7 +29,20 @@ public class OrganizationApplyService {
     }
     
     public List<EventVolunteer> getFilterVolunteersByEvent(int organizationId, int eventId, String statusFilter) {
+        // Tự động reject các pending applications trước khi load danh sách
+        organizationApplyDAO.autoRejectPendingApplications(eventId);
+        
         return organizationApplyDAO.getFilterVolunteersByEvent(organizationId, eventId, statusFilter);
+    }
+    
+    // Tự động reject pending applications của 1 event cụ thể
+    public int autoRejectPendingApplications(int eventId) {
+        return organizationApplyDAO.autoRejectPendingApplications(eventId);
+    }
+    
+    // Tự động reject pending applications cho tất cả events
+    public int autoRejectAllPendingApplications() {
+        return organizationApplyDAO.autoRejectAllPendingApplications();
     }
     
 }

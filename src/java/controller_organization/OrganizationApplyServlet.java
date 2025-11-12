@@ -56,6 +56,13 @@ public class OrganizationApplyServlet extends HttpServlet {
             statusFilter = "all";
         }
 
+        // Tự động reject và lấy số lượng bị ảnh hưởng
+        int autoRejectedCount = organizationApplyService.autoRejectPendingApplications(eventId);
+        if (autoRejectedCount > 0) {
+            session.setAttribute("warningMessage", 
+                "Đã tự động từ chối " + autoRejectedCount + " đơn đăng ký do không được xử lý trong 24h trước sự kiện.");
+        }
+        
         List<EventVolunteer> volunteers = organizationApplyService.getFilterVolunteersByEvent(organizationId, eventId, statusFilter);
         request.setAttribute("volunteers", volunteers);
         request.setAttribute("eventId", eventId);
@@ -86,8 +93,10 @@ public class OrganizationApplyServlet extends HttpServlet {
 
         if ("approve".equals(action)) {
             organizationApplyService.updateVolunteerStatus(applyEventId, "approved");
+            session.setAttribute("successMessage", "Đã duyệt đơn đăng ký thành công!");
         } else if ("reject".equals(action)) {
             organizationApplyService.updateVolunteerStatus(applyEventId, "rejected");
+            session.setAttribute("successMessage", "Đã từ chối đơn đăng ký!");
         }
 
         // Quay lại trang danh sách apply của event

@@ -66,5 +66,37 @@ public class CreateEventsDAO {
             return false;
         }
     }
+    
+    // Validate: Kiểm tra organization có sự kiện trùng thời gian không
+    public boolean hasOverlappingEvent(int organizationId, Date startDate, Date endDate) {
+        String sql = "SELECT COUNT(*) FROM Events "
+                + "WHERE organization_id = ? "
+                + "AND ("
+                + "    (start_date <= ? AND end_date >= ?) "  // Event cũ bao phủ startDate mới
+                + "    OR (start_date <= ? AND end_date >= ?)"  // Event cũ bao phủ endDate mới
+                + "    OR (start_date >= ? AND end_date <= ?)"  // Event mới bao phủ event cũ
+                + ")";
+        
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            java.sql.Timestamp sqlStartDate = new java.sql.Timestamp(startDate.getTime());
+            java.sql.Timestamp sqlEndDate = new java.sql.Timestamp(endDate.getTime());
+            
+            ps.setInt(1, organizationId);
+            ps.setTimestamp(2, sqlStartDate);
+            ps.setTimestamp(3, sqlStartDate);
+            ps.setTimestamp(4, sqlEndDate);
+            ps.setTimestamp(5, sqlEndDate);
+            ps.setTimestamp(6, sqlStartDate);
+            ps.setTimestamp(7, sqlEndDate);
+            
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0; // Có event trùng
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
 
 }

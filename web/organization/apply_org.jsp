@@ -19,14 +19,6 @@
     </head>
     <body>
         <div class="content-container">
-            <%
-                     Object sessionId = session.getId();
-                     String fullname = (String) session.getAttribute("fullname");
-                     if (fullname == null) {
-                         fullname = "Khách";
-                     }
-            %>
-
             <!-- Sidebar -->
             <jsp:include page="layout_org/sidebar_org.jsp" />
 
@@ -36,6 +28,31 @@
                 <div class="container-fluid">
 
                     <h2 class="fw-bold mb-4">Danh sách đơn đăng kí</h2>
+
+                    <!-- Thông báo -->
+                    <c:if test="${not empty sessionScope.successMessage}">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" id="autoCloseAlert">
+                            <i class="bi bi-check-circle"></i> ${sessionScope.successMessage}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        <c:remove var="successMessage" scope="session"/>
+                    </c:if>
+                    
+                    <c:if test="${not empty sessionScope.warningMessage}">
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert" id="autoCloseAlert">
+                            <i class="bi bi-exclamation-triangle"></i> ${sessionScope.warningMessage}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        <c:remove var="warningMessage" scope="session"/>
+                    </c:if>
+                    
+                    <c:if test="${not empty sessionScope.errorMessage}">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert" id="autoCloseAlert">
+                            <i class="bi bi-x-circle"></i> ${sessionScope.errorMessage}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        <c:remove var="errorMessage" scope="session"/>
+                    </c:if>
 
                     <!-- Form lọc -->
                     <form class="row g-3 align-items-center mb-3" method="get" action="OrganizationApplyServlet">
@@ -158,5 +175,17 @@
 
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // Auto close alert after 3 seconds
+            window.onload = function() {
+                var alert = document.getElementById('autoCloseAlert');
+                if (alert) {
+                    setTimeout(function() {
+                        var bsAlert = new bootstrap.Alert(alert);
+                        bsAlert.close();
+                    }, 3000);
+                }
+            };
+        </script>
     </body>
 </html>

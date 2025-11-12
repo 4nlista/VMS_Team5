@@ -53,22 +53,29 @@
             <div class="main-content p-8">
                 <div class="container-fluid">
                     <h2 class="fw-bold mb-4"> Tạo Sự Kiện Mới</h2>
-                    <c:if test="${not empty param.msg}">
-                        <div class="container mt-3">
-                            <c:choose>
-                                <c:when test="${param.msg == 'success'}">
-                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                        <strong>Thành công!</strong> Sự kiện đã được tạo.
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                    </div>
-                                </c:when>
-                                <c:when test="${param.msg == 'error'}">
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        <strong>Lỗi!</strong> Không thể tạo sự kiện. Vui lòng thử lại.
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                    </div>
-                                </c:when>
-                            </c:choose>
+                    
+                    <!-- Thông báo lỗi từ session -->
+                    <c:if test="${not empty sessionScope.errorMessage}">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert" id="autoCloseAlert">
+                            <i class="bi bi-x-circle"></i> <strong>Lỗi!</strong> ${sessionScope.errorMessage}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        <c:remove var="errorMessage" scope="session"/>
+                    </c:if>
+                    
+                    <c:if test="${not empty sessionScope.successMessage}">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" id="autoCloseAlert">
+                            <i class="bi bi-check-circle"></i> <strong>Thành công!</strong> ${sessionScope.successMessage}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        <c:remove var="successMessage" scope="session"/>
+                    </c:if>
+                    
+                    <!-- Alert lỗi không có ảnh -->
+                    <c:if test="${not empty errorMsg}">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert" id="autoCloseAlert">
+                            <i class="bi bi-x-circle"></i> <strong>Lỗi!</strong> ${errorMsg}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>
                     </c:if>
                     <div class="card mb-3">
@@ -183,5 +190,17 @@
             </div>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // Auto close alert after 5 seconds
+            window.onload = function() {
+                var alert = document.getElementById('autoCloseAlert');
+                if (alert) {
+                    setTimeout(function() {
+                        var bsAlert = new bootstrap.Alert(alert);
+                        bsAlert.close();
+                    }, 5000); // 5 giây cho alert error để user đọc rõ
+                }
+            };
+        </script>
     </body>
 </html>

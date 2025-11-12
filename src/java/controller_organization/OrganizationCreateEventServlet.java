@@ -119,19 +119,24 @@ public class OrganizationCreateEventServlet extends HttpServlet {
             event.setStartDate(startDate);
             event.setEndDate(endDate);
             event.setTotalDonation(0); // mặc định
-            boolean success = createEventsService.createEvent(event);
+            
+            // Gọi service và nhận kết quả
+            String result = createEventsService.createEvent(event);
 
-            if (success) {
-                session.removeAttribute("uploadedFileName"); // 
-                response.sendRedirect(request.getContextPath() + "/OrganizationCreateEventServlet?msg=success");
+            if ("success".equals(result)) {
+                session.removeAttribute("uploadedFileName");
+                session.setAttribute("successMessage", "Tạo sự kiện thành công!");
+                response.sendRedirect(request.getContextPath() + "/OrganizationListServlet");
             } else {
-                response.sendRedirect(request.getContextPath() + "/OrganizationCreateEventServlet?msg=error");
+                // Set error message vào session
+                session.setAttribute("errorMessage", result);
+                response.sendRedirect(request.getContextPath() + "/OrganizationCreateEventServlet");
             }
 
         } catch (NumberFormatException | ParseException ex) {
             ex.printStackTrace();
-            response.sendRedirect(request.getContextPath() + "/OrganizationCreateEventServlet?msg=invalid");
-
+            session.setAttribute("errorMessage", "Dữ liệu không hợp lệ! Vui lòng kiểm tra lại.");
+            response.sendRedirect(request.getContextPath() + "/OrganizationCreateEventServlet");
         }
     }
 
