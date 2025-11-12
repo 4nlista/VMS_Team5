@@ -18,7 +18,7 @@ public class Notification {
     private String type; // 'reminder','approval','donation','system'
     private Date createdAt;
     private boolean isRead; // 0 = chưa đọc, 1 = đã đọc
-    private Integer relatedEventId;
+    private int eventId;
     
     // THÊM CÁC TRƯỜNG JOIN:
     private String senderName;    // full_name từ Users
@@ -28,7 +28,7 @@ public class Notification {
     public Notification() {
     }
 
-    public Notification(int id, int senderId, int receiverId, String message, String type, Date createdAt, boolean isRead, Integer relatedEventId, String senderName, String receiverName, String eventTitle) {
+    public Notification(int id, int senderId, int receiverId, String message, String type, Date createdAt, boolean isRead, int eventId, String senderName, String receiverName, String eventTitle) {
         this.id = id;
         this.senderId = senderId;
         this.receiverId = receiverId;
@@ -36,11 +36,13 @@ public class Notification {
         this.type = type;
         this.createdAt = createdAt;
         this.isRead = isRead;
-        this.relatedEventId = relatedEventId;
+        this.eventId = eventId;
         this.senderName = senderName;
         this.receiverName = receiverName;
         this.eventTitle = eventTitle;
     }
+
+    
 
     public int getId() {
         return id;
@@ -98,12 +100,12 @@ public class Notification {
         this.isRead = isRead;
     }
 
-    public Integer getRelatedEventId() {
-        return relatedEventId;
+    public int getEventId() {
+        return eventId;
     }
 
-    public void setRelatedEventId(Integer relatedEventId) {
-        this.relatedEventId = relatedEventId;
+    public void setEventId(int eventId) {
+        this.eventId = eventId;
     }
 
     public String getSenderName() {

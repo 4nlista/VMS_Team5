@@ -20,11 +20,8 @@ public class OrganizationSendNotificationService {
         this.notificationDAO = new NotificationDAO();
     }
 
-    /**
-     * Gửi thông báo cá nhân cho 1 volunteer
-     *
-     * @return message kết quả
-     */
+    //Gửi thông báo cá nhân cho 1 volunteer
+
     public String sendIndividualNotification(int senderId, int eventId, int volunteerId,
             String message, String type) {
         // Validate 1: Event chưa kết thúc
@@ -48,7 +45,7 @@ public class OrganizationSendNotificationService {
         notification.setReceiverId(volunteerId);
         notification.setMessage(message.trim());
         notification.setType(type);
-        notification.setRelatedEventId(eventId);
+        notification.setEventId(eventId);
 
         // Insert
         boolean result = notificationDAO.insertNotification(notification);
@@ -60,11 +57,7 @@ public class OrganizationSendNotificationService {
         }
     }
 
-    /**
-     * Gửi thông báo chung cho tất cả volunteer của event
-     *
-     * @return message kết quả
-     */
+    // Gửi thông báo chung cho tất cả volunteer của event
     public String sendAllNotification(int senderId, int eventId, String message, String type) {
         // Validate 1: Event chưa kết thúc
         if (!notificationDAO.isEventActive(eventId)) {
@@ -96,7 +89,7 @@ public class OrganizationSendNotificationService {
             notification.setReceiverId(volunteerId);
             notification.setMessage(message.trim());
             notification.setType(type);
-            notification.setRelatedEventId(eventId);
+            notification.setEventId(eventId);
 
             if (notificationDAO.insertNotification(notification)) {
                 successCount++;

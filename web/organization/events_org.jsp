@@ -16,6 +16,13 @@
             <div class="main-content p-4">
                 <div class="container-fluid">
                     <h3 class="fw-bold mb-4">Danh sách sự kiện</h3>
+                    <c:if test="${not empty sessionScope.message}">
+                        <div class="alert alert-danger alert-dismissible fade show">
+                            ${sessionScope.message}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        <c:remove var="message" scope="session"/>
+                    </c:if>
 
                     <!-- Bộ lọc + nút tạo mới -->
                     <form method="get" action="OrganizationListServlet" class="d-flex justify-content-between align-items-center mb-3 flex-wrap">

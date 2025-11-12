@@ -29,7 +29,7 @@ public class NotificationDAO {
 
     // 1. Insert 1 thông báo
     public boolean insertNotification(Notification notification) {
-        String sql = "INSERT INTO Notifications (sender_id, receiver_id, message, type, related_event_id) "
+        String sql = "INSERT INTO Notifications (sender_id, receiver_id, message, type, event_id) "
                 + "VALUES (?, ?, ?, ?, ?)";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -37,13 +37,7 @@ public class NotificationDAO {
             ps.setInt(2, notification.getReceiverId());
             ps.setString(3, notification.getMessage());
             ps.setString(4, notification.getType());
-
-            if (notification.getRelatedEventId() != null) {
-                ps.setInt(5, notification.getRelatedEventId());
-            } else {
-                ps.setNull(5, Types.INTEGER);
-            }
-
+            ps.setInt(5, notification.getEventId());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -55,14 +49,14 @@ public class NotificationDAO {
     public List<Notification> getNotificationsByReceiverId(int receiverId) {
         List<Notification> list = new ArrayList<>();
         String sql = "SELECT n.id, n.sender_id, n.receiver_id, n.message, n.type, "
-                + "n.created_at, n.is_read, n.related_event_id, "
+                + "n.created_at, n.is_read, n.event_id, "
                 + "us.full_name AS sender_name, "
                 + "ur.full_name AS receiver_name, "
                 + "e.title AS event_title "
                 + "FROM Notifications n "
                 + "LEFT JOIN Users us ON n.sender_id = us.account_id "
                 + "LEFT JOIN Users ur ON n.receiver_id = ur.account_id "
-                + "LEFT JOIN Events e ON n.related_event_id = e.id "
+                + "LEFT JOIN Events e ON n.event_id = e.id "
                 + "WHERE n.receiver_id = ? "
                 + "ORDER BY n.created_at DESC";
 
@@ -80,7 +74,7 @@ public class NotificationDAO {
                 n.setType(rs.getString("type"));
                 n.setCreatedAt(rs.getTimestamp("created_at"));
                 n.setIsRead(rs.getBoolean("is_read"));
-                n.setRelatedEventId(rs.getObject("related_event_id", Integer.class));
+                n.setEventId(rs.getInt("event_id"));
                 n.setSenderName(rs.getString("sender_name"));
                 n.setReceiverName(rs.getString("receiver_name"));
                 n.setEventTitle(rs.getString("event_title"));

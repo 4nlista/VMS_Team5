@@ -33,6 +33,14 @@
                         </a>
                     </div>
 
+                    <c:if test="${not empty sessionScope.message}">
+                        <div class="alert alert-danger alert-dismissible fade show">
+                            ${sessionScope.message}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        <c:remove var="message" scope="session"/>
+                    </c:if>
+
                     <!-- Bộ lọc + nút tạo mới (nếu cần) -->
                     <form method="get" action="OrganizationVolunteersServlet" class="d-flex align-items-end mb-3 flex-wrap gap-3">
                         <c:if test="${not empty eventId}">
@@ -75,10 +83,10 @@
                             </div>
                         </div>
                     </form>
-                    <button type="submit" class="btn btn-warnings mb-3" style="min-width:140px;">
-                        <i class="bi bi-send"></i> Thông báo chung
-                    </button>
-
+                    <a href="<%= request.getContextPath() %>/OrganizationSendNotificationServlet?eventId=${eventId}&sendType=all" 
+                       class="btn btn-success mb-4">
+                        <i class="bi bi-broadcast"></i> Thông báo chung
+                    </a>
                     <!-- Bảng dữ liệu -->
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover" style="table-layout: fixed; width: 100%;">
@@ -111,7 +119,10 @@
                                         <td>${p.address}</td>
                                         <td>
                                             <a href="${pageContext.request.contextPath}/OrganizationVolunteerDetailServlet?volunteerId=${p.id}" class="btn btn-primary btn-sm me-1">Chi tiết</a>
-                                            <a href="<%= request.getContextPath() %>/organization/send_notification_org.jsp" class="btn btn-info btn-sm">Thông báo</a>
+                                            <a href="<%= request.getContextPath() %>/OrganizationSendNotificationServlet?eventId=${eventId}&volunteerId=${volunteer.id}&sendType=individual" 
+                                               class="btn btn-info btn-sm">Thông báo
+                                            </a>
+
                                         </td>
                                     </tr>
                                 </c:forEach>
