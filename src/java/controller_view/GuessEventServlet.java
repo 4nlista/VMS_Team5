@@ -52,6 +52,7 @@ public class GuessEventServlet extends HttpServlet {
                 volunteerId = acc.getId();
             }
         }
+        
         List<Event> events = displayService.getActiveEventsPagedWithStatus(offset, limit, volunteerId);
         if (volunteerId != null) {
             for (Event e : events) {

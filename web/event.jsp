@@ -38,7 +38,7 @@
                                 <a class="block-20" style="background-image: url('${pageContext.request.contextPath}/UploadImagesServlet?file=${e.images}');"></a>                           
                                 <div class="text p-4 d-block h-100">
                                     <div class="meta d-flex justify-content-end">
-                                        <a href="${pageContext.request.contextPath}/feedback_events.jsp" class="meta-chat">
+                                        <a href="${pageContext.request.contextPath}/ViewFeedbackEventsServlet?eventId=${e.id}&page=${currentPage}" class="meta-chat">
                                             <span class="icon-comment text-warning"></span> Bình luận
                                         </a>
                                     </div>
@@ -50,8 +50,12 @@
                                     <h3 class="heading mb-1"><a href="${pageContext.request.contextPath}/VolunteerApplyEventServlet?eventId=${e.id}">${e.title}</a></h3>
                                     <p class="text-muted mb-1"><i>Loại sự kiện: ${e.categoryName}</i></p>
                                     <p class="time-loc">
-                                        <span class="mr-2"><i class="icon-clock-o"></i> Bắt đầu: ${e.startDate}</span><br/>
-                                        <span class="mr-2"><i class="icon-clock-o"></i> Kết thúc: ${e.endDate}</span><br/>
+                                        <span class="mr-2"><i class="icon-clock-o"></i> Bắt đầu: 
+                                            <fmt:formatDate value="${e.startDate}" pattern="dd/MM/yyyy HH:mm" />
+                                        </span><br/>
+                                        <span class="mr-2"><i class="icon-clock-o"></i> Kết thúc: 
+                                            <fmt:formatDate value="${e.endDate}" pattern="dd/MM/yyyy HH:mm" />
+                                        </span><br/>
                                         <span><i class="icon-map-o"></i> Địa điểm : ${e.location}</span>
                                     </p>
                                     <p>${e.description}</p>

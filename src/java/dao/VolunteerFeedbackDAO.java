@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import model.Feedback;
 import utils.DBContext;
 
@@ -202,5 +204,51 @@ public class VolunteerFeedbackDAO {
      */
     public boolean canFeedback(int eventId, int volunteerId) {
         return checkFeedbackEligibility(eventId, volunteerId) == 0;
+    }
+
+    /**
+     * Lấy danh sách feedback valid của một event
+     *
+     * @param eventId ID của event
+     * @return Danh sách feedback có status = 'valid'
+     */
+    public List<Feedback> getValidFeedbacksByEventId(int eventId) {
+        List<Feedback> feedbacks = new ArrayList<>();
+        String sql = "SELECT f.id, f.event_id, f.volunteer_id, f.rating, f.comment, "
+                + "f.feedback_date, f.status, "
+                + "e.title AS event_title, "
+                + "u_vol.full_name AS volunteer_name, "
+                + "u_org.full_name AS organization_name "
+                + "FROM Feedback f "
+                + "JOIN Events e ON f.event_id = e.id "
+                + "JOIN Users u_vol ON f.volunteer_id = u_vol.account_id "
+                + "JOIN Users u_org ON e.organization_id = u_org.account_id "
+                + "WHERE f.event_id = ? AND f.status = 'valid' "
+                + "ORDER BY f.feedback_date DESC";
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, eventId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Feedback feedback = new Feedback(
+                        rs.getInt("id"),
+                        rs.getInt("event_id"),
+                        rs.getInt("volunteer_id"),
+                        rs.getInt("rating"),
+                        rs.getString("comment"),
+                        rs.getTimestamp("feedback_date"),
+                        rs.getString("status"),
+                        rs.getString("event_title"),
+                        rs.getString("volunteer_name"),
+                        rs.getString("organization_name")
+                );
+                feedbacks.add(feedback);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return feedbacks;
     }
 }
