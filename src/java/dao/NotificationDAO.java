@@ -177,4 +177,21 @@ public class NotificationDAO {
         }
         return list;
     }
+    
+    // 9. Validate: Kiểm tra volunteer cụ thể có approved trong event không
+    public boolean isVolunteerApprovedInEvent(int eventId, int volunteerId) {
+        String sql = "SELECT COUNT(*) FROM Event_Volunteers WHERE event_id = ? AND volunteer_id = ? AND status = 'approved'";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, eventId);
+            ps.setInt(2, volunteerId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

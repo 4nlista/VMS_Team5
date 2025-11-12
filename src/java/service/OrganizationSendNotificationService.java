@@ -29,9 +29,9 @@ public class OrganizationSendNotificationService {
             return "Sự kiện đã kết thúc, không thể gửi thông báo!";
         }
 
-        // Validate 2: Event có volunteer
-        if (!notificationDAO.hasApprovedVolunteers(eventId)) {
-            return "Sự kiện chưa có tình nguyện viên nào tham gia!";
+        // Validate 2: Volunteer cụ thể có approved trong event không
+        if (!notificationDAO.isVolunteerApprovedInEvent(eventId, volunteerId)) {
+            return "Tình nguyện viên này chưa được duyệt tham gia sự kiện!";
         }
 
         // Validate 3: Message không rỗng

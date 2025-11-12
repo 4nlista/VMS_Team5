@@ -119,7 +119,7 @@
                                         <td>${p.address}</td>
                                         <td>
                                             <a href="${pageContext.request.contextPath}/OrganizationVolunteerDetailServlet?volunteerId=${p.id}" class="btn btn-primary btn-sm me-1">Chi tiết</a>
-                                            <a href="<%= request.getContextPath() %>/OrganizationSendNotificationServlet?eventId=${eventId}&volunteerId=${volunteer.id}&sendType=individual" 
+                                            <a href="<%= request.getContextPath() %>/OrganizationSendNotificationServlet?eventId=${eventId}&volunteerId=${p.id}&sendType=individual" 
                                                class="btn btn-info btn-sm">Thông báo
                                             </a>
 
