@@ -7,6 +7,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -29,6 +30,25 @@
                                     <h4 class="mb-0"><i class="bi bi-send"></i> Gửi thông báo cá nhân</h4>
                                 </div>
                                 <div class="card-body">
+                                    <!-- Thông báo -->
+                                    <c:if test="${not empty sessionScope.message}">
+                                        <c:choose>
+                                            <c:when test="${fn:contains(sessionScope.message, 'thành công')}">
+                                                <div class="alert alert-success alert-dismissible fade show" role="alert" id="autoCloseAlert">
+                                                    <i class="bi bi-check-circle"></i> ${sessionScope.message}
+                                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                                </div>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <div class="alert alert-warning alert-dismissible fade show" role="alert" id="autoCloseAlert">
+                                                    <i class="bi bi-exclamation-triangle"></i> ${sessionScope.message}
+                                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                                </div>
+                                            </c:otherwise>
+                                        </c:choose>
+                                        <c:remove var="message" scope="session"/>
+                                    </c:if>
+                                    
                                     <form action="<%= request.getContextPath() %>/OrganizationSendNotificationServlet" method="POST">
                                         <!-- Hidden inputs -->
                                         <input type="hidden" name="eventId" value="${eventId}">
@@ -74,5 +94,17 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Auto close alert after 3 seconds
+        window.onload = function() {
+            var alert = document.getElementById('autoCloseAlert');
+            if (alert) {
+                setTimeout(function() {
+                    var bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                }, 3000); // 3 seconds
+            }
+        };
+    </script>
 </body>
 </html>

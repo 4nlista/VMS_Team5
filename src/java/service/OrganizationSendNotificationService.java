@@ -24,6 +24,12 @@ public class OrganizationSendNotificationService {
 
     public String sendIndividualNotification(int senderId, int eventId, int volunteerId,
             String message, String type) {
+        // Validate 0: Kiểm tra thời gian gửi thông báo (phải cách nhau >= 8 tiếng)
+        if (!notificationDAO.canSendNotification(senderId, eventId)) {
+            long hoursRemaining = notificationDAO.getHoursUntilNextNotification(senderId, eventId);
+            return "Bạn chỉ có thể gửi thông báo sau " + hoursRemaining + " giờ nữa!";
+        }
+        
         // Validate 1: Event chưa kết thúc
         if (!notificationDAO.isEventActive(eventId)) {
             return "Sự kiện đã kết thúc, không thể gửi thông báo!";
@@ -59,6 +65,12 @@ public class OrganizationSendNotificationService {
 
     // Gửi thông báo chung cho tất cả volunteer của event
     public String sendAllNotification(int senderId, int eventId, String message, String type) {
+        // Validate 0: Kiểm tra thời gian gửi thông báo (phải cách nhau >= 8 tiếng)
+        if (!notificationDAO.canSendNotification(senderId, eventId)) {
+            long hoursRemaining = notificationDAO.getHoursUntilNextNotification(senderId, eventId);
+            return "Bạn chỉ có thể gửi thông báo sau " + hoursRemaining + " giờ nữa!";
+        }
+        
         // Validate 1: Event chưa kết thúc
         if (!notificationDAO.isEventActive(eventId)) {
             return "Sự kiện đã kết thúc, không thể gửi thông báo!";
