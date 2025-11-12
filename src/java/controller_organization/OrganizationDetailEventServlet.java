@@ -105,7 +105,24 @@ public class OrganizationDetailEventServlet extends HttpServlet {
                 java.util.Date now = new java.util.Date();
                 Event currentEvent = dao.getEventById(eventId);
 
-                // Kiểm tra ngày bắt đầu phải >= hiện tại
+                // 1. Không cập nhật nếu sự kiện đã kết thúc (end_date < now)
+                if (currentEvent.getEndDate().before(now)) {
+                    request.getSession().setAttribute("errorMessage", 
+                            "Sự kiện đã kết thúc, không thể cập nhật!");
+                    response.sendRedirect(request.getContextPath() + "/OrganizationDetailEventServlet?eventId=" + eventId);
+                    return;
+                }
+
+                // 2. Không cập nhật trong vòng 24h trước khi sự kiện bắt đầu
+                long hoursUntilStart = (currentEvent.getStartDate().getTime() - now.getTime()) / (60 * 60 * 1000);
+                if (hoursUntilStart <= 24) {
+                    request.getSession().setAttribute("errorMessage", 
+                            "Không thể cập nhật trong vòng 24h trước khi sự kiện diễn ra!");
+                    response.sendRedirect(request.getContextPath() + "/OrganizationDetailEventServlet?eventId=" + eventId);
+                    return;
+                }
+
+                // 3. Kiểm tra ngày bắt đầu phải >= hiện tại
                 if (startDate.before(now)) {
                     request.getSession().setAttribute("errorMessage",
                             "Ngày bắt đầu không được ở quá khứ!");
@@ -113,7 +130,7 @@ public class OrganizationDetailEventServlet extends HttpServlet {
                     return;
                 }
 
-                // Kiểm tra ngày kết thúc > ngày bắt đầu
+                // 4. Kiểm tra ngày kết thúc > ngày bắt đầu
                 if (endDate.before(startDate) || endDate.equals(startDate)) {
                     request.getSession().setAttribute("errorMessage",
                             "Ngày kết thúc phải sau ngày bắt đầu!");
@@ -121,32 +138,20 @@ public class OrganizationDetailEventServlet extends HttpServlet {
                     return;
                 }
 
-                // 1. Không update nếu event đã kết thúc
-                if (currentEvent.getEndDate().before(now)) {
-                    request.getSession().setAttribute("errorMessage", "Sự kiện đã kết thúc, không thể cập nhật!");
-                    response.sendRedirect(request.getContextPath() + "/OrganizationDetailEventServlet?eventId=" + eventId);
-                    return;
-                }
-
-                // 2. Không giảm số lượng volunteer
+                // 5. Không giảm số lượng volunteer
                 int currentVolunteers = dao.countRegisteredVolunteers(eventId);
                 if (neededVolunteers < currentVolunteers) {
-                    request.getSession().setAttribute("errorMessage", "Số lượng tình nguyện viên tối thiểu: " + currentVolunteers);
+                    request.getSession().setAttribute("errorMessage", 
+                            "Số lượng tình nguyện viên tối thiểu: " + currentVolunteers);
                     response.sendRedirect(request.getContextPath() + "/OrganizationDetailEventServlet?eventId=" + eventId);
                     return;
                 }
 
-                // 3. Không update trong vòng 24h trước khi bắt đầu
-                if ((startDate.getTime() - now.getTime()) < 24 * 60 * 60 * 1000L) {
-                    request.getSession().setAttribute("errorMessage", "Không thể cập nhật trong vòng 24h trước khi sự kiện diễn ra!");
-                    response.sendRedirect(request.getContextPath() + "/OrganizationDetailEventServlet?eventId=" + eventId);
-                    return;
-                }
-
-                // 4. Kiểm tra trùng với event khác cùng org
+                // 6. Kiểm tra trùng với event khác cùng org
                 boolean isOverlap = dao.checkOverlapWithOtherEvents(currentEvent.getOrganizationId(), startDate, endDate, eventId);
                 if (isOverlap) {
-                    request.getSession().setAttribute("errorMessage", "Có sự kiện khác đang active trùng thời gian!");
+                    request.getSession().setAttribute("errorMessage", 
+                            "Có sự kiện khác đang active trùng thời gian!");
                     response.sendRedirect(request.getContextPath() + "/OrganizationDetailEventServlet?eventId=" + eventId);
                     return;
                 }

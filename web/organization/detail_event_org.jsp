@@ -84,6 +84,27 @@
                             <c:remove var="errorMessage" scope="session"/>
                         </c:if>
                     </div>
+                    <!-- Kiểm tra điều kiện disable form -->
+                    <jsp:useBean id="now" class="java.util.Date" />
+                    <c:set var="hoursUntilStart" value="${(event.startDate.time - now.time) / (60 * 60 * 1000)}" />
+                    <c:set var="isEventEnded" value="${event.endDate.time < now.time}" />
+                    <c:set var="isWithin24Hours" value="${hoursUntilStart <= 24 && hoursUntilStart >= 0}" />
+                    <c:set var="canUpdate" value="${!isEventEnded && !isWithin24Hours}" />
+
+                    <!-- Hiển thị cảnh báo nếu không thể cập nhật -->
+                    <c:if test="${isEventEnded}">
+                        <div class="alert alert-danger" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <strong>Sự kiện đã kết thúc!</strong> Không thể thực hiện cập nhật.
+                        </div>
+                    </c:if>
+                    <c:if test="${!isEventEnded && isWithin24Hours}">
+                        <div class="alert alert-warning" role="alert">
+                            <i class="bi bi-clock-fill me-2"></i>
+                            <strong>Sự kiện sắp diễn ra trong vòng 24h!</strong> Không thể thực hiện cập nhật.
+                        </div>
+                    </c:if>
+
                     <!-- Form Cập nhật Sự kiện -->
                     <form action="<%= request.getContextPath() %>/OrganizationDetailEventServlet" method="post">
                         <input type="hidden" name="eventId" value="${event.id}">
@@ -97,7 +118,7 @@
                                 <div class="mb-4">
                                     <label class="form-label text-muted fw-semibold">Tiêu đề sự kiện</label>
                                     <input type="text" name="title" class="form-control form-control-lg" 
-                                           value="${event.title}" required>
+                                           value="${event.title}" required ${!canUpdate ? 'disabled' : ''}>
                                 </div>
 
                                 <div class="row">
@@ -129,13 +150,13 @@
                                         <div class="mb-3">
                                             <label class="form-label text-muted">Địa điểm</label>
                                             <input type="text" name="location" class="form-control" 
-                                                   value="${event.location}" required>
+                                                   value="${event.location}" required ${!canUpdate ? 'disabled' : ''}>
                                         </div>
 
                                         <div class="mb-3">
                                             <label class="form-label text-muted">Số lượng tình nguyện viên cần</label>
                                             <input type="number" name="neededVolunteers" class="form-control" 
-                                                   value="${event.neededVolunteers}" min="1" required>
+                                                   value="${event.neededVolunteers}" min="1" required ${!canUpdate ? 'disabled' : ''}>
                                         </div>
                                     </div>
 
@@ -144,18 +165,20 @@
                                         <div class="mb-3">
                                             <label class="form-label text-muted">Ngày bắt đầu</label>
                                             <input type="datetime-local" name="startDate" class="form-control" 
-                                                   value="<fmt:formatDate value='${event.startDate}' pattern='yyyy-MM-dd\'T\'HH:mm' />" required>
+                                                   value="<fmt:formatDate value='${event.startDate}' pattern='yyyy-MM-dd\'T\'HH:mm' />" 
+                                                   required ${!canUpdate ? 'disabled' : ''}>
                                         </div>
 
                                         <div class="mb-3">
                                             <label class="form-label text-muted">Ngày kết thúc</label>
                                             <input type="datetime-local" name="endDate" class="form-control" 
-                                                   value="<fmt:formatDate value='${event.endDate}' pattern='yyyy-MM-dd\'T\'HH:mm' />" required>
+                                                   value="<fmt:formatDate value='${event.endDate}' pattern='yyyy-MM-dd\'T\'HH:mm' />" 
+                                                   required ${!canUpdate ? 'disabled' : ''}>
                                         </div>
 
                                         <div class="mb-3">
                                             <label class="form-label text-muted">Trạng thái</label>
-                                            <select name="status" class="form-select" required>
+                                            <select name="status" class="form-select" required ${!canUpdate ? 'disabled' : ''}>
                                                 <option value="active" ${event.status == 'active' ? 'selected' : ''}>Đang hoạt động</option>
                                                 <option value="inactive" ${event.status == 'inactive' ? 'selected' : ''}>Tạm dừng</option>
                                                 <option value="closed" ${event.status == 'closed' ? 'selected' : ''}>Đã đóng</option>
@@ -164,7 +187,7 @@
 
                                         <div class="mb-3">
                                             <label class="form-label text-muted">Chế độ</label>
-                                            <select name="visibility" class="form-select" required>
+                                            <select name="visibility" class="form-select" required ${!canUpdate ? 'disabled' : ''}>
                                                 <option value="public" ${event.visibility == 'public' ? 'selected' : ''}>Công khai</option>
                                                 <option value="private" ${event.visibility == 'private' ? 'selected' : ''}>Riêng tư</option>
                                             </select>
@@ -181,23 +204,25 @@
                                 <!-- Mô tả -->
                                 <div class="mb-4">
                                     <label class="form-label text-muted">Mô tả sự kiện</label>
-                                    <textarea name="description" class="form-control" rows="4" required>${event.description}</textarea>
+                                    <textarea name="description" class="form-control" rows="4" 
+                                              required ${!canUpdate ? 'disabled' : ''}>${event.description}</textarea>
                                 </div>
 
                                 <!-- Action Buttons -->
                                 <div class="text-end">
-
                                     <a href="<%= request.getContextPath() %>/OrganizationListServlet" 
                                        class="btn btn-secondary me-2">
-                                        <i></i>Hủy
+                                        <i class="bi bi-x-circle me-1"></i>Hủy
                                     </a>
-                                    <button type="submit" name="action" value="update" class="btn btn-primary me-2">
-                                        <i></i>Cập nhật
-                                    </button>
-                                    <button type="submit" name="action" value="delete" class="btn btn-danger"
-                                            onclick="return confirm('Bạn có chắc chắn muốn xóa sự kiện này?')">
-                                        <i></i>Xóa
-                                    </button>
+                                    <c:if test="${canUpdate}">
+                                        <button type="submit" name="action" value="update" class="btn btn-primary me-2">
+                                            <i class="bi bi-check-circle me-1"></i>Cập nhật
+                                        </button>
+                                        <button type="submit" name="action" value="delete" class="btn btn-danger"
+                                                onclick="return confirm('Bạn có chắc chắn muốn xóa sự kiện này?')">
+                                            <i class="bi bi-trash me-1"></i>Xóa
+                                        </button>
+                                    </c:if>
                                 </div>
 
                                 <a href="<%= request.getContextPath() %>/OrganizationListServlet" class="btn btn-primary">
