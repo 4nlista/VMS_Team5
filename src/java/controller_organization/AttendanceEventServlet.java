@@ -64,10 +64,14 @@ public class AttendanceEventServlet extends HttpServlet {
         // Lấy danh sách volunteer để điểm danh
         List<Attendance> volunteers = attendanceService.getVolunteersForAttendance(eventId, statusFilter);
         
+        // Kiểm tra xem có thể cập nhật điểm danh không
+        boolean canUpdate = attendanceService.canUpdateAttendance(eventId);
+        
         // Set attributes
         request.setAttribute("volunteers", volunteers);
         request.setAttribute("eventId", eventId);
         request.setAttribute("statusFilter", statusFilter);
+        request.setAttribute("canUpdate", canUpdate);
         request.setAttribute("account", acc);
         
         // Forward to JSP
@@ -97,16 +101,45 @@ public class AttendanceEventServlet extends HttpServlet {
         int eventId = Integer.parseInt(request.getParameter("eventId"));
         
         if ("update".equals(action)) {
+            // Kiểm tra xem có thể cập nhật điểm danh không
+            if (!attendanceService.canUpdateAttendance(eventId)) {
+                session.setAttribute("errorMessage", "Không thể cập nhật điểm danh! Sự kiện chưa bắt đầu hoặc đã kết thúc hơn 24 giờ.");
+                response.sendRedirect(request.getContextPath() + "/AttendanceEventServlet?eventId=" + eventId);
+                return;
+            }
+            
             // Lấy tất cả volunteerIds và status tương ứng
             String[] volunteerIds = request.getParameterValues("volunteerId");
+            
+            int successCount = 0;
+            int failCount = 0;
+            String firstError = null;
             
             if (volunteerIds != null) {
                 for (String volId : volunteerIds) {
                     String newStatus = request.getParameter("status_" + volId);
                     if (newStatus != null && !newStatus.isEmpty()) {
-                        attendanceService.updateAttendanceStatus(eventId, Integer.parseInt(volId), newStatus);
+                        String result = attendanceService.updateAttendanceStatus(eventId, Integer.parseInt(volId), newStatus);
+                        
+                        if ("success".equals(result)) {
+                            successCount++;
+                        } else {
+                            failCount++;
+                            if (firstError == null) {
+                                firstError = result;
+                            }
+                        }
                     }
                 }
+            }
+            
+            // Set message
+            if (successCount > 0 && failCount == 0) {
+                session.setAttribute("successMessage", "Cập nhật điểm danh thành công cho " + successCount + " tình nguyện viên!");
+            } else if (successCount > 0 && failCount > 0) {
+                session.setAttribute("warningMessage", "Cập nhật thành công " + successCount + ", thất bại " + failCount + ". Lỗi: " + firstError);
+            } else if (failCount > 0) {
+                session.setAttribute("errorMessage", "Cập nhật điểm danh thất bại! " + firstError);
             }
             
             // Redirect về danh sách events

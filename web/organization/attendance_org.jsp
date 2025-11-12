@@ -23,6 +23,31 @@
                 <div class="container-fluid">
                     <h3 class="fw-bold mb-4">Điểm danh sự kiện</h3>
 
+                    <!-- Thông báo -->
+                    <c:if test="${not empty sessionScope.successMessage}">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" id="autoCloseAlert">
+                            <i class="bi bi-check-circle"></i> ${sessionScope.successMessage}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        <c:remove var="successMessage" scope="session"/>
+                    </c:if>
+                    
+                    <c:if test="${not empty sessionScope.warningMessage}">
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert" id="autoCloseAlert">
+                            <i class="bi bi-exclamation-triangle"></i> ${sessionScope.warningMessage}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        <c:remove var="warningMessage" scope="session"/>
+                    </c:if>
+                    
+                    <c:if test="${not empty sessionScope.errorMessage}">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert" id="autoCloseAlert">
+                            <i class="bi bi-x-circle"></i> ${sessionScope.errorMessage}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        <c:remove var="errorMessage" scope="session"/>
+                    </c:if>
+
                     <!-- Bộ lọc -->
                     <form method="get" action="AttendanceEventServlet" class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
                         <input type="hidden" name="eventId" value="${eventId}">
@@ -51,6 +76,14 @@
                             </a>
                         </div>
                     </form>
+
+                    <!-- Thông báo không thể cập nhật -->
+                    <c:if test="${not canUpdate}">
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i> 
+                            <strong>Lưu ý:</strong> Không thể cập nhật điểm danh. Sự kiện chưa bắt đầu hoặc đã kết thúc hơn 24 giờ.
+                        </div>
+                    </c:if>
 
                     <!-- Form cập nhật -->
                     <form method="post" action="AttendanceEventServlet">
@@ -103,7 +136,7 @@
                                                     </td>
                                                     <td>
                                                         <input type="hidden" name="volunteerId" value="${vol.volunteerId}">
-                                                        <select name="status_${vol.volunteerId}" class="form-select form-select-sm">
+                                                        <select name="status_${vol.volunteerId}" class="form-select form-select-sm" ${not canUpdate ? 'disabled' : ''}>
                                                             <option value="pending" ${vol.status == 'pending' ? 'selected' : ''}>Chưa xử lý</option>
                                                             <option value="present" ${vol.status == 'present' ? 'selected' : ''}>Tham gia</option>
                                                             <option value="absent" ${vol.status == 'absent' ? 'selected' : ''}>Vắng</option>
@@ -119,11 +152,11 @@
 
                         <!-- Nút hành động -->
                         <div class="d-flex gap-2 mt-3">
-                            <button type="submit" class="btn btn-success">
+                            <button type="submit" class="btn btn-success" ${not canUpdate ? 'disabled' : ''}>
                                 <i class="bi bi-check-circle"></i> Cập nhật
                             </button>
                             <a href="<%= request.getContextPath() %>/OrganizationListServlet" class="btn btn-secondary">
-                                <i class="bi bi-x-circle"></i> Hủy
+                                <i class="bi bi-x-circle"></i> Quay lại
                             </a>
                         </div>
                     </form>
@@ -132,5 +165,17 @@
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // Auto close alert after 3 seconds
+            window.onload = function() {
+                var alert = document.getElementById('autoCloseAlert');
+                if (alert) {
+                    setTimeout(function() {
+                        var bsAlert = new bootstrap.Alert(alert);
+                        bsAlert.close();
+                    }, 3000);
+                }
+            };
+        </script>
     </body>
 </html>

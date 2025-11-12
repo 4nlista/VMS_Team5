@@ -18,21 +18,46 @@ public class AttendanceService {
 
     // Lấy danh sách volunteer để điểm danh
     public List<Attendance> getVolunteersForAttendance(int eventId, String statusFilter) {
+        // Tự động mark absent cho pending khi sự kiện kết thúc
+        attendanceDAO.autoMarkAbsentForPendingAttendance(eventId);
+        
         return attendanceDAO.getVolunteersForAttendance(eventId, statusFilter);
     }
 
-    // Cập nhật trạng thái điểm danh , check để cập nhật
-    public boolean updateAttendanceStatus(int eventId, int volunteerId, String status) {
+    // Cập nhật trạng thái điểm danh với validate
+    public String updateAttendanceStatus(int eventId, int volunteerId, String status) {
         // Validate status
         if (!status.equals("pending") && !status.equals("present") && !status.equals("absent")) {
-            return false;
+            return "Trạng thái không hợp lệ!";
         }
-
-        return attendanceDAO.updateAttendanceStatus(eventId, volunteerId, status);
-
+        
+        // Validate 1: Sự kiện phải đã bắt đầu (start_date <= ngày hiện tại)
+        if (!attendanceDAO.isEventStarted(eventId)) {
+            return "Chưa thể cập nhật điểm danh! Sự kiện chưa bắt đầu.";
+        }
+        
+        // Validate 2: Sự kiện không được kết thúc quá 24h
+        if (attendanceDAO.isEventEndedOver24Hours(eventId)) {
+            return "Không thể cập nhật điểm danh! Sự kiện đã kết thúc hơn 24 giờ.";
+        }
+        
+        // Thực hiện cập nhật
+        boolean result = attendanceDAO.updateAttendanceStatus(eventId, volunteerId, status);
+        
+        if (result) {
+            return "success"; // Dùng để check trong servlet
+        } else {
+            return "Cập nhật điểm danh thất bại!";
+        }
     }
 
     public List<Attendance> getAttendanceHistory(int volunteerId) {
         return attendanceDAO.getAttendanceHistoryByVolunteerId(volunteerId);
+    }
+    
+    // Validate: Kiểm tra có thể cập nhật điểm danh không
+    public boolean canUpdateAttendance(int eventId) {
+        return attendanceDAO.isEventStarted(eventId) 
+                && !attendanceDAO.isEventEndedOver24Hours(eventId);
     }
 }

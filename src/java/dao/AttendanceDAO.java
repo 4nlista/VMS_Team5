@@ -157,4 +157,52 @@ public class AttendanceDAO {
             return false;
         }
     }
+    
+    // Validate 1: Kiểm tra sự kiện đã bắt đầu chưa (start_date <= ngày hiện tại)
+    public boolean isEventStarted(int eventId) {
+        String sql = "SELECT COUNT(*) FROM Events WHERE id = ? AND start_date <= CAST(GETDATE() AS DATE)";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, eventId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    // Validate 2: Kiểm tra sự kiện đã kết thúc quá 24h chưa
+    public boolean isEventEndedOver24Hours(int eventId) {
+        String sql = "SELECT COUNT(*) FROM Events WHERE id = ? AND DATEDIFF(HOUR, end_date, GETDATE()) > 24";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, eventId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    // Validate 3: Tự động chuyển status "pending" thành "absent" khi sự kiện kết thúc
+    public int autoMarkAbsentForPendingAttendance(int eventId) {
+        String sql = "UPDATE Attendance SET status = 'absent' "
+                + "WHERE event_id = ? AND status = 'pending' "
+                + "AND EXISTS (SELECT 1 FROM Events WHERE id = ? AND end_date < GETDATE())";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, eventId);
+            ps.setInt(2, eventId);
+            return ps.executeUpdate(); // Trả về số row bị ảnh hưởng
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
 }
