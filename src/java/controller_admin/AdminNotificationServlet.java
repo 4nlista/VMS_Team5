@@ -88,6 +88,7 @@ public class AdminNotificationServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("account") == null) {
             response.sendRedirect(request.getContextPath() + "/LoginServlet");
@@ -100,6 +101,9 @@ public class AdminNotificationServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "Truy cập bị từ chối");
             return;
         }
+
+        System.out.println("DEBUG - Account ID: " + acc.getId());
+        System.out.println("DEBUG - Account Role: " + acc.getRole());
 
         int adminId = acc.getId();
         String action = request.getParameter("action");

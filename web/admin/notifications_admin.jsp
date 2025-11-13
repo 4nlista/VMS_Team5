@@ -202,7 +202,7 @@
                                                 </c:if>
                                             </c:forEach>
 
-                                        <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                                    <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
                                             <a class="page-link" href="<%= request.getContextPath() %>/AdminNotificationServlet?page=${currentPage + 1}&sort=${sortOrder}">
                                                 Sau
                                             </a>

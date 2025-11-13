@@ -11,7 +11,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Quản lý Báo cáo</title>
+        <title>Kiểm duyệt nội dung</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
         <link href="<%= request.getContextPath() %>/admin/css/admin.css" rel="stylesheet">
@@ -24,7 +24,7 @@
             <!-- Main Content -->
             <div class="main-content p-4">
                 <div class="container-fluid">
-                    <h3 class="fw-bold mb-4">Quản lý Báo cáo</h3>
+                    <h3 class="fw-bold mb-4">Kiểm duyệt nội dung</h3>
 
                     <!-- Success/Error Messages -->
                     <c:if test="${param.success == 'true'}">
@@ -68,7 +68,7 @@
                             <button type="submit" class="btn btn-primary btn-sm" style="min-width:110px; align-self:end;">
                                 <i class="bi bi-search"></i> Lọc
                             </button>
-                            
+
 
                             <!-- Nút Reset -->
                             <a href="${pageContext.request.contextPath}/AdminReportServlet" 

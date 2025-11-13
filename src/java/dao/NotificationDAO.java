@@ -37,7 +37,11 @@ public class NotificationDAO {
             ps.setInt(2, notification.getReceiverId());
             ps.setString(3, notification.getMessage());
             ps.setString(4, notification.getType());
-            ps.setInt(5, notification.getEventId());
+            if (notification.getEventId() > 0) {
+                ps.setInt(5, notification.getEventId());
+            } else {
+                ps.setNull(5, Types.INTEGER);  // Nếu = 0 thì set NULL
+            }
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();

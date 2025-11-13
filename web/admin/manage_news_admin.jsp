@@ -23,7 +23,7 @@
             <!-- Main Content -->
             <div class="flex-grow-1 p-4" style="background-color: #f8f9fa; min-height: 100vh;">
                 <div class="container-fluid">
-                    <h3 class="fw-bold mb-4">Kiểm duyệt nội dung</h3>
+                    <h3 class="fw-bold mb-4">Quản lí bài đăng</h3>
 
                     <!-- Thông báo -->
                     <c:if test="${param.success != null}">
