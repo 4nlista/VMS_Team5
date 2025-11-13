@@ -22,7 +22,6 @@
         <div class="page-content container mt-5 pt-5 pb-5">
             <h1 class="mb-4 text-center">Lịch sử sự kiện đã tham gia</h1>
 
-            <!-- Thêm vào đầu trang history_event_volunteer.jsp, sau thẻ <h1> -->
             <!-- Alert thông báo hủy đơn hoặc lỗi/success -->
             <c:if test="${not empty sessionScope.message}">
                 <div class="alert
@@ -45,6 +44,26 @@
                             alert.close();
                         }
                     }, 2000);
+                </script>
+            </c:if>
+
+            <!-- Alert thông báo lỗi feedback -->
+            <c:if test="${not empty sessionScope.errorMessage}">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert" id="autoHideAlert">
+                    <i class="bi bi-exclamation-triangle-fill"></i> ${sessionScope.errorMessage}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <c:remove var="errorMessage" scope="session"/>
+
+                <script>
+                    // Tự động ẩn sau 3 giây
+                    setTimeout(function () {
+                        var alertBox = document.getElementById("autoHideAlert");
+                        if (alertBox) {
+                            var alert = bootstrap.Alert.getOrCreateInstance(alertBox);
+                            alert.close();
+                        }
+                    }, 3000);
                 </script>
             </c:if>
 
