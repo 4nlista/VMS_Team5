@@ -6,6 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -104,10 +105,11 @@
                             <thead class="table-secondary">
                                 <tr>
                                     <th style="width:5%;">STT</th>
-                                    <th style="width:20%;">Tình nguyện viên</th>
-                                    <th style="width:40%;">Bình luận</th>
+                                    <th style="width:15%;">Tình nguyện viên</th>
+                                    <th style="width:35%;">Bình luận</th>
                                     <th style="width:5%;">Điểm</th>
-                                    <th style="width:12%;">Trạng thái</th>
+                                    <th style="width:12%;">Ngày giờ</th>
+                                    <th style="width:10%;">Trạng thái</th>
                                     <th style="width:18%;">Thao tác</th>
                                 </tr>
                             </thead>
@@ -118,6 +120,9 @@
                                         <td>${f.volunteerName}</td>
                                         <td style="word-wrap: break-word; white-space: normal;">${f.comment}</td>
                                         <td>${f.rating}</td>
+                                        <td>
+                                            <fmt:formatDate value="${f.feedbackDate}" pattern="dd/MM/yyyy HH:mm" />
+                                        </td>
                                         <td>
                                             <c:choose>
                                                 <c:when test="${f.status == 'valid' || f.status == 'Valid'}">
@@ -147,7 +152,7 @@
                                 </c:forEach>
                                 <c:if test="${empty feedbacks}">
                                     <tr>
-                                        <td colspan="6" class="text-center">Không có đánh giá phù hợp</td>
+                                        <td colspan="7" class="text-center">Không có đánh giá phù hợp</td>
                                     </tr>
                                 </c:if>
                             </tbody>
