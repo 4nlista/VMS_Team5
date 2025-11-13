@@ -44,16 +44,16 @@ public class GuessNewServlet extends HttpServlet {
         }
 
         int offset = (page - 1) * limit;
-        // lấy danh sách event đang hoạt động công khai (đã phân trang)
+        // lấy danh sách news đang hoạt động công khai (đã phân trang)
         List<New> listNews = displayNewService.getActiveNewsPaged(offset, limit);
-        //Tính tổng số event 
-        int totalEvents = displayNewService.getTotalActiveNews();
-        int totalPages = (int) Math.ceil((double) totalEvents / limit);
+        //Tính tổng số news 
+        int totalNews = displayNewService.getTotalActiveNews();
+        int totalPages = (int) Math.ceil((double) totalNews / limit);
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
 
-        List<New> allNews = displayNewService.getAllPostNews();
-        request.setAttribute("allNews", displayNewService.getAllPostNews());
+        // Set danh sách news đã phân trang (không phải getAllPostNews)
+        request.setAttribute("allNews", listNews);
         request.getRequestDispatcher("blog.jsp").forward(request, response);
 
     }
