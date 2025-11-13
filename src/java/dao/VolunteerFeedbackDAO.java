@@ -27,11 +27,8 @@ public class VolunteerFeedbackDAO {
         }
     }
 
-    /**
-     * Kiểm tra volunteer đã feedback cho event này chưa
-     *
-     * @return Feedback nếu đã có, null nếu chưa
-     */
+    // Kiểm tra volunteer đã feedback cho event này chưa
+ 
     public Feedback getFeedbackByEventAndVolunteer(int eventId, int volunteerId) {
         String sql = "SELECT f.id, f.event_id, f.volunteer_id, f.rating, f.comment, "
                 + "f.feedback_date, f.status, "
@@ -151,13 +148,13 @@ public class VolunteerFeedbackDAO {
         return false;
     }
 
-    /**
-     * Kiểm tra volunteer có đủ điều kiện feedback không Trả về mã lỗi cụ thể để
-     * hiển thị thông báo phù hợp
-     *
-     * @return 0 = Được phép feedback 1 = Chưa đăng ký sự kiện 2 = Đơn chưa được
-     * duyệt (pending/rejected) 3 = Sự kiện chưa bắt đầu
-     */
+
+     // Kiểm tra volunteer có đủ điều kiện feedback không Trả về mã lỗi cụ thể để
+     // hiển thị thông báo phù hợp
+
+     // @return Được phép feedback = 0 | Chưa đăng ký sự kiện = 1 | Đơn chưa được : 2
+     // duyệt (pending/rejected) 3 = Sự kiện chưa bắt đầu
+     
     public int checkFeedbackEligibility(int eventId, int volunteerId) {
         String sql = "SELECT ev.status, e.start_date "
                 + "FROM Event_Volunteers ev "

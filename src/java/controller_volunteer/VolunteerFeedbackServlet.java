@@ -1,5 +1,8 @@
 package controller_volunteer;
 
+import dao.AdminUserDAO;
+import dao.NotificationDAO;
+import dao.ViewEventsDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -9,7 +12,10 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import model.Account;
+import model.Event;
 import model.Feedback;
+import model.Notification;
+import model.User;
 import service.VolunteerFeedbackService;
 
 @WebServlet(name = "VolunteerFeedbackServlet", urlPatterns = {"/VolunteerFeedbackServlet"})
@@ -23,9 +29,7 @@ public class VolunteerFeedbackServlet extends HttpServlet {
         feedbackService = new VolunteerFeedbackService();
     }
 
-    /**
-     * GET: Hiển thị form feedback (tạo mới hoặc xem/sửa)
-     */
+    //  GET: Hiển thị form feedback (tạo mới hoặc xem/sửa)
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -77,9 +81,7 @@ public class VolunteerFeedbackServlet extends HttpServlet {
         request.getRequestDispatcher("volunteer/feedback_volunteer.jsp").forward(request, response);
     }
 
-    /**
-     * POST: Xử lý tạo mới hoặc cập nhật feedback
-     */
+    // POST: Xử lý tạo mới hoặc cập nhật feedback
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -134,23 +136,48 @@ public class VolunteerFeedbackServlet extends HttpServlet {
     }
 
     /**
-     * Xử lý tạo feedback mới
+     * Xử lý gửi feedback mới
      */
     private boolean handleCreate(HttpServletRequest request, int eventId, int volunteerId) {
         try {
             int rating = Integer.parseInt(request.getParameter("rating"));
             String comment = request.getParameter("comment");
+            boolean success = feedbackService.createFeedback(eventId, volunteerId, rating, comment);
 
-            return feedbackService.createFeedback(eventId, volunteerId, rating, comment);
+            // GỬI THÔNG BÁO CHO ORG
+            if (success) {
+                try {
+                    AdminUserDAO userDAO = new AdminUserDAO();
+                    User volUser = userDAO.getUserByAccountId(volunteerId);
+                    String volName = (volUser != null) ? volUser.getFull_name() : "Tình nguyện viên";
+
+                    ViewEventsDAO eventDAO = new ViewEventsDAO();
+                    Event event = eventDAO.getEventById(eventId);
+
+                    if (event != null) {
+                        NotificationDAO notiDAO = new NotificationDAO();
+                        Notification noti = new Notification();
+                        noti.setSenderId(volunteerId);
+                        noti.setReceiverId(event.getOrganizationId());
+                        noti.setMessage("Tình nguyện viên " + volName + " đã gửi đánh giá " + rating + " sao về sự kiện \"" + event.getTitle() + "\"");
+                        noti.setType("system");
+                        noti.setEventId(eventId);
+
+                        notiDAO.insertNotification(noti);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            return success;
         } catch (NumberFormatException e) {
             e.printStackTrace();
             return false;
         }
     }
 
-    /**
-     * Xử lý cập nhật feedback
-     */
+    // Xử lý cập nhật feedback
     private boolean handleUpdate(HttpServletRequest request, int eventId, int volunteerId) {
         try {
             int rating = Integer.parseInt(request.getParameter("rating"));

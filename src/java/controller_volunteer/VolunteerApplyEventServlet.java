@@ -1,5 +1,8 @@
 package controller_volunteer;
 
+import dao.AdminUserDAO;
+import dao.NotificationDAO;
+import dao.ViewEventsDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -12,6 +15,7 @@ import java.util.List;
 import model.Account;
 import model.Event;
 import model.EventVolunteer;
+import model.Notification;
 import model.User;
 import service.AdminUserService;
 import service.DisplayEventService;
@@ -143,6 +147,30 @@ public class VolunteerApplyEventServlet extends HttpServlet {
             boolean success = volunteerApplyService.applyToEvent(acc.getId(), eventId, note);
 
             if (success) {
+
+                // GỬI THÔNG BÁO CHO Organization
+                try {
+                    AdminUserDAO userDAO = new AdminUserDAO();
+                    User volUser = userDAO.getUserByAccountId(acc.getId());
+                    String volName = (volUser != null) ? volUser.getFull_name() : acc.getUsername();
+
+                    ViewEventsDAO eventDAO = new ViewEventsDAO();
+                    Event event = eventDAO.getEventById(eventId);
+
+                    if (event != null) {
+                        NotificationDAO notiDAO = new NotificationDAO();
+                        Notification noti = new Notification();
+                        noti.setSenderId(acc.getId());
+                        noti.setReceiverId(event.getOrganizationId());
+                        noti.setMessage("Tình nguyện viên " + volName + " đã gửi đơn đăng ký vào sự kiện \"" + event.getTitle() + "\" của bạn");
+                        noti.setType("apply");
+                        noti.setEventId(eventId);
+                        notiDAO.insertNotification(noti);
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 session.setAttribute("message", "Đăng ký sự kiện thành công!");
                 session.setAttribute("messageType", "success");
                 response.sendRedirect(request.getContextPath() + "/VolunteerHomeServlet");
