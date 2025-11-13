@@ -96,7 +96,7 @@
         </li>
         <li>
             <a href="<%= request.getContextPath() %>/AdminNotificationServlet"
-               class="nav-link text-white <%= currentPath.endsWith("/notification_admin.jsp") ? "active" : "" %>">
+               class="nav-link text-white <%= currentPath.endsWith("/notifications_admin.jsp") ? "active" : "" %>">
                 <i class="bi bi-bell me-2"></i>
                 Thông báo
                 <% if (unreadCountAdmin > 0) { %>

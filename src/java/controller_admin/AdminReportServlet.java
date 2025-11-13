@@ -1,5 +1,6 @@
 package controller_admin;
 
+import dao.NotificationDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -9,6 +10,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 import model.Account;
+import model.Notification;
 import model.Report;
 import service.AccountService;
 import service.AdminReportService;
@@ -161,7 +163,6 @@ public class AdminReportServlet extends HttpServlet {
             return;
         }
 
-        // Lấy tham số
         String action = request.getParameter("action");
         String reportIdParam = request.getParameter("reportId");
         String feedbackIdParam = request.getParameter("feedbackId");
@@ -178,23 +179,73 @@ public class AdminReportServlet extends HttpServlet {
             feedbackId = Integer.parseInt(feedbackIdParam);
         }
 
-        // Xử lý action
+        // Lấy thông tin report trước khi xử lý để biết organizationId
+        Report report = reportService.getReportById(reportId);
+
         boolean success = false;
 
         switch (action) {
             case "approve":
-                // Chỉ duyệt báo cáo, KHÔNG khóa tài khoản
                 success = reportService.approveReport(reportId);
+
+                // GỬI THÔNG BÁO CHO ORG
+                if (success && report != null) {
+                    try {
+                        NotificationDAO notiDAO = new NotificationDAO();
+                        Notification noti = new Notification();
+                        noti.setSenderId(acc.getId()); // Admin gửi
+                        noti.setReceiverId(report.getOrganizationId());
+                        noti.setMessage("Admin đã chấp nhận báo cáo vi phạm của bạn");
+                        noti.setType("report");
+                        noti.setEventId(0);
+
+                        notiDAO.insertNotification(noti);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
                 break;
 
             case "approve_and_lock":
-                // Duyệt báo cáo VÀ khóa tài khoản Volunteer
                 success = reportService.approveReportAndLockAccount(reportId, feedbackId);
+
+                // GỬI THÔNG BÁO CHO ORG
+                if (success && report != null) {
+                    try {
+                        NotificationDAO notiDAO = new NotificationDAO();
+                        Notification noti = new Notification();
+                        noti.setSenderId(acc.getId());
+                        noti.setReceiverId(report.getOrganizationId());
+                        noti.setMessage("Admin đã chấp nhận báo cáo vi phạm và khóa tài khoản volunteer");
+                        noti.setType("report");
+                        noti.setEventId(0);
+
+                        notiDAO.insertNotification(noti);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
                 break;
 
             case "reject":
-                // Từ chối báo cáo
                 success = reportService.rejectReport(reportId);
+
+                // GỬI THÔNG BÁO CHO ORG
+                if (success && report != null) {
+                    try {
+                        NotificationDAO notiDAO = new NotificationDAO();
+                        Notification noti = new Notification();
+                        noti.setSenderId(acc.getId());
+                        noti.setReceiverId(report.getOrganizationId());
+                        noti.setMessage("Admin đã từ chối báo cáo vi phạm của bạn");
+                        noti.setType("report");
+                        noti.setEventId(0);
+
+                        notiDAO.insertNotification(noti);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
                 break;
 
             default:

@@ -1,5 +1,6 @@
 package controller_admin;
 
+import dao.NotificationDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.util.List;
 import model.Account;
 import model.New;
+import model.Notification;
 import service.AccountService;
 import service.AdminNewsService;
 
@@ -163,7 +165,6 @@ public class AdminNewsServlet extends HttpServlet {
             return;
         }
 
-        // Lấy tham số
         String action = request.getParameter("action");
         String newsIdParam = request.getParameter("newsId");
 
@@ -174,26 +175,99 @@ public class AdminNewsServlet extends HttpServlet {
 
         int newsId = Integer.parseInt(newsIdParam);
 
-        // Xử lý action
+        // Lấy thông tin news trước khi xử lý để biết organizationId
+        New news = newsService.getNewsById(newsId);
+
         boolean success = false;
 
         switch (action) {
             case "approve":
                 success = newsService.approveNews(newsId);
+
+                // GỬI THÔNG BÁO CHO ORG
+                if (success && news != null) {
+                    try {
+                        NotificationDAO notiDAO = new NotificationDAO();
+                        Notification noti = new Notification();
+                        noti.setSenderId(acc.getId()); // Admin gửi
+                        noti.setReceiverId(news.getOrganizationId());
+                        noti.setMessage("Admin đã duyệt tin tức \"" + news.getTitle() + "\" của bạn");
+                        noti.setType("system");
+                        noti.setEventId(0);
+
+                        notiDAO.insertNotification(noti);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
                 break;
+
             case "reject":
                 success = newsService.rejectNews(newsId);
+
+                // GỬI THÔNG BÁO CHO ORG
+                if (success && news != null) {
+                    try {
+                        NotificationDAO notiDAO = new NotificationDAO();
+                        Notification noti = new Notification();
+                        noti.setSenderId(acc.getId());
+                        noti.setReceiverId(news.getOrganizationId());
+                        noti.setMessage("Admin đã từ chối tin tức \"" + news.getTitle() + "\" của bạn");
+                        noti.setType("system");
+                        noti.setEventId(0);
+
+                        notiDAO.insertNotification(noti);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
                 break;
+
             case "hide":
                 success = newsService.hideNews(newsId);
+
+                // GỬI THÔNG BÁO CHO ORG
+                if (success && news != null) {
+                    try {
+                        NotificationDAO notiDAO = new NotificationDAO();
+                        Notification noti = new Notification();
+                        noti.setSenderId(acc.getId());
+                        noti.setReceiverId(news.getOrganizationId());
+                        noti.setMessage("Admin đã ẩn tin tức \"" + news.getTitle() + "\" của bạn");
+                        noti.setType("system");
+                        noti.setEventId(0);
+
+                        notiDAO.insertNotification(noti);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
                 break;
+
             case "publish":
                 success = newsService.showNews(newsId);
+
+                // GỬI THÔNG BÁO CHO ORG
+                if (success && news != null) {
+                    try {
+                        NotificationDAO notiDAO = new NotificationDAO();
+                        Notification noti = new Notification();
+                        noti.setSenderId(acc.getId());
+                        noti.setReceiverId(news.getOrganizationId());
+                        noti.setMessage("Admin đã hiển thị lại tin tức \"" + news.getTitle() + "\" của bạn");
+                        noti.setType("system");
+                        noti.setEventId(0);
+
+                        notiDAO.insertNotification(noti);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
                 break;
+
             default:
                 break;
         }
-
         // Redirect về danh sách
         if (success) {
             response.sendRedirect(request.getContextPath() + "/AdminNewsServlet?success=true");
