@@ -58,6 +58,110 @@ public class EventVolunteerDAO {
         return list;
     }
 
+    // Lấy danh sách sự kiện với filter, sort và phân trang
+    public List<EventVolunteer> getEventRegistrationsFiltered(int volunteerId, String statusFilter, String sortOrder, int page, int pageSize) {
+        List<EventVolunteer> list = new ArrayList<>();
+        int offset = (page - 1) * pageSize;
+        
+        StringBuilder sql = new StringBuilder("""
+            SELECT ev.id, ev.event_id, ev.volunteer_id, ev.apply_date, ev.status, ev.note,
+                   e.title AS eventTitle,
+                   c.name AS categoryName,
+                   u_org.full_name AS organizationName,
+                   u_vol.full_name AS volunteerName
+            FROM Event_Volunteers ev
+            JOIN Events e ON ev.event_id = e.id
+            LEFT JOIN Categories c ON e.category_id = c.category_id
+            LEFT JOIN Accounts o ON e.organization_id = o.id
+            LEFT JOIN Users u_org ON o.id = u_org.account_id
+            LEFT JOIN Accounts v ON ev.volunteer_id = v.id
+            LEFT JOIN Users u_vol ON v.id = u_vol.account_id
+            WHERE ev.volunteer_id = ?
+        """);
+        
+        // Thêm filter theo status
+        if (statusFilter != null && !statusFilter.equals("all")) {
+            sql.append(" AND ev.status = ?");
+        }
+        
+        // Thêm ORDER BY theo apply_date
+        if ("asc".equals(sortOrder)) {
+            sql.append(" ORDER BY ev.apply_date ASC");
+        } else {
+            sql.append(" ORDER BY ev.apply_date DESC");
+        }
+        
+        // Thêm phân trang
+        sql.append(" OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+        
+        try (Connection conn = DBContext.getConnection(); 
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            
+            int paramIndex = 1;
+            ps.setInt(paramIndex++, volunteerId);
+            
+            if (statusFilter != null && !statusFilter.equals("all")) {
+                ps.setString(paramIndex++, statusFilter);
+            }
+            
+            ps.setInt(paramIndex++, offset);
+            ps.setInt(paramIndex++, pageSize);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    EventVolunteer ev = new EventVolunteer();
+                    ev.setId(rs.getInt("id"));
+                    ev.setEventId(rs.getInt("event_id"));
+                    ev.setVolunteerId(rs.getInt("volunteer_id"));
+                    Timestamp ts = rs.getTimestamp("apply_date");
+                    ev.setApplyDate(ts != null ? new java.util.Date(ts.getTime()) : null);
+                    ev.setStatus(rs.getString("status"));
+                    ev.setNote(rs.getString("note"));
+                    ev.setEventTitle(rs.getString("eventTitle"));
+                    ev.setCategoryName(rs.getString("categoryName"));
+                    ev.setOrganizationName(rs.getString("organizationName"));
+                    ev.setVolunteerName(rs.getString("volunteerName"));
+                    list.add(ev);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return list;
+    }
+    
+    // Đếm tổng số sự kiện theo filter
+    public int countEventRegistrations(int volunteerId, String statusFilter) {
+        StringBuilder sql = new StringBuilder(
+            "SELECT COUNT(*) FROM Event_Volunteers WHERE volunteer_id = ?"
+        );
+        
+        if (statusFilter != null && !statusFilter.equals("all")) {
+            sql.append(" AND status = ?");
+        }
+        
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            
+            ps.setInt(1, volunteerId);
+            
+            if (statusFilter != null && !statusFilter.equals("all")) {
+                ps.setString(2, statusFilter);
+            }
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return 0;
+    }
+
     // --- Lấy trạng thái đơn ---
     public String getApplicationStatus(int eventId, int volunteerId) {
         String sql = "SELECT status FROM Event_Volunteers WHERE event_id = ? AND volunteer_id = ?";

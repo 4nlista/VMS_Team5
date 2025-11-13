@@ -67,6 +67,38 @@
                 </script>
             </c:if>
 
+            <!-- Form filter và sắp xếp -->
+            <div class="card shadow-sm border mb-3">
+                <div class="card-body">
+                    <form method="get" action="VolunteerEventServlet" class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Trạng thái:</label>
+                            <select name="status" class="form-select">
+                                <option value="all" ${statusFilter == 'all' ? 'selected' : ''}>Tất cả</option>
+                                <option value="approved" ${statusFilter == 'approved' ? 'selected' : ''}>Được duyệt</option>
+                                <option value="pending" ${statusFilter == 'pending' ? 'selected' : ''}>Chờ duyệt</option>
+                                <option value="rejected" ${statusFilter == 'rejected' ? 'selected' : ''}>Từ chối</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Sắp xếp:</label>
+                            <select name="sort" class="form-select">
+                                <option value="desc" ${sortOrder == 'desc' ? 'selected' : ''}>Mới nhất</option>
+                                <option value="asc" ${sortOrder == 'asc' ? 'selected' : ''}>Cũ nhất</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary me-2">
+                                <i class="bi bi-filter"></i> Lọc
+                            </button>
+                            <a href="VolunteerEventServlet" class="btn btn-secondary">
+                                <i class="bi bi-arrow-counterclockwise"></i> Reset
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <div class="card shadow-sm border">
                 <div class="card-body">
                     <table class="table table-striped table-hover align-middle">
@@ -90,7 +122,7 @@
                                             <td>${ev.eventTitle}</td>
                                             <td>${ev.organizationName}</td>
                                             <td>${ev.categoryName}</td>
-                                            <td><fmt:formatDate value="${ev.applyDate}" pattern="dd/MM/yyyy" /></td>
+                                            <td><fmt:formatDate value="${ev.applyDate}" pattern="dd/MM/yyyy HH:mm" /></td>
                                             <td>
                                                 <c:choose>
                                                     <c:when test="${ev.status == 'approved'}">
@@ -167,6 +199,41 @@
                             </c:choose>
                         </tbody>
                     </table>
+
+                    <!-- Phân trang -->
+                    <c:if test="${totalPages > 1}">
+                        <nav aria-label="Page navigation" class="mt-4">
+                            <ul class="pagination justify-content-center">
+                                <!-- Previous -->
+                                <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                                    <a class="page-link" href="VolunteerEventServlet?page=${currentPage - 1}&status=${statusFilter}&sort=${sortOrder}">
+                                        Trước
+                                    </a>
+                                </li>
+
+                                <!-- Số trang -->
+                                <c:forEach var="i" begin="1" end="${totalPages}">
+                                    <li class="page-item ${currentPage == i ? 'active' : ''}">
+                                        <a class="page-link" href="VolunteerEventServlet?page=${i}&status=${statusFilter}&sort=${sortOrder}">
+                                            ${i}
+                                        </a>
+                                    </li>
+                                </c:forEach>
+
+                                <!-- Next -->
+                                <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                                    <a class="page-link" href="VolunteerEventServlet?page=${currentPage + 1}&status=${statusFilter}&sort=${sortOrder}">
+                                        Sau
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+
+                        <!-- Thông tin phân trang -->
+                        <div class="text-center text-muted">
+                            Trang ${currentPage} / ${totalPages} (Tổng ${totalRecords} sự kiện)
+                        </div>
+                    </c:if>
                 </div>
             </div>
         </div>
