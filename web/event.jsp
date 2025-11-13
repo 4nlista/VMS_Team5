@@ -17,7 +17,7 @@
         <!-- Navbar -->
         <%@ include file="layout/navbar.jsp" %>
 
-        <div class="hero-wrap" style="background-image: url('images/bg_1.jpg');" data-stellar-background-ratio="0.5">
+        <div class="hero-wrap" style="background-image: url('images/background.jpg');" data-stellar-background-ratio="0.5">
             <div class="overlay"></div>
             <div class="container">
                 <div class="row no-gutters slider-text align-items-center justify-content-center" data-scrollax-parent="true">
@@ -30,6 +30,7 @@
         </div>
 
         <section class="ftco-section">
+            <h1 class="text-center mb-4">Danh sách các sự kiện đang diễn ra</h1>
             <div class="container">
                 <div class="row">
                     <c:forEach var="e" items="${events}">

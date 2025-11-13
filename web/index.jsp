@@ -34,8 +34,6 @@
         <jsp:include page="/layout/modal_option.jsp" />
         <!-- Text Modal -->
         <jsp:include page="/layout/text_modal.jsp" />
-        <!-- Intro Organization -->
-        <jsp:include page="/layout/intro.jsp" />
         <!-- Donors -->
         <jsp:include page="/layout/donors.jsp" />
         <!-- Images Child -->
@@ -44,10 +42,6 @@
         <jsp:include page="/layout/blog.jsp" />
         <!-- Events -->
         <jsp:include page="/layout/events.jsp" />
-
-        <!-- Offer -->
-        <jsp:include page="/layout/offer.jsp" />
-
 
         <jsp:include page="/layout/footer.jsp" />
         <jsp:include page="/layout/loader.jsp" />

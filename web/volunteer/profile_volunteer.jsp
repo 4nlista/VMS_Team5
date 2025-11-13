@@ -186,7 +186,7 @@
                             </div>
 
                             <div class="profile-card">
-                                <h5 class="mb-3">Sự kiện gần nhất</h5>
+                                <h5 class="mb-3">3. Sự kiện gần nhất</h5>
                                 <p class="mb-1"><strong>Sự kiện:</strong>
                                     <c:choose>
                                         <c:when test="${not empty profile.eventName}">
@@ -221,7 +221,8 @@
         <script>
             (function () {
                 const form = document.getElementById('volunteerProfileForm');
-                if (!form) return;
+                if (!form)
+                    return;
                 const accountId = form.getAttribute('data-account-id');
                 var ctx = '<%= request.getContextPath() %>';
 
@@ -307,7 +308,7 @@
                     }
                     const re = /^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$/;
                     if (!re.test(v)) {
-                        setError(el, 'Định dạng email không hợp lệ.'); 
+                        setError(el, 'Định dạng email không hợp lệ.');
                         return false;
                     }
                     clearError(el);
@@ -371,9 +372,11 @@
 
                 // Uniqueness checks
                 const checkEmailUnique = debounce(async function () {
-                    if (!validateEmailFormat()) return;
+                    if (!validateEmailFormat())
+                        return;
                     const val = fields.email.value.trim();
-                    if (!val) return;
+                    if (!val)
+                        return;
                     try {
                         const base = window.location.origin + ctx;
                         const url = base + '/VolunteerValidateServlet?type=email&value=' + encodeURIComponent(val) + '&accountId=' + encodeURIComponent(accountId);
@@ -384,13 +387,16 @@
                         } else {
                             clearError(fields.email);
                         }
-                    } catch (e) { /* ignore */ }
+                    } catch (e) { /* ignore */
+                    }
                 }, 400);
 
                 const checkPhoneUnique = debounce(async function () {
-                    if (!validatePhoneFormat()) return;
+                    if (!validatePhoneFormat())
+                        return;
                     const val = fields.phone.value.trim();
-                    if (!val) return;
+                    if (!val)
+                        return;
                     try {
                         const base = window.location.origin + ctx;
                         const url = base + '/VolunteerValidateServlet?type=phone&value=' + encodeURIComponent(val) + '&accountId=' + encodeURIComponent(accountId);
@@ -401,7 +407,8 @@
                         } else {
                             clearError(fields.phone);
                         }
-                    } catch (e) { /* ignore */ }
+                    } catch (e) { /* ignore */
+                    }
                 }, 400);
 
                 // Bind events

@@ -18,15 +18,11 @@
         <!-- Navbar -->
         <%@ include file="layout/navbar.jsp" %>
 
-        <div class="hero-wrap" style="background-image: url('images/bg_2.jpg');" data-stellar-background-ratio="0.5">
+        <div class="hero-wrap" style="background-image: url('images/background.jpg');" data-stellar-background-ratio="0.5">
             <div class="overlay"></div>
             <div class="container">
                 <div class="row no-gutters slider-text align-items-center justify-content-center" data-scrollax-parent="true">
                     <div class="col-md-7 ftco-animate text-center" data-scrollax=" properties: { translateY: '70%' }">
-                        <p class="breadcrumbs" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">
-                            <span class="mr-2"><a href="<%= request.getContextPath() %>/">Home</a></span> 
-                            <span>Blog</span>
-                        </p>
                         <h1 class="mb-3 bread" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Trang tin tức</h1>
                     </div>
                 </div>
@@ -35,6 +31,7 @@
 
         <section class="ftco-section">
             <div class="container">
+                <h1 class="text-center mb-4">Các tin tức của sự kiện</h1>
                 <div class="row d-flex">
                     <c:choose>
                         <c:when test="${empty allNews}">

@@ -7,6 +7,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="model.Account"%>
 <%@ page import="dao.NotificationDAO" %>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
 <%
      Account acc = (Account) session.getAttribute("account");
@@ -83,8 +84,7 @@
 
                 <!-- Dropdown Khám phá -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle <%= (currentPage.contains("causes.jsp") 
-                                                            || currentPage.contains("GuessNewServlet") 
+                    <a class="nav-link dropdown-toggle <%= (currentPage.contains("GuessNewServlet") 
                                                             || currentPage.contains("gallery.jsp") 
                                                             || currentPage.contains("GuessEventServlet")) 
                                                             ? "active" : "" %>" 
@@ -92,13 +92,7 @@
                         Khám phá
                     </a>
                     <div class="dropdown-menu" aria-labelledby="exploreDropdown">
-                        <a class="dropdown-item <%= currentPage.contains("causes.jsp") ? "active" : "" %>" href="<%= request.getContextPath() %>/causes.jsp">Hoạt động</a>
-
-
-
                         <a class="dropdown-item <%= currentPage.contains("GuessNewServlet") ? "active" : "" %>" href="<%= request.getContextPath() %>/GuessNewServlet">Bài viết</a>
-
-
                         <a class="dropdown-item <%= currentPage.contains("gallery.jsp") ? "active" : "" %>" href="<%= request.getContextPath() %>/gallery.jsp">Hình ảnh</a>
                         <a class="dropdown-item <%= currentPage.contains("event.jsp") ? "active" : "" %>" href="<%= request.getContextPath() %>/GuessEventServlet">Sự kiện</a>
                     </div>
@@ -114,11 +108,6 @@
                     <a href="<%= request.getContextPath() %>/GuessDonateServlet" class="nav-link <%= currentPage.contains("GuessDonateServlet") ? "active" : "" %>">Tài trợ</a>
                 </li>
                 <% } %>
-
-
-                <li class="nav-item">
-                    <a href="<%= request.getContextPath() %>/contact.jsp" class="nav-link <%= currentPage.contains("contact.jsp") ? "active" : "" %>">Liên hệ</a>
-                </li>
 
                 <!--nếu đăng nhập , tạo session thì mới hiển thị lịch sử giao dịch + lịch sử sự kiện-->
                 <% if (acc != null) { %>
@@ -139,7 +128,7 @@
                     <a href="<%= request.getContextPath() %>/VolunteerNotificationServlet" 
                        class="nav-link btn btn-outline position-relative" 
                        style="padding: 12px 20px; border-radius: 25px; border-width: 2px;">
-                        <i class="bi bi-bell-fill fs-5"></i>
+                        <i class="bi bi-bell-fill fs-5" style="color: white;"></i>
                         <% if (unreadCountVol > 0) { %>
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" 
                               style="font-size: 11px; padding: 4px 7px;">
@@ -149,10 +138,11 @@
                     </a>
                 </li>
                 <% } %>
+
                 <li class="nav-item">
                     <a href="<%= request.getContextPath() %>/VolunteerProfileServlet" 
                        class="nav-link <%= currentPage.contains("VolunteerProfileServlet") ? "active" : "" %>">
-                        Hồ sơ của <%= acc.getUsername() %>
+                        Hồ sơ cá nhân
                     </a>
                 </li>
 
