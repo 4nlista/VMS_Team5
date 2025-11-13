@@ -181,11 +181,11 @@ public class VolunteerFeedbackDAO {
             java.sql.Timestamp startDate = rs.getTimestamp("start_date");
             java.sql.Timestamp now = new java.sql.Timestamp(System.currentTimeMillis());
 
-            if (startDate.after(now)) {
-                return 3; // Sự kiện chưa bắt đầu
+            if (now.before(startDate)) {
+                return 3; // Sự kiện chưa bắt đầu (now < start_date)
             }
 
-            return 0; // Được phép feedback
+            return 0; // Được phép feedback (sự kiện đã bắt đầu hoặc đang diễn ra)
 
         } catch (SQLException e) {
             e.printStackTrace();

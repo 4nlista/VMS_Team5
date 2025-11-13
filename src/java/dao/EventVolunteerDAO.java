@@ -8,7 +8,7 @@ import utils.DBContext;
 
 public class EventVolunteerDAO {
 
-    // --- Phần code cũ giữ nguyên ---
+    // Lấy list danh sách các sự kiện mà volunteer đã đăng ký 
     public List<EventVolunteer> getEventRegistrationsByVolunteerId(int volunteerId) {
         List<EventVolunteer> list = new ArrayList<>();
         String sql = """
@@ -78,7 +78,7 @@ public class EventVolunteerDAO {
         return null;
     }
 
-    // --- Xóa đơn + ghi log --
+    // --- Xóa đơn  --
     public boolean deletePendingApplication(int eventId, int volunteerId) {
         String sql = "DELETE FROM Event_Volunteers WHERE event_id = ? AND volunteer_id = ? AND status = 'Pending'";
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -91,6 +91,7 @@ public class EventVolunteerDAO {
         return false;
     }
 
+    // Lấy thông tin chi tiết 1 đơn đăng ký của volunteer cho 1 sự kiện (dùng cho lịch sử sự kiện)
     public EventVolunteer getRegistrationByEventAndVolunteer(int eventId, int volunteerId) {
         EventVolunteer ev = null;
         String sql = """
@@ -127,7 +128,8 @@ public class EventVolunteerDAO {
         
         LEFT JOIN Attendance a ON a.event_id = ev.event_id AND a.volunteer_id = ev.volunteer_id
         
-        WHERE ev.event_id = ? AND ev.volunteer_id = ?;
+        WHERE ev.event_id = ? AND ev.volunteer_id = ?
+        ORDER BY ev.apply_date DESC;
     """;
 
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
