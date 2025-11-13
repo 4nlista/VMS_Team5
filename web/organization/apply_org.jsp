@@ -37,7 +37,7 @@
                         </div>
                         <c:remove var="successMessage" scope="session"/>
                     </c:if>
-                    
+
                     <c:if test="${not empty sessionScope.warningMessage}">
                         <div class="alert alert-warning alert-dismissible fade show" role="alert" id="autoCloseAlert">
                             <i class="bi bi-exclamation-triangle"></i> ${sessionScope.warningMessage}
@@ -45,7 +45,7 @@
                         </div>
                         <c:remove var="warningMessage" scope="session"/>
                     </c:if>
-                    
+
                     <c:if test="${not empty sessionScope.errorMessage}">
                         <div class="alert alert-danger alert-dismissible fade show" role="alert" id="autoCloseAlert">
                             <i class="bi bi-x-circle"></i> ${sessionScope.errorMessage}
@@ -123,26 +123,25 @@
                                                         <input type="hidden" name="action" value="approve"/>
                                                         <input type="hidden" name="id" value="${v.id}"/>
                                                         <input type="hidden" name="eventId" value="${v.eventId}"/>
+                                                        <input type="hidden" name="volunteerId" value="${v.volunteerId}"/>
                                                         <button type="submit" class="btn btn-success btn-sm">
                                                             Chấp nhận
                                                         </button>
                                                     </form>
-
                                                     <!-- Form từ chối -->
                                                     <form method="post" action="OrganizationApplyServlet" class="d-inline">
                                                         <input type="hidden" name="action" value="reject"/>
                                                         <input type="hidden" name="id" value="${v.id}"/>
                                                         <input type="hidden" name="eventId" value="${v.eventId}"/>
+                                                        <input type="hidden" name="volunteerId" value="${v.volunteerId}"/>
                                                         <button type="submit" class="btn btn-danger btn-sm">
                                                             Từ chối
                                                         </button>
                                                     </form>
                                                 </c:when>
-
                                                 <c:when test="${v.status == 'approved'}">
                                                     <span class="badge bg-success">Đã duyệt</span>
                                                 </c:when>
-
                                                 <c:when test="${v.status == 'rejected'}">
                                                     <span class="badge bg-danger">Đã từ chối</span>
                                                 </c:when>
@@ -153,7 +152,7 @@
                                 </c:forEach>
                             </tbody>
                         </table>
-                        
+
                         <div class="d-flex justify-content-end mt-3">
                             <a href="${pageContext.request.contextPath}/OrganizationApplyServlet" class="btn btn-secondary">
                                 <i class="bi bi-arrow-left"></i> Quay lại
@@ -177,10 +176,10 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script>
             // Auto close alert after 3 seconds
-            window.onload = function() {
+            window.onload = function () {
                 var alert = document.getElementById('autoCloseAlert');
                 if (alert) {
-                    setTimeout(function() {
+                    setTimeout(function () {
                         var bsAlert = new bootstrap.Alert(alert);
                         bsAlert.close();
                     }, 3000);

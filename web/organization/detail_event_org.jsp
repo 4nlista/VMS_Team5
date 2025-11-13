@@ -289,6 +289,7 @@
                                                                   method="post" style="display:inline;">
                                                                 <input type="hidden" name="donationId" value="${donation.id}">
                                                                 <input type="hidden" name="eventId" value="${event.id}">
+                                                                <input type="hidden" name="volunteerId" value="${donation.volunteerId}">
                                                                 <button type="submit" name="action" value="approve" 
                                                                         class="btn btn-primary btn-sm">Chấp nhận</button>
                                                                 <button type="submit" name="action" value="reject" 
