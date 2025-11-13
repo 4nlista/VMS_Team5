@@ -158,9 +158,9 @@ public class AttendanceDAO {
         }
     }
     
-    // Validate 1: Kiểm tra sự kiện đã bắt đầu chưa (start_date <= ngày hiện tại)
+    // Validate 1: Kiểm tra sự kiện đã bắt đầu chưa (start_date <= ngày giờ hiện tại)
     public boolean isEventStarted(int eventId) {
-        String sql = "SELECT COUNT(*) FROM Events WHERE id = ? AND start_date <= CAST(GETDATE() AS DATE)";
+        String sql = "SELECT COUNT(*) FROM Events WHERE id = ? AND start_date <= GETDATE()";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, eventId);
