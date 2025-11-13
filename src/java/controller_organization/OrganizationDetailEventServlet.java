@@ -107,7 +107,7 @@ public class OrganizationDetailEventServlet extends HttpServlet {
 
                 // 1. Không cập nhật nếu sự kiện đã kết thúc (end_date < now)
                 if (currentEvent.getEndDate().before(now)) {
-                    request.getSession().setAttribute("errorMessage", 
+                    request.getSession().setAttribute("errorMessage",
                             "Sự kiện đã kết thúc, không thể cập nhật!");
                     response.sendRedirect(request.getContextPath() + "/OrganizationDetailEventServlet?eventId=" + eventId);
                     return;
@@ -116,7 +116,7 @@ public class OrganizationDetailEventServlet extends HttpServlet {
                 // 2. Không cập nhật trong vòng 24h trước khi sự kiện bắt đầu
                 long hoursUntilStart = (currentEvent.getStartDate().getTime() - now.getTime()) / (60 * 60 * 1000);
                 if (hoursUntilStart <= 24) {
-                    request.getSession().setAttribute("errorMessage", 
+                    request.getSession().setAttribute("errorMessage",
                             "Không thể cập nhật trong vòng 24h trước khi sự kiện diễn ra!");
                     response.sendRedirect(request.getContextPath() + "/OrganizationDetailEventServlet?eventId=" + eventId);
                     return;
@@ -141,7 +141,7 @@ public class OrganizationDetailEventServlet extends HttpServlet {
                 // 5. Không giảm số lượng volunteer
                 int currentVolunteers = dao.countRegisteredVolunteers(eventId);
                 if (neededVolunteers < currentVolunteers) {
-                    request.getSession().setAttribute("errorMessage", 
+                    request.getSession().setAttribute("errorMessage",
                             "Số lượng tình nguyện viên tối thiểu: " + currentVolunteers);
                     response.sendRedirect(request.getContextPath() + "/OrganizationDetailEventServlet?eventId=" + eventId);
                     return;
@@ -150,7 +150,7 @@ public class OrganizationDetailEventServlet extends HttpServlet {
                 // 6. Kiểm tra trùng với event khác cùng org
                 boolean isOverlap = dao.checkOverlapWithOtherEvents(currentEvent.getOrganizationId(), startDate, endDate, eventId);
                 if (isOverlap) {
-                    request.getSession().setAttribute("errorMessage", 
+                    request.getSession().setAttribute("errorMessage",
                             "Có sự kiện khác đang active trùng thời gian!");
                     response.sendRedirect(request.getContextPath() + "/OrganizationDetailEventServlet?eventId=" + eventId);
                     return;
@@ -168,18 +168,18 @@ public class OrganizationDetailEventServlet extends HttpServlet {
                     request.getSession().setAttribute("errorMessage", "Cập nhật thất bại!");
                 }
 
-            } else if ("delete".equals(action)) {
-                boolean success = dao.deleteEvent(eventId);
-
-                if (success) {
-                    request.getSession().setAttribute("successMessage", "Xóa sự kiện thành công!");
-                    response.sendRedirect(request.getContextPath() + "/OrganizationListServlet");
-                    return;
-                } else {
-                    request.getSession().setAttribute("errorMessage", "Xóa sự kiện thất bại!");
-                }
+//            } else if ("delete".equals(action)) {
+//                boolean success = dao.deleteEvent(eventId);
+//
+//                if (success) {
+//                    request.getSession().setAttribute("successMessage", "Xóa sự kiện thành công!");
+//                    response.sendRedirect(request.getContextPath() + "/OrganizationListServlet");
+//                    return;
+//                } else {
+//                    request.getSession().setAttribute("errorMessage", "Xóa sự kiện thất bại!");
+//                }
+//            }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
             request.getSession().setAttribute("errorMessage", "Có lỗi xảy ra: " + e.getMessage());

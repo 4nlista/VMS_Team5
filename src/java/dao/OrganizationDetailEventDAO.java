@@ -257,22 +257,22 @@ public class OrganizationDetailEventDAO {
     }
 
     //Xóa sự kiện
-    public boolean deleteEvent(int eventId) {
-        String sql = "DELETE FROM Events WHERE id = ?";
-
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, eventId);
-
-            int rowsAffected = ps.executeUpdate();
-            ps.close();
-            return rowsAffected > 0;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
+//    public boolean deleteEvent(int eventId) {
+//        String sql = "DELETE FROM Events WHERE id = ?";
+//
+//        try {
+//            PreparedStatement ps = conn.prepareStatement(sql);
+//            ps.setInt(1, eventId);
+//
+//            int rowsAffected = ps.executeUpdate();
+//            ps.close();
+//            return rowsAffected > 0;
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//    }
 
     // Duyệt đơn donate (cập nhật status = 'success' và cộng vào total_donation)
     public boolean approveDonation(int donationId, int eventId) {
