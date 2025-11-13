@@ -23,7 +23,7 @@
                         <a class="block-20" style="background-image: url('${pageContext.request.contextPath}/UploadImagesServlet?file=${e.images}');"></a>
                         <div class="text p-4 d-block h-100">
                             <div class="meta d-flex justify-content-end">
-                                <a href="${pageContext.request.contextPath}/feedback_events.jsp" class="meta-chat">
+                                <a href="${pageContext.request.contextPath}/ViewFeedbackEventsServlet?eventId=${e.id}" class="meta-chat">
                                     <span class="icon-comment text-warning"></span> Bình luận
                                 </a>
                             </div>

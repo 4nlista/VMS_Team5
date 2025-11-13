@@ -30,7 +30,7 @@ public class AdminEventLockServlet extends HttpServlet {
             if (success) {
                 redirectUrl.append("lockSuccess=true");
             } else {
-                redirectUrl.append("lockError=true");
+                redirectUrl.append("lockError=24h_restriction");
             }
             
             if (status != null && !status.isEmpty()) {
@@ -49,7 +49,7 @@ public class AdminEventLockServlet extends HttpServlet {
             response.sendRedirect(redirectUrl.toString());
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect(request.getContextPath() + "/AdminEventsServlet?lockError=true");
+            response.sendRedirect(request.getContextPath() + "/AdminEventsServlet?lockError=general");
         }
     }
 }

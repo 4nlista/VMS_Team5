@@ -67,7 +67,13 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 </c:if>
-                <c:if test="${param.lockError == 'true'}">
+                <c:if test="${param.lockError == '24h_restriction'}">
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="bi bi-exclamation-circle me-2"></i>Không thể khóa sự kiện! Sự kiện này sẽ diễn ra trong vòng 24 giờ tới. Admin không được khóa sự kiện trước 24h diễn ra sự kiện.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </c:if>
+                <c:if test="${param.lockError == 'general' || param.lockError == 'true'}">
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                         <i class="bi bi-exclamation-circle me-2"></i>Có lỗi xảy ra khi khóa sự kiện!
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>

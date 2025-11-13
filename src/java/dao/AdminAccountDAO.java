@@ -251,6 +251,29 @@ public class AdminAccountDAO {
         return -1;
     }
     
+    // 7b. Kiểm tra Organization có sự kiện active trong 48h tới không
+    public boolean hasActiveEventsWithin48Hours(int organizationId) {
+        String sql = """
+            SELECT COUNT(*) 
+            FROM Events 
+            WHERE organization_id = ? 
+            AND status = 'active' 
+            AND start_date > GETDATE() 
+            AND start_date <= DATEADD(HOUR, 48, GETDATE())
+            """;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, organizationId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
     // 8. Xóa account và toàn bộ dữ liệu liên quan (cascading delete bằng code)
     public boolean deleteAccountCascade(int id) {
         String delReportsByEventOrg = "DELETE FROM Reports WHERE feedback_id IN (SELECT id FROM Feedback WHERE event_id IN (SELECT id FROM Events WHERE organization_id = ?))";
