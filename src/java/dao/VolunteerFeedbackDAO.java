@@ -161,7 +161,8 @@ public class VolunteerFeedbackDAO {
         String sql = "SELECT ev.status, e.start_date "
                 + "FROM Event_Volunteers ev "
                 + "JOIN Events e ON ev.event_id = e.id "
-                + "WHERE ev.event_id = ? AND ev.volunteer_id = ?";
+                + "WHERE ev.event_id = ? AND ev.volunteer_id = ? "
+                + "ORDER BY ev.apply_date DESC";
 
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
