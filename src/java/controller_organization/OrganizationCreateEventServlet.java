@@ -1,5 +1,9 @@
 package controller_organization;
 
+import dao.AccountDAO;
+import dao.AdminUserDAO;
+import dao.NotificationDAO;
+import dao.UserDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -17,6 +21,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import model.Account;
 import model.Event;
+import model.Notification;
+import model.User;
 import service.AccountService;
 import service.CreateEventsService;
 
@@ -119,11 +125,31 @@ public class OrganizationCreateEventServlet extends HttpServlet {
             event.setStartDate(startDate);
             event.setEndDate(endDate);
             event.setTotalDonation(0); // mặc định
-            
+
             // Gọi service và nhận kết quả
             String result = createEventsService.createEvent(event);
 
             if ("success".equals(result)) {
+
+                // GỬI THÔNG BÁO CHO ADMIN
+                try {
+                    // Lấy fullName từ Users
+                    AdminUserDAO accDAO = new AdminUserDAO();
+                    User user = accDAO.getUserByAccountId(acc.getId());
+                    String fullName = (user != null) ? user.getFull_name() : acc.getUsername();
+
+                    NotificationDAO notiDAO = new NotificationDAO();
+                    Notification noti = new Notification();
+                    noti.setSenderId(acc.getId());
+                    noti.setReceiverId(1); // Admin ID = 1
+                    noti.setMessage("Tổ chức " + fullName + " đã tạo 1 sự kiện mới");
+                    noti.setType("system");
+                    noti.setEventId(0); 
+
+                    notiDAO.insertNotification(noti);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 session.removeAttribute("uploadedFileName");
                 session.setAttribute("successMessage", "Tạo sự kiện thành công!");
                 response.sendRedirect(request.getContextPath() + "/OrganizationListServlet");

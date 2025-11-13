@@ -1,5 +1,7 @@
 package controller_organization;
 
+import dao.AdminUserDAO;
+import dao.NotificationDAO;
 import dao.OrganizationFeedbackDAO;
 import dao.OrganizationReportDAO;
 import jakarta.servlet.ServletException;
@@ -11,6 +13,8 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import model.Account;
 import model.Feedback;
+import model.Notification;
+import model.User;
 
 @WebServlet(name = "OrganizationSendReportOrgServlet", urlPatterns = {"/organization/send_report_org"})
 public class OrganizationSendReportOrgServlet extends HttpServlet {
@@ -64,6 +68,25 @@ public class OrganizationSendReportOrgServlet extends HttpServlet {
         String reason = request.getParameter("reason");
 
         reportDAO.insertPendingReport(feedbackId, acc.getId(), reason);
+        // GỬI THÔNG BÁO CHO ADMIN
+        try {
+            // Lấy fullName từ Users
+            AdminUserDAO accDAO = new AdminUserDAO();
+            User user = accDAO.getUserByAccountId(acc.getId());
+            String fullName = (user != null) ? user.getFull_name() : acc.getUsername();
+
+            NotificationDAO notiDAO = new NotificationDAO();
+            Notification noti = new Notification();
+            noti.setSenderId(acc.getId());
+            noti.setReceiverId(1); // Admin ID = 1
+            noti.setMessage("Tổ chức " + fullName + " đã gửi 1 báo cáo vi phạm");
+            noti.setType("report");
+            noti.setEventId(0);
+
+            notiDAO.insertNotification(noti);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         // Lấy eventId từ feedback để redirect về đúng trang
         Feedback fb = feedbackDAO.findByIdWithJoin(feedbackId);
