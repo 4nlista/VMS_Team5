@@ -65,4 +65,20 @@ public class DisplayEventService {
 
         return events;
     }
+    
+    // Lấy danh sách categories
+    public List<model.Category> getAllCategories() {
+        return viewEventsDAO.getAllCategories();
+    }
+    
+    // Lọc events theo category, date range, sort + phân trang
+    public List<Event> getFilteredEventsPaged(Integer categoryId, String startDateStr, String endDateStr, 
+                                              String sortOrder, int offset, int limit) {
+        return viewEventsDAO.getFilteredEventsPaged(categoryId, startDateStr, endDateStr, sortOrder, offset, limit);
+    }
+    
+    // Đếm tổng events sau khi filter
+    public int getTotalFilteredEvents(Integer categoryId, String startDateStr, String endDateStr) {
+        return viewEventsDAO.getTotalFilteredEvents(categoryId, startDateStr, endDateStr);
+    }
 }

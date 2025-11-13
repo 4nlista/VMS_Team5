@@ -31,7 +31,7 @@ public class GuessEventServlet extends HttpServlet {
             throws ServletException, IOException {
 
         int page = 1;
-        int limit = 3;
+        int limit = 6;
         String pageParam = request.getParameter("page");
 
         if (pageParam != null) {
@@ -43,6 +43,24 @@ public class GuessEventServlet extends HttpServlet {
         }
         int offset = (page - 1) * limit;
 
+        // Lấy filter parameters
+        String categoryParam = request.getParameter("category");
+        String startDate = request.getParameter("startDate");
+        String endDate = request.getParameter("endDate");
+        String sortOrder = request.getParameter("sort");
+        if (sortOrder == null || sortOrder.isEmpty()) {
+            sortOrder = "desc"; // mặc định mới nhất
+        }
+        
+        Integer categoryId = null;
+        if (categoryParam != null && !categoryParam.isEmpty() && !"all".equals(categoryParam)) {
+            try {
+                categoryId = Integer.parseInt(categoryParam);
+            } catch (NumberFormatException e) {
+                categoryId = null;
+            }
+        }
+
         HttpSession session = request.getSession(false);
         Integer volunteerId = null;
 
@@ -53,7 +71,11 @@ public class GuessEventServlet extends HttpServlet {
             }
         }
         
-        List<Event> events = displayService.getActiveEventsPagedWithStatus(offset, limit, volunteerId);
+        // Lấy events với filter
+        List<Event> events = displayService.getFilteredEventsPaged(categoryId, startDate, endDate, 
+                                                                    sortOrder, offset, limit);
+        
+        // Kiểm tra trạng thái cho từng event
         if (volunteerId != null) {
             for (Event e : events) {
                 boolean hasApplied = volunteerapplyService.hasApplied(volunteerId, e.getId());
@@ -62,7 +84,7 @@ public class GuessEventServlet extends HttpServlet {
 
                 e.setHasApplied(hasApplied);
                 e.setRejectedCount(rejectedCount);
-                e.setIsFull(isFull);  // ✅ THÊM
+                e.setIsFull(isFull);
             }
         } else {
             // Nếu chưa login thì vẫn check full
@@ -72,12 +94,20 @@ public class GuessEventServlet extends HttpServlet {
             }
         }
 
-        int totalEvents = displayService.getTotalActiveEvents();
+        // Tính tổng pages sau khi filter
+        int totalEvents = displayService.getTotalFilteredEvents(categoryId, startDate, endDate);
         int totalPages = (int) Math.ceil((double) totalEvents / limit);
 
+        // Set attributes
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("events", events);
+        request.setAttribute("categories", displayService.getAllCategories());
+        request.setAttribute("selectedCategory", categoryParam != null ? categoryParam : "all");
+        request.setAttribute("startDate", startDate != null ? startDate : "");
+        request.setAttribute("endDate", endDate != null ? endDate : "");
+        request.setAttribute("sortOrder", sortOrder);
+        
         request.getRequestDispatcher("event.jsp").forward(request, response);
     }
 

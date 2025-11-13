@@ -32,9 +32,59 @@
         <section class="ftco-section">
             <h1 class="text-center mb-4">Danh sách các sự kiện đang diễn ra</h1>
             <div class="container">
+                <!-- Form lọc -->
+                <div class="row mb-4" id="filter-section">
+                    <div class="col-12">
+                        <form method="get" action="GuessEventServlet#filter-section" class="bg-light p-4 rounded">
+                            <div class="row g-3">
+                                <!-- Lọc theo danh mục -->
+                                <div class="col-md-2">
+                                    <label class="form-label fw-bold">Danh mục</label>
+                                    <select name="category" class="form-select">
+                                        <option value="all" ${selectedCategory == 'all' ? 'selected' : ''}>Tất cả</option>
+                                        <c:forEach var="cat" items="${categories}">
+                                            <option value="${cat.categoryId}" ${selectedCategory == cat.categoryId.toString() ? 'selected' : ''}>
+                                                ${cat.name}
+                                            </option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+
+                                <!-- Sắp xếp -->
+                                <div class="col-md-2">
+                                    <label class="form-label fw-bold">Sắp xếp theo</label>
+                                    <select name="sort" class="form-select">
+                                        <option value="desc" ${sortOrder == 'desc' ? 'selected' : ''}>Mới nhất</option>
+                                        <option value="asc" ${sortOrder == 'asc' ? 'selected' : ''}>Cũ nhất</option>
+                                    </select>
+                                </div>
+
+                                <!-- Từ ngày -->
+                                <div class="col-md-3">
+                                    <label class="form-label fw-bold">Từ ngày</label>
+                                    <input type="date" name="startDate" class="form-control" value="${startDate}">
+                                </div>
+
+                                <!-- Đến ngày -->
+                                <div class="col-md-3">
+                                    <label class="form-label fw-bold">Đến ngày</label>
+                                    <input type="date" name="endDate" class="form-control" value="${endDate}">
+                                </div>
+
+                                <!-- Nút lọc -->
+                                <div class="col-md-2 d-flex align-items-end">
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="icon-search"></i> Lọc
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
                 <div class="row">
                     <c:forEach var="e" items="${events}">
-                        <div class="col-md-4 d-flex align-items-stretch">
+                        <div class="col-md-4 d-flex align-items-stretch mb-5">
                             <div class="blog-entry align-self-stretch h-100 w-100">
                                 <a class="block-20" style="background-image: url('${pageContext.request.contextPath}/UploadImagesServlet?file=${e.images}');"></a>                           
                                 <div class="text p-4 d-block h-100">
@@ -44,8 +94,7 @@
                                         </a>
                                     </div>
                                     <div class="meta mb-3">
-                                        <div><a>Người tổ chức: <b><i>${e.organizationName}</i></b></a></div>
-
+                                        <div><strong>Người tổ chức:</strong> <b><i>${e.organizationName}</i></b></div>
                                     </div>
 
                                     <h3 class="heading mb-1"><a href="${pageContext.request.contextPath}/VolunteerApplyEventServlet?eventId=${e.id}">${e.title}</a></h3>
@@ -123,39 +172,50 @@
                     </c:forEach>
                 </div>
 
+                <!-- Phân trang -->
                 <div class="row mt-5">
                     <div class="col text-center">
-                        <div class="block-27">
-                            <ul>
-                                <!-- Nút Previous -->
-                                <c:if test="${currentPage > 1}">
-                                    <li><a href="GuessEventServlet?page=${currentPage - 1}">&lt;</a></li>
-                                    </c:if>
-                                    <c:if test="${currentPage == 1}">
-                                    <li class="disabled"><span>&lt;</span></li>
-                                    </c:if>
+                        <!-- Hiển thị thông tin -->
+                        <p class="text-muted mb-3">
+                            Trang ${currentPage} / ${totalPages} 
+                            <c:if test="${not empty events}">
+                                (Tổng: ${totalPages * 6 > 6 ? (totalPages - 1) * 6 : 0} - ${currentPage * 6 > (totalPages * 6) ? totalPages * 6 : currentPage * 6} sự kiện)
+                            </c:if>
+                        </p>
 
-                                <!-- Danh sách số trang -->
-                                <c:forEach begin="1" end="${totalPages}" var="i">
-                                    <c:choose>
-                                        <c:when test="${i == currentPage}">
-                                            <li class="active"><span>${i}</span></li>
-                                                </c:when>
-                                                <c:otherwise>
-                                            <li><a href="GuessEventServlet?page=${i}">${i}</a></li>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </c:forEach>
+                        <c:if test="${totalPages > 1}">
+                            <div class="block-27">
+                                <ul>
+                                    <!-- Nút Previous -->
+                                    <c:if test="${currentPage > 1}">
+                                        <li><a href="GuessEventServlet?page=${currentPage - 1}&category=${selectedCategory}&startDate=${startDate}&endDate=${endDate}&sort=${sortOrder}#filter-section">&lt;</a></li>
+                                        </c:if>
+                                        <c:if test="${currentPage == 1}">
+                                        <li class="disabled"><span>&lt;</span></li>
+                                        </c:if>
 
-                                <!-- Nút Next -->
-                                <c:if test="${currentPage < totalPages}">
-                                    <li><a href="GuessEventServlet?page=${currentPage + 1}">&gt;</a></li>
-                                    </c:if>
-                                    <c:if test="${currentPage == totalPages}">
-                                    <li class="disabled"><span>&gt;</span></li>
-                                    </c:if>
-                            </ul>
-                        </div>
+                                    <!-- Danh sách số trang -->
+                                    <c:forEach begin="1" end="${totalPages}" var="i">
+                                        <c:choose>
+                                            <c:when test="${i == currentPage}">
+                                                <li class="active"><span>${i}</span></li>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                <li><a href="GuessEventServlet?page=${i}&category=${selectedCategory}&startDate=${startDate}&endDate=${endDate}&sort=${sortOrder}#filter-section">${i}</a></li>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </c:forEach>
+
+                                    <!-- Nút Next -->
+                                    <c:if test="${currentPage < totalPages}">
+                                        <li><a href="GuessEventServlet?page=${currentPage + 1}&category=${selectedCategory}&startDate=${startDate}&endDate=${endDate}&sort=${sortOrder}#filter-section">&gt;</a></li>
+                                        </c:if>
+                                        <c:if test="${currentPage == totalPages}">
+                                        <li class="disabled"><span>&gt;</span></li>
+                                        </c:if>
+                                </ul>
+                            </div>
+                        </c:if>
                     </div>
                 </div>
             </div>

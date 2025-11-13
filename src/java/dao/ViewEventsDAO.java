@@ -256,6 +256,143 @@ public class ViewEventsDAO {
         return false;
     }
 
+    // Lấy tất cả categories
+    public List<model.Category> getAllCategories() {
+        List<model.Category> list = new ArrayList<>();
+        String sql = "SELECT category_id, name FROM Categories ORDER BY name";
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                model.Category cat = new model.Category();
+                cat.setCategoryId(rs.getInt("category_id"));
+                cat.setName(rs.getString("name"));
+                list.add(cat);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return list;
+    }
+
+    // Lọc events theo category, date range, sort order + phân trang
+    public List<Event> getFilteredEventsPaged(Integer categoryId, String startDateStr, String endDateStr, 
+                                              String sortOrder, int offset, int limit) {
+        List<Event> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder();
+        sql.append("""        
+            SELECT e.*, 
+                   u.full_name AS organization_name, 
+                   c.name AS category_name
+            FROM Events e
+            JOIN Accounts a ON e.organization_id = a.id
+            JOIN Users u ON a.id = u.account_id
+            JOIN Categories c ON e.category_id = c.category_id
+            WHERE e.status = 'active' AND e.visibility = 'public'
+        """);
+        
+        // Thêm điều kiện lọc
+        if (categoryId != null && categoryId > 0) {
+            sql.append(" AND e.category_id = ?");
+        }
+        if (startDateStr != null && !startDateStr.isEmpty()) {
+            sql.append(" AND e.start_date >= ?");
+        }
+        if (endDateStr != null && !endDateStr.isEmpty()) {
+            sql.append(" AND e.start_date <= ?");
+        }
+        
+        // Thêm sắp xếp
+        if ("asc".equals(sortOrder)) {
+            sql.append(" ORDER BY e.start_date ASC");
+        } else {
+            sql.append(" ORDER BY e.start_date DESC");
+        }
+        
+        sql.append(" OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+        
+        try (PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+            
+            if (categoryId != null && categoryId > 0) {
+                ps.setInt(paramIndex++, categoryId);
+            }
+            if (startDateStr != null && !startDateStr.isEmpty()) {
+                ps.setString(paramIndex++, startDateStr + " 00:00:00");
+            }
+            if (endDateStr != null && !endDateStr.isEmpty()) {
+                ps.setString(paramIndex++, endDateStr + " 23:59:59");
+            }
+            
+            ps.setInt(paramIndex++, offset);
+            ps.setInt(paramIndex++, limit);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Event e = new Event(
+                            rs.getInt("id"),
+                            rs.getString("images"),
+                            rs.getString("title"),
+                            rs.getString("description"),
+                            rs.getTimestamp("start_date"),
+                            rs.getTimestamp("end_date"),
+                            rs.getString("location"),
+                            rs.getInt("needed_volunteers"),
+                            rs.getString("status"),
+                            rs.getString("visibility"),
+                            rs.getInt("organization_id"),
+                            rs.getInt("category_id"),
+                            rs.getDouble("total_donation"),
+                            rs.getString("organization_name"),
+                            rs.getString("category_name")
+                    );
+                    list.add(e);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return list;
+    }
+
+    // Đếm tổng số events sau khi filter
+    public int getTotalFilteredEvents(Integer categoryId, String startDateStr, String endDateStr) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT COUNT(*) FROM Events e WHERE e.status = 'active' AND e.visibility = 'public'");
+        
+        if (categoryId != null && categoryId > 0) {
+            sql.append(" AND e.category_id = ?");
+        }
+        if (startDateStr != null && !startDateStr.isEmpty()) {
+            sql.append(" AND e.start_date >= ?");
+        }
+        if (endDateStr != null && !endDateStr.isEmpty()) {
+            sql.append(" AND e.start_date <= ?");
+        }
+        
+        try (PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+            
+            if (categoryId != null && categoryId > 0) {
+                ps.setInt(paramIndex++, categoryId);
+            }
+            if (startDateStr != null && !startDateStr.isEmpty()) {
+                ps.setString(paramIndex++, startDateStr + " 00:00:00");
+            }
+            if (endDateStr != null && !endDateStr.isEmpty()) {
+                ps.setString(paramIndex++, endDateStr + " 23:59:59");
+            }
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return 0;
+    }
+
     public void close() {
         try {
             if (conn != null && !conn.isClosed()) {
