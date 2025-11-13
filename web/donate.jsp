@@ -69,7 +69,44 @@
                     </c:forEach>
                 </div>
 
+                <!-- Phân trang -->
+                <c:if test="${totalPages > 1}">
+                    <div class="row mt-5">
+                        <div class="col text-center">
+                            <div class="block-27">
+                                <ul>
+                                    <!-- Nút Previous -->
+                                    <c:if test="${currentPage > 1}">
+                                        <li><a href="GuessDonateServlet?page=${currentPage - 1}">&lt;</a></li>
+                                        </c:if>
+                                        <c:if test="${currentPage == 1}">
+                                        <li class="disabled"><span>&lt;</span></li>
+                                        </c:if>
 
+                                    <!-- Danh sách số trang -->
+                                    <c:forEach begin="1" end="${totalPages}" var="i">
+                                        <c:choose>
+                                            <c:when test="${i == currentPage}">
+                                                <li class="active"><span>${i}</span></li>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                <li><a href="GuessDonateServlet?page=${i}">${i}</a></li>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </c:forEach>
+
+                                    <!-- Nút Next -->
+                                    <c:if test="${currentPage < totalPages}">
+                                        <li><a href="GuessDonateServlet?page=${currentPage + 1}">&gt;</a></li>
+                                        </c:if>
+                                        <c:if test="${currentPage == totalPages}">
+                                        <li class="disabled"><span>&gt;</span></li>
+                                        </c:if>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </c:if>
 
             </div>
         </section>

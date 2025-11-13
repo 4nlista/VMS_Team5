@@ -32,8 +32,28 @@ public class GuessDonateServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        List<Donation> allDonates = displayDonateService.getAllUserDonation();
-        request.setAttribute("allDonates", displayDonateService.getAllUserDonation());
+        int page = 1; // mặc định là trang đầu
+        int limit = 6; // số donors mỗi trang
+        String pageParam = request.getParameter("page");
+        if (pageParam != null) {
+            try {
+                page = Integer.parseInt(pageParam);
+            } catch (NumberFormatException e) {
+                page = 1;
+            }
+        }
+
+        int offset = (page - 1) * limit;
+        // lấy danh sách donors đã phân trang
+        List<Donation> listDonors = displayDonateService.getDonorsPaged(offset, limit);
+        //Tính tổng số donors
+        int totalDonors = displayDonateService.getTotalDonors();
+        int totalPages = (int) Math.ceil((double) totalDonors / limit);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
+
+        // Set danh sách donors đã phân trang
+        request.setAttribute("allDonates", listDonors);
         request.getRequestDispatcher("donate.jsp").forward(request, response);
     }
 

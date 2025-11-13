@@ -45,7 +45,7 @@ public class DisplayDonateService {
         return viewUserDonationDAO.getTotalDonors();
     }
     
-    public List<Donation> getDonorsPaged() {
-        return viewUserDonationDAO.getDonorsPaged(1, 3);
+    public List<Donation> getDonorsPaged(int offset, int limit) {
+        return viewUserDonationDAO.getDonorsPaged(offset, limit);
     }
 }
