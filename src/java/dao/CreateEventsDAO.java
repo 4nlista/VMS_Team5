@@ -33,6 +33,7 @@ public class CreateEventsDAO {
         if (e == null) {
             return false;
         }
+        
         String sql = "INSERT INTO Events (title, description, images, location, status, visibility, "
                 + "category_id, organization_id, needed_volunteers, start_date, end_date, total_donation) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";

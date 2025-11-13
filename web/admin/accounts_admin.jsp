@@ -106,7 +106,7 @@
                             <tr>
                                 <td>${acc.id}</td>
                                 <td>${acc.username}</td>
-                                
+
                                 <td>${acc.role}</td>
                                 <td>
                                     <c:choose>
@@ -344,7 +344,7 @@
                     alert.close();
                 }, 3000);
             }
-            
+
             const createSuccessAlert = document.getElementById('create-success-alert');
             if (createSuccessAlert) {
                 setTimeout(() => {

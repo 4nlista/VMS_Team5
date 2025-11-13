@@ -1,7 +1,3 @@
-/*
- * A friendly reminder to drink enough water
- */
-
 package controller_organization;
 
 import java.io.IOException;
@@ -14,7 +10,7 @@ import java.io.File;
 
 /**
  *
- * @author Mirinae
+ * @author ADDMIN
  */
 @MultipartConfig
 @WebServlet(name="NewsImageServlet", urlPatterns={"/NewsImage"})
