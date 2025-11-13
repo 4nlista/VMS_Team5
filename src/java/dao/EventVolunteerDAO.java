@@ -203,8 +203,13 @@ public class EventVolunteerDAO {
             ev.id,
             ev.event_id,
             e.title AS eventTitle,
+            e.location AS eventLocation,
+            e.description AS eventDescription,
+            e.status AS eventStatus,
             c.name AS categoryName,
-            u_org.full_name AS organizationName,  -- đổi sang fullname từ bảng Users
+            u_org.full_name AS organizationName,
+            u_org.phone AS orgPhone,
+            u_org.email AS orgEmail,
             ev.volunteer_id,
             v.username AS volunteerName,
             ev.apply_date,
@@ -218,7 +223,7 @@ public class EventVolunteerDAO {
         INNER JOIN Events e ON ev.event_id = e.id
         LEFT JOIN Categories c ON e.category_id = c.category_id
         
-        -- join Accounts và Users để lấy fullname tổ chức
+        -- join Accounts và Users để lấy fullname, phone, email tổ chức
         INNER JOIN Accounts o ON e.organization_id = o.id
         INNER JOIN Users u_org ON u_org.account_id = o.id
         
@@ -257,6 +262,11 @@ public class EventVolunteerDAO {
                     ev.setStartDateEvent(rs.getTimestamp("startDateEvent"));
                     ev.setEndDateEvent(rs.getTimestamp("endDateEvent"));
                     ev.setAttendanceReport(rs.getString("attendanceReport"));
+                    ev.setEventLocation(rs.getString("eventLocation"));
+                    ev.setEventDescription(rs.getString("eventDescription"));
+                    ev.setEventStatus(rs.getString("eventStatus"));
+                    ev.setOrgPhone(rs.getString("orgPhone"));
+                    ev.setOrgEmail(rs.getString("orgEmail"));
                 }
             }
         } catch (SQLException e) {

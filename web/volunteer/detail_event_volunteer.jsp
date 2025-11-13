@@ -15,6 +15,13 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet"/>
         <jsp:include page="/layout/header.jsp"/>
+        <style>
+            .list-group-item strong {
+                font-weight: 700;
+                font-size: 1.05rem;
+                color: #2c3e50;
+            }
+        </style>
     </head>
     <body>
         <jsp:include page="/layout/navbar.jsp"/>
@@ -37,6 +44,8 @@
                                         <ul class="list-group list-group-flush">
                                             <li class="list-group-item"><strong>Tiêu đề:</strong> ${ev.eventTitle}</li>
                                             <li class="list-group-item"><strong>Người tổ chức:</strong> ${ev.organizationName}</li>
+                                            <li class="list-group-item"><strong>Email:</strong> ${ev.orgEmail}</li>
+                                            <li class="list-group-item"><strong>Số điện thoại:</strong> ${ev.orgPhone}</li>
                                             <li class="list-group-item"><strong>Danh mục:</strong> ${ev.categoryName}</li>
                                             <li class="list-group-item">
                                                 <strong>Ngày bắt đầu:</strong> 
@@ -45,6 +54,40 @@
                                             <li class="list-group-item">
                                                 <strong>Ngày kết thúc:</strong> 
                                                 <fmt:formatDate value="${ev.endDateEvent}" pattern="dd/MM/yyyy HH:mm"/>
+                                            </li>
+                                            <li class="list-group-item"><strong>Địa điểm:</strong> ${ev.eventLocation}</li>
+                                            <li class="list-group-item">
+                                                <strong>Trạng thái sự kiện:</strong>
+                                                <span class="badge
+                                                      <c:choose>
+                                                          <c:when test="${ev.eventStatus eq 'active'}">bg-success</c:when>
+                                                          <c:when test="${ev.eventStatus eq 'inactive'}">bg-warning text-dark</c:when>
+                                                          <c:otherwise>bg-secondary</c:otherwise>
+                                                      </c:choose>">
+                                                    <c:choose>
+                                                        <c:when test="${ev.eventStatus eq 'active'}">Đang hoạt động</c:when>
+                                                        <c:when test="${ev.eventStatus eq 'inactive'}">Tạm dừng</c:when>
+                                                        <c:otherwise>Đã đóng</c:otherwise>
+                                                    </c:choose>
+                                                </span>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <strong>Mô tả:</strong>
+                                                <div id="shortDesc">
+                                                    <c:choose>
+                                                        <c:when test="${ev.eventDescription.length() > 150}">
+                                                            ${ev.eventDescription.substring(0, 150)}...
+                                                            <a href="#" id="showMoreBtn" class="text-primary">Xem thêm</a>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            ${ev.eventDescription}
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </div>
+                                                <div id="fullDesc" style="display: none;">
+                                                    ${ev.eventDescription}
+                                                    <a href="#" id="showLessBtn" class="text-primary">Thu gọn</a>
+                                                </div>
                                             </li>
                                         </ul>
                                     </div>
@@ -115,5 +158,30 @@
         <jsp:include page="/layout/footer.jsp"/>
         <jsp:include page="/layout/loader.jsp"/>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // Toggle mô tả đầy đủ
+            document.addEventListener('DOMContentLoaded', function() {
+                const showMoreBtn = document.getElementById('showMoreBtn');
+                const showLessBtn = document.getElementById('showLessBtn');
+                const shortDesc = document.getElementById('shortDesc');
+                const fullDesc = document.getElementById('fullDesc');
+                
+                if (showMoreBtn) {
+                    showMoreBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        shortDesc.style.display = 'none';
+                        fullDesc.style.display = 'block';
+                    });
+                }
+                
+                if (showLessBtn) {
+                    showLessBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        shortDesc.style.display = 'block';
+                        fullDesc.style.display = 'none';
+                    });
+                }
+            });
+        </script>
     </body>
 </html>

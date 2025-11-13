@@ -22,6 +22,13 @@ public class EventVolunteer {
     private Date startDateEvent;                 // Ngày bắt đầu
     private Date endDateEvent;                   // Ngày kết thúc
     private String attendanceReport;            // trạng thái điểm danh
+    
+    // Thông tin thêm về event và organization
+    private String eventLocation;               // Địa điểm sự kiện
+    private String eventDescription;            // Mô tả sự kiện
+    private String eventStatus;                 // Trạng thái sự kiện (active/inactive/closed)
+    private String orgPhone;                    // Số điện thoại org
+    private String orgEmail;                    // Email org
 
     public EventVolunteer() {
     }
@@ -180,6 +187,46 @@ public class EventVolunteer {
 
     public void setAttendanceReport(String attendanceReport) {
         this.attendanceReport = attendanceReport;
+    }
+
+    public String getEventLocation() {
+        return eventLocation;
+    }
+
+    public void setEventLocation(String eventLocation) {
+        this.eventLocation = eventLocation;
+    }
+
+    public String getEventDescription() {
+        return eventDescription;
+    }
+
+    public void setEventDescription(String eventDescription) {
+        this.eventDescription = eventDescription;
+    }
+
+    public String getEventStatus() {
+        return eventStatus;
+    }
+
+    public void setEventStatus(String eventStatus) {
+        this.eventStatus = eventStatus;
+    }
+
+    public String getOrgPhone() {
+        return orgPhone;
+    }
+
+    public void setOrgPhone(String orgPhone) {
+        this.orgPhone = orgPhone;
+    }
+
+    public String getOrgEmail() {
+        return orgEmail;
+    }
+
+    public void setOrgEmail(String orgEmail) {
+        this.orgEmail = orgEmail;
     }
 
 }
