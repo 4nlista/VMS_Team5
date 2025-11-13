@@ -1,6 +1,16 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" pageEncoding="UTF-8" %>
+<%@ page import="dao.NotificationDAO" %>
 <%
     String currentPath = request.getRequestURI();
+%>
+
+<%
+    Integer accountIdAdmin = (Integer) session.getAttribute("accountId");
+    int unreadCountAdmin = 0;
+    if (accountIdAdmin != null) {
+        NotificationDAO notiDAO = new NotificationDAO();
+        unreadCountAdmin = notiDAO.getUnreadCount(accountIdAdmin);
+    }
 %>
 
 <div class="sidebar">
@@ -85,10 +95,13 @@
             </a>
         </li>
         <li>
-            <a href="<%= request.getContextPath() %>/admin/notifications_admin.jsp"
-               class="nav-link text-white <%= currentPath.endsWith("/notifications_admin.jsp") ? "active" : "" %>">
-                <i class="bi bi-gear me-2"></i>
+            <a href="<%= request.getContextPath() %>/AdminNotificationServlet"
+               class="nav-link text-white <%= currentPath.endsWith("/notification_admin.jsp") ? "active" : "" %>">
+                <i class="bi bi-bell me-2"></i>
                 Thông báo
+                <% if (unreadCountAdmin > 0) { %>
+                <span class="badge bg-danger ms-2"><%= unreadCountAdmin %></span>
+                <% } %>
             </a>
         </li>
         <li>

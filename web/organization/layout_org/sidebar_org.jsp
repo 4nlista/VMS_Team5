@@ -7,8 +7,17 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="model.User" %>
+<%@ page import="dao.NotificationDAO" %>
 <%
     String currentPath = request.getRequestURI();
+
+        Integer accountIdOrg = (Integer) session.getAttribute("accountId");
+        int unreadCountOrg = 0;
+        if (accountIdOrg != null) {
+            NotificationDAO notiDAO = new NotificationDAO();
+            unreadCountOrg = notiDAO.getUnreadCount(accountIdOrg);
+        }
+
 %>
 <%
     User currentUser = (User) session.getAttribute("user");
@@ -30,7 +39,12 @@
             <img src="<%= avatarUrl %>" alt="Avatar" class="sidebar-avatar" />
             <p><%= currentUser != null ? currentUser.getFull_name() : "Unknown User" %></p>
         </div>
+
+
+
         <ul class="nav flex-column mb-auto">
+
+
             <li class="nav-item">
                 <a href="<%= request.getContextPath() %>/OrganizationHomeServlet"
                    class="nav-link text-white <%= currentPath.endsWith("/home_org.jsp") ? "active" : "" %>">
@@ -47,13 +61,13 @@
                     Hồ sơ cá nhân
                 </a>
             </li>
-<!--            <li>
-                <a href="<%= request.getContextPath() %>/organization/users_org.jsp"
-                   class="nav-link text-white <%= currentPath.endsWith("/users_org.jsp") ? "active" : "" %>">
-                    <i class="bi bi-person-lines-fill me-2"></i>
-                    Quản lí người dùng
-                </a>
-            </li>-->
+            <!--            <li>
+                            <a href="<%= request.getContextPath() %>/organization/users_org.jsp"
+                               class="nav-link text-white <%= currentPath.endsWith("/users_org.jsp") ? "active" : "" %>">
+                                <i class="bi bi-person-lines-fill me-2"></i>
+                                Quản lí người dùng
+                            </a>
+                        </li>-->
             <li>
                 <a href="<%= request.getContextPath() %>/OrganizationListServlet"
                    class="nav-link text-white <%= currentPath.endsWith("/OrganizationListServlet") ? "active" : "" %>">
@@ -61,13 +75,13 @@
                     Quản lí sự kiện
                 </a>
             </li>
-<!--            <li>
-                <a href="<%= request.getContextPath() %>/OrganizationManageFeedbackServlet"
-                   class="nav-link text-white <%= currentPath.endsWith("/manage_feedback_org.jsp") ? "active" : "" %>">
-                    <i class="bi bi-pencil me-2"></i>
-                    Quản lí đánh giá
-                </a>
-            </li>-->
+            <!--            <li>
+                            <a href="<%= request.getContextPath() %>/OrganizationManageFeedbackServlet"
+                               class="nav-link text-white <%= currentPath.endsWith("/manage_feedback_org.jsp") ? "active" : "" %>">
+                                <i class="bi bi-pencil me-2"></i>
+                                Quản lí đánh giá
+                            </a>
+                        </li>-->
             <li>
                 <a href="<%= request.getContextPath() %>/OrganizationManageNews"
                    class="nav-link text-white <%= (currentPath.endsWith("/manage_new_org.jsp")
@@ -79,6 +93,18 @@
                     Quản lí tin tức
                 </a>
             </li>
+
+            <li class="nav-item">
+                <a href="<%= request.getContextPath() %>/OrganizationNotificationServlet"
+                   class="nav-link text-white <%= currentPath.endsWith("/notifications_org.jsp") ? "active" : "" %>">
+                    <i class="bi bi-bell me-2"></i>
+                    Thông báo
+                    <% if (unreadCountOrg > 0) { %>
+                    <span class="badge bg-danger ms-2"><%= unreadCountOrg %></span>
+                    <% } %>
+                </a>
+            </li>
+
             <li>
                 <a href="<%= request.getContextPath() %>/organization/change_password_org.jsp"
                    class="nav-link text-white <%= currentPath.endsWith("/change_password_org.jsp") ? "active" : "" %>">

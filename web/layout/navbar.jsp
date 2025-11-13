@@ -6,9 +6,15 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="model.Account"%>
+<%@ page import="dao.NotificationDAO" %>
 
 <%
-    Account acc = (Account) session.getAttribute("account");
+     Account acc = (Account) session.getAttribute("account");
+    int unreadCountVol = 0;
+    if (acc != null) {
+        NotificationDAO notiDAO = new NotificationDAO();
+        unreadCountVol = notiDAO.getUnreadCount(acc.getId());
+    }
 %>
 
 <style>
@@ -87,12 +93,12 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="exploreDropdown">
                         <a class="dropdown-item <%= currentPage.contains("causes.jsp") ? "active" : "" %>" href="<%= request.getContextPath() %>/causes.jsp">Hoạt động</a>
-                        
-                        
-                        
+
+
+
                         <a class="dropdown-item <%= currentPage.contains("GuessNewServlet") ? "active" : "" %>" href="<%= request.getContextPath() %>/GuessNewServlet">Bài viết</a>
-                        
-                        
+
+
                         <a class="dropdown-item <%= currentPage.contains("gallery.jsp") ? "active" : "" %>" href="<%= request.getContextPath() %>/gallery.jsp">Hình ảnh</a>
                         <a class="dropdown-item <%= currentPage.contains("event.jsp") ? "active" : "" %>" href="<%= request.getContextPath() %>/GuessEventServlet">Sự kiện</a>
                     </div>
@@ -127,8 +133,23 @@
                         <li><a class="dropdown-item" href="<%= request.getContextPath() %>/VolunteerAttendanceServlet">Lịch sử điểm danh</a></li>
                     </ul>
                 </li>
+                <% if (acc != null) { %>
+                <!-- Chuông thông báo - đặt TRƯỚC nút Đăng xuất -->
                 <li class="nav-item">
-
+                    <a href="<%= request.getContextPath() %>/VolunteerNotificationServlet" 
+                       class="nav-link btn btn-outline position-relative" 
+                       style="padding: 12px 20px; border-radius: 25px; border-width: 2px;">
+                        <i class="bi bi-bell-fill fs-5"></i>
+                        <% if (unreadCountVol > 0) { %>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" 
+                              style="font-size: 11px; padding: 4px 7px;">
+                            <%= unreadCountVol %>
+                        </span>
+                        <% } %>
+                    </a>
+                </li>
+                <% } %>
+                <li class="nav-item">
                     <a href="<%= request.getContextPath() %>/VolunteerProfileServlet" 
                        class="nav-link <%= currentPage.contains("VolunteerProfileServlet") ? "active" : "" %>">
                         Hồ sơ của <%= acc.getUsername() %>
