@@ -58,7 +58,7 @@
 
             <!-- Main Content -->
             <div class="main-content">
-                <h1><i class="bi bi-calendar-event me-2"></i>Quản lý sự kiện</h1>
+                <h2>Quản lý sự kiện</h1>
 
                 <!-- Success/Error Messages -->
                 <c:if test="${param.lockSuccess == 'true'}">

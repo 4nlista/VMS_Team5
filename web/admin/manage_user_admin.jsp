@@ -22,201 +22,251 @@
             <jsp:include page="layout_admin/sidebar_admin.jsp" />
 
             <div class="main-content">
-                <h1><i class="bi bi-people-fill me-2"></i>Trang Quản Lý Người Dùng</h1>
+                <!-- Header -->
+                <div class="bg-white rounded-3 shadow-sm p-4 mb-4">
+                    <h1 class="mb-0 text-primary fw-bold">
+                        <i class="bi bi-people-fill me-2"></i>Quản Lý Người Dùng
+                    </h1>
+                </div>
 
-                <!-- Filter + Search -->
-                <div class="filter-bar mb-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
-
-                    <!-- Compact Filter -->
-                    <div class="dropdown" style="flex: 3;">
-                        <button class="btn btn-danger dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-filter me-1"></i>Lọc
-                        </button>
-
-                        <div class="dropdown-menu filter-dropdown shadow" aria-labelledby="filterDropdown">
-                            <form action="AdminUserServlet" method="get" class="d-flex flex-column gap-2">
-                                <select name="role" class="form-select form-select-sm">
-                                    <option value="">-- Vai Trò --</option>
-                                    <option value="admin" ${currentRole == 'admin' ? 'selected' : ''}>Quản Trị Viên</option>
-                                    <option value="organization" ${currentRole == 'organization' ? 'selected' : ''}>Người Tổ Chức</option>
-                                    <option value="volunteer" ${currentRole == 'volunteer' ? 'selected' : ''}>Tình Nguyện Viên</option>
-                                </select>
-
-                                <select name="gender" class="form-select form-select-sm">
-                                    <option value="">-- Giới Tính --</option>
-                                    <option value="male" ${currentGender == 'male' ? 'selected' : ''}>Nam</option>
-                                    <option value="female" ${currentGender == 'female' ? 'selected' : ''}>Nữ</option>
-                                </select>
-
-                                <input type="hidden" name="search" value="${fn:escapeXml(currentSearch)}" />
-                                <input type="hidden" name="sort" value="${fn:escapeXml(currentSort)}" />
-
-                                <div class="d-flex justify-content-end gap-2 mt-2">
-                                    <button type="submit" class="btn btn-danger btn-sm">
-                                        <i class="bi bi-search me-1"></i>Áp dụng
+                <!-- Filter + Search Card -->
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <!-- Filter Dropdown -->
+                            <div class="col-lg-8 col-md-7">
+                                <div class="dropdown d-inline-block me-2">
+                                    <button class="btn btn-danger dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-funnel me-1"></i>Bộ Lọc
                                     </button>
-                                    <a href="AdminUserServlet" class="btn btn-secondary btn-sm">
-                                        <i class="bi bi-trash me-1"></i>Đặt lại
-                                    </a>
+                                    <div class="dropdown-menu p-3 shadow" aria-labelledby="filterDropdown" style="min-width: 280px;">
+                                        <form action="AdminUserServlet" method="get">
+                                            <div class="mb-3">
+                                                <label class="form-label small text-muted">Vai Trò</label>
+                                                <select name="role" class="form-select form-select-sm">
+                                                    <option value="">Tất cả vai trò</option>
+                                                    <option value="admin" ${currentRole == 'admin' ? 'selected' : ''}>Quản Trị Viên</option>
+                                                    <option value="organization" ${currentRole == 'organization' ? 'selected' : ''}>Người Tổ Chức</option>
+                                                    <option value="volunteer" ${currentRole == 'volunteer' ? 'selected' : ''}>Tình Nguyện Viên</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label small text-muted">Giới Tính</label>
+                                                <select name="gender" class="form-select form-select-sm">
+                                                    <option value="">Tất cả giới tính</option>
+                                                    <option value="male" ${currentGender == 'male' ? 'selected' : ''}>Nam</option>
+                                                    <option value="female" ${currentGender == 'female' ? 'selected' : ''}>Nữ</option>
+                                                </select>
+                                            </div>
+
+                                            <input type="hidden" name="search" value="${fn:escapeXml(currentSearch)}" />
+                                            <input type="hidden" name="sort" value="${fn:escapeXml(currentSort)}" />
+
+                                            <div class="d-flex gap-2">
+                                                <button type="submit" class="btn btn-danger btn-sm flex-fill">
+                                                    <i class="bi bi-check-circle me-1"></i>Áp dụng
+                                                </button>
+                                                <a href="AdminUserServlet" class="btn btn-secondary btn-sm flex-fill">
+                                                    <i class="bi bi-arrow-clockwise me-1"></i>Đặt lại
+                                                </a>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
-                            </form>
+                            </div>
+
+                            <!-- Search Form -->
+                            <div class="col-lg-4 col-md-5">
+                                <form action="AdminUserServlet" method="get" class="d-flex">
+                                    <input type="text" name="search" class="form-control form-control-sm" placeholder="Tìm kiếm theo tên..." value="${fn:escapeXml(currentSearch)}" />
+                                    <input type="hidden" name="role" value="${fn:escapeXml(currentRole)}" />
+                                    <input type="hidden" name="sort" value="${fn:escapeXml(currentSort)}" />
+                                    <input type="hidden" name="gender" value="${fn:escapeXml(currentGender)}" />
+                                    <button type="submit" class="btn btn-primary btn-sm ms-2">
+                                        <i class="bi bi-search"></i>
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
-
-                    <!-- Search -->
-                    <form action="AdminUserServlet" method="get" class="d-flex" style="flex: 1; justify-content: end;">
-                        <input type="text" name="search" class="form-control" placeholder="Tìm Họ Tên" value="${fn:escapeXml(currentSearch)}" />
-                        <input type="hidden" name="role" value="${fn:escapeXml(currentRole)}" />
-                        <input type="hidden" name="sort" value="${fn:escapeXml(currentSort)}" />
-                        <input type="hidden" name="gender" value="${fn:escapeXml(currentGender)}" />
-                        <button type="submit" class="btn btn-primary ms-2">
-                            <i class="bi bi-search" title="TÌm!"></i>
-                        </button>
-                    </form>
                 </div>
 
-                <!-- User Table -->
-                <div class="table-responsive shadow-sm mb-4" style="min-height: 450px;">
-                    <table class="table table-striped table-hover align-middle mb-0">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>ID</th>
-                                <th>Ảnh Đại Diện</th>
-                                <th>Tên Tài Khoản</th>
-                                <th>Họ và Tên</th>
-                                <th>Giới Tính</th>
-                                <th>Vai Trò</th>
-                                <th class="text-center">Hành Động</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- This should never happen lmao -->
-                            <c:if test="${empty users}">
-                                <tr><td colspan="7" class="text-center text-danger py-4">Không có ai ở đây hết cả :(</td></tr>
-                            </c:if>
+                <!-- User Table Card -->
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="py-3 ps-4">ID</th>
+                                        <th class="py-3">Ảnh</th>
+                                        <th class="py-3">Họ và Tên</th>
+                                        <th class="py-3">Giới Tính</th>
+                                        <th class="py-3">Vai Trò</th>
+                                        <th class="py-3 text-center">Hành Động</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <c:if test="${empty users}">
+                                        <tr>
+                                            <td colspan="6" class="text-center py-5">
+                                                <i class="bi bi-inbox text-muted" style="font-size: 3rem;"></i>
+                                                <p class="text-muted mt-2 mb-0">Không tìm thấy người dùng nào</p>
+                                            </td>
+                                        </tr>
+                                    </c:if>
 
-                            <c:forEach var="user" items="${users}">
-                                <tr class="user-row bg-white">
-                                    <td>${user.id}</td>
-                                    <td>
-                                        <c:choose>
-                                            <c:when test="${not empty user.avatar && fn:contains(user.avatar, '://')}">
-                                                <img src="${user.avatar}" alt="avatar" class="rounded-circle avatar-lg mb-3 border border-2 border-light shadow-sm" width="50" height="50"/>
-                                            </c:when>
-
-                                            <c:when test="${not empty user.avatar}">
-                                                <img src="${pageContext.request.contextPath}/UserAvatar?file=${user.avatar}" alt="avatar" class="rounded-circle avatar-lg mb-3 border border-2 border-light shadow-sm" width="50" height="50"/>
-                                            </c:when>
-
-                                            <c:otherwise>
-                                                <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="avatar" class="rounded-circle avatar-lg mb-3 border border-2 border-light shadow-sm" width="50" height="50"/>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                    <td>${user.account.username}</td>
-                                    <td>${user.full_name}</td>
-                                    <td>
-                                        <c:choose>
-                                            <c:when test="${user.gender == 'male'}">Nam</c:when>
-                                            <c:when test="${user.gender == 'female'}">Nữ</c:when>
-                                            <c:otherwise>Unknown</c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                    <td>
-                                        <c:choose>
-                                            <c:when test="${user.account.role == 'admin'}">
-                                                <span class="badge bg-secondary text-capitalize">Quản Trị Viên</span>
-                                            </c:when>
-                                            <c:when test="${user.account.role == 'organization'}">
-                                                <span class="badge bg-secondary text-capitalize">Người Tổ Chức</span>
-                                            </c:when>
-                                            <c:when test="${user.account.role == 'volunteer'}">
-                                                <span class="badge bg-secondary text-capitalize">Tình Nguyện Viên</span>
-                                            </c:when>
-                                            <c:otherwise>Unknown</c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                    <td class="text-center">
-                                        <form action="AdminUserDetailServlet" method="get" style="display:inline;">
-                                            <input type="hidden" name="id" value="${user.id}">
-                                            <button type="submit" class="btn btn-primary btn-sm me-1" title="Xem Thông Tin Chi Tiết">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                        </form>
-                                        <form action="AdminUserEditServlet" method="get" style="display:inline;">
-                                            <input type="hidden" name="id" value="${user.id}">
-                                            <button type="submit" class="btn btn-warning btn-sm" title="Chỉnh Sửa Chi Tiết">
-                                                <i class="bi bi-pencil-square"></i>
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            </c:forEach>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Pagination Section -->
-                <div class="card shadow-sm border-0 p-3">
-                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-                        <!-- Left: Page info -->
-                        <div class="text-muted small">
-                            Trang số <strong>${currentPage}</strong> trong tổng số <strong>${totalPages}</strong>
+                                    <c:forEach var="user" items="${users}">
+                                        <tr>
+                                            <td class="ps-4 fw-medium">${user.id}</td>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${not empty user.avatar && fn:contains(user.avatar, '://')}">
+                                                        <img src="${user.avatar}" alt="avatar" class="rounded-circle" width="45" height="45" style="object-fit: cover; border: 2px solid #f0f0f0;"/>
+                                                    </c:when>
+                                                    <c:when test="${not empty user.avatar}">
+                                                        <img src="${pageContext.request.contextPath}/UserAvatar?file=${user.avatar}" alt="avatar" class="rounded-circle" width="45" height="45" style="object-fit: cover; border: 2px solid #f0f0f0;"/>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="avatar" class="rounded-circle" width="45" height="45" style="object-fit: cover; border: 2px solid #f0f0f0;"/>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
+                                            <td class="fw-medium">${user.full_name}</td>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${user.gender == 'male'}">
+                                                        <i class="bi bi-gender-male text-primary"></i> Nam
+                                                    </c:when>
+                                                    <c:when test="${user.gender == 'female'}">
+                                                        <i class="bi bi-gender-female text-danger"></i> Nữ
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="text-muted">N/A</span>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${user.account.role == 'admin'}">
+                                                        <span class="badge bg-danger">
+                                                            <i class="bi bi-shield-check me-1"></i>Quản Trị
+                                                        </span>
+                                                    </c:when>
+                                                    <c:when test="${user.account.role == 'organization'}">
+                                                        <span class="badge bg-warning text-dark">
+                                                            <i class="bi bi-building me-1"></i>Tổ Chức
+                                                        </span>
+                                                    </c:when>
+                                                    <c:when test="${user.account.role == 'volunteer'}">
+                                                        <span class="badge bg-success">
+                                                            <i class="bi bi-heart me-1"></i>Tình Nguyện
+                                                        </span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="badge bg-secondary">Unknown</span>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
+                                            <td class="text-center">
+                                                <form action="AdminUserDetailServlet" method="get" style="display:inline;">
+                                                    <input type="hidden" name="id" value="${user.id}">
+                                                    <button type="submit" class="btn btn-primary btn-sm me-1" title="Xem Chi Tiết">
+                                                        <i class="bi bi-eye"></i>
+                                                    </button>
+                                                </form>
+                                                <form action="AdminUserEditServlet" method="get" style="display:inline;">
+                                                    <input type="hidden" name="id" value="${user.id}">
+                                                    <button type="submit" class="btn btn-warning btn-sm" title="Chỉnh Sửa">
+                                                        <i class="bi bi-pencil-square"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                </tbody>
+                            </table>
                         </div>
+                    </div>
+                </div>
 
-                        <!-- Center: Pagination Controls -->
-                        <nav aria-label="User list pagination">
-                            <ul class="pagination mb-0 flex-wrap justify-content-center">
-                                <!-- Previous -->
-                                <c:url var="prevUrl" value="AdminUserServlet">
-                                    <c:param name="page" value="${currentPage - 1}" />
-                                    <c:param name="role" value="${fn:escapeXml(currentRole)}" />
-                                    <c:param name="search" value="${fn:escapeXml(currentSearch)}" />
-                                    <c:param name="sort" value="${fn:escapeXml(currentSort)}" />
-                                    <c:param name="gender" value="${fn:escapeXml(currentGender)}" />
-                                </c:url>
-                                <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
-                                    <a class="page-link" href="${prevUrl}">Trước</a>
-                                </li>
-                                <!-- Page numbers -->
-                                <c:forEach var="i" begin="1" end="${totalPages}">
-                                    <c:url var="pageUrl" value="AdminUserServlet">
-                                        <c:param name="page" value="${i}" />
-                                        <c:param name="role" value="${fn:escapeXml(currentRole)}" />
-                                        <c:param name="search" value="${fn:escapeXml(currentSearch)}" />
-                                        <c:param name="sort" value="${fn:escapeXml(currentSort)}" />
-                                        <c:param name="gender" value="${fn:escapeXml(currentGender)}" />
-                                    </c:url>
-                                    <li class="page-item ${i == currentPage ? 'active' : ''}">
-                                        <a class="page-link" href="${pageUrl}">${i}</a>
-                                    </li>
-                                </c:forEach>
+                <!-- Pagination Card -->
+                <div class="card shadow-sm border-0">
+                    <div class="card-body">
+                        <div class="row align-items-center g-3">
+                            <!-- Page Info -->
+                            <div class="col-md-4 text-center text-md-start">
+                                <p class="text-muted mb-0 small">
+                                    Trang <strong class="text-primary">${currentPage}</strong> / <strong>${totalPages}</strong>
+                                </p>
+                            </div>
 
-                                <!-- Next -->
-                                <c:url var="nextUrl" value="AdminUserServlet">
-                                    <c:param name="page" value="${currentPage + 1}" />
-                                    <c:param name="role" value="${fn:escapeXml(currentRole)}" />
-                                    <c:param name="search" value="${fn:escapeXml(currentSearch)}" />
-                                    <c:param name="sort" value="${fn:escapeXml(currentSort)}" />
-                                    <c:param name="gender" value="${fn:escapeXml(currentGender)}" />
-                                </c:url>
-                                <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
-                                    <a class="page-link" href="${nextUrl}">Tiếp</a>
-                                </li>
-                            </ul>
-                        </nav>
+                            <!-- Pagination Controls -->
+                            <div class="col-md-4">
+                                <nav aria-label="User list pagination">
+                                    <ul class="pagination pagination-sm justify-content-center mb-0">
+                                        <!-- Previous -->
+                                        <c:url var="prevUrl" value="AdminUserServlet">
+                                            <c:param name="page" value="${currentPage - 1}" />
+                                            <c:param name="role" value="${fn:escapeXml(currentRole)}" />
+                                            <c:param name="search" value="${fn:escapeXml(currentSearch)}" />
+                                            <c:param name="sort" value="${fn:escapeXml(currentSort)}" />
+                                            <c:param name="gender" value="${fn:escapeXml(currentGender)}" />
+                                        </c:url>
+                                        <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                                            <a class="page-link" href="${prevUrl}">
+                                                <i class="bi bi-chevron-left"></i>
+                                            </a>
+                                        </li>
 
-                        <!-- Right: Go to page -->
-                        <form action="AdminUserServlet" method="get" class="d-flex align-items-center gap-2">
-                            <label for="gotoPage" class="form-label mb-0 small text-muted">Đi tới trang:</label>
-                            <input type="number" id="gotoPage" name="page" min="1" max="${totalPages}" value="${currentPage}"
-                                   class="form-control form-control-sm" style="width: 80px;">
-                            <input type="hidden" name="role" value="${fn:escapeXml(currentRole)}" />
-                            <input type="hidden" name="search" value="${fn:escapeXml(currentSearch)}" />
-                            <input type="hidden" name="sort" value="${fn:escapeXml(currentSort)}" />
-                            <input type="hidden" name="gender" value="${fn:escapeXml(currentGender)}" />
-                            <button type="submit" class="btn btn-primary btn-sm">Đi!</button>
-                        </form>
+                                        <!-- Page Numbers -->
+                                        <c:forEach var="i" begin="1" end="${totalPages}">
+                                            <c:url var="pageUrl" value="AdminUserServlet">
+                                                <c:param name="page" value="${i}" />
+                                                <c:param name="role" value="${fn:escapeXml(currentRole)}" />
+                                                <c:param name="search" value="${fn:escapeXml(currentSearch)}" />
+                                                <c:param name="sort" value="${fn:escapeXml(currentSort)}" />
+                                                <c:param name="gender" value="${fn:escapeXml(currentGender)}" />
+                                            </c:url>
+                                            <li class="page-item ${i == currentPage ? 'active' : ''}">
+                                                <a class="page-link" href="${pageUrl}">${i}</a>
+                                            </li>
+                                        </c:forEach>
+
+                                        <!-- Next -->
+                                        <c:url var="nextUrl" value="AdminUserServlet">
+                                            <c:param name="page" value="${currentPage + 1}" />
+                                            <c:param name="role" value="${fn:escapeXml(currentRole)}" />
+                                            <c:param name="search" value="${fn:escapeXml(currentSearch)}" />
+                                            <c:param name="sort" value="${fn:escapeXml(currentSort)}" />
+                                            <c:param name="gender" value="${fn:escapeXml(currentGender)}" />
+                                        </c:url>
+                                        <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                                            <a class="page-link" href="${nextUrl}">
+                                                <i class="bi bi-chevron-right"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+
+                            <!-- Go to Page -->
+                            <div class="col-md-4">
+                                <form action="AdminUserServlet" method="get" class="d-flex justify-content-center justify-content-md-end align-items-center gap-2">
+                                    <label for="gotoPage" class="form-label mb-0 small text-muted text-nowrap">Đến trang:</label>
+                                    <input type="number" id="gotoPage" name="page" min="1" max="${totalPages}" value="${currentPage}"
+                                           class="form-control form-control-sm" style="width: 70px;">
+                                    <input type="hidden" name="role" value="${fn:escapeXml(currentRole)}" />
+                                    <input type="hidden" name="search" value="${fn:escapeXml(currentSearch)}" />
+                                    <input type="hidden" name="sort" value="${fn:escapeXml(currentSort)}" />
+                                    <input type="hidden" name="gender" value="${fn:escapeXml(currentGender)}" />
+                                    <button type="submit" class="btn btn-primary btn-sm">
+                                        <i class="bi bi-arrow-right"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

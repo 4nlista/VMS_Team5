@@ -15,8 +15,8 @@
 
 <div class="sidebar">
     <div class="logo">
-        <img src="<%= request.getContextPath() %>/admin/images/logo.jpg" alt="Logo" />
-        <span>Admin Panel</span>
+        <img src="<%= request.getContextPath() %>/admin/images/download.jpg" alt="Logo" />
+        <span>Quản trị hệ thống</span>
     </div>
 
     <ul class="nav flex-column mb-auto">
