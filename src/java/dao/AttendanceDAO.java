@@ -29,18 +29,19 @@ public class AttendanceDAO {
 
         String sql = """
             SELECT 
-                a.volunteer_id,
+                ev.volunteer_id,
                 v.full_name AS volunteerName,
-                a.status,
+                COALESCE(a.status, 'pending') AS status,
                 e.title AS eventTitle,
                 o.full_name AS organizationName,
                 e.start_date,
                 e.end_date
-            FROM Attendance a
-            JOIN Events e ON a.event_id = e.id
-            JOIN Users v ON a.volunteer_id = v.account_id
+            FROM Event_Volunteers ev
+            JOIN Events e ON ev.event_id = e.id
+            JOIN Users v ON ev.volunteer_id = v.account_id
             JOIN Users o ON e.organization_id = o.account_id
-            WHERE a.volunteer_id = ?
+            LEFT JOIN Attendance a ON a.event_id = ev.event_id AND a.volunteer_id = ev.volunteer_id
+            WHERE ev.volunteer_id = ? AND ev.status = 'approved'
             ORDER BY e.start_date DESC
         """;
 
