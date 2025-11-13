@@ -47,7 +47,7 @@
                                     </c:choose>
 
                                     <div class="info ml-5">
-                                        <h3><a href="teacher-single.html">${e.volunteerFullName}</a></h3>
+                                        <h3><a>${e.volunteerFullName}</a></h3>
                                         <span class="position" style="color: black">
                                             Mã ID:  ${e.volunteerId}
                                         </span>

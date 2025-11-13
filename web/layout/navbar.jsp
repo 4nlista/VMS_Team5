@@ -122,6 +122,14 @@
                         <li><a class="dropdown-item" href="<%= request.getContextPath() %>/VolunteerAttendanceServlet">Lịch sử điểm danh</a></li>
                     </ul>
                 </li>
+                
+                <li class="nav-item">
+                    <a href="<%= request.getContextPath() %>/VolunteerProfileServlet" 
+                       class="nav-link <%= currentPage.contains("VolunteerProfileServlet") ? "active" : "" %>">
+                        Hồ sơ cá nhân
+                    </a>
+                </li>
+                
                 <% if (acc != null) { %>
                 <!-- Chuông thông báo - đặt TRƯỚC nút Đăng xuất -->
                 <li class="nav-item">
@@ -139,14 +147,9 @@
                 </li>
                 <% } %>
 
-                <li class="nav-item">
-                    <a href="<%= request.getContextPath() %>/VolunteerProfileServlet" 
-                       class="nav-link <%= currentPage.contains("VolunteerProfileServlet") ? "active" : "" %>">
-                        Hồ sơ cá nhân
-                    </a>
-                </li>
 
-                <li class="nav-item" style="align-content: center">
+
+                <li class="nav-item" style="align-content: center; margin-left: 2px">
                     <a href="<%= request.getContextPath() %>/LogoutServlet" 
                        class="nav-link btn btn-outline-secondary" 
                        style="padding:15px 10px; border-radius:25px;">

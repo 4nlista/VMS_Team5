@@ -52,7 +52,6 @@
                     <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
                         <div>
                             <h1 class="mb-1">Hồ sơ tình nguyện viên</h1>
-                            <p class="text-muted mb-0">Xin chào, <strong>${displayName}</strong>. Cập nhật thông tin cá nhân của bạn tại đây.</p>
                         </div>
                     </div>
 

@@ -44,7 +44,7 @@
                                         </a>
                                     </div>
                                     <div class="meta mb-3">
-                                        <div><a href="">Người tổ chức: <b><i>${e.organizationName}</i></b></a></div>
+                                        <div><a>Người tổ chức: <b><i>${e.organizationName}</i></b></a></div>
 
                                     </div>
 

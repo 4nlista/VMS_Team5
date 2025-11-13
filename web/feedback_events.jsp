@@ -17,18 +17,13 @@
         <!-- Navbar -->
         <%@ include file="layout/navbar.jsp" %>
 
-        <div class="hero-wrap" style="background-image: url('images/bg_1.jpg');" data-stellar-background-ratio="0.5">
+        <div class="hero-wrap" style="background-image: url('images/background.jpg');" data-stellar-background-ratio="0.5">
             <div class="overlay"></div>
             <div class="container">
                 <div class="row no-gutters slider-text align-items-center justify-content-center" data-scrollax-parent="true">
                     <div class="col-md-7 ftco-animate text-center" data-scrollax=" properties: { translateY: '70%' }">
-                        <p class="breadcrumbs" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">
-                            <span class="mr-2"><a href="<%= request.getContextPath() %>/VolunteerHomeServlet">Home</a></span> 
-                            <span class="mr-2"><a href="<%= request.getContextPath() %>/GuessEventServlet">Sự kiện</a></span> 
-                            <span>Bình luận</span>
-                        </p>
-                        <h1 class="mb-3 bread" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">
-                            Bình luận sự kiện: ${event.title}
+                        <h1 class="mb-3 bread text-center" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">
+                            Danh sách đánh giá
                         </h1>
                     </div>
                 </div>
@@ -42,14 +37,14 @@
                         <div class="card shadow-sm">
                             <div class="card-header bg-primary text-white">
                                 <h4 class="mb-0">
-                                    <i class="icon-comment"></i> Danh sách bình luận
+                                    <i class="icon-comment"></i> Danh sách đánh giá
                                 </h4>
                             </div>
                             <div class="card-body">
                                 <c:choose>
                                     <c:when test="${empty feedbacks}">
                                         <div class="alert alert-info text-center">
-                                            <i class="icon-info-circle"></i> Chưa có bình luận nào cho sự kiện này.
+                                            <i class="icon-info-circle"></i> Chưa có đánh giá nào cho sự kiện này.
                                         </div>
                                     </c:when>
                                     <c:otherwise>
@@ -96,7 +91,7 @@
                                         </div>
                                     </c:otherwise>
                                 </c:choose>
-                                
+
                                 <div class="mt-4 text-center">
                                     <c:choose>
                                         <c:when test="${not empty returnPage && returnPage > 1}">
