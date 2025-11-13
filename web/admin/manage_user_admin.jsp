@@ -23,11 +23,8 @@
 
             <div class="main-content">
                 <!-- Header -->
-                <div class="bg-white rounded-3 shadow-sm p-4 mb-4">
-                    <h1 class="mb-0 text-primary fw-bold">
-                        <i class="bi bi-people-fill me-2"></i>Quản Lý Người Dùng
-                    </h1>
-                </div>
+                <h1 class="mb-4 text-black fw-bold">Quản Lý Người Dùng</h1>
+
 
                 <!-- Filter + Search Card -->
                 <div class="card shadow-sm border-0 mb-4">
