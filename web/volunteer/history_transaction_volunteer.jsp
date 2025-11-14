@@ -73,7 +73,7 @@
                                         <td>${status.index + 1 + (currentPage - 1) * pageSize}</td>
                                         <td>${d.qrCode != null ? d.qrCode : "-"}</td>
                                         <td>${d.eventTitle != null ? d.eventTitle : "-"}</td>
-                                        <td>${d.amount}</td>
+                                        <td><fmt:formatNumber value="${d.amount}" pattern="#,###" /> </td>
                                         <td>${d.paymentMethod != null ? d.paymentMethod : "-"}</td>
                                         <td>
                                             <c:choose>

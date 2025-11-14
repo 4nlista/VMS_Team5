@@ -17,6 +17,27 @@
         <!-- Navbar -->
         <%@ include file="layout/navbar.jsp" %>
 
+        <!-- Success Message Alert -->
+        <c:if test="${not empty sessionScope.successMessage}">
+            <div class="position-fixed w-100 d-flex justify-content-center" style="top: 80px; z-index: 9999; pointer-events: none;">
+                <div class="alert alert-success alert-dismissible fade show shadow-lg" role="alert" id="successAlert" style="pointer-events: auto; min-width: 400px;">
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    <strong>${sessionScope.successMessage}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            </div>
+            <c:remove var="successMessage" scope="session"/>
+            <script>
+                setTimeout(function () {
+                    var alertElement = document.getElementById('successAlert');
+                    if (alertElement) {
+                        var bsAlert = new bootstrap.Alert(alertElement);
+                        bsAlert.close();
+                    }
+                }, 3000);
+            </script>
+        </c:if>
+
         <div class="hero-wrap" style="background-image: url('images/background.jpg');" data-stellar-background-ratio="0.5">
             <div class="overlay"></div>
             <div class="container">
@@ -36,7 +57,7 @@
                 <div class="row mb-4" id="filter-section">
                     <div class="col-12">
                         <form method="get" action="GuessEventServlet#filter-section" class="bg-light p-4 rounded">
-                            <div class="row g-3">
+                            <div class="row g-2">
                                 <!-- Lọc theo danh mục -->
                                 <div class="col-md-2">
                                     <label class="form-label fw-bold">Danh mục</label>
@@ -59,22 +80,30 @@
                                     </select>
                                 </div>
 
+                                <!-- Sắp xếp -->
+                                <div class="col-md-2">
+                                    <label class="form-label fw-bold">Số lượng</label>
+                                    <select name="sort" class="form-select">
+                                        <option value="desc" ${sortOrder == 'desc' ? 'selected' : ''}>Đã đủ</option>
+                                        <option value="asc" ${sortOrder == 'asc' ? 'selected' : ''}>Còn trống</option>
+                                    </select>
+                                </div>
+
                                 <!-- Từ ngày -->
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <label class="form-label fw-bold">Từ ngày</label>
                                     <input type="date" name="startDate" class="form-control" value="${startDate}">
                                 </div>
 
                                 <!-- Đến ngày -->
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <label class="form-label fw-bold">Đến ngày</label>
                                     <input type="date" name="endDate" class="form-control" value="${endDate}">
                                 </div>
 
                                 <!-- Nút lọc -->
                                 <div class="col-md-2 d-flex align-items-end">
-                                    <button type="submit" class="btn btn-primary w-100">
-                                        <i class="icon-search"></i> Lọc
+                                    <button type="submit" class="btn btn-primary w-100"> Lọc
                                     </button>
                                 </div>
                             </div>

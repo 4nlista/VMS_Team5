@@ -124,6 +124,8 @@
                                                     </div>
                                                 </div>
 
+                                                <!-- ẨN TRƯỜNG ROLE - GIỮ CODE ĐỂ PHÒNG MAI THẦY CÔ YÊU CẦU BẬT LẠI -->
+                                                <!--
                                                 <div class="col-md-6">
                                                     <label class="form-label">Vai trò <span class="text-danger">*</span></label>
                                                     <div class="row">
@@ -143,6 +145,10 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                -->
+                                                
+                                                <!-- MẶC ĐỊNH ROLE = VOLUNTEER -->
+                                                <input type="hidden" name="role" value="volunteer" />
                                             </div>
 
                                             <!-- Submit -->

@@ -67,7 +67,7 @@
                                     <div class="col-md-6">
                                         <h5 class="mb-3">Phương thức thanh toán</h5>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="paymentMethod" value="QR Code" readonly="">
+                                            <input class="form-check-input" type="radio" name="paymentMethod" value="QR Code" checked readonly>
                                             <label class="form-check-label">
                                                 <i class="bi bi-qr-code"></i> Thanh toán bằng QR Code
                                             </label>
@@ -78,7 +78,7 @@
                                     <div class="col-md-6">
                                         <h5 class="mb-3">Thông tin giao dịch</h5>
                                         <label class="form-label">Số tiền ủng hộ (VNĐ) <span class="text-danger">*</span></label>
-                                        <input type="number" class="form-control" name="amount" min="10000" step="1000" placeholder="Ví dụ: 100000" required>
+                                        <input type="number" class="form-control" name="amount" min="10000" step="1" placeholder="Ví dụ: 100000" required>
                                         <small class="text-muted">Tối thiểu 10,000 VNĐ</small>
                                     </div>
                                 </div>

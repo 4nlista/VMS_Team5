@@ -45,7 +45,11 @@ public class RegisterServlet extends HttpServlet {
         String phone = request.getParameter("phone");
         String address = request.getParameter("address");
         String gender = request.getParameter("gender");
+        // MẶC ĐỊNH ROLE = VOLUNTEER (nếu không có hoặc rỗng thì gán volunteer)
         String role = request.getParameter("role");
+        if (role == null || role.trim().isEmpty()) {
+            role = "volunteer";
+        }
         String dobStr = request.getParameter("dob");
 
         //  Kiểm tra mật khẩu khớp
