@@ -81,4 +81,9 @@ public class DisplayEventService {
     public int getTotalFilteredEvents(Integer categoryId, String startDateStr, String endDateStr) {
         return viewEventsDAO.getTotalFilteredEvents(categoryId, startDateStr, endDateStr);
     }
+    
+    // Kiểm tra volunteer đã donate cho event chưa
+    public boolean hasDonated(int volunteerId, int eventId) {
+        return viewEventsDAO.hasVolunteerDonated(volunteerId, eventId);
+    }
 }

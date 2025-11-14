@@ -80,11 +80,13 @@ public class GuessEventServlet extends HttpServlet {
             for (Event e : events) {
                 boolean hasApplied = volunteerapplyService.hasApplied(volunteerId, e.getId());
                 int rejectedCount = volunteerapplyService.countRejected(e.getId(), volunteerId);
-                boolean isFull = volunteerapplyService.isEventFull(e.getId());  
+                boolean isFull = volunteerapplyService.isEventFull(e.getId());
+                boolean hasDonated = displayService.hasDonated(volunteerId, e.getId());
 
                 e.setHasApplied(hasApplied);
                 e.setRejectedCount(rejectedCount);
                 e.setIsFull(isFull);
+                e.setHasDonated(hasDonated);
             }
         } else {
             // Nếu chưa login thì vẫn check full
