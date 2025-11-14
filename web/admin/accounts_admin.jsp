@@ -74,15 +74,18 @@
                         <i class="bi bi-plus-circle"></i> Tạo tài khoản
                     </a>
                 </div>
+                <form action="">
+                    <button class="btn btn-info text-black mb-4">
+                            Gửi thông báo chung
+                    </button>
+                </form>
+
 
                 <!-- Bảng dữ liệu -->
                 <table class="table table-bordered table-hover">
                     <thead class="table-dark">
                         <tr>
-                            <th>ID
-                                <a href="?sort=id_asc"><i class="bi bi-caret-up-fill text-white ms-1"></i></a>
-                                <a href="?sort=id_desc"><i class="bi bi-caret-down-fill text-white"></i></a>
-                            </th>
+                            <th>ID</th>
                             <th>Tài khoản</th>
                             <th>Vai trò</th>
                             <th>Trạng thái</th>
@@ -148,6 +151,11 @@
                                                 </a>
                                             </c:otherwise>
                                         </c:choose>
+
+                                        <a class="btn btn-warning btn-sm btn-icon" title="Gửi thông báo"
+                                           href="<%= request.getContextPath() %>/.....">
+                                            <i class="bi bi-send"></i>
+                                        </a>
                                     </div>
 
                                 </td>
