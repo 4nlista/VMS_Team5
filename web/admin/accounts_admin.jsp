@@ -100,12 +100,12 @@
                                     <c:choose>
                                         <c:when test="${acc.status}">
                                             <span class="badge bg-success">
-                                                <i class="bi bi-circle-fill me-1"></i> Active
+                                                <i class="bi bi-circle-fill me-1"></i> Hoạt động
                                             </span>
                                         </c:when>
                                         <c:otherwise>
                                             <span class="badge bg-danger">
-                                                <i class="bi bi-circle-fill me-1"></i> Inactive
+                                                <i class="bi bi-circle-fill me-1"></i> Ngừng hoạt động
                                             </span>
                                         </c:otherwise>
                                     </c:choose>

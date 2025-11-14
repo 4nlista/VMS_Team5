@@ -147,18 +147,18 @@
                                             <td>
                                                 <c:choose>
                                                     <c:when test="${user.account.role == 'admin'}">
-                                                        <span class="badge bg-danger">
-                                                            <i class="bi bi-shield-check me-1"></i>Quản Trị
+                                                        <span class="badge bg-info text-dark">
+                                                            Quản Trị Viên
                                                         </span>
                                                     </c:when>
                                                     <c:when test="${user.account.role == 'organization'}">
-                                                        <span class="badge bg-warning text-dark">
-                                                            <i class="bi bi-building me-1"></i>Tổ Chức
+                                                        <span class="badge bg-success text-white">
+                                                            Tổ Chức Viên
                                                         </span>
                                                     </c:when>
                                                     <c:when test="${user.account.role == 'volunteer'}">
-                                                        <span class="badge bg-success">
-                                                            <i class="bi bi-heart me-1"></i>Tình Nguyện
+                                                        <span class="badge bg-secondary">
+                                                            Tình Nguyện Viên
                                                         </span>
                                                     </c:when>
                                                     <c:otherwise>
