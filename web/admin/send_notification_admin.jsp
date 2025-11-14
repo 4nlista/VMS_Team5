@@ -57,7 +57,14 @@
                             </div>
                             <div class="col-md-6">
                                 <p><strong>Vai trò:</strong> <span class="badge bg-info">${account.role}</span></p>
-                                <p><strong>Họ tên:</strong> ${user.fullName}</p>
+                                <c:choose>
+                                    <c:when test="${not empty user}">
+                                        <p><strong>Họ tên:</strong> ${user.full_name}</p>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <p><strong>Họ tên:</strong> <span class="text-muted">(Chưa cập nhật)</span></p>
+                                    </c:otherwise>
+                                </c:choose>
                             </div>
                         </div>
                     </div>

@@ -70,7 +70,7 @@ public class AdminSendNotificationServlet extends HttpServlet {
             request.getRequestDispatcher("/admin/send_all_notification_admin.jsp").forward(request, response);
             
         } else if ("countRecipients".equals(action)) {
-            // AJAX: Đếm số lượng recipients
+            // Đếm số lượng recipients
             String rolesParam = request.getParameter("roles");
             String statusFilter = request.getParameter("status");
             
@@ -109,7 +109,12 @@ public class AdminSendNotificationServlet extends HttpServlet {
             int receiverId = Integer.parseInt(request.getParameter("receiverId"));
             String message = request.getParameter("message");
             
+            System.out.println("🔔 Admin " + admin.getId() + " gửi thông báo đến account " + receiverId);
+            System.out.println("📝 Message: " + message);
+            
             boolean success = notificationService.sendIndividualNotification(admin.getId(), receiverId, message);
+            
+            System.out.println("✅ Kết quả: " + (success ? "Thành công" : "Thất bại"));
             
             if (success) {
                 response.sendRedirect(request.getContextPath() + "/admin/AdminSendNotificationServlet?action=individual&accountId=" + receiverId + "&msg=success");
@@ -123,8 +128,15 @@ public class AdminSendNotificationServlet extends HttpServlet {
             String rolesParam = request.getParameter("roles");
             String statusFilter = request.getParameter("status");
             
+            System.out.println("🔔 Admin " + admin.getId() + " gửi thông báo chung");
+            System.out.println("📝 Message: " + message);
+            System.out.println("👥 Roles: " + rolesParam);
+            System.out.println("✔️ Status filter: " + statusFilter);
+            
             List<String> roles = Arrays.asList(rolesParam.split(","));
             int successCount = notificationService.sendBulkNotification(admin.getId(), message, roles, statusFilter);
+            
+            System.out.println("✅ Đã gửi thành công: " + successCount + " thông báo");
             
             if (successCount > 0) {
                 response.sendRedirect(request.getContextPath() + "/admin/AdminSendNotificationServlet?action=all&msg=success&count=" + successCount);

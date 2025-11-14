@@ -26,26 +26,39 @@ public class AdminSendNotificationService {
     
     // Gửi thông báo cá nhân từ Admin đến 1 account
     public boolean sendIndividualNotification(int adminId, int receiverId, String message) {
+        System.out.println("🔍 [Service] sendIndividualNotification called");
+        System.out.println("   - adminId: " + adminId);
+        System.out.println("   - receiverId: " + receiverId);
+        System.out.println("   - message length: " + (message != null ? message.trim().length() : 0));
+        
         // Validate message
         if (message == null || message.trim().length() < 10 || message.trim().length() > 500) {
+            System.out.println("❌ [Service] Message validation FAILED");
             return false;
         }
+        System.out.println("✅ [Service] Message validation passed");
         
         // Kiểm tra receiver tồn tại
         Account receiver = accountDAO.getAccountById(receiverId);
         if (receiver == null) {
+            System.out.println("❌ [Service] Receiver account NOT FOUND");
             return false;
         }
+        System.out.println("✅ [Service] Receiver account found: " + receiver.getUsername());
         
         // Tạo notification
         Notification notification = new Notification();
         notification.setSenderId(adminId);
         notification.setReceiverId(receiverId);
         notification.setMessage(message.trim());
-        notification.setType("admin_announcement"); // Loại thông báo từ admin
+        notification.setType("system"); // Loại thông báo từ admin - dùng type 'system'
         notification.setEventId(0); // Admin gửi không liên quan event
         
-        return notificationDAO.insertNotification(notification);
+        System.out.println("📤 [Service] Calling NotificationDAO.insertNotification...");
+        boolean result = notificationDAO.insertNotification(notification);
+        System.out.println((result ? "✅" : "❌") + " [Service] Insert result: " + result);
+        
+        return result;
     }
     
     // Gửi thông báo chung cho nhiều accounts (filter theo roles và status)
@@ -64,7 +77,7 @@ public class AdminSendNotificationService {
             notification.setSenderId(adminId);
             notification.setReceiverId(recipient.getId());
             notification.setMessage(message.trim());
-            notification.setType("admin_announcement");
+            notification.setType("system"); // Loại thông báo từ admin - dùng type 'system'
             notification.setEventId(0);
             
             if (notificationDAO.insertNotification(notification)) {

@@ -31,6 +31,14 @@ public class NotificationDAO {
     public boolean insertNotification(Notification notification) {
         String sql = "INSERT INTO Notifications (sender_id, receiver_id, message, type, event_id) "
                 + "VALUES (?, ?, ?, ?, ?)";
+        System.out.println("🔍 [DAO] insertNotification called");
+        System.out.println("   SQL: " + sql);
+        System.out.println("   - sender_id: " + notification.getSenderId());
+        System.out.println("   - receiver_id: " + notification.getReceiverId());
+        System.out.println("   - message: " + notification.getMessage());
+        System.out.println("   - type: " + notification.getType());
+        System.out.println("   - event_id: " + notification.getEventId());
+        
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, notification.getSenderId());
@@ -42,8 +50,14 @@ public class NotificationDAO {
             } else {
                 ps.setNull(5, Types.INTEGER);  // Nếu = 0 thì set NULL
             }
-            return ps.executeUpdate() > 0;
+            int rowsAffected = ps.executeUpdate();
+            System.out.println("✅ [DAO] Rows affected: " + rowsAffected);
+            return rowsAffected > 0;
         } catch (SQLException e) {
+            System.out.println("❌ [DAO] SQLException occurred!");
+            System.out.println("   Error message: " + e.getMessage());
+            System.out.println("   SQL State: " + e.getSQLState());
+            System.out.println("   Error Code: " + e.getErrorCode());
             e.printStackTrace();
             return false;
         }

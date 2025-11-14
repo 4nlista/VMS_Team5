@@ -154,11 +154,6 @@
                                                 </a>
                                             </c:otherwise>
                                         </c:choose>
-
-                                        <a class="btn btn-warning btn-sm btn-icon" title="Gửi thông báo"
-                                           href="<%= request.getContextPath() %>/.....">
-                                            <i class="bi bi-send"></i>
-                                        </a>
                                     </div>
 
                                 </td>
@@ -210,7 +205,7 @@
                 </div>
             </div>
 
-            <!-- Detail Modal -->
+<!--             Detail Modal 
             <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -230,13 +225,13 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>-->
 
         </div>
 
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script>
+<!--        <script>
             const detailModal = document.getElementById('detailModal');
             if (detailModal) {
                 detailModal.addEventListener('show.bs.modal', event => {
@@ -270,6 +265,6 @@
                     alert.close();
                 }, 3000);
             }
-        </script>
+        </script>-->
     </body>
 </html>
