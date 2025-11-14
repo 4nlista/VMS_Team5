@@ -287,16 +287,64 @@ public class AttendanceDAO {
         return false;
     }
     
-    // Validate 3: Tự động chuyển status "pending" thành "absent" khi sự kiện kết thúc
-    public int autoMarkAbsentForPendingAttendance(int eventId) {
-        String sql = "UPDATE Attendance SET status = 'absent' "
-                + "WHERE event_id = ? AND status = 'pending' "
-                + "AND EXISTS (SELECT 1 FROM Events WHERE id = ? AND end_date < GETDATE())";
+    // Tự động mark absent cho sự kiện đã kết thúc (dùng chung cho cả Organization & Volunteer)
+    // Có thể truyền eventId (1 event) hoặc null (tất cả events của volunteer)
+    public int autoMarkAbsentForEndedEvents(Integer eventId, Integer volunteerId) {
+        int totalUpdated = 0;
+        
+        // Bước 1: INSERT record 'absent' cho các sự kiện đã kết thúc mà chưa có trong Attendance
+        StringBuilder insertSql = new StringBuilder("""
+            INSERT INTO Attendance (event_id, volunteer_id, status)
+            SELECT ev.event_id, ev.volunteer_id, 'absent'
+            FROM Event_Volunteers ev
+            JOIN Events e ON ev.event_id = e.id
+            WHERE ev.status = 'approved'
+              AND e.end_date < GETDATE()
+              AND NOT EXISTS (
+                  SELECT 1 FROM Attendance a 
+                  WHERE a.event_id = ev.event_id 
+                    AND a.volunteer_id = ev.volunteer_id
+              )
+        """);
+        
+        // Bước 2: UPDATE các record 'pending' thành 'absent' cho sự kiện đã kết thúc
+        StringBuilder updateSql = new StringBuilder("""
+            UPDATE Attendance 
+            SET status = 'absent' 
+            WHERE status = 'pending' 
+              AND event_id IN (
+                  SELECT e.id 
+                  FROM Events e 
+                  WHERE e.end_date < GETDATE()
+              )
+        """);
+        
         try {
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setInt(1, eventId);
-            ps.setInt(2, eventId);
-            return ps.executeUpdate(); // Trả về số row bị ảnh hưởng
+            // Thêm điều kiện filter theo eventId hoặc volunteerId
+            if (eventId != null) {
+                insertSql.append(" AND ev.event_id = ?");
+                updateSql.append(" AND event_id = ?");
+            }
+            if (volunteerId != null) {
+                insertSql.append(" AND ev.volunteer_id = ?");
+                updateSql.append(" AND volunteer_id = ?");
+            }
+            
+            // Thực hiện INSERT
+            PreparedStatement psInsert = connection.prepareStatement(insertSql.toString());
+            int paramIndex = 1;
+            if (eventId != null) psInsert.setInt(paramIndex++, eventId);
+            if (volunteerId != null) psInsert.setInt(paramIndex++, volunteerId);
+            totalUpdated += psInsert.executeUpdate();
+            
+            // Thực hiện UPDATE
+            PreparedStatement psUpdate = connection.prepareStatement(updateSql.toString());
+            paramIndex = 1;
+            if (eventId != null) psUpdate.setInt(paramIndex++, eventId);
+            if (volunteerId != null) psUpdate.setInt(paramIndex++, volunteerId);
+            totalUpdated += psUpdate.executeUpdate();
+            
+            return totalUpdated;
         } catch (SQLException e) {
             e.printStackTrace();
             return 0;

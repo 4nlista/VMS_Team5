@@ -18,8 +18,8 @@ public class AttendanceService {
 
     // Lấy danh sách volunteer để điểm danh
     public List<Attendance> getVolunteersForAttendance(int eventId, String statusFilter) {
-        // Tự động mark absent cho pending khi sự kiện kết thúc
-        attendanceDAO.autoMarkAbsentForPendingAttendance(eventId);
+        // Tự động mark absent cho pending khi sự kiện kết thúc (Organization)
+        attendanceDAO.autoMarkAbsentForEndedEvents(eventId, null);
         
         return attendanceDAO.getVolunteersForAttendance(eventId, statusFilter);
     }
@@ -57,6 +57,9 @@ public class AttendanceService {
     
     // Lấy danh sách attendance với phân trang và filter
     public List<Attendance> getAttendanceHistoryPaginated(int volunteerId, int page, int pageSize, String statusFilter) {
+        // Tự động mark absent cho tất cả sự kiện đã kết thúc của volunteer này (Volunteer)
+        attendanceDAO.autoMarkAbsentForEndedEvents(null, volunteerId);
+        
         return attendanceDAO.getAttendanceHistoryPaginated(volunteerId, page, pageSize, statusFilter);
     }
     
