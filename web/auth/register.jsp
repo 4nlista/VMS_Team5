@@ -25,7 +25,7 @@
             <div class="container py-5">
                 <div class="row justify-content-center align-items-center">
                     <div class="col-xl-9">
-                        <!-- ✅ Alert ở ngoài card -->
+                        <!-- Alert ở ngoài card -->
                         <% if (error != null) { %>
                         <div class="alert alert-danger alert-dismissible fade show" role="alert" id="errorAlert">
                             <i class="bi bi-exclamation-triangle-fill me-2"></i>
