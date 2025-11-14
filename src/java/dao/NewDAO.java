@@ -166,4 +166,80 @@ public class NewDAO {
         return 0;
     }
 
+    // Filter news by date and time with pagination
+    public List<New> getNewsByDateTimeRangePaged(String startDateTime, String endDateTime, int offset, int limit) {
+        List<New> list = new ArrayList<>();
+        String sql = """
+                    SELECT 
+                        n.id,
+                        n.title,
+                        n.content,
+                        n.images,
+                        n.created_at,
+                        n.updated_at,
+                        n.organization_id,
+                        n.status,
+                        u.full_name AS organization_name
+                    FROM News AS n
+                    JOIN Users AS u 
+                        ON n.organization_id = u.id
+                    WHERE n.created_at >= ?
+                      AND n.created_at <= ?
+                      AND n.status = 'published'
+                    ORDER BY n.created_at DESC
+                    OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
+                    """;
+        
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, startDateTime);
+            ps.setString(2, endDateTime);
+            ps.setInt(3, offset);
+            ps.setInt(4, limit);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    New e = new New(
+                        rs.getInt("id"),
+                        rs.getString("title"),
+                        rs.getString("content"),
+                        rs.getString("images"),
+                        rs.getTimestamp("created_at"),
+                        rs.getTimestamp("updated_at"),
+                        rs.getInt("organization_id"),
+                        rs.getString("status"),
+                        rs.getString("organization_name")
+                    );
+                    list.add(e);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return list;
+    }
+
+    // Count news in date-time range for pagination
+    public int countNewsByDateTimeRange(String startDateTime, String endDateTime) {
+        String sql = """
+                    SELECT COUNT(*) 
+                    FROM News 
+                    WHERE created_at >= ?
+                      AND created_at <= ?
+                      AND status = 'published'
+                    """;
+        
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, startDateTime);
+            ps.setString(2, endDateTime);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return 0;
+    }
 }
