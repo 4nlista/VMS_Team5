@@ -107,6 +107,10 @@
                                     <textarea class="form-control" rows="2" name="note" placeholder="Ghi chú thêm..."></textarea>
                                 </div>
 
+                                <div class="alert alert-info mb-3">
+                                    <i class="bi bi-info-circle-fill"></i> <strong>Lưu ý:</strong> Bạn sẽ không thể hủy đơn đăng ký trước 24h diễn ra sự kiện.
+                                </div>
+
                                 <div class="d-flex justify-content-between">
                                     <c:if test="${isFull}">
                                         <div class="alert alert-warning">

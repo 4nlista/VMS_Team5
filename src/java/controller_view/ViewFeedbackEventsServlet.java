@@ -52,24 +52,44 @@ public class ViewFeedbackEventsServlet extends HttpServlet {
                 return;
             }
             
-            // Lấy danh sách feedback valid của event
-            List<Feedback> feedbacks = feedbackDAO.getValidFeedbacksByEventId(eventId);
-            
-            // Lấy tham số page để quay lại đúng trang
-            String pageParam = request.getParameter("page");
-            int page = 1;
-            if (pageParam != null && !pageParam.isEmpty()) {
+            // Lấy tham số page cho phân trang feedback
+            String feedbackPageParam = request.getParameter("feedbackPage");
+            int feedbackPage = 1;
+            if (feedbackPageParam != null && !feedbackPageParam.isEmpty()) {
                 try {
-                    page = Integer.parseInt(pageParam);
+                    feedbackPage = Integer.parseInt(feedbackPageParam);
                 } catch (NumberFormatException e) {
-                    page = 1;
+                    feedbackPage = 1;
+                }
+            }
+            
+            int pageSize = 5;
+            
+            // Lấy danh sách feedback với phân trang
+            List<Feedback> feedbacks = feedbackDAO.getValidFeedbacksByEventIdPaged(eventId, feedbackPage, pageSize);
+            
+            // Đếm tổng số feedback
+            int totalFeedbacks = feedbackDAO.countValidFeedbacksByEventId(eventId);
+            int totalPages = (int) Math.ceil((double) totalFeedbacks / pageSize);
+            
+            // Lấy tham số page để quay lại đúng trang sự kiện
+            String eventPageParam = request.getParameter("page");
+            int eventPage = 1;
+            if (eventPageParam != null && !eventPageParam.isEmpty()) {
+                try {
+                    eventPage = Integer.parseInt(eventPageParam);
+                } catch (NumberFormatException e) {
+                    eventPage = 1;
                 }
             }
             
             // Set attributes
             request.setAttribute("event", event);
             request.setAttribute("feedbacks", feedbacks);
-            request.setAttribute("returnPage", page);
+            request.setAttribute("currentPage", feedbackPage);
+            request.setAttribute("totalPages", totalPages);
+            request.setAttribute("returnPage", eventPage);
+            request.setAttribute("eventId", eventId);
             
             // Forward to JSP
             request.getRequestDispatcher("/feedback_events.jsp").forward(request, response);

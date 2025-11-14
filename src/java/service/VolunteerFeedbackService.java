@@ -5,6 +5,7 @@
 package service;
 
 import dao.VolunteerFeedbackDAO;
+import java.util.List;
 import model.Feedback;
 
 /**
@@ -149,5 +150,27 @@ public class VolunteerFeedbackService {
      */
     public boolean hasFeedback(int eventId, int volunteerId) {
         return feedbackDAO.getFeedbackByEventAndVolunteer(eventId, volunteerId) != null;
+    }
+
+    /**
+     * Lấy danh sách feedback với phân trang
+     *
+     * @param eventId ID của event
+     * @param page Trang hiện tại
+     * @param pageSize Số lượng feedback mỗi trang
+     * @return Danh sách feedback
+     */
+    public List<Feedback> getValidFeedbacksPaged(int eventId, int page, int pageSize) {
+        return feedbackDAO.getValidFeedbacksByEventIdPaged(eventId, page, pageSize);
+    }
+
+    /**
+     * Đếm tổng số feedback valid
+     *
+     * @param eventId ID của event
+     * @return Tổng số feedback
+     */
+    public int countValidFeedbacks(int eventId) {
+        return feedbackDAO.countValidFeedbacksByEventId(eventId);
     }
 }

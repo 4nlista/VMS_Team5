@@ -23,7 +23,7 @@
             </div>
             <div class="col-md-4">
                 <div class="ftco-footer-widget mb-4">
-                    <h2 class="ftco-heading-2">Recent Blog</h2>
+                    <h2 class="ftco-heading-2">Các tin tức</h2>
                     <div class="block-21 mb-4 d-flex">
                         <a class="blog-img mr-4" style="background-image: url(images/image_1.jpg);"></a>
                         <div class="text">
@@ -50,7 +50,7 @@
             </div>
             <div class="col-md-2">
                 <div class="ftco-footer-widget mb-4 ml-md-4">
-                    <h2 class="ftco-heading-2">Site Links</h2>
+                    <h2 class="ftco-heading-2">Link</h2>
                     <ul class="list-unstyled">
                         <li><a href="" class="py-2 d-block">Trang chủ</a></li>
                         <li><a href="" class="py-2 d-block">Giới thiệu</a></li>

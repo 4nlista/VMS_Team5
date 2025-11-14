@@ -249,4 +249,80 @@ public class VolunteerFeedbackDAO {
         }
         return feedbacks;
     }
+    
+    /**
+     * Lấy danh sách feedback với phân trang
+     *
+     * @param eventId ID của event
+     * @param page Trang hiện tại
+     * @param pageSize Số lượng feedback mỗi trang
+     * @return Danh sách feedback có status = 'valid'
+     */
+    public List<Feedback> getValidFeedbacksByEventIdPaged(int eventId, int page, int pageSize) {
+        List<Feedback> feedbacks = new ArrayList<>();
+        int offset = (page - 1) * pageSize;
+        
+        String sql = "SELECT f.id, f.event_id, f.volunteer_id, f.rating, f.comment, "
+                + "f.feedback_date, f.status, "
+                + "e.title AS event_title, "
+                + "u_vol.full_name AS volunteer_name, "
+                + "u_org.full_name AS organization_name "
+                + "FROM Feedback f "
+                + "JOIN Events e ON f.event_id = e.id "
+                + "JOIN Users u_vol ON f.volunteer_id = u_vol.account_id "
+                + "JOIN Users u_org ON e.organization_id = u_org.account_id "
+                + "WHERE f.event_id = ? AND f.status = 'valid' "
+                + "ORDER BY f.feedback_date DESC "
+                + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, eventId);
+            ps.setInt(2, offset);
+            ps.setInt(3, pageSize);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Feedback feedback = new Feedback(
+                        rs.getInt("id"),
+                        rs.getInt("event_id"),
+                        rs.getInt("volunteer_id"),
+                        rs.getInt("rating"),
+                        rs.getString("comment"),
+                        rs.getTimestamp("feedback_date"),
+                        rs.getString("status"),
+                        rs.getString("event_title"),
+                        rs.getString("volunteer_name"),
+                        rs.getString("organization_name")
+                );
+                feedbacks.add(feedback);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return feedbacks;
+    }
+    
+    /**
+     * Đếm tổng số feedback valid của event
+     *
+     * @param eventId ID của event
+     * @return Tổng số feedback
+     */
+    public int countValidFeedbacksByEventId(int eventId) {
+        String sql = "SELECT COUNT(*) FROM Feedback WHERE event_id = ? AND status = 'valid'";
+        
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, eventId);
+            ResultSet rs = ps.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 }

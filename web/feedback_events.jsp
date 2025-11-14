@@ -89,6 +89,34 @@
                                                 </tbody>
                                             </table>
                                         </div>
+                                        
+                                        <!-- Phân trang - LUÔN HIỆN -->
+                                        <c:if test="${totalPages >= 1}">
+                                            <nav aria-label="Feedback pagination" class="mt-4">
+                                                <ul class="pagination justify-content-center">
+                                                    <!-- Nút Trước -->
+                                                    <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                                                        <a class="page-link" href="?eventId=${eventId}&feedbackPage=${currentPage - 1}&page=${returnPage}">
+                                                            &lt; Trước
+                                                        </a>
+                                                    </li>
+
+                                                    <!-- Các số trang -->
+                                                    <c:forEach var="i" begin="1" end="${totalPages}">
+                                                        <li class="page-item ${i == currentPage ? 'active' : ''}">
+                                                            <a class="page-link" href="?eventId=${eventId}&feedbackPage=${i}&page=${returnPage}">${i}</a>
+                                                        </li>
+                                                    </c:forEach>
+
+                                                    <!-- Nút Sau -->
+                                                    <li class="page-item ${currentPage >= totalPages ? 'disabled' : ''}">
+                                                        <a class="page-link" href="?eventId=${eventId}&feedbackPage=${currentPage + 1}&page=${returnPage}">
+                                                            Sau &gt;
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </nav>
+                                        </c:if>
                                     </c:otherwise>
                                 </c:choose>
 
