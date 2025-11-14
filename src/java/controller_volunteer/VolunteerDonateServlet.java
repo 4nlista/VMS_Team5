@@ -60,10 +60,12 @@ public class VolunteerDonateServlet extends HttpServlet {
         session.setAttribute("username", acc.getUsername());
         int volunteerId = acc.getId();
 
-        // Lấy thông tin phân trang
+        // Lấy thông tin phân trang và filter
         int pageIndex = 1;
-        int pageSize = 10;
+        int pageSize = 5; // Đổi từ 10 thành 5
         String pageParam = request.getParameter("page");
+        String startDate = request.getParameter("startDate");
+        String endDate = request.getParameter("endDate");
 
         if (pageParam != null) {
             try {
@@ -76,14 +78,25 @@ public class VolunteerDonateServlet extends HttpServlet {
             }
         }
 
-        // Lấy tổng số donations
-        int totalDonations = displayDonateService.getTotalDonationsByVolunteer(volunteerId);
+        // Kiểm tra có filter ngày không
+        boolean hasDateFilter = (startDate != null && !startDate.trim().isEmpty()) 
+                             || (endDate != null && !endDate.trim().isEmpty());
+
+        List<Donation> volunteerDonations;
+        int totalDonations;
+        
+        if (hasDateFilter) {
+            // Lấy với filter ngày
+            volunteerDonations = displayDonateService.getUserDonationsPagedWithDateFilter(volunteerId, pageIndex, pageSize, startDate, endDate);
+            totalDonations = displayDonateService.getTotalDonationsByVolunteerWithDateFilter(volunteerId, startDate, endDate);
+        } else {
+            // Lấy bình thường
+            volunteerDonations = displayDonateService.getUserDonationsPaged(volunteerId, pageIndex, pageSize);
+            totalDonations = displayDonateService.getTotalDonationsByVolunteer(volunteerId);
+        }
 
         // Tính tổng số trang
         int totalPages = (int) Math.ceil((double) totalDonations / pageSize);
-
-        // Lấy danh sách donations theo trang
-        List<Donation> volunteerDonations = displayDonateService.getUserDonationsPaged(volunteerId, pageIndex, pageSize);
 
         // Lấy top3 và all (nếu cần)
         List<Donation> top3Donations = displayDonateService.getTop3UserDonation();
@@ -94,6 +107,8 @@ public class VolunteerDonateServlet extends HttpServlet {
         request.setAttribute("currentPage", pageIndex);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("pageSize", pageSize);
+        request.setAttribute("startDate", startDate);
+        request.setAttribute("endDate", endDate);
         request.setAttribute("top3Donations", top3Donations);
         request.setAttribute("allDonations", allDonations);
 

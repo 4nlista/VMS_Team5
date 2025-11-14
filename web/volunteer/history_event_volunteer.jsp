@@ -200,14 +200,14 @@
                         </tbody>
                     </table>
 
-                    <!-- Phân trang -->
-                    <c:if test="${totalPages > 1}">
+                    <!-- Phân trang - LUÔN HIỆN -->
+                    <c:if test="${totalPages >= 1}">
                         <nav aria-label="Page navigation" class="mt-4">
                             <ul class="pagination justify-content-center">
                                 <!-- Previous -->
                                 <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
                                     <a class="page-link" href="VolunteerEventServlet?page=${currentPage - 1}&status=${statusFilter}&sort=${sortOrder}">
-                                        Trước
+                                        &lt; Trước
                                     </a>
                                 </li>
 
@@ -221,9 +221,9 @@
                                 </c:forEach>
 
                                 <!-- Next -->
-                                <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                                <li class="page-item ${currentPage >= totalPages ? 'disabled' : ''}">
                                     <a class="page-link" href="VolunteerEventServlet?page=${currentPage + 1}&status=${statusFilter}&sort=${sortOrder}">
-                                        Sau
+                                        Sau &gt;
                                     </a>
                                 </li>
                             </ul>

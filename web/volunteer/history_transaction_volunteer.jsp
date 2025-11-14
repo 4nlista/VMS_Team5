@@ -15,6 +15,35 @@
         <div class="page-content container-fluid mt-5 pt-5 pb-5" style="max-width: 1400px;">
             <h1 class="mb-4 text-center">Lịch sử thanh toán</h1>
 
+            <!-- Form lọc theo ngày -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <form method="GET" action="<%= request.getContextPath() %>/VolunteerDonateServlet" class="row g-3 align-items-end">
+                        <div class="col-md-4">
+                            <label for="startDate" class="form-label fw-bold">
+                                <i class="bi bi-calendar-event"></i> Từ ngày
+                            </label>
+                            <input type="date" class="form-control" id="startDate" name="startDate" value="${startDate}">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="endDate" class="form-label fw-bold">
+                                <i class="bi bi-calendar-check"></i> Đến ngày
+                            </label>
+                            <input type="date" class="form-control" id="endDate" name="endDate" value="${endDate}">
+                        </div>
+                        <div class="col-md-4">
+                            <input type="hidden" name="page" value="1">
+                            <button type="submit" class="btn btn-primary me-2">
+                                <i class="bi bi-funnel"></i> Lọc
+                            </button>
+                            <a href="<%= request.getContextPath() %>/VolunteerDonateServlet" class="btn btn-secondary">
+                                <i class="bi bi-x-circle"></i> Xóa lọc
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <div class="card shadow-sm border">
                 <div class="card-body">
                     <div class="table-responsive">
@@ -85,8 +114,7 @@
                                     <!-- Nút Trước (disabled nếu ở trang 1) -->
                                     <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
                                         <a class="page-link" 
-                                           href="${currentPage > 1 ? '?page='+(currentPage - 1) : '#'}" 
-                                           ${currentPage == 1 ? 'tabindex="-1" aria-disabled="true"' : ''}>
+                                           href="?page=${currentPage - 1}&startDate=${startDate}&endDate=${endDate}">
                                             &lt; Trước
                                         </a>
                                     </li>
@@ -94,15 +122,14 @@
                                     <!-- Các nút số trang -->
                                     <c:forEach var="i" begin="1" end="${totalPages}">
                                         <li class="page-item ${i == currentPage ? 'active' : ''}">
-                                            <a class="page-link" href="?page=${i}">${i}</a>
+                                            <a class="page-link" href="?page=${i}&startDate=${startDate}&endDate=${endDate}">${i}</a>
                                         </li>
                                     </c:forEach>
 
                                     <!-- Nút Sau (disabled nếu ở trang cuối) -->
                                     <li class="page-item ${currentPage >= totalPages ? 'disabled' : ''}">
                                         <a class="page-link" 
-                                           href="${currentPage < totalPages ? '?page='+(currentPage + 1) : '#'}" 
-                                           ${currentPage >= totalPages ? 'tabindex="-1" aria-disabled="true"' : ''}>
+                                           href="?page=${currentPage + 1}&startDate=${startDate}&endDate=${endDate}">
                                             Sau &gt;
                                         </a>
                                     </li>

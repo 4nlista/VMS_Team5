@@ -1,6 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.util.List"%>
 <%@page import="model.Attendance"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -16,6 +17,34 @@
 
         <div class="page-content container mt-5 pt-5 pb-5">
             <h1 class="mb-4 text-center">Lịch sử điểm danh</h1>
+
+            <!-- Form lọc trạng thái -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <form method="GET" action="<%= request.getContextPath() %>/VolunteerAttendanceServlet" class="row g-3">
+                        <div class="col-md-6">
+                            <label for="status" class="form-label fw-bold">
+                                <i class="bi bi-funnel"></i> Trạng thái điểm danh
+                            </label>
+                            <select name="status" id="status" class="form-select">
+                                <option value="all" ${statusFilter == 'all' ? 'selected' : ''}>Tất cả</option>
+                                <option value="present" ${statusFilter == 'present' ? 'selected' : ''}>Đã tham gia</option>
+                                <option value="absent" ${statusFilter == 'absent' ? 'selected' : ''}>Đã vắng</option>
+                                <option value="pending" ${statusFilter == 'pending' ? 'selected' : ''}>Chưa điểm danh</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 d-flex align-items-end gap-2">
+                            <input type="hidden" name="page" value="1">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-funnel-fill"></i> Lọc
+                            </button>
+                            <a href="<%= request.getContextPath() %>/VolunteerAttendanceServlet" class="btn btn-secondary">
+                                <i class="bi bi-x-circle"></i> Xóa lọc
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
 
             <div class="card shadow-sm border">
                 <div class="card-body">
@@ -74,6 +103,34 @@
                             <% } %>
                         </tbody>
                     </table>
+                    
+                    <!-- Phân trang - LUÔN HIỆN -->
+                    <c:if test="${totalPages >= 1}">
+                        <nav aria-label="Attendance pagination" class="mt-4">
+                            <ul class="pagination justify-content-center">
+                                <!-- Nút Trước -->
+                                <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                                    <a class="page-link" href="?page=${currentPage - 1}&status=${statusFilter}">
+                                        &lt; Trước
+                                    </a>
+                                </li>
+
+                                <!-- Các số trang -->
+                                <c:forEach var="i" begin="1" end="${totalPages}">
+                                    <li class="page-item ${i == currentPage ? 'active' : ''}">
+                                        <a class="page-link" href="?page=${i}&status=${statusFilter}">${i}</a>
+                                    </li>
+                                </c:forEach>
+
+                                <!-- Nút Sau -->
+                                <li class="page-item ${currentPage >= totalPages ? 'disabled' : ''}">
+                                    <a class="page-link" href="?page=${currentPage + 1}&status=${statusFilter}">
+                                        Sau &gt;
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </c:if>
                 </div>
             </div>
         </div>

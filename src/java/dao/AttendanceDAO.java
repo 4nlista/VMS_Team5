@@ -68,6 +68,102 @@ public class AttendanceDAO {
         }
         return list;
     }
+    
+    // Phân trang với filter status
+    public List<Attendance> getAttendanceHistoryPaginated(int volunteerId, int page, int pageSize, String statusFilter) {
+        List<Attendance> list = new ArrayList<>();
+        int offset = (page - 1) * pageSize;
+        
+        StringBuilder sql = new StringBuilder("""
+            SELECT 
+                ev.volunteer_id,
+                v.full_name AS volunteerName,
+                COALESCE(a.status, 'pending') AS status,
+                e.title AS eventTitle,
+                o.full_name AS organizationName,
+                e.start_date,
+                e.end_date
+            FROM Event_Volunteers ev
+            JOIN Events e ON ev.event_id = e.id
+            JOIN Users v ON ev.volunteer_id = v.account_id
+            JOIN Users o ON e.organization_id = o.account_id
+            LEFT JOIN Attendance a ON a.event_id = ev.event_id AND a.volunteer_id = ev.volunteer_id
+            WHERE ev.volunteer_id = ? AND ev.status = 'approved'
+        """);
+        
+        // Thêm filter status nếu có
+        if (statusFilter != null && !statusFilter.equals("all")) {
+            sql.append(" AND COALESCE(a.status, 'pending') = ?");
+        }
+        
+        sql.append(" ORDER BY e.start_date DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+        
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            
+            int paramIndex = 1;
+            ps.setInt(paramIndex++, volunteerId);
+            
+            if (statusFilter != null && !statusFilter.equals("all")) {
+                ps.setString(paramIndex++, statusFilter);
+            }
+            
+            ps.setInt(paramIndex++, offset);
+            ps.setInt(paramIndex++, pageSize);
+            
+            ResultSet rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                Attendance att = new Attendance(
+                        rs.getInt("volunteer_id"),
+                        rs.getString("volunteerName"),
+                        rs.getString("status"),
+                        rs.getString("eventTitle"),
+                        rs.getString("organizationName"),
+                        new java.util.Date(rs.getTimestamp("start_date").getTime()),
+                        new java.util.Date(rs.getTimestamp("end_date").getTime())
+                );
+                list.add(att);
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
+    // Đếm tổng số attendance với filter
+    public int getTotalAttendanceByVolunteer(int volunteerId, String statusFilter) {
+        StringBuilder sql = new StringBuilder("""
+            SELECT COUNT(*)
+            FROM Event_Volunteers ev
+            JOIN Events e ON ev.event_id = e.id
+            LEFT JOIN Attendance a ON a.event_id = ev.event_id AND a.volunteer_id = ev.volunteer_id
+            WHERE ev.volunteer_id = ? AND ev.status = 'approved'
+        """);
+        
+        if (statusFilter != null && !statusFilter.equals("all")) {
+            sql.append(" AND COALESCE(a.status, 'pending') = ?");
+        }
+        
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            
+            int paramIndex = 1;
+            ps.setInt(paramIndex++, volunteerId);
+            
+            if (statusFilter != null && !statusFilter.equals("all")) {
+                ps.setString(paramIndex++, statusFilter);
+            }
+            
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 
     
     // Lấy danh sách volunteer đã được approved để điểm danh Có thể filter theo

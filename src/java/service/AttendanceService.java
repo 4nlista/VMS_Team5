@@ -55,6 +55,16 @@ public class AttendanceService {
         return attendanceDAO.getAttendanceHistoryByVolunteerId(volunteerId);
     }
     
+    // Lấy danh sách attendance với phân trang và filter
+    public List<Attendance> getAttendanceHistoryPaginated(int volunteerId, int page, int pageSize, String statusFilter) {
+        return attendanceDAO.getAttendanceHistoryPaginated(volunteerId, page, pageSize, statusFilter);
+    }
+    
+    // Đếm tổng số attendance
+    public int getTotalAttendance(int volunteerId, String statusFilter) {
+        return attendanceDAO.getTotalAttendanceByVolunteer(volunteerId, statusFilter);
+    }
+    
     // Validate: Kiểm tra có thể cập nhật điểm danh không
     public boolean canUpdateAttendance(int eventId) {
         return attendanceDAO.isEventStarted(eventId) 

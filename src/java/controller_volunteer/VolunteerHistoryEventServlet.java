@@ -49,7 +49,7 @@ public class VolunteerHistoryEventServlet extends HttpServlet {
                 }
             }
             
-            int pageSize = 10;
+            int pageSize = 5;
             
             // Lấy danh sách với filter + paging
             List<EventVolunteer> registrations = service.getEventRegistrationsFiltered(

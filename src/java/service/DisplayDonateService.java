@@ -36,8 +36,18 @@ public class DisplayDonateService {
         return viewUserDonationDAO.getUserDonationsPaged(volunteerId, pageIndex, pageSize);
     }
     
+    // Lấy danh sách với filter ngày
+    public List<Donation> getUserDonationsPagedWithDateFilter(int volunteerId, int page, int pageSize, String startDate, String endDate) {
+        return viewUserDonationDAO.getUserDonationsPagedWithDateFilter(volunteerId, page, pageSize, startDate, endDate);
+    }
+    
     public int getTotalDonationsByVolunteer(int volunteerId) {
         return viewUserDonationDAO.getTotalDonationsByVolunteer(volunteerId);
+    }
+    
+    // Đếm tổng số với filter ngày
+    public int getTotalDonationsByVolunteerWithDateFilter(int volunteerId, String startDate, String endDate) {
+        return viewUserDonationDAO.getTotalDonationsByVolunteerWithDateFilter(volunteerId, startDate, endDate);
     }
     
     // trả về phân trang
