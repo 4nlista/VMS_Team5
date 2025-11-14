@@ -192,7 +192,7 @@ public class OrganizationApplyDAO {
         }
     }
     
-    // Tự động reject cho TẤT CẢ events đang trong khoảng 24h trước diễn ra
+    // Tự động reject đơn cho TẤT CẢ events đang trong khoảng 24h trước diễn ra
     public int autoRejectAllPendingApplications() {
         String sql = """
             UPDATE Event_Volunteers 

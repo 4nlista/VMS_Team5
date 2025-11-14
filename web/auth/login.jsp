@@ -17,10 +17,18 @@
     <body>
         <form action="<%= request.getContextPath() %>/LoginServlet" method="post">
             <section class="vh-100" style="background-color: #9A616D;">
-                <% String error = (String) request.getAttribute("error"); %>
-                <% if (error != null) { %>
-                <div class="error-message text-danger text-center"><%= error %></div>
-                <% } %>
+                <% 
+                    String errorParam = request.getParameter("error");
+                    String errorMessage = null;
+                    
+                    if ("account_locked".equals(errorParam)) {
+                        errorMessage = "Tài khoản của bạn bị khóa";
+                    } else if ("wrong_credentials".equals(errorParam)) {
+                        errorMessage = "Sai tên đăng nhập hoặc mật khẩu";
+                    } else if (errorParam != null) {
+                        errorMessage = "Đăng nhập thất bại";
+                    }
+                %>
                 <div class="container py-5 h-100">
                     <div class="row d-flex justify-content-center align-items-center h-100">
                         <div class="col col-xl-10">
@@ -37,6 +45,12 @@
                                                 <i class="fas fa-cubes fa-2x me-3" style="color: #ff6219;"></i>
                                                 <span class="h1 fw-bold mb-0">Đăng nhập tài khoản</span>
                                             </div>
+
+                                            <% if (errorMessage != null) { %>
+                                            <div class="alert alert-danger text-center" role="alert">
+                                                <i class="bi bi-exclamation-triangle-fill"></i> <%= errorMessage %>
+                                            </div>
+                                            <% } %>
 
                                             <div class="form-outline mb-4">
                                                 <label class="form-label" for="form2Example17">Tài khoản</label>

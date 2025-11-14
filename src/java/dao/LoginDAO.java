@@ -30,6 +30,7 @@ public class LoginDAO {
 
     // 1. Kiểm tra đăng nhập (username và password) 
     // Hỗ trợ cả mật khẩu plain text (để tương thích ngược) và mật khẩu đã hash
+    // Trả về account nếu username và password đúng (không kiểm tra status ở đây)
     public Account checkLogin(String username, String password) {
         String sql = "SELECT * FROM Accounts WHERE username = ?";
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {

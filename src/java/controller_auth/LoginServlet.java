@@ -47,8 +47,8 @@ public class LoginServlet extends HttpServlet {
         if (redirectUrl != null) {
             response.sendRedirect(request.getContextPath() + redirectUrl);
         } else {
-            request.setAttribute("error", "Sai username hoặc password rồi em ơi!");
-            request.getRequestDispatcher("auth/login.jsp").forward(request, response);
+            // Fallback nếu service trả về null (không nên xảy ra)
+            response.sendRedirect(request.getContextPath() + "/auth/login.jsp?error=wrong_credentials");
         }
     }
 

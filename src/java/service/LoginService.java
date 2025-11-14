@@ -28,11 +28,18 @@ public class LoginService {
     // - Nó kiểm tra username/password có hợp lệ không.
     // - Nếu đúng → lưu account vào session.
     // - Sau đó gọi resolveRedirect() để quyết định chuyển hướng đi đâu (dashboard, volunteer home...).
-    // - Nếu sai → trả về null (hoặc URL login fail).
+    // - Nếu sai → trả về URL với error code cụ thể.
     public String processLogin(String username, String password, HttpSession session) {
         Account acc = loginDAO.checkLogin(username, password);
-        if (acc == null || !acc.isStatus()) {
-            return "/auth/login.jsp?error=1"; // Login fail
+        
+        // Nếu không tìm thấy account hoặc password sai
+        if (acc == null) {
+            return "/auth/login.jsp?error=wrong_credentials"; // Sai username hoặc password
+        }
+        
+        // Nếu tìm thấy account nhưng bị khóa
+        if (!acc.isStatus()) {
+            return "/auth/login.jsp?error=account_locked"; // Tài khoản bị khóa
         }
 
         session.setAttribute("account", acc);
