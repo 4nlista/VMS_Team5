@@ -70,12 +70,12 @@ public class AdminSendNotificationServlet extends HttpServlet {
             request.getRequestDispatcher("/admin/send_all_notification_admin.jsp").forward(request, response);
             
         } else if ("countRecipients".equals(action)) {
-            // Đếm số lượng recipients
+            // Đếm số lượng recipients (trừ chính admin đang đếm)
             String rolesParam = request.getParameter("roles");
             String statusFilter = request.getParameter("status");
             
             List<String> roles = Arrays.asList(rolesParam.split(","));
-            int count = notificationService.countRecipients(roles, statusFilter);
+            int count = notificationService.countRecipients(roles, statusFilter, admin.getId());
             
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");

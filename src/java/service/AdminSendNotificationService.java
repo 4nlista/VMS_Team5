@@ -73,6 +73,10 @@ public class AdminSendNotificationService {
         
         int successCount = 0;
         for (Account recipient : recipients) {
+            // Bỏ qua chính mình - Admin không gửi cho chính Admin đang gửi
+            if (recipient.getId() == adminId) {
+                continue;
+            }
             Notification notification = new Notification();
             notification.setSenderId(adminId);
             notification.setReceiverId(recipient.getId());
@@ -88,9 +92,11 @@ public class AdminSendNotificationService {
         return successCount;
     }
     
-    // Đếm số lượng recipients theo filter
-    public int countRecipients(List<String> roles, String statusFilter) {
+    // Đếm số lượng recipients theo filter (không bao gồm chính admin đang gửi)
+    public int countRecipients(List<String> roles, String statusFilter, int adminId) {
         List<Account> recipients = accountDAO.getAccountsByRolesAndStatus(roles, statusFilter);
-        return recipients.size();
+        // Trừ đi 1 nếu admin đang gửi nằm trong danh sách
+        long count = recipients.stream().filter(acc -> acc.getId() != adminId).count();
+        return (int) count;
     }
 }
