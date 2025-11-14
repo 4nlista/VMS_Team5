@@ -15,7 +15,7 @@
         <jsp:include page="/layout/navbar.jsp" />
 
         <div class="page-content container mt-5 pt-5 pb-5">
-            <h1 class="mb-4 text-center">Lịch sử sự kiện đã tham gia</h1>
+            <h1 class="mb-4 text-center">Lịch sử điểm danh</h1>
 
             <div class="card shadow-sm border">
                 <div class="card-body">
