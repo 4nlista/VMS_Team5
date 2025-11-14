@@ -48,6 +48,8 @@ public class AdminNotificationServlet extends HttpServlet {
         // Lấy params phân trang và lọc
         String pageStr = request.getParameter("page");
         String sortOrder = request.getParameter("sort");
+        String startDate = request.getParameter("startDate");
+        String endDate = request.getParameter("endDate");
 
         int page = 1;
         if (pageStr != null) {
@@ -65,13 +67,26 @@ public class AdminNotificationServlet extends HttpServlet {
             sortOrder = "newest";
         }
 
-        int pageSize = 10;
+        int pageSize = 3;
 
-        // Lấy danh sách thông báo theo trang
-        List<Notification> notifications = service.getNotificationsPaginated(adminId, page, pageSize, sortOrder);
+        // Kiểm tra xem có filter theo ngày không
+        boolean hasDateFilter = (startDate != null && !startDate.trim().isEmpty()) 
+                             || (endDate != null && !endDate.trim().isEmpty());
+
+        List<Notification> notifications;
+        int totalNotifications;
+        
+        if (hasDateFilter) {
+            // Lấy danh sách với filter ngày
+            notifications = service.getNotificationsPaginatedWithDateFilter(adminId, page, pageSize, sortOrder, startDate, endDate);
+            totalNotifications = service.getTotalNotificationsWithDateFilter(adminId, startDate, endDate);
+        } else {
+            // Lấy danh sách bình thường
+            notifications = service.getNotificationsPaginated(adminId, page, pageSize, sortOrder);
+            totalNotifications = service.getTotalNotifications(adminId);
+        }
 
         // Tính tổng số trang
-        int totalNotifications = service.getTotalNotifications(adminId);
         int totalPages = (int) Math.ceil((double) totalNotifications / pageSize);
 
         // Set attributes
@@ -80,6 +95,8 @@ public class AdminNotificationServlet extends HttpServlet {
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("sortOrder", sortOrder);
         request.setAttribute("totalNotifications", totalNotifications);
+        request.setAttribute("startDate", startDate);
+        request.setAttribute("endDate", endDate);
         request.setAttribute("account", acc);
 
         request.getRequestDispatcher("/admin/notifications_admin.jsp").forward(request, response);

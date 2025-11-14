@@ -29,10 +29,20 @@ public class AdminNotificationService {
     public List<Notification> getNotificationsPaginated(int adminId, int page, int pageSize, String sortOrder) {
         return notificationDAO.getNotificationsByReceiverIdPaginated(adminId, page, pageSize, sortOrder);
     }
+    
+    // Lấy danh sách thông báo với phân trang, sắp xếp và lọc theo ngày
+    public List<Notification> getNotificationsPaginatedWithDateFilter(int adminId, int page, int pageSize, String sortOrder, String startDate, String endDate) {
+        return notificationDAO.getNotificationsByReceiverIdPaginatedWithDateFilter(adminId, page, pageSize, sortOrder, startDate, endDate);
+    }
 
     // Đếm tổng số thông báo
     public int getTotalNotifications(int adminId) {
         return notificationDAO.getTotalNotifications(adminId);
+    }
+    
+    // Đếm tổng số thông báo với lọc ngày
+    public int getTotalNotificationsWithDateFilter(int adminId, String startDate, String endDate) {
+        return notificationDAO.getTotalNotificationsWithDateFilter(adminId, startDate, endDate);
     }
 
     // Đánh dấu 1 thông báo đã đọc

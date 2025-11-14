@@ -17,7 +17,7 @@
         <link href="<%= request.getContextPath() %>/admin/css/admin.css" rel="stylesheet">
         <style>
             .notification-item {
-                border-left: 4px solid #0d6efd;
+                border-left: 2px solid #0d6efd;
                 transition: all 0.3s ease;
             }
             .notification-item:hover {
@@ -40,20 +40,20 @@
             <jsp:include page="layout_admin/sidebar_admin.jsp" />
 
             <div class="flex-grow-1 p-4">
-                <h1 class="text-center"><i class="bi bi-send me-2"></i>Quản lý sự kiện</h1>
                 <div class="container-fluid border">
                     <!-- Header -->
                     <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h2 class="mb-0">
-                            <i class="bi bi-bell-fill text-primary"></i> Thông báo
+                        <h2 class="mb-0">Thông báo
                             <c:if test="${totalNotifications > 0}">
-                                <span class="badge bg-secondary">${totalNotifications}</span>
+                                <span class="badge bg-warning">${totalNotifications}</span>
                             </c:if>
                         </h2>
                         <div class="d-flex gap-2">
                             <!-- Lọc sắp xếp -->
                             <form method="GET" action="<%= request.getContextPath() %>/AdminNotificationServlet" class="d-inline">
                                 <input type="hidden" name="page" value="1">
+                                <input type="hidden" name="startDate" value="${startDate}">
+                                <input type="hidden" name="endDate" value="${endDate}">
                                 <select name="sort" class="form-select form-select-sm" onchange="this.form.submit()">
                                     <option value="newest" ${sortOrder == 'newest' ? 'selected' : ''}>Mới nhất</option>
                                     <option value="oldest" ${sortOrder == 'oldest' ? 'selected' : ''}>Cũ nhất</option>
@@ -69,6 +69,36 @@
                                     </button>
                                 </form>
                             </c:if>
+                        </div>
+                    </div>
+
+                    <!-- Form lọc theo ngày -->
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-body">
+                            <form method="GET" action="<%= request.getContextPath() %>/AdminNotificationServlet" class="row g-3 align-items-end">
+                                <div class="col-md-4">
+                                    <label for="startDate" class="form-label fw-bold">
+                                        <i class="bi bi-calendar-event"></i> Từ ngày
+                                    </label>
+                                    <input type="date" class="form-control" id="startDate" name="startDate" value="${startDate}">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="endDate" class="form-label fw-bold">
+                                        <i class="bi bi-calendar-check"></i> Đến ngày
+                                    </label>
+                                    <input type="date" class="form-control" id="endDate" name="endDate" value="${endDate}">
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="hidden" name="page" value="1">
+                                    <input type="hidden" name="sort" value="${sortOrder}">
+                                    <button type="submit" class="btn btn-primary me-2">
+                                        <i class="bi bi-funnel"></i> Lọc
+                                    </button>
+                                    <a href="<%= request.getContextPath() %>/AdminNotificationServlet" class="btn btn-secondary">
+                                        <i class="bi bi-x-circle"></i> Xóa lọc
+                                    </a>
+                                </div>
+                            </form>
                         </div>
                     </div>
 
@@ -177,10 +207,10 @@
 
                             <!-- Phân trang -->
                             <c:if test="${totalPages > 1}">
-                                <nav class="mt-4">
+                                <nav class="mt-1">
                                     <ul class="pagination justify-content-center">
                                         <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
-                                            <a class="page-link" href="<%= request.getContextPath() %>/AdminNotificationServlet?page=${currentPage - 1}&sort=${sortOrder}">
+                                            <a class="page-link" href="<%= request.getContextPath() %>/AdminNotificationServlet?page=${currentPage - 1}&sort=${sortOrder}&startDate=${startDate}&endDate=${endDate}">
                                                 Trước
                                             </a>
                                         </li>
@@ -189,7 +219,7 @@
                                         <c:forEach begin="1" end="${totalPages}" var="i">
                                             <c:if test="${i == 1 || i == totalPages || (i >= currentPage - 2 && i <= currentPage + 2)}">
                                                 <li class="page-item ${currentPage == i ? 'active' : ''}">
-                                                    <a class="page-link" href="<%= request.getContextPath() %>/AdminNotificationServlet?page=${i}&sort=${sortOrder}">
+                                                    <a class="page-link" href="<%= request.getContextPath() %>/AdminNotificationServlet?page=${i}&sort=${sortOrder}&startDate=${startDate}&endDate=${endDate}">
                                                         ${i}
                                                     </a>
                                                 </li>
@@ -202,8 +232,8 @@
                                                 </c:if>
                                             </c:forEach>
 
-                                    <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
-                                            <a class="page-link" href="<%= request.getContextPath() %>/AdminNotificationServlet?page=${currentPage + 1}&sort=${sortOrder}">
+                                        <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                                            <a class="page-link" href="<%= request.getContextPath() %>/AdminNotificationServlet?page=${currentPage + 1}&sort=${sortOrder}&startDate=${startDate}&endDate=${endDate}">
                                                 Sau
                                             </a>
                                         </li>

@@ -324,6 +324,79 @@ public class NotificationDAO {
         }
         return list;
     }
+    
+    // Phân trang với lọc theo ngày tháng
+    public List<Notification> getNotificationsByReceiverIdPaginatedWithDateFilter(int receiverId, int page, int pageSize, String sortOrder, String startDate, String endDate) {
+        List<Notification> list = new ArrayList<>();
+        int offset = (page - 1) * pageSize;
+
+        String orderBy = "DESC";
+        if ("oldest".equals(sortOrder)) {
+            orderBy = "ASC";
+        }
+
+        StringBuilder sql = new StringBuilder("SELECT n.id, n.sender_id, n.receiver_id, n.message, n.type, "
+                + "n.created_at, n.is_read, n.event_id, "
+                + "us.full_name AS sender_name, "
+                + "ur.full_name AS receiver_name, "
+                + "e.title AS event_title "
+                + "FROM Notifications n "
+                + "LEFT JOIN Users us ON n.sender_id = us.account_id "
+                + "LEFT JOIN Users ur ON n.receiver_id = ur.account_id "
+                + "LEFT JOIN Events e ON n.event_id = e.id "
+                + "WHERE n.receiver_id = ? ");
+
+        // Thêm điều kiện lọc ngày nếu có
+        boolean hasStartDate = startDate != null && !startDate.trim().isEmpty();
+        boolean hasEndDate = endDate != null && !endDate.trim().isEmpty();
+        
+        if (hasStartDate) {
+            sql.append("AND n.created_at >= ? ");
+        }
+        if (hasEndDate) {
+            sql.append("AND n.created_at <= ? ");
+        }
+
+        sql.append("ORDER BY n.created_at ").append(orderBy).append(" ")
+           .append("OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql.toString());
+            int paramIndex = 1;
+            ps.setInt(paramIndex++, receiverId);
+            
+            if (hasStartDate) {
+                ps.setString(paramIndex++, startDate + " 00:00:00");
+            }
+            if (hasEndDate) {
+                ps.setString(paramIndex++, endDate + " 23:59:59");
+            }
+            
+            ps.setInt(paramIndex++, offset);
+            ps.setInt(paramIndex++, pageSize);
+            
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Notification n = new Notification();
+                n.setId(rs.getInt("id"));
+                n.setSenderId(rs.getInt("sender_id"));
+                n.setReceiverId(rs.getInt("receiver_id"));
+                n.setMessage(rs.getString("message"));
+                n.setType(rs.getString("type"));
+                n.setCreatedAt(rs.getTimestamp("created_at"));
+                n.setIsRead(rs.getBoolean("is_read"));
+                n.setEventId(rs.getInt("event_id"));
+                n.setSenderName(rs.getString("sender_name"));
+                n.setReceiverName(rs.getString("receiver_name"));
+                n.setEventTitle(rs.getString("event_title"));
+                list.add(n);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 
     // Đếm tổng số thông báo
     public int getTotalNotifications(int receiverId) {
@@ -331,6 +404,42 @@ public class NotificationDAO {
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, receiverId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    
+    // Đếm tổng số thông báo với lọc ngày
+    public int getTotalNotificationsWithDateFilter(int receiverId, String startDate, String endDate) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Notifications WHERE receiver_id = ? ");
+        
+        boolean hasStartDate = startDate != null && !startDate.trim().isEmpty();
+        boolean hasEndDate = endDate != null && !endDate.trim().isEmpty();
+        
+        if (hasStartDate) {
+            sql.append("AND created_at >= ? ");
+        }
+        if (hasEndDate) {
+            sql.append("AND created_at <= ? ");
+        }
+        
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql.toString());
+            int paramIndex = 1;
+            ps.setInt(paramIndex++, receiverId);
+            
+            if (hasStartDate) {
+                ps.setString(paramIndex++, startDate + " 00:00:00");
+            }
+            if (hasEndDate) {
+                ps.setString(paramIndex++, endDate + " 23:59:59");
+            }
+            
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 return rs.getInt(1);
