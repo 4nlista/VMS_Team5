@@ -81,15 +81,6 @@ public class AdminAccountService {
         return adminAccountDAO.findAccountsPaged(normalizedRole, status, trimmedSearch, offset, safePageSize);
     }
     
-    // 7. Xóa account (không cho xóa admin) và toàn bộ dữ liệu liên quan
-    public boolean deleteAccount(int id) {
-        Account acc = accountDAO.getAccountById(id);
-        if (acc == null) return false;
-        if ("admin".equalsIgnoreCase(acc.getRole())) return false;
-        // Thực hiện xóa cascade an toàn trong transaction
-        return adminAccountDAO.deleteAccountCascade(id);
-    }
-    
     // 8. Tạo tài khoản mới (chỉ cho tạo organization hoặc volunteer)
     public boolean createAccount(String username, String password, String role, boolean status) {
         // Validate role - không cho tạo admin từ đây
