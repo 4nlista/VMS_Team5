@@ -72,6 +72,10 @@
                                     <label class="form-label fw-bold">Vai trò</label>
                                     <div>
                                         <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="roleAdmin" value="admin" checked>
+                                            <label class="form-check-label" for="roleAdmin">Admin</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="checkbox" id="roleOrg" value="organization" checked>
                                             <label class="form-check-label" for="roleOrg">Organization</label>
                                         </div>

@@ -75,7 +75,7 @@
                     </a>
                 </div>
                 <a href="<%= request.getContextPath() %>/admin/AdminSendNotificationServlet?action=all" class="btn btn-info text-black mb-4">
-                    <i class="bi bi-megaphone"></i> Gửi thông báo chung
+                    Gửi thông báo chung
                 </a>
 
 
@@ -148,7 +148,7 @@
                                                     </c:if>
                                                 </c:url>
                                                 <a href="${toggleUrl}"
-                                                   class="btn ${acc.status ? 'btn-info' : 'btn-success'} btn-sm btn-icon" 
+                                                   class="btn ${acc.status ? 'btn-danger' : 'btn-success'} btn-sm btn-icon" 
                                                    title="${acc.status ? 'Khóa tài khoản' : 'Mở khóa tài khoản'}">
                                                     <i class="bi ${acc.status ? 'bi-lock' : 'bi-unlock'}"></i>
                                                 </a>
@@ -204,67 +204,7 @@
                     </nav>
                 </div>
             </div>
-
-<!--             Detail Modal 
-            <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="detailModalLabel">Chi tiết tài khoản</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="mb-2"><strong>ID:</strong> <span id="detail-id"></span></div>
-                            <div class="mb-2"><strong>Username:</strong> <span id="detail-username"></span></div>
-                            <div class="mb-2"><strong>Role:</strong> <span id="detail-role"></span></div>
-                            <div class="mb-2"><strong>Status:</strong> <span id="detail-status"></span></div>
-                            <div class="text-muted small">Lưu ý: Email hiển thị tại trang hồ sơ người dùng.</div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                        </div>
-                    </div>
-                </div>
-            </div>-->
-
         </div>
-
-
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<!--        <script>
-            const detailModal = document.getElementById('detailModal');
-            if (detailModal) {
-                detailModal.addEventListener('show.bs.modal', event => {
-                    const button = event.relatedTarget;
-                    const id = button.getAttribute('data-id');
-                    const username = button.getAttribute('data-username');
-                    const role = button.getAttribute('data-role');
-                    const status = button.getAttribute('data-status') === 'true';
-
-                    document.getElementById('detail-id').textContent = id;
-                    document.getElementById('detail-username').textContent = username;
-                    document.getElementById('detail-role').textContent = role;
-                    document.getElementById('detail-status').innerHTML = status
-                            ? '<span class="badge bg-success"><i class="bi bi-circle-fill me-1"></i> Active</span>'
-                            : '<span class="badge bg-danger"><i class="bi bi-circle-fill me-1"></i> Inactive</span>';
-                });
-            }
-
-            // Khởi tạo Bootstrap tooltip cho các phần tử có data-bs-toggle="tooltip"
-            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            tooltipTriggerList.forEach(function (tooltipTriggerEl) {
-                new bootstrap.Tooltip(tooltipTriggerEl);
-            });
-
-            // Tự động ẩn alert thành công sau 3 giây
-
-            const createSuccessAlert = document.getElementById('create-success-alert');
-            if (createSuccessAlert) {
-                setTimeout(() => {
-                    const alert = new bootstrap.Alert(createSuccessAlert);
-                    alert.close();
-                }, 3000);
-            }
-        </script>-->
     </body>
 </html>

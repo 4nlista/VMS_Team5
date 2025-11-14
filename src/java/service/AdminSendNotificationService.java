@@ -73,7 +73,7 @@ public class AdminSendNotificationService {
         
         int successCount = 0;
         for (Account recipient : recipients) {
-            // Bỏ qua chính mình - Admin không gửi cho chính Admin đang gửi
+            // Bỏ qua chính mình - Admin ko thể gửi cho chính mình
             if (recipient.getId() == adminId) {
                 continue;
             }

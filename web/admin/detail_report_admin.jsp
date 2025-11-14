@@ -84,7 +84,6 @@
                         </div>
 
                         <!-- Form xử lý -->
-                        <!-- Form xử lý -->
                         <div class="mt-4 text-center">
                             <form method="post" action="${pageContext.request.contextPath}/AdminReportServlet" class="d-inline">
                                 <input type="hidden" name="reportId" value="${report.id}" />
@@ -106,7 +105,7 @@
                                     </c:when>
 
                                     <c:otherwise>
-                                        <div class="alert alert-info text-center mb-3">
+                                        <div class="alert alert-success text-center mb-3">
                                             Báo cáo này đã được xử lý (<strong>${report.status}</strong>).
                                         </div>
                                     </c:otherwise>

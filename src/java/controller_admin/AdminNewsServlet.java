@@ -88,7 +88,7 @@ public class AdminNewsServlet extends HttpServlet {
             }
         }
 
-        int pageSize = 10; // 10 bài/trang
+        int pageSize = 5; // 10 bài/trang
 
         // Lấy danh sách News
         List<New> newsList = newsService.getAllNews(statusFilter, sortOrder, page, pageSize);
