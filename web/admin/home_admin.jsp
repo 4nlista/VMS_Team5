@@ -66,32 +66,12 @@
                     </div>
                 </div>
 
-                <!-- Hàng thống kê 2 -->
-                <div class="row g-3 mb-4">
-                    <div class="col-md-4">
-                        <div class="p-3 border rounded bg-white text-center shadow-sm">
-                            <h2 class="text-primary fw-bold mb-1">125.000.000</h2>
-                            <p class="text-muted mb-0">Tổng số tiền từ thiện</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="p-3 border rounded bg-white text-center shadow-sm">
-                            <h2 class="text-secondary fw-bold mb-1">200</h2>
-                            <p class="text-muted mb-0">Tổng tình nguyện viên</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="p-3 border rounded bg-white text-center shadow-sm">
-                            <h2 class="text-info fw-bold mb-1">450</h2>
-                            <p class="text-muted mb-0">Tổng ....</p>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Biểu đồ tổng tiền -->
+                <!-- Biểu đồ tổng tiền .. Cái này bạn lấy theo mốc từ tháng mấy đến tháng mấy là được ,
+                nó tính theo tổng donate của tất cả các sự kiện--> 
                 <div class="card border rounded shadow-sm p-3 bg-white mb-4">
                     <h6 class="fw-bold text-primary mb-3">
-                        <i class="bi bi-bar-chart-line"></i> Tổng số tiền theo tháng
+                        <i class="bi bi-bar-chart-line"></i> Tổng số tiền theo tháng 
                     </h6>
                     <canvas id="donationChart" height="100"></canvas>
                 </div>
@@ -100,15 +80,15 @@
                 <div class="row g-3">
                     <!-- Biểu đồ phân loại tài khoản -->
                     <div class="col-md-6">
-                        <div class="card border rounded shadow-sm p-3 bg-white">
+                        <div class="card border rounded shadow-sm p-3 bg-white" style="height: 100%;">
                             <h6 class="fw-bold mb-3"><i class="bi bi-pie-chart"></i> Phân loại tài khoản</h6>
-                            <canvas id="accountChart" height="200"></canvas>
+                            <canvas id="accountChart"></canvas>
                         </div>
-                    </div>
-
-                    <!-- Top 5 sự kiện donate -->
+                    </div>          
                     <div class="col-md-6">
-                        <div class="card border rounded shadow-sm p-3 bg-white">
+
+                        <!-- Top 3 sự kiện donate -->
+                        <div class="card border rounded shadow-sm p-3 bg-white mb-5">
                             <h6 class="fw-bold mb-3"><i class="bi bi-trophy"></i> Top 3 sự kiện được tài trợ nhiều nhất</h6>
                             <table class="table table-hover table-sm align-middle">
                                 <thead class="table-light">
@@ -123,16 +103,36 @@
                                         <tr>
                                             <td>${status.index + 1}</td>
                                             <td>${e.title}</td>
-                                            <td class="text-end"><fmt:formatNumber value="${e.totalDonation}" type="number" pattern="#,###" /></td>
-                                            
-                                            
+                                            <td class="text-end"><fmt:formatNumber value="${e.totalDonation}" type="number" /></td>
                                         </tr>
                                     </c:forEach>
                                 </tbody>
                             </table>
                         </div>
 
-
+                        <!-- Top 3 người donate nhiều nhất -->
+                        <div class="card border rounded shadow-sm p-3 bg-white mt-3">
+                            <h6 class="fw-bold mb-3"><i class="bi bi-trophy"></i> Top 3 tình nguyện viên tài trợ nhiều nhất</h6>
+                            <table class="table table-hover table-sm align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>Họ tên</th>
+                                        <th class="text-end">Số tiền tài trợ (₫)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Hiển thị top 3 người tài trợ từ backend -->
+                                    <c:forEach var="donor" items="${top3Donors}" varStatus="status">
+                                        <tr>
+                                            <td>${status.index + 1}</td>
+                                            <td>${donor.volunteerFullName}</td>
+                                            <td class="text-end"><fmt:formatNumber value="${donor.totalAmountDonated}" type="number" /></td>
+                                        </tr>
+                                    </c:forEach>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
@@ -169,36 +169,49 @@
             </div>
         </div>
 
-
-
         <!-- Chart.js script -->
         <script>
-            // Biểu đồ tổng tiền donate theo tháng
+            // Biểu đồ tổng tiền donate theo tháng - Hiển thị 5 tháng gần nhất
             new Chart(document.getElementById("donationChart"), {
                 type: 'bar',
                 data: {
-                    labels: ["Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9"],
-                    datasets: [{
-                            label: 'Tổng tiền (₫)',
-                            data: [50000000, 70000000, 90000000, 60000000, 100000000],
-                            backgroundColor: ['#0d6efd', '#198754', '#dc3545', '#ffc107', '#0dcaf0']
-                        }]
+                    // Lấy các tháng từ backend (format: MM/yyyy)
+                    labels: [<c:forEach var="entry" items="${donationByMonth}" varStatus="status">"Tháng ${entry.key}"<c:if test="${!status.last}">, </c:if></c:forEach>],
+                            datasets: [{
+                                    label: 'Tổng tiền (₫)',
+                                    // Lấy tổng tiền từng tháng từ backend
+                                    data: [<c:forEach var="entry" items="${donationByMonth}" varStatus="status">${entry.value}<c:if test="${!status.last}">, </c:if></c:forEach>],
+                                    backgroundColor: ['#0d6efd', '#198754', '#dc3545', '#ffc107', '#0dcaf0']
+                                }]
                 },
                 options: {responsive: true, plugins: {legend: {display: false}}}
             });
 
-            // Biểu đồ phân loại tài khoản
+            // Biểu đồ phân loại tài khoản - Hiển thị active/inactive theo role
             new Chart(document.getElementById("accountChart"), {
                 type: 'pie',
                 data: {
-                    labels: ["Admin", "Tổ chức", "Tình nguyện viên"],
-                    
-                    
-                    
+                    labels: [
+                        "Admin (Active)", "Admin (Inactive)",
+                        "Tổ chức (Active)", "Tổ chức (Inactive)",
+                        "Volunteer (Active)", "Volunteer (Inactive)"
+                    ],
                     datasets: [{
-                            data: [5, 20, 120],
-                            backgroundColor: ['#0d6efd', '#20c997', '#ffc107']
+                            // Lấy số lượng trực tiếp từ Map - default 0 nếu null
+                            data: [
+            <c:out value="${allAccountStats['admin_active']}" default="0" />,
+            <c:out value="${allAccountStats['admin_inactive']}" default="0" />,
+            <c:out value="${allAccountStats['organization_active']}" default="0" />,
+            <c:out value="${allAccountStats['organization_inactive']}" default="0" />,
+            <c:out value="${allAccountStats['volunteer_active']}" default="0" />,
+            <c:out value="${allAccountStats['volunteer_inactive']}" default="0" />
+                            ],
+                            backgroundColor: ['#0d6efd', '#6c757d', '#20c997', '#adb5bd', '#ffc107', '#ced4da']
                         }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true
                 }
             });
         </script>

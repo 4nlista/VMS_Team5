@@ -40,12 +40,13 @@ public class AdminHomeService {
     public List<Event> getTop3EventsMoneyDonate() {
         return adminHomeDAO.getTop3EventsMoneyDonate();
     }
+    
     // 1.4 Hiển thị top 3 sắp diễn ra
-
     public List<Event> getTop3EventsComing() {
         return adminHomeDAO.getTop3EventsComing();
     }
     
+    // thống kê số tài khoản
     public Map<String, Integer> getAccountStatistics() {
         return adminHomeDAO.getAccountStatistics();
     }
@@ -53,5 +54,20 @@ public class AdminHomeService {
     // danh sách các sự kiện đang diễn ra
     public int getTotalEventsActive() {
         return statisticsDAO.getTotalEventsActive();
+    }
+    
+    // Lấy thống kê donate theo 5 tháng gần nhất
+    public Map<String, Double> getDonationByMonth() {
+        return adminHomeDAO.getDonationByMonth();
+    }
+    
+    // Lấy top 3 người donate nhiều nhất
+    public List<model.Donation> getTop3Donors() {
+        return adminHomeDAO.getTop3Donors();
+    }
+    
+    // Lấy thống kê tài khoản đầy đủ (active + inactive)
+    public Map<String, Integer> getAllAccountStats() {
+        return adminHomeDAO.getAllAccountStats();
     }
 }
