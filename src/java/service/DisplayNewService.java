@@ -40,4 +40,13 @@ public class DisplayNewService {
         return newsDAO.getTotalPublishNews();
     }
 
+    // filter by date range with pagination
+    public List<New> getNewsByDateTimeRangePaged(String startDateTime, String endDateTime, int offset, int limit) {
+        return newsDAO.getNewsByDateTimeRangePaged(startDateTime, endDateTime, offset, limit);
+    }
+    
+    // Count filtered news
+    public int countNewsByDateTimeRange(String startDateTime, String endDateTime) {
+        return newsDAO.countNewsByDateTimeRange(startDateTime, endDateTime);
+    }
 }

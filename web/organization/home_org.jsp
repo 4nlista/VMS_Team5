@@ -39,7 +39,7 @@
                 <!-- Hàng thống kê 1 -->
                 <div class="row g-3 mb-3">
                     <!-- Tổng sự kiện -->
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <div class="bg-primary rounded shadow p-3 text-start text-white position-relative">
                             <h2 class="fw-bold">${totalEvents}</h2>
                             <h5 class="">Tổng số sự kiện</h5>
@@ -49,7 +49,7 @@
                     </div>
 
                     <!-- Tổng tình nguyện viên -->
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <div class="bg-success rounded shadow p-3 text-start text-white position-relative">
                             <h2 class="fw-bold">${totalVolunteers}</h2>
                             <h5 class="">Tổng tình nguyện viên</h5>
@@ -60,7 +60,7 @@
 
 
                     <!-- Tổng tiền donate -->
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <div class="bg-warning rounded shadow p-3 text-start text-dark position-relative">
                             <h2 class="fw-bold">
                                 <fmt:formatNumber value="${totalDonations}" type="number" pattern="#,###" /> ₫
