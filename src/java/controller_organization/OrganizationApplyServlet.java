@@ -100,29 +100,64 @@ public class OrganizationApplyServlet extends HttpServlet {
         // Lấy thông tin volunteer và event
         int volunteerId = Integer.parseInt(request.getParameter("volunteerId")); // LẤY TỪ REQUEST
         if ("approve".equals(action)) {
-            organizationApplyService.updateVolunteerStatus(applyEventId, "approved");
-            session.setAttribute("successMessage", "Đã duyệt đơn đăng ký thành công!");
-            // GỬI THÔNG BÁO CHO VOLUNTEER
-            try {
-                AdminUserDAO userDAO = new AdminUserDAO();
-                User orgUser = userDAO.getUserByAccountId(acc.getId());
-                String orgName = (orgUser != null) ? orgUser.getFull_name() : "Tổ chức";
+            // KIỂM TRA SLOT TRƯỚC KHI DUYỆT
+            ViewEventsDAO viewEventDAO = new ViewEventsDAO();
+            Event event = viewEventDAO.getEventById(eventId);
+            
+            if (event != null) {
+                int currentApproved = organizationApplyService.countApprovedVolunteers(eventId);
+                int neededVolunteers = event.getNeededVolunteers();
+                
+                if (currentApproved >= neededVolunteers) {
+                    // ĐÃ FULL SLOT - TỰ ĐỘNG REJECT
+                    organizationApplyService.updateVolunteerStatus(applyEventId, "rejected");
+                    session.setAttribute("warningMessage", 
+                        "Sự kiện đã đủ " + neededVolunteers + " tình nguyện viên. Đơn này đã tự động bị từ chối.");
+                    
+                    // GỬI THÔNG BÁO CHO VOLUNTEER VỀ VIỆC BỊ TỪ CHỐI
+                    try {
+                        AdminUserDAO userDAO = new AdminUserDAO();
+                        User orgUser = userDAO.getUserByAccountId(acc.getId());
+                        String orgName = (orgUser != null) ? orgUser.getFull_name() : "Tổ chức";
+                        String eventTitle = event.getTitle();
+                        
+                        NotificationDAO notiDAO = new NotificationDAO();
+                        Notification noti = new Notification();
+                        noti.setSenderId(acc.getId());
+                        noti.setReceiverId(volunteerId);
+                        noti.setMessage("Đơn đăng ký sự kiện \"" + eventTitle + "\" của bạn đã bị từ chối do sự kiện đã đủ số lượng tình nguyện viên.");
+                        noti.setType("apply");
+                        noti.setEventId(eventId);
+                        notiDAO.insertNotification(noti);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    // CÒN SLOT - DUYỆT BÌNH THƯỜNG
+                    organizationApplyService.updateVolunteerStatus(applyEventId, "approved");
+                    session.setAttribute("successMessage", "Đã duyệt đơn đăng ký thành công!");
+                    
+                    // GỬI THÔNG BÁO CHO VOLUNTEER
+                    try {
+                        AdminUserDAO userDAO = new AdminUserDAO();
+                        User orgUser = userDAO.getUserByAccountId(acc.getId());
+                        String orgName = (orgUser != null) ? orgUser.getFull_name() : "Tổ chức";
+                        String eventTitle = event.getTitle();
 
-                ViewEventsDAO viewEventDAO = new ViewEventsDAO();
-                Event event = viewEventDAO.getEventById(eventId);
-                String eventTitle = (event != null) ? event.getTitle() : "sự kiện";
-
-                NotificationDAO notiDAO = new NotificationDAO();
-                Notification noti = new Notification();
-                noti.setSenderId(acc.getId());
-                noti.setReceiverId(volunteerId);
-                noti.setMessage("Tổ chức " + orgName + " đã duyệt đơn tham gia sự kiện \"" + eventTitle + "\" của bạn");
-                noti.setType("apply");
-                noti.setEventId(eventId);
-
-                notiDAO.insertNotification(noti);
-            } catch (Exception e) {
-                e.printStackTrace();
+                        NotificationDAO notiDAO = new NotificationDAO();
+                        Notification noti = new Notification();
+                        noti.setSenderId(acc.getId());
+                        noti.setReceiverId(volunteerId);
+                        noti.setMessage("Tổ chức \"" + orgName + "\" đã chấp nhận đơn đăng ký sự kiện \"" + eventTitle + "\" của bạn.");
+                        noti.setType("apply");
+                        noti.setEventId(eventId);
+                        notiDAO.insertNotification(noti);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+                session.setAttribute("errorMessage", "Không tìm thấy thông tin sự kiện!");
             }
         } else if ("reject".equals(action)) {
             organizationApplyService.updateVolunteerStatus(applyEventId, "rejected");

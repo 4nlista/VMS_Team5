@@ -88,6 +88,22 @@ public class OrganizationApplyDAO {
             e.printStackTrace();
         }
     }
+    
+    // Đếm số volunteer đã được approved cho event (dùng để check slot)
+    public int countApprovedVolunteers(int eventId) {
+        String sql = "SELECT COUNT(*) FROM Event_Volunteers WHERE event_id = ? AND status = 'approved'";
+        try (Connection con = DBContext.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, eventId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 
     // hàm xử lý nút lọc theo trạng thái
     public List<EventVolunteer> getFilterVolunteersByEvent(int organizationId, int eventId, String statusFilter) {

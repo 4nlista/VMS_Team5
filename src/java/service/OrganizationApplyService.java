@@ -28,6 +28,11 @@ public class OrganizationApplyService {
         organizationApplyDAO.updateVolunteerStatus(volunteerId, status);
     }
     
+    // Đếm số volunteer đã được approved cho event (dùng để check slot)
+    public int countApprovedVolunteers(int eventId) {
+        return organizationApplyDAO.countApprovedVolunteers(eventId);
+    }
+    
     public List<EventVolunteer> getFilterVolunteersByEvent(int organizationId, int eventId, String statusFilter) {
         // Tự động reject các pending applications trước khi load danh sách
         organizationApplyDAO.autoRejectPendingApplications(eventId);
