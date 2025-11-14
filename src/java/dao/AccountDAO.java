@@ -190,5 +190,58 @@ public class AccountDAO {
         }
         return null;
     }
+    
+    // Lấy danh sách accounts theo roles và status (dùng cho Admin gửi thông báo chung)
+    public List<Account> getAccountsByRolesAndStatus(List<String> roles, String statusFilter) {
+        List<Account> accounts = new ArrayList<>();
+        
+        // Build SQL động với IN clause
+        StringBuilder sql = new StringBuilder("SELECT id, username, password, role, status FROM Accounts WHERE 1=1");
+        
+        // Filter theo roles
+        if (roles != null && !roles.isEmpty()) {
+            sql.append(" AND role IN (");
+            for (int i = 0; i < roles.size(); i++) {
+                sql.append("?");
+                if (i < roles.size() - 1) sql.append(", ");
+            }
+            sql.append(")");
+        }
+        
+        // Filter theo status
+        if ("active".equals(statusFilter)) {
+            sql.append(" AND status = 1");
+        } else if ("inactive".equals(statusFilter)) {
+            sql.append(" AND status = 0");
+        }
+        // "all" thì không filter status
+        
+        try (PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            // Set parameters cho roles
+            int paramIndex = 1;
+            if (roles != null && !roles.isEmpty()) {
+                for (String role : roles) {
+                    ps.setString(paramIndex++, role);
+                }
+            }
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Account account = new Account(
+                        rs.getInt("id"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getString("role"),
+                        rs.getBoolean("status")
+                    );
+                    accounts.add(account);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return accounts;
+    }
 
 }

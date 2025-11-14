@@ -74,11 +74,9 @@
                         <i class="bi bi-plus-circle"></i> Tạo tài khoản
                     </a>
                 </div>
-                <form action="">
-                    <button class="btn btn-info text-black mb-4">
-                            Gửi thông báo chung
-                    </button>
-                </form>
+                <a href="<%= request.getContextPath() %>/admin/AdminSendNotificationServlet?action=all" class="btn btn-info text-black mb-4">
+                    <i class="bi bi-megaphone"></i> Gửi thông báo chung
+                </a>
 
 
                 <!-- Bảng dữ liệu -->
@@ -118,6 +116,11 @@
                                         <a class="btn btn-primary btn-sm btn-icon" title="Xem chi tiết"
                                            href="<%= request.getContextPath() %>/admin/detail_accounts_admin.jsp?id=${acc.id}">
                                             <i class="bi bi-eye"></i>
+                                        </a>
+                                        <!-- Nút gửi thông báo cá nhân -->
+                                        <a class="btn btn-warning btn-sm btn-icon" title="Gửi thông báo"
+                                           href="<%= request.getContextPath() %>/admin/AdminSendNotificationServlet?action=individual&accountId=${acc.id}">
+                                            <i class="bi bi-bell"></i>
                                         </a>
                                         <c:choose>
                                             <c:when test="${acc.role == 'admin'}">
