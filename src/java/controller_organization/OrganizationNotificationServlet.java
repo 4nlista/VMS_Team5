@@ -37,6 +37,8 @@ public class OrganizationNotificationServlet extends HttpServlet {
         // Lấy params phân trang và lọc
         String pageStr = request.getParameter("page");
         String sortOrder = request.getParameter("sort");
+        String startDate = request.getParameter("startDate");
+        String endDate = request.getParameter("endDate");
 
         int page = 1;
         if (pageStr != null) {
@@ -54,13 +56,26 @@ public class OrganizationNotificationServlet extends HttpServlet {
             sortOrder = "newest"; // Mặc định mới nhất
         }
 
-        int pageSize = 10; // 10 thông báo/trang
+        int pageSize = 3; // 3 thông báo/trang
 
-        // Lấy danh sách thông báo theo trang
-        List<Notification> notifications = service.getNotificationsPaginated(organizationId, page, pageSize, sortOrder);
+        // Kiểm tra xem có filter theo ngày không
+        boolean hasDateFilter = (startDate != null && !startDate.trim().isEmpty()) 
+                             || (endDate != null && !endDate.trim().isEmpty());
+
+        List<Notification> notifications;
+        int totalNotifications;
+        
+        if (hasDateFilter) {
+            // Lấy danh sách với filter ngày
+            notifications = service.getNotificationsPaginatedWithDateFilter(organizationId, page, pageSize, sortOrder, startDate, endDate);
+            totalNotifications = service.getTotalNotificationsWithDateFilter(organizationId, startDate, endDate);
+        } else {
+            // Lấy danh sách bình thường
+            notifications = service.getNotificationsPaginated(organizationId, page, pageSize, sortOrder);
+            totalNotifications = service.getTotalNotifications(organizationId);
+        }
 
         // Tính tổng số trang
-        int totalNotifications = service.getTotalNotifications(organizationId);
         int totalPages = (int) Math.ceil((double) totalNotifications / pageSize);
 
         // Set attributes
@@ -69,6 +84,8 @@ public class OrganizationNotificationServlet extends HttpServlet {
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("sortOrder", sortOrder);
         request.setAttribute("totalNotifications", totalNotifications);
+        request.setAttribute("startDate", startDate);
+        request.setAttribute("endDate", endDate);
 
         request.getRequestDispatcher("/organization/notification_org.jsp").forward(request, response);
     }

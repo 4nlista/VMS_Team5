@@ -29,10 +29,20 @@ public class OrganizationNotificationService {
     public List<Notification> getNotificationsPaginated(int organizationId, int page, int pageSize, String sortOrder) {
         return notificationDAO.getNotificationsByReceiverIdPaginated(organizationId, page, pageSize, sortOrder);
     }
+    
+    // Lấy danh sách thông báo với phân trang, sắp xếp và lọc theo ngày
+    public List<Notification> getNotificationsPaginatedWithDateFilter(int organizationId, int page, int pageSize, String sortOrder, String startDate, String endDate) {
+        return notificationDAO.getNotificationsByReceiverIdPaginatedWithDateFilter(organizationId, page, pageSize, sortOrder, startDate, endDate);
+    }
 
     ///Đếm tổng số thông báo
     public int getTotalNotifications(int organizationId) {
         return notificationDAO.getTotalNotifications(organizationId);
+    }
+    
+    // Đếm tổng số thông báo với lọc ngày
+    public int getTotalNotificationsWithDateFilter(int organizationId, String startDate, String endDate) {
+        return notificationDAO.getTotalNotificationsWithDateFilter(organizationId, startDate, endDate);
     }
 
     // Đánh dấu 1 thông báo đã đọc
