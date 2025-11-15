@@ -491,5 +491,136 @@ public class ViewDonorsDAO {
         }
         return 0;
     }
+    
+    // Lọc donations với filter đầy đụ (ngày + trạng thái)
+    public List<Donation> getUserDonationsWithAllFilters(int volunteerId, int page, int pageSize, 
+                                                         String startDate, String endDate, String status) {
+        List<Donation> list = new ArrayList<>();
+        int offset = (page - 1) * pageSize;
+        
+        StringBuilder sql = new StringBuilder("""
+            SELECT 
+                d.id,
+                d.event_id,
+                d.volunteer_id,
+                d.amount,
+                d.donate_date,
+                d.status,
+                d.payment_method,
+                d.qr_code,
+                d.note,
+                a.username AS volunteer_username,
+                u.full_name AS volunteer_full_name,
+                e.title AS event_title
+            FROM Donations d
+            JOIN Accounts a ON d.volunteer_id = a.id
+            JOIN Users u ON a.id = u.account_id
+            JOIN Events e ON d.event_id = e.id
+            WHERE d.volunteer_id = ?
+        """);
+        
+        // Thêm điều kiện filter ngày
+        boolean hasStartDate = startDate != null && !startDate.trim().isEmpty();
+        boolean hasEndDate = endDate != null && !endDate.trim().isEmpty();
+        boolean hasStatus = status != null && !status.trim().isEmpty() && !"all".equals(status);
+        
+        if (hasStartDate) {
+            sql.append(" AND d.donate_date >= ?");
+        }
+        if (hasEndDate) {
+            sql.append(" AND d.donate_date <= ?");
+        }
+        if (hasStatus) {
+            sql.append(" AND d.status = ?");
+        }
+        
+        sql.append(" ORDER BY d.donate_date DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+        
+        try (PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+            ps.setInt(paramIndex++, volunteerId);
+            
+            if (hasStartDate) {
+                ps.setString(paramIndex++, startDate + " 00:00:00");
+            }
+            if (hasEndDate) {
+                ps.setString(paramIndex++, endDate + " 23:59:59");
+            }
+            if (hasStatus) {
+                ps.setString(paramIndex++, status);
+            }
+            
+            ps.setInt(paramIndex++, offset);
+            ps.setInt(paramIndex++, pageSize);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Donation d = new Donation(
+                            rs.getInt("id"),
+                            rs.getInt("event_id"),
+                            rs.getInt("volunteer_id"),
+                            rs.getDouble("amount"),
+                            rs.getTimestamp("donate_date"),
+                            rs.getString("status"),
+                            rs.getString("payment_method"),
+                            rs.getString("qr_code"),
+                            rs.getString("note"),
+                            rs.getString("volunteer_username"),
+                            rs.getString("volunteer_full_name"),
+                            rs.getString("event_title"),
+                            0,
+                            0
+                    );
+                    list.add(d);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return list;
+    }
+    
+    // Đếm tổng số donations với filter đầy đủ
+    public int getTotalDonationsWithAllFilters(int volunteerId, String startDate, String endDate, String status) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Donations WHERE volunteer_id = ?");
+        
+        boolean hasStartDate = startDate != null && !startDate.trim().isEmpty();
+        boolean hasEndDate = endDate != null && !endDate.trim().isEmpty();
+        boolean hasStatus = status != null && !status.trim().isEmpty() && !"all".equals(status);
+        
+        if (hasStartDate) {
+            sql.append(" AND donate_date >= ?");
+        }
+        if (hasEndDate) {
+            sql.append(" AND donate_date <= ?");
+        }
+        if (hasStatus) {
+            sql.append(" AND status = ?");
+        }
+        
+        try (PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+            ps.setInt(paramIndex++, volunteerId);
+            
+            if (hasStartDate) {
+                ps.setString(paramIndex++, startDate + " 00:00:00");
+            }
+            if (hasEndDate) {
+                ps.setString(paramIndex++, endDate + " 23:59:59");
+            }
+            if (hasStatus) {
+                ps.setString(paramIndex++, status);
+            }
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return 0;
+    }
 
 }

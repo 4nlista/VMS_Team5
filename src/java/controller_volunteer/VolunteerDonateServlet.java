@@ -66,6 +66,7 @@ public class VolunteerDonateServlet extends HttpServlet {
         String pageParam = request.getParameter("page");
         String startDate = request.getParameter("startDate");
         String endDate = request.getParameter("endDate");
+        String statusFilter = request.getParameter("status");
 
         if (pageParam != null) {
             try {
@@ -78,17 +79,23 @@ public class VolunteerDonateServlet extends HttpServlet {
             }
         }
 
-        // Kiểm tra có filter ngày không
+        // Kiểm tra có filter không
         boolean hasDateFilter = (startDate != null && !startDate.trim().isEmpty()) 
                              || (endDate != null && !endDate.trim().isEmpty());
+        boolean hasStatusFilter = (statusFilter != null && !statusFilter.trim().isEmpty() && !"all".equals(statusFilter));
+        boolean hasAnyFilter = hasDateFilter || hasStatusFilter;
 
         List<Donation> volunteerDonations;
         int totalDonations;
         
-        if (hasDateFilter) {
-            // Lấy với filter ngày
-            volunteerDonations = displayDonateService.getUserDonationsPagedWithDateFilter(volunteerId, pageIndex, pageSize, startDate, endDate);
-            totalDonations = displayDonateService.getTotalDonationsByVolunteerWithDateFilter(volunteerId, startDate, endDate);
+        if (hasAnyFilter) {
+            // Lấy với filter đầy đủ
+            volunteerDonations = displayDonateService.getUserDonationsWithAllFilters(
+                volunteerId, pageIndex, pageSize, startDate, endDate, statusFilter
+            );
+            totalDonations = displayDonateService.getTotalDonationsWithAllFilters(
+                volunteerId, startDate, endDate, statusFilter
+            );
         } else {
             // Lấy bình thường
             volunteerDonations = displayDonateService.getUserDonationsPaged(volunteerId, pageIndex, pageSize);
@@ -109,6 +116,7 @@ public class VolunteerDonateServlet extends HttpServlet {
         request.setAttribute("pageSize", pageSize);
         request.setAttribute("startDate", startDate);
         request.setAttribute("endDate", endDate);
+        request.setAttribute("statusFilter", statusFilter != null ? statusFilter : "all");
         request.setAttribute("top3Donations", top3Donations);
         request.setAttribute("allDonations", allDonations);
 

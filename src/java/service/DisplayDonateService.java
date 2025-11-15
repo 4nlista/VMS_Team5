@@ -50,6 +50,17 @@ public class DisplayDonateService {
         return viewUserDonationDAO.getTotalDonationsByVolunteerWithDateFilter(volunteerId, startDate, endDate);
     }
     
+    // Lọc donations với filter đầy đủ (ngày + trạng thái)
+    public List<Donation> getUserDonationsWithAllFilters(int volunteerId, int page, int pageSize, 
+                                                         String startDate, String endDate, String status) {
+        return viewUserDonationDAO.getUserDonationsWithAllFilters(volunteerId, page, pageSize, startDate, endDate, status);
+    }
+    
+    // Đếm tổng số với filter đầy đủ
+    public int getTotalDonationsWithAllFilters(int volunteerId, String startDate, String endDate, String status) {
+        return viewUserDonationDAO.getTotalDonationsWithAllFilters(volunteerId, startDate, endDate, status);
+    }
+    
     // trả về phân trang
     public int getTotalDonors(){
         return viewUserDonationDAO.getTotalDonors();

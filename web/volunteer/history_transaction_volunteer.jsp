@@ -19,19 +19,30 @@
             <div class="card mb-4 shadow-sm">
                 <div class="card-body">
                     <form method="GET" action="<%= request.getContextPath() %>/VolunteerDonateServlet" class="row g-3 align-items-end">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label for="startDate" class="form-label fw-bold">
                                 <i class="bi bi-calendar-event"></i> Từ ngày
                             </label>
                             <input type="date" class="form-control" id="startDate" name="startDate" value="${startDate}">
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label for="endDate" class="form-label fw-bold">
                                 <i class="bi bi-calendar-check"></i> Đến ngày
                             </label>
                             <input type="date" class="form-control" id="endDate" name="endDate" value="${endDate}">
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
+                            <label for="status" class="form-label fw-bold">
+                                <i class="bi bi-check-circle"></i> Trạng thái
+                            </label>
+                            <select class="form-select" id="status" name="status">
+                                <option value="all" ${statusFilter == 'all' ? 'selected' : ''}>Tất cả</option>
+                                <option value="success" ${statusFilter == 'success' ? 'selected' : ''}>Thành công</option>
+                                <option value="pending" ${statusFilter == 'pending' ? 'selected' : ''}>Đang xử lý</option>
+                                <option value="cancelled" ${statusFilter == 'cancelled' ? 'selected' : ''}>Bị từ chối</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
                             <input type="hidden" name="page" value="1">
                             <button type="submit" class="btn btn-primary me-2">
                                 <i class="bi bi-funnel"></i> Lọc
@@ -50,14 +61,16 @@
                         <table class="table table-striped table-hover align-middle" style="table-layout: fixed; width: 100%;">
                             <thead class="table-dark">
                                 <tr>
-                                    <th scope="col" style="width:4%;">STT</th>
-                                    <th scope="col" style="width:13%;">Mã QR</th>
-                                    <th scope="col" style="width:20%;">Sự kiện</th>
-                                    <th scope="col" style="width:9%;">Số tiền</th>
-                                    <th scope="col" style="width:11%;">Phương thức</th>
+                                    <th scope="col" style="width:5%;">STT</th>
+                                    <!--                                    <th scope="col" style="width:13%;">Mã QR</th>-->
+                                    <th scope="col" style="width:25%;">Sự kiện</th>
+                                    <th scope="col" style="width:10%;">Số tiền</th>
+                                    <th scope="col" style="width:15%;">Phương thức</th>
                                     <th scope="col" style="width:15%;">Ngày thanh toán</th>
-                                    <th scope="col" style="width:15%; word-wrap: break-word; overflow-wrap: break-word;">Ghi chú</th>
-                                    <th scope="col" style="width:8%;">Trạng thái</th>
+                                    <!--                                    <th scope="col" style="width:15%; word-wrap: break-word; overflow-wrap: break-word;">Ghi chú</th>-->
+                                    <th scope="col" style="width:15%;">Trạng thái</th>
+                                    <!--tôi thêm button này nhé -->
+                                    <th scope="col" style="width:15%;">Xem chi tiết</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -71,7 +84,7 @@
                                 <c:forEach var="d" items="${volunteerDonations}" varStatus="status">
                                     <tr>
                                         <td>${status.index + 1 + (currentPage - 1) * pageSize}</td>
-                                        <td>${d.qrCode != null ? d.qrCode : "-"}</td>
+<!--                                        <td>${d.qrCode != null ? d.qrCode : "-"}</td>-->
                                         <td>${d.eventTitle != null ? d.eventTitle : "-"}</td>
                                         <td><fmt:formatNumber value="${d.amount}" pattern="#,###" /> </td>
                                         <td>${d.paymentMethod != null ? d.paymentMethod : "-"}</td>
@@ -83,7 +96,7 @@
                                                 <c:otherwise>-</c:otherwise>
                                             </c:choose>
                                         </td>
-                                        <td>${d.note != null ? d.note : ""}</td>
+<!--                                        <td>${d.note != null ? d.note : ""}</td>-->
                                         <td>
                                             <c:choose>
                                                 <c:when test="${d.status == 'success'}">
@@ -100,6 +113,12 @@
                                                 </c:otherwise>
                                             </c:choose>
                                         </td>
+                                        <td>
+                                            <a href="${pageContext.request.contextPath}/VolunteerDetailPaymentServlet?donationId=${d.id}" 
+                                               class="btn btn-sm btn-info">
+                                                <i class="bi bi-eye"></i> Xem chi tiết
+                                            </a>
+                                        </td>
                                     </tr>
                                 </c:forEach>
 
@@ -114,7 +133,7 @@
                                     <!-- Nút Trước (disabled nếu ở trang 1) -->
                                     <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
                                         <a class="page-link" 
-                                           href="?page=${currentPage - 1}&startDate=${startDate}&endDate=${endDate}">
+                                           href="?page=${currentPage - 1}&startDate=${startDate}&endDate=${endDate}&status=${statusFilter}">
                                             &lt; Trước
                                         </a>
                                     </li>
@@ -122,14 +141,14 @@
                                     <!-- Các nút số trang -->
                                     <c:forEach var="i" begin="1" end="${totalPages}">
                                         <li class="page-item ${i == currentPage ? 'active' : ''}">
-                                            <a class="page-link" href="?page=${i}&startDate=${startDate}&endDate=${endDate}">${i}</a>
+                                            <a class="page-link" href="?page=${i}&startDate=${startDate}&endDate=${endDate}&status=${statusFilter}">${i}</a>
                                         </li>
                                     </c:forEach>
 
                                     <!-- Nút Sau (disabled nếu ở trang cuối) -->
                                     <li class="page-item ${currentPage >= totalPages ? 'disabled' : ''}">
                                         <a class="page-link" 
-                                           href="?page=${currentPage + 1}&startDate=${startDate}&endDate=${endDate}">
+                                           href="?page=${currentPage + 1}&startDate=${startDate}&endDate=${endDate}&status=${statusFilter}">
                                             Sau &gt;
                                         </a>
                                     </li>

@@ -32,9 +32,39 @@ public class Donation {
     // Thống kê
     private double totalAmountDonated;  // tổng số tiền donate của mỗi cá nhân
     private int numberOfEventsDonated; // số lượng sự kiện donate của mỗi cá nhân
+    
+    // khai báo thêm thông tin của organization
+    private String organizationName;
+    private String emailOrganization;
+    private String phoneOrganization;
+    
+    
 
     public Donation() {
     }
+
+    public Donation(int id, int eventId, int volunteerId, double amount, Date donateDate, String status, String paymentMethod, String qrCode, String note, String volunteerUsername, String volunteerFullName, String volunteerAvatar, String eventTitle, double totalAmountDonated, int numberOfEventsDonated, String organizationName, String emailOrganization, String phoneOrganization) {
+        this.id = id;
+        this.eventId = eventId;
+        this.volunteerId = volunteerId;
+        this.amount = amount;
+        this.donateDate = donateDate;
+        this.status = status;
+        this.paymentMethod = paymentMethod;
+        this.qrCode = qrCode;
+        this.note = note;
+        this.volunteerUsername = volunteerUsername;
+        this.volunteerFullName = volunteerFullName;
+        this.volunteerAvatar = volunteerAvatar;
+        this.eventTitle = eventTitle;
+        this.totalAmountDonated = totalAmountDonated;
+        this.numberOfEventsDonated = numberOfEventsDonated;
+        this.organizationName = organizationName;
+        this.emailOrganization = emailOrganization;
+        this.phoneOrganization = phoneOrganization;
+    }
+    
+    
 
     public Donation(int id, int eventId, int volunteerId, double amount, Date donateDate, String status, String paymentMethod, String qrCode, String note, String volunteerUsername, String volunteerFullName, String eventTitle, double totalAmountDonated, int numberOfEventsDonated) {
         this.id = id;
@@ -198,4 +228,29 @@ public class Donation {
         this.numberOfEventsDonated = numberOfEventsDonated;
     }
 
+    public String getOrganizationName() {
+        return organizationName;
+    }
+
+    public void setOrganizationName(String organizationName) {
+        this.organizationName = organizationName;
+    }
+
+    public String getEmailOrganization() {
+        return emailOrganization;
+    }
+
+    public void setEmailOrganization(String emailOrganization) {
+        this.emailOrganization = emailOrganization;
+    }
+
+    public String getPhoneOrganization() {
+        return phoneOrganization;
+    }
+
+    public void setPhoneOrganization(String phoneOrganization) {
+        this.phoneOrganization = phoneOrganization;
+    }
+
+    
 }

@@ -48,14 +48,8 @@
                                         <input type="text" class="form-control" value="${event.title}" readonly>
                                     </div>
 
-                                    <!-- Họ và tên volunteer (readonly) -->
-                                    <div class="col-md-6">
-                                        <label class="form-label">Họ và tên</label>
-                                        <input type="text" class="form-control" value="${volunteerName}" readonly>
-                                    </div>
-
                                     <!-- Tên tổ chức (readonly) -->
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                         <label class="form-label">Tổ chức</label>
                                         <input type="text" class="form-control" value="${event.organizationName}" readonly>
                                     </div>

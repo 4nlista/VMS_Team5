@@ -102,5 +102,79 @@ public class DonationDAO {
 
         return list;
     }
+    
+    // Lấy chi tiết donation theo ID (bao gồm thông tin event và organization)
+    public Donation getDonationDetailById(int donationId) {
+        String sql = """
+            SELECT 
+                d.id,
+                d.event_id,
+                d.volunteer_id,
+                d.amount,
+                d.donate_date,
+                d.status,
+                d.payment_method,
+                d.qr_code,
+                d.note,
+                a_vol.username AS volunteerUsername,
+                u_vol.full_name AS volunteerFullName,
+                e.title AS eventTitle,
+                e.description AS eventDescription,
+                e.location AS eventLocation,
+                e.start_date AS eventStartDate,
+                e.end_date AS eventEndDate,
+                c.name AS categoryName,
+                a_org.username AS organizationUsername,
+                u_org.full_name AS organizationName,
+                u_org.email AS emailOrganization,
+                u_org.phone AS phoneOrganization
+            FROM Donations d
+            JOIN Accounts a_vol ON d.volunteer_id = a_vol.id
+            JOIN Users u_vol ON a_vol.id = u_vol.account_id
+            JOIN Events e ON d.event_id = e.id
+            LEFT JOIN Categories c ON e.category_id = c.category_id
+            JOIN Accounts a_org ON e.organization_id = a_org.id
+            JOIN Users u_org ON a_org.id = u_org.account_id
+            WHERE d.id = ?
+        """;
+        
+        try (Connection connection = DBContext.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            
+            ps.setInt(1, donationId);
+            ResultSet rs = ps.executeQuery();
+            
+            if (rs.next()) {
+                Donation donation = new Donation(
+                    rs.getInt("id"),
+                    rs.getInt("event_id"),
+                    rs.getInt("volunteer_id"),
+                    rs.getDouble("amount"),
+                    rs.getTimestamp("donate_date") != null ? new java.util.Date(rs.getTimestamp("donate_date").getTime()) : null,
+                    rs.getString("status"),
+                    rs.getString("payment_method"),
+                    rs.getString("qr_code"),
+                    rs.getString("note"),
+                    rs.getString("volunteerUsername"),
+                    rs.getString("volunteerFullName"),
+                    rs.getString("eventTitle"),
+                    0,
+                    0
+                );
+                
+                // Set thông tin organization
+                donation.setOrganizationName(rs.getString("organizationName"));
+                donation.setEmailOrganization(rs.getString("emailOrganization"));
+                donation.setPhoneOrganization(rs.getString("phoneOrganization"));
+                
+                return donation;
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return null;
+    }
 
 }
