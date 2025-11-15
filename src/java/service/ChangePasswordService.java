@@ -39,13 +39,19 @@ public class ChangePasswordService {
                 return "Mật khẩu hiện tại không đúng.";
             }
 
-            // 3. Kiểm tra confirm password
+            // 3. Kiểm tra mật khẩu mới không được giống mật khẩu cũ
+            if (currentPassword.equals(newPassword)) {
+                System.out.println("❌ Mật khẩu mới giống mật khẩu cũ!");
+                return "Mật khẩu mới không được giống mật khẩu cũ.";
+            }
+
+            // 4. Kiểm tra confirm password
             if (!newPassword.equals(confirmPassword)) {
                 System.out.println("❌ Xác nhận mật khẩu không khớp!");
                 return "Xác nhận mật khẩu không khớp.";
             }
 
-            // 4. Hash mật khẩu mới và update database
+            // 5. Hash mật khẩu mới và update database
             String newPasswordHash = PasswordUtil.hashPassword(newPassword);
             System.out.println("New password hash: " + newPasswordHash);
 

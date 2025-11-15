@@ -10,8 +10,8 @@ import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
 
 /**
- * Tự động chuyển status = 'closed' cho các sự kiện đã kết thúc
- * Chạy mỗi 1 giờ kiểm tra và update
+ * Tự động chuyển status = 'closed' cho các sự kiện đã kết thúc Chạy mỗi 1 giờ
+ * kiểm tra và update
  */
 @WebListener
 public class AutoCloseEventScheduler implements ServletContextListener {
@@ -21,7 +21,7 @@ public class AutoCloseEventScheduler implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         scheduler = Executors.newSingleThreadScheduledExecutor();
-        
+
         // Chạy ngay khi khởi động và lặp lại mỗi 1 phút
         scheduler.scheduleAtFixedRate(() -> {
             try {
@@ -32,7 +32,7 @@ public class AutoCloseEventScheduler implements ServletContextListener {
                 e.printStackTrace();
             }
         }, 0, 1, TimeUnit.MINUTES); // 0 = chạy ngay, 1 = mỗi 1 phút
-        
+
         System.out.println("[AutoCloseEventScheduler] Đã khởi động - Chạy mỗi 1 phút");
     }
 
@@ -49,21 +49,20 @@ public class AutoCloseEventScheduler implements ServletContextListener {
      */
     private void closeExpiredEvents() {
         String sql = """
-            UPDATE Events
+            UPDATE dbo.events
             SET status = 'closed'
             WHERE status IN ('active', 'inactive')
               AND end_date < GETDATE()
         """;
 
-        try (Connection conn = DBContext.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
             int rowsUpdated = ps.executeUpdate();
-            
+
             if (rowsUpdated > 0) {
                 System.out.println("[AutoCloseEventScheduler] Đã đóng " + rowsUpdated + " sự kiện hết hạn");
             }
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
