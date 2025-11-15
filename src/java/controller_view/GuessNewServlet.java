@@ -37,7 +37,7 @@ public class GuessNewServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Get page parameter
+        // Nhận tham số trang
         int page = 1;
         int limit = 3;
         String pageParam = request.getParameter("page");
@@ -50,26 +50,26 @@ public class GuessNewServlet extends HttpServlet {
         }
         int offset = (page - 1) * limit;
 
-        // Check if filtering by date range
+        // Kiểm tra xem có lọc theo phạm vi ngày không
         String startDateTime = request.getParameter("startDateTime");
         String endDateTime = request.getParameter("endDateTime");
 
         if (startDateTime != null && !startDateTime.isEmpty()
                 && endDateTime != null && !endDateTime.isEmpty()) {
 
-            // Validate date range
+            // Xác thực phạm vi ngày
             try {
                 // Convert to SQL format (from HTML datetime-local format)
                 String startDateTimeSQL = startDateTime.replace("T", " ") + ":00";
                 String endDateTimeSQL = endDateTime.replace("T", " ") + ":00";
 
-                // Parse dates for validation
+                // Phân tích ngày để xác thực
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Date startDate = sdf.parse(startDateTimeSQL);
                 Date endDate = sdf.parse(endDateTimeSQL);
                 Date currentDate = new Date();
 
-                // Validation checks
+                // Kiểm tra xác thực
                 if (startDate.after(endDate)) {
                     // Start date is after end date - error
                     request.setAttribute("errorMessage", "Ngày bắt đầu không thể sau ngày kết thúc!");
@@ -77,7 +77,7 @@ public class GuessNewServlet extends HttpServlet {
                     request.setAttribute("endDateTime", endDateTime);
                     request.setAttribute("allNews", new ArrayList<New>());
                 } else if (startDate.after(currentDate)) {
-                    // Start date is in the future - error
+                    // Ngày bắt đầu ở tương lai - error
                     request.setAttribute("errorMessage", "Ngày bắt đầu không thể là ngày tương lai!");
                     request.setAttribute("startDateTime", startDateTime);
                     request.setAttribute("endDateTime", endDateTime);
@@ -100,7 +100,7 @@ public class GuessNewServlet extends HttpServlet {
                     request.setAttribute("totalPages", totalPages);
                     request.setAttribute("totalNews", totalNews);
 
-                    // Warning if end date is in the future
+                    // Cảnh báo nếu ngày kết thúc ở tương lai
                     if (endDate.after(currentDate)) {
                         request.setAttribute("warningMessage", "Ngày kết thúc là tương lai, chỉ hiển thị tin tức đã đăng.");
                     }
