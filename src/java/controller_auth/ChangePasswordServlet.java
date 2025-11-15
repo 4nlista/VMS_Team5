@@ -18,7 +18,7 @@ public class ChangePasswordServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Chỉ redirect về trang login nếu truy cập GET trực tiếp
+        // Truy cập GET trực tiếp → chuyển về trang login
         response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
     }
 
@@ -26,24 +26,25 @@ public class ChangePasswordServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-
+      
         String currentPassword = request.getParameter("currentPassword");
         String newPassword = request.getParameter("newPassword");
         String confirmPassword = request.getParameter("confirmPassword");
-
+        // Lấy thông tin user từ session
         Integer accountId = (Integer) request.getSession().getAttribute("accountId");
         String role = (String) request.getSession().getAttribute("role");
 
         if (accountId == null || role == null) {
+            // Chưa login → về trang login
             response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
             return;
         }
 
-        // Gọi service
+        // Gọi service xử lý logic đổi mật khẩu
         String errorMsg = service.changePassword(accountId, currentPassword, newPassword, confirmPassword);
 
         if (errorMsg != null) {
-            // Có lỗi → forward lại trang đổi mật khẩu
+            // Có lỗi → forward về trang đổi mật khẩu với thông báo lỗi
             request.setAttribute("error", errorMsg);
             switch (role) {
                 case "volunteer":
@@ -62,8 +63,8 @@ public class ChangePasswordServlet extends HttpServlet {
             return;
         }
 
-        //khi đổi thành công, servlet sẽ forward lại trang đổi mật khẩu tương ứng với role, 
-        //truyền thêm biến success để JSP hiển thị thông báo rồi tự động redirect về trang login.
+        // Đổi mật khẩu thành công → forward về trang đổi mật khẩu với thông báo thành công
+        // JSP sẽ hiển thị thông báo và tự động redirect về login sau vài giây
         request.setAttribute("success", "Đổi mật khẩu thành công! Bạn sẽ được chuyển hướng trong giây lát.");
         switch (role) {
             case "volunteer":

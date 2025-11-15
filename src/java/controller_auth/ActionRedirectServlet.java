@@ -11,9 +11,9 @@ import java.io.IOException;
 import model.Account;
 import service.LoginService;
 
-// Mục đích: chặn các hành động yêu cầu login trước (như donate, volunteer).
-// Nếu chưa login → lưu redirectAfterLogin vào session và chuyển sang trang login.jsp.
-// Nếu đã login → redirect trực tiếp đến action tương ứng (donate.jsp, VolunteerHomeServlet).
+// Servlet điều hướng các hành động yêu cầu đăng nhập (donate, volunteer)
+// Nếu chưa login → lưu action vào session và chuyển đến trang login
+// Nếu đã login → gọi LoginService để quyết định redirect đến đâu
 @WebServlet(name = "ActionRedirectServlet", urlPatterns = {"/ActionRedirectServlet"})
 
 public class ActionRedirectServlet extends HttpServlet {
@@ -28,16 +28,20 @@ public class ActionRedirectServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+       
         HttpSession session = request.getSession();
+         // Lấy account từ session để kiểm tra đã login 
         Account acc = (Account) session.getAttribute("account");
+        
+         // Lấy action từ request parameter (donate, be_a_volunteer...)
         String action = request.getParameter("action");
 
         if (acc == null) {
-            // guest → nhớ action, bắt login
+            // guest → Chưa login: lưu action để redirect sau khi login thành công
             session.setAttribute("redirectAfterLogin", action);
             response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
         } else {
-            // đã login → delegate quyết định redirect cho LoginService
+            // Đã login: gọi LoginService để xử lý logic phân quyền và redirect
             String redirectUrl = loginService.resolveRedirect(acc, session, action);
             response.sendRedirect(request.getContextPath() + redirectUrl);
         }
