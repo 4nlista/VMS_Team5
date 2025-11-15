@@ -37,7 +37,9 @@
                                 <select name="status" class="form-select form-select-sm" style="width: 140px;">
                                     <option value="">Tất cả</option>
                                     <option value="published" ${currentStatus == 'published' ? 'selected' : ''}>Đã hiển thị</option>
-                                    <option value="hidden" ${currentStatus == 'hidden' ? 'selected' : ''}>Đã bị ẩn</option>
+                                    <option value="hidden" ${currentStatus == 'hidden' ? 'selected' : ''}>Đã ẩn</option>
+                                    <option value="pending" ${currentStatus == 'pending' ? 'selected' : ''}>Đang chờ duyệt</option>
+                                    <option value="rejected" ${currentStatus == 'rejected' ? 'selected' : ''}>Bị từ chối</option>
                                 </select>
                             </div>
                             <!-- Nút Lọc -->
@@ -76,25 +78,39 @@
                                         <td>
                                             <c:choose>
                                                 <c:when test="${newItem.status == 'published'}">
-                                                    <span class="badge bg-success">Hiển thị</span>
+                                                    <span class="badge bg-success">Đã hiển thị</span>
                                                 </c:when>
                                                 <c:when test="${newItem.status == 'hidden'}">
-                                                    <span class="badge bg-warning text-dark">Bị Ẩn</span>
+                                                    <span class="badge bg-secondary">Đã ẩn</span>
                                                 </c:when>
-                                                <c:otherwise>
-                                                    <span class="badge bg-danger">Từ chối</span>
-                                                </c:otherwise>
+                                                <c:when test="${newItem.status == 'pending'}">
+                                                    <span class="badge bg-warning text-dark">Chờ duyệt</span>
+                                                </c:when>
+                                                <c:when test="${newItem.status == 'rejected'}">
+                                                    <span class="badge bg-danger">Bị từ chối</span>
+                                                </c:when>
                                             </c:choose>
                                         </td>
                                         <td>
+                                            <!-- Nút Xem -->
                                             <form action="${pageContext.request.contextPath}/OrganizationNewsDetail" method="get" style="display:inline;">
                                                 <input type="hidden" name="id" value="${newItem.id}">
                                                 <button type="submit" class="btn btn-primary btn-sm me-1" title="Xem Thông Tin Chi Tiết">
                                                     Xem
                                                 </button>
                                             </form>
-                                            <a href="${pageContext.request.contextPath}/OrganizationNewsEdit?id=${newItem.id}" class="btn btn-warning btn-sm me-1">Sửa</a>
-                                            <form action="${pageContext.request.contextPath}/OrganizationNewsDelete" method="post" style="display:inline;" onsubmit="return confirm('Bạn có chắc muốn xóa bài viết này?');">
+                                            
+                                            <!-- Nút Sửa: Chỉ hiện khi KHÔNG phải pending hoặc rejected -->
+                                            <c:if test="${newItem.status != 'pending' && newItem.status != 'rejected'}">
+                                                <a href="${pageContext.request.contextPath}/OrganizationNewsEdit?id=${newItem.id}" 
+                                                   class="btn btn-warning btn-sm me-1">Sửa</a>
+                                            </c:if>
+                                            
+                                            <!-- Nút Xóa -->
+                                            <form action="${pageContext.request.contextPath}/OrganizationNewsDelete" 
+                                                  method="post" 
+                                                  style="display:inline;" 
+                                                  onsubmit="return confirm('Bạn có chắc muốn xóa bài viết này?');">
                                                 <input type="hidden" name="id" value="${newItem.id}">
                                                 <button type="submit" class="btn btn-danger btn-sm me-1" title="Xóa Tin Tức">
                                                     Xóa

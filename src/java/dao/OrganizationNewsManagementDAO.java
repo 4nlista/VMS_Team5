@@ -129,7 +129,6 @@ public class OrganizationNewsManagementDAO {
 		// Build WHERE: organization filter is mandatory
 		List<String> whereClauses = new ArrayList<>();
 		whereClauses.add("n.organization_id = ?");
-		whereClauses.add("n.status <> 'pending'");
 
 		if (status != null && !status.trim().isEmpty()) {
 			whereClauses.add("n.status = ?");

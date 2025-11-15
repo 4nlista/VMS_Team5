@@ -58,10 +58,16 @@
                                         <label class="form-label fw-semibold">Trạng thái</label>
                                         <c:choose>
                                             <c:when test="${news.status == 'published'}">
-                                                <input type="text" class="form-control" value="Hiển Thị" readonly>
+                                                <input type="text" class="form-control" value="Đã hiển thị" readonly>
                                             </c:when>
                                             <c:when test="${news.status == 'hidden'}">
-                                                <input type="text" class="form-control" value="Ẩn" readonly>
+                                                <input type="text" class="form-control" value="Đã ẩn" readonly>
+                                            </c:when>
+                                            <c:when test="${news.status == 'pending'}">
+                                                <input type="text" class="form-control text-warning fw-bold" value="Đang chờ duyệt" readonly>
+                                            </c:when>
+                                            <c:when test="${news.status == 'rejected'}">
+                                                <input type="text" class="form-control text-danger fw-bold" value="Bị từ chối" readonly>
                                             </c:when>
                                             <c:otherwise>
                                                 <input type="text" class="form-control" value="Unknown" readonly>
@@ -79,10 +85,24 @@
                                             <a href="${pageContext.request.contextPath}/OrganizationManageNews" class="btn btn-secondary">
                                                 <i class="bi bi-arrow-left me-1"></i> Quay lại
                                             </a>
-                                            <div>
-                                                <a href="${pageContext.request.contextPath}/OrganizationNewsEdit?id=${news.id}" class="btn btn-primary">
-                                                    <i class="bi bi-pencil me-1"></i> Sửa
-                                                </a>
+                                            <div class="d-flex gap-2">
+                                                <!-- Nút Sửa: Chỉ hiện khi KHÔNG phải pending hoặc rejected -->
+                                                <c:if test="${news.status != 'pending' && news.status != 'rejected'}">
+                                                    <a href="${pageContext.request.contextPath}/OrganizationNewsEdit?id=${news.id}" class="btn btn-primary">
+                                                        <i class="bi bi-pencil me-1"></i> Sửa
+                                                    </a>
+                                                </c:if>
+                                                
+                                                <!-- Nút Xóa -->
+                                                <form action="${pageContext.request.contextPath}/OrganizationNewsDelete"
+                                                      method="post" 
+                                                      onsubmit="return confirm('Bạn có chắc chắn muốn xóa bài viết này?');" 
+                                                      style="display:inline;">
+                                                    <input type="hidden" name="id" value="${news.id}" />
+                                                    <button type="submit" class="btn btn-danger">
+                                                        <i class="bi bi-trash me-1"></i> Xóa
+                                                    </button>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
