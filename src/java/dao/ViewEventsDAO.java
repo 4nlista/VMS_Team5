@@ -29,8 +29,29 @@ public class ViewEventsDAO {
         }
     }
 
+    // Đóng tất cả events đã hết hạn (end_date < now)
+    public void closeExpiredEvents() {
+        String sql = """
+            UPDATE Events
+            SET status = 'closed'
+            WHERE status IN ('active', 'inactive')
+              AND end_date < GETDATE()
+        """;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            int rows = ps.executeUpdate();
+            if (rows > 0) {
+                System.out.println("[ViewEventsDAO] Đã đóng " + rows + " sự kiện hết hạn");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     // Lấy danh sách sự kiện đang active và public để hiển thị lên jsp
     public List<Event> getActiveEvents() {
+        // Tự động đóng events hết hạn trước khi query
+        closeExpiredEvents();
+        
         List<Event> list = new ArrayList<>();
         String sql = """
     SELECT e.*, 

@@ -30,8 +30,29 @@ public class OrganizationEventsDAO {
         }
     }
 
+    // Đóng tất cả events đã hết hạn
+    private void closeExpiredEvents() {
+        String sql = """
+            UPDATE Events
+            SET status = 'closed'
+            WHERE status IN ('active', 'inactive')
+              AND end_date < GETDATE()
+        """;
+        try (Connection con = DBContext.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+            int rows = ps.executeUpdate();
+            if (rows > 0) {
+                System.out.println("[OrganizationEventsDAO] Đã đóng " + rows + " sự kiện hết hạn");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     // lấy EventsByOrganization theo người tổ chức 
     public List<Event> getEventsByOrganization(int organizationId) {
+        // Tự động đóng events hết hạn trước khi query
+        closeExpiredEvents();
+        
         List<Event> list = new ArrayList<>();
         String sql = """ 
                      SELECT 
