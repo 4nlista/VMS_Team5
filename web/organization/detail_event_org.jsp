@@ -218,10 +218,6 @@
                                         <button type="submit" name="action" value="update" class="btn btn-primary me-2">
                                             <i class="bi bi-check-circle me-1"></i>Cập nhật
                                         </button>
-                                        <button type="submit" name="action" value="delete" class="btn btn-danger"
-                                                onclick="return confirm('Bạn có chắc chắn muốn xóa sự kiện này?')">
-                                            <i class="bi bi-trash me-1"></i>Xóa
-                                        </button>
                                     </c:if>
                                 </div>
 
@@ -353,9 +349,6 @@
                                     </div>
                                 </c:if>
                             </div>
-
-
-
                         </div>
                     </div>
                 </div>
