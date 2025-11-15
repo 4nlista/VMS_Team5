@@ -131,7 +131,7 @@
                 </li>
                 
                 <% if (acc != null) { %>
-                <!-- Chuông thông báo - đặt TRƯỚC nút Đăng xuất -->
+                <!-- Chuông thông báo -->
                 <li class="nav-item">
                     <a href="<%= request.getContextPath() %>/VolunteerNotificationServlet" 
                        class="nav-link btn btn-outline position-relative" 
@@ -145,9 +145,16 @@
                         <% } %>
                     </a>
                 </li>
+                
+                <!-- Đổi mật khẩu -->
+                <li class="nav-item">
+                    <a href="<%= request.getContextPath() %>/volunteer/change_password_volunteer.jsp" 
+                       class="nav-link btn btn-outline-secondary"  
+                       style="padding:15px 10px; border-radius:25px;">
+                        Đổi mật khẩu
+                    </a>
+                </li>
                 <% } %>
-
-
 
                 <li class="nav-item" style="align-content: center; margin-left: 2px">
                     <a href="<%= request.getContextPath() %>/LogoutServlet" 
