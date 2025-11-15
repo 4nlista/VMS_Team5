@@ -82,7 +82,7 @@
                                                     <span class="badge bg-warning text-dark">Bị Ẩn</span>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <span class="badge bg-secondary">UNKNOWN</span>
+                                                    <span class="badge bg-danger">Từ chối</span>
                                                 </c:otherwise>
                                             </c:choose>
                                         </td>
