@@ -78,8 +78,16 @@ public class VolunteerApplyService {
         if (hasConflictingEvent(volunteerId, eventId)) {
             throw new IllegalArgumentException("Bạn đã đăng ký sự kiện khác trùng thời gian đó bạn nhỏ!");
         }
+        
+        // 5. Kiểm tra còn đủ 24h trước sự kiện không
+        long diff = event.getStartDate().getTime() - new java.util.Date().getTime();
+        long hoursRemaining = java.util.concurrent.TimeUnit.MILLISECONDS.toHours(diff);
+        
+        if (hoursRemaining < 24) {
+            throw new IllegalArgumentException("Bạn cần gửi đơn trước 24h diễn ra sự kiện!");
+        }
 
-        // 5. Nếu chưa thì thêm vào DB
+        // 6. Nếu pass hết → thêm vào DB
         volunteerApplyDAO.applyToEvent(volunteerId, eventId, note);
         return true;
     }
