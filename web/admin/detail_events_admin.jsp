@@ -25,7 +25,7 @@
             <!-- Main Content -->
             <div class="main-content">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h1><i class="bi bi-calendar-event me-2"></i>Chi tiết sự kiện</h1>
+                    <h1>Chi tiết sự kiện</h1>
                     <a href="AdminEventsServlet" class="btn btn-secondary">
                         <i class="bi bi-arrow-left me-2"></i>Quay lại
                     </a>
@@ -40,112 +40,108 @@
                 <c:if test="${not empty event}">
                     <div class="card shadow-sm">
                         <div class="card-header bg-primary text-white">
-                            <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Thông tin sự kiện</h5>
+                            <h6 class="mb-0">Thông tin sự kiện</h6>
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">ID Sự kiện:</label>
-                                    <p class="form-control-plaintext">${event.id}</p>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">Tiêu đề:</label>
-                                    <p class="form-control-plaintext">${fn:escapeXml(event.title)}</p>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">Trạng thái:</label>
-                                    <p class="form-control-plaintext">
-                                        <c:choose>
-                                            <c:when test="${event.status == 'active'}">
-                                                <span class="badge bg-success">Active</span>
-                                            </c:when>
-                                            <c:when test="${event.status == 'inactive'}">
-                                                <span class="badge bg-secondary">Inactive</span>
-                                            </c:when>
-                                            <c:when test="${event.status == 'closed'}">
-                                                <span class="badge bg-dark">Closed</span>
-                                            </c:when>
-                                        </c:choose>
-                                    </p>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">Chế độ:</label>
-                                    <p class="form-control-plaintext">
-                                        <c:choose>
-                                            <c:when test="${event.visibility == 'public'}">
-                                                <span class="badge bg-info">Public</span>
-                                            </c:when>
-                                            <c:when test="${event.visibility == 'private'}">
-                                                <span class="badge bg-warning text-dark">Private</span>
-                                            </c:when>
-                                        </c:choose>
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">Ngày diễn ra:</label>
-                                    <p class="form-control-plaintext">
-                                        <fmt:formatDate value="${event.startDate}" pattern="dd/MM/yyyy HH:mm" />
-                                    </p>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">Ngày kết thúc:</label>
-                                    <p class="form-control-plaintext">
-                                        <fmt:formatDate value="${event.endDate}" pattern="dd/MM/yyyy HH:mm" />
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">Địa điểm:</label>
-                                    <p class="form-control-plaintext">${fn:escapeXml(event.location)}</p>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">Số lượng tình nguyện viên đã tham gia:</label>
-                                    <p class="form-control-plaintext">
-                                        <span class="badge bg-primary">${approvedVolunteersCount}</span>
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">Tên người tổ chức:</label>
-                                    <p class="form-control-plaintext">${fn:escapeXml(event.organizationName)}</p>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold">Tổng số tiền donate:</label>
-                                    <p class="form-control-plaintext">
-                                        <strong class="text-success">
-                                            <fmt:formatNumber value="${event.totalDonation}" type="number" maxFractionDigits="0" /> VNĐ
-                                        </strong>
-                                    </p>
-                                </div>
-                            </div>
-
-                            <c:if test="${not empty event.description}">
-                                <div class="mb-3">
-                                    <label class="form-label fw-bold">Mô tả:</label>
-                                    <div class="form-control-plaintext border rounded p-3 bg-light">
-                                        ${fn:escapeXml(event.description)}
+                                <!-- Cột trái: Hình ảnh -->
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="fw-bold d-block mb-2">Hình ảnh</label>
+                                        <c:if test="${not empty event.images}">
+                                            <img src="<%= request.getContextPath() %>/UploadImagesServlet?file=${event.images}" 
+                                                 alt="Event Image" 
+                                                 class="img-fluid rounded" 
+                                                 style="width: 100%; max-height: 280px; object-fit: cover;" />
+                                        </c:if>
+                                        <c:if test="${empty event.images}">
+                                            <div class="text-muted text-center py-5 border rounded bg-light">
+                                                Không có hình ảnh
+                                            </div>
+                                        </c:if>
                                     </div>
                                 </div>
-                            </c:if>
 
-                            <c:if test="${not empty event.images}">
-                                <div class="mb-3">
-                                    <label class="form-label fw-bold">Hình ảnh:</label>
-                                    <div>
-                                        <img src="${event.images}" alt="Event Image" class="img-thumbnail" style="max-width: 300px; max-height: 300px;" />
+                                <!-- Cột phải: Thông tin chi tiết -->
+                                <div class="col-md-8">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="fw-bold">ID Sự kiện</label>
+                                            <p class="mb-0">${event.id}</p>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="fw-bold">Tiêu đề</label>
+                                            <p class="mb-0">${fn:escapeXml(event.title)}</p>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="fw-bold">Người tổ chức</label>
+                                            <p class="mb-0">${fn:escapeXml(event.organizationName)}</p>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="fw-bold">Địa điểm</label>
+                                            <p class="mb-0">${fn:escapeXml(event.location)}</p>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="fw-bold">Ngày diễn ra</label>
+                                            <p class="mb-0"><fmt:formatDate value="${event.startDate}" pattern="dd/MM/yyyy HH:mm" /></p>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="fw-bold">Ngày kết thúc</label>
+                                            <p class="mb-0"><fmt:formatDate value="${event.endDate}" pattern="dd/MM/yyyy HH:mm" /></p>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="fw-bold">Trạng thái</label>
+                                            <p class="mb-0">
+                                                <c:choose>
+                                                    <c:when test="${event.status == 'active'}">
+                                                        <span class="badge bg-success">Active</span>
+                                                    </c:when>
+                                                    <c:when test="${event.status == 'inactive'}">
+                                                        <span class="badge bg-secondary">Inactive</span>
+                                                    </c:when>
+                                                    <c:when test="${event.status == 'closed'}">
+                                                        <span class="badge bg-dark">Closed</span>
+                                                    </c:when>
+                                                </c:choose>
+                                            </p>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="fw-bold">Chế độ</label>
+                                            <p class="mb-0">
+                                                <c:choose>
+                                                    <c:when test="${event.visibility == 'public'}">
+                                                        <span class="badge bg-info">Public</span>
+                                                    </c:when>
+                                                    <c:when test="${event.visibility == 'private'}">
+                                                        <span class="badge bg-warning text-dark">Private</span>
+                                                    </c:when>
+                                                </c:choose>
+                                            </p>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="fw-bold">Số lượng volunteer</label>
+                                            <p class="mb-0"><span class="badge bg-primary">${approvedVolunteersCount}</span></p>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="fw-bold">Tổng tiền donate</label>
+                                            <p class="mb-0">
+                                                <strong class="text-success">
+                                                    <fmt:formatNumber value="${event.totalDonation}" type="number" maxFractionDigits="0" /> VNĐ
+                                                </strong>
+                                            </p>
+                                        </div>
                                     </div>
+
+                                    <c:if test="${not empty event.description}">
+                                        <div class="mt-2">
+                                            <label class="fw-bold">Mô tả</label>
+                                            <div class="border rounded p-2 bg-light">
+                                                ${fn:escapeXml(event.description)}
+                                            </div>
+                                        </div>
+                                    </c:if>
                                 </div>
-                            </c:if>
+                            </div>
                         </div>
                     </div>
                 </c:if>

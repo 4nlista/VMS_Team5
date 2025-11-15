@@ -29,11 +29,6 @@
                     <h4 class="fw-bold mb-0 text-primary">
                         <i class="bi bi-speedometer2"></i> Bảng quản trị tổ chức
                     </h4>
-                    <div class="notification position-relative me-3">
-                        <i class="bi bi-bell-fill fs-4 text-secondary"></i>
-                        <span class="badge bg-danger position-absolute top-0 start-100 translate-middle-x rounded-pill px-2 py-1" 
-                              style="font-size: 0.75rem;">0</span>
-                    </div>
                 </div>
 
                 <!-- Hàng thống kê 1 -->
