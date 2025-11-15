@@ -161,9 +161,9 @@ public class OrganizationHomeDAO extends DBContext{
                      "FROM Donations d " +
                      "INNER JOIN Events e ON d.event_id = e.id " +
                      "WHERE e.organization_id = ? " +
-                     "AND d.donation_date >= DATEADD(MONTH, -5, DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()), 0)) " +
-                     "GROUP BY YEAR(d.donation_date), MONTH(d.donation_date) " +
-                     "ORDER BY YEAR(d.donation_date), MONTH(d.donation_date)";
+                     "AND d.donate_date >= DATEADD(MONTH, -5, DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()), 0)) " +
+                     "GROUP BY YEAR(d.donate_date), MONTH(d.donate_date) " +
+                     "ORDER BY YEAR(d.donate_date), MONTH(d.donate_date)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, organizationId);
             ResultSet rs = ps.executeQuery();
