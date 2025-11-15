@@ -30,7 +30,8 @@ public class OrganizationSendNotificationService {
         }
 
         // Validate 2: Volunteer cụ thể có approved trong event không
-        if (!notificationDAO.isVolunteerApprovedInEvent(eventId, volunteerId)) {
+        // (Bỏ qua validate này nếu type = "approval" vì thông báo approval được gửi để thông báo kết quả duyệt)
+        if (!"approval".equals(type) && !notificationDAO.isVolunteerApprovedInEvent(eventId, volunteerId)) {
             return "Tình nguyện viên này chưa được duyệt tham gia sự kiện!";
         }
 

@@ -63,6 +63,7 @@
                                                 <option value="reminder">Nhắc nhở (Reminder)</option>
                                                 <option value="system">Hệ thống (System)</option>
                                                 <option value="approval">Duyệt đơn (Approval)</option>
+                                                <option value="donation">Quyên góp (Donation)</option>
                                             </select>
                                         </div>
 
