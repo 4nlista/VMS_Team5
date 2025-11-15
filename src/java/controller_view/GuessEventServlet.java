@@ -52,6 +52,11 @@ public class GuessEventServlet extends HttpServlet {
             sortOrder = "desc"; // mặc định mới nhất
         }
         
+        // Lấy các filter mới
+        String slotFilter = request.getParameter("slotFilter"); // "full", "available", "all"
+        String donateFilter = request.getParameter("donateFilter"); // "donated", "not_donated", "all"
+        String applyStatusFilter = request.getParameter("applyStatusFilter"); // "rejected", "applied", "all"
+        
         Integer categoryId = null;
         if (categoryParam != null && !categoryParam.isEmpty() && !"all".equals(categoryParam)) {
             try {
@@ -88,11 +93,57 @@ public class GuessEventServlet extends HttpServlet {
                 e.setIsFull(isFull);
                 e.setHasDonated(hasDonated);
             }
+            
+            // Áp dụng các filter nếu volunteer đã login
+            if (slotFilter != null && !"all".equals(slotFilter)) {
+                events.removeIf(e -> {
+                    if ("full".equals(slotFilter)) {
+                        return !e.isIsFull();
+                    } else if ("available".equals(slotFilter)) {
+                        return e.isIsFull();
+                    }
+                    return false;
+                });
+            }
+            
+            if (donateFilter != null && !"all".equals(donateFilter)) {
+                events.removeIf(e -> {
+                    if ("donated".equals(donateFilter)) {
+                        return !e.isHasDonated();
+                    } else if ("not_donated".equals(donateFilter)) {
+                        return e.isHasDonated();
+                    }
+                    return false;
+                });
+            }
+            
+            if (applyStatusFilter != null && !"all".equals(applyStatusFilter)) {
+                events.removeIf(e -> {
+                    if ("rejected".equals(applyStatusFilter)) {
+                        return e.getRejectedCount() < 1;
+                    } else if ("applied".equals(applyStatusFilter)) {
+                        return !e.isHasApplied();
+                    }
+                    return false;
+                });
+            }
         } else {
             // Nếu chưa login thì vẫn check full
             for (Event e : events) {
                 boolean isFull = volunteerapplyService.isEventFull(e.getId());
                 e.setIsFull(isFull);
+            }
+            
+            // Chỉ cho phép lọc slot khi chưa login
+            if (slotFilter != null && !"all".equals(slotFilter)) {
+                events.removeIf(e -> {
+                    if ("full".equals(slotFilter)) {
+                        return !e.isIsFull();
+                    } else if ("available".equals(slotFilter)) {
+                        return e.isIsFull();
+                    }
+                    return false;
+                });
             }
         }
 
@@ -109,6 +160,9 @@ public class GuessEventServlet extends HttpServlet {
         request.setAttribute("startDate", startDate != null ? startDate : "");
         request.setAttribute("endDate", endDate != null ? endDate : "");
         request.setAttribute("sortOrder", sortOrder);
+        request.setAttribute("slotFilter", slotFilter != null ? slotFilter : "all");
+        request.setAttribute("donateFilter", donateFilter != null ? donateFilter : "all");
+        request.setAttribute("applyStatusFilter", applyStatusFilter != null ? applyStatusFilter : "all");
         
         request.getRequestDispatcher("event.jsp").forward(request, response);
     }

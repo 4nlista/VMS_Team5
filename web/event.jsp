@@ -56,55 +56,81 @@
                 <!-- Form lọc -->
                 <div class="row mb-4" id="filter-section">
                     <div class="col-12">
-                        <form method="get" action="GuessEventServlet#filter-section" class="bg-light p-4 rounded">
+                        <form method="get" action="GuessEventServlet#filter-section" class="bg-light p-3 rounded">
                             <div class="row g-2">
-                                <!-- Lọc theo danh mục -->
-                                <div class="col-md-2">
-                                    <label class="form-label fw-bold">Danh mục</label>
-                                    <select name="category" class="form-select">
-                                        <option value="all" ${selectedCategory == 'all' ? 'selected' : ''}>Tất cả</option>
-                                        <c:forEach var="cat" items="${categories}">
-                                            <option value="${cat.categoryId}" ${selectedCategory == cat.categoryId.toString() ? 'selected' : ''}>
-                                                ${cat.name}
-                                            </option>
-                                        </c:forEach>
-                                    </select>
+                                <!-- Cột 1: Danh mục (trên) + Số lượng (dưới) -->
+                                <div class="col-md-3">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold mb-1">Danh mục</label>
+                                        <select name="category" class="form-select">
+                                            <option value="all" ${selectedCategory == 'all' ? 'selected' : ''}>Tất cả</option>
+                                            <c:forEach var="cat" items="${categories}">
+                                                <option value="${cat.categoryId}" ${selectedCategory == cat.categoryId.toString() ? 'selected' : ''}>
+                                                    ${cat.name}
+                                                </option>
+                                            </c:forEach>
+                                        </select>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="form-label fw-bold mb-1">Số lượng</label>
+                                        <select name="slotFilter" class="form-select">
+                                            <option value="all" ${slotFilter == 'all' ? 'selected' : ''}>Tất cả</option>
+                                            <option value="full" ${slotFilter == 'full' ? 'selected' : ''}>Đã đủ</option>
+                                            <option value="available" ${slotFilter == 'available' ? 'selected' : ''}>Còn trống</option>
+                                        </select>
+                                    </div>
                                 </div>
 
-                                <!-- Sắp xếp -->
-                                <div class="col-md-2">
-                                    <label class="form-label fw-bold">Sắp xếp theo</label>
-                                    <select name="sort" class="form-select">
-                                        <option value="desc" ${sortOrder == 'desc' ? 'selected' : ''}>Mới nhất</option>
-                                        <option value="asc" ${sortOrder == 'asc' ? 'selected' : ''}>Cũ nhất</option>
-                                    </select>
+                                <!-- Cột 2: Từ ngày (trên) + Trạng thái Đăng ký (dưới) -->
+                                <div class="col-md-3">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold mb-1">Từ ngày</label>
+                                        <input type="date" name="startDate" class="form-control" value="${startDate}">
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="form-label fw-bold mb-1">Trạng thái Đăng ký</label>
+                                        <select name="applyStatusFilter" class="form-select">
+                                            <option value="all" ${applyStatusFilter == 'all' ? 'selected' : ''}>Tất cả</option>
+                                            <option value="applied" ${applyStatusFilter == 'applied' ? 'selected' : ''}>Đã đăng ký</option>
+                                            <option value="rejected" ${applyStatusFilter == 'rejected' ? 'selected' : ''}>Bị từ chối</option>
+                                        </select>
+                                    </div>
                                 </div>
 
-                                <!-- Sắp xếp -->
-                                <div class="col-md-2">
-                                    <label class="form-label fw-bold">Số lượng</label>
-                                    <select name="sort" class="form-select">
-                                        <option value="desc" ${sortOrder == 'desc' ? 'selected' : ''}>Đã đủ</option>
-                                        <option value="asc" ${sortOrder == 'asc' ? 'selected' : ''}>Còn trống</option>
-                                    </select>
+                                <!-- Cột 3: Đến ngày (trên) + Trạng thái Donate (dưới) -->
+                                <div class="col-md-3">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold mb-1">Đến ngày</label>
+                                        <input type="date" name="endDate" class="form-control" value="${endDate}">
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="form-label fw-bold mb-1">Trạng thái Donate</label>
+                                        <select name="donateFilter" class="form-select">
+                                            <option value="all" ${donateFilter == 'all' ? 'selected' : ''}>Tất cả</option>
+                                            <option value="donated" ${donateFilter == 'donated' ? 'selected' : ''}>Đã donate</option>
+                                            <option value="not_donated" ${donateFilter == 'not_donated' ? 'selected' : ''}>Chưa donate</option>
+                                        </select>
+                                    </div>
                                 </div>
 
-                                <!-- Từ ngày -->
-                                <div class="col-md-2">
-                                    <label class="form-label fw-bold">Từ ngày</label>
-                                    <input type="date" name="startDate" class="form-control" value="${startDate}">
-                                </div>
-
-                                <!-- Đến ngày -->
-                                <div class="col-md-2">
-                                    <label class="form-label fw-bold">Đến ngày</label>
-                                    <input type="date" name="endDate" class="form-control" value="${endDate}">
-                                </div>
-
-                                <!-- Nút lọc -->
-                                <div class="col-md-2 d-flex align-items-end">
-                                    <button type="submit" class="btn btn-primary w-100"> Lọc
-                                    </button>
+                                <!-- Cột 4: Sắp xếp theo (trên) + Nút lọc (dưới) -->
+                                <div class="col-md-3">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold mb-1">Sắp xếp theo</label>
+                                        <select name="sort" class="form-select">
+                                            <option value="desc" ${sortOrder == 'desc' ? 'selected' : ''}>Mới nhất</option>
+                                            <option value="asc" ${sortOrder == 'asc' ? 'selected' : ''}>Cũ nhất</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="d-flex align-items-end" style="height: 61px;">
+                                        <button type="submit" class="btn btn-primary w-100">
+                                            <i class="icon-filter"></i> Lọc
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </form>
