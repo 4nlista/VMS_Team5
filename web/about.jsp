@@ -36,14 +36,26 @@
                         <div class="img img-about align-self-stretch" style="background-image: url(images/bg_3.jpg); width: 100%;"></div>
                     </div>
                     <div class="col-md-6 pl-md-5 ftco-animate">
-                        <h2 class="mb-4">Welcome to Welfare Stablished Since 1898</h2>
-                        <p>The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild Question Marks and devious Semikoli, but the Little Blind Text didn’t listen. She packed her seven versalia, put her initial into the belt and made herself on the way.</p>
-                        <p>On her way she met a copy. The copy warned the Little Blind Text, 
-                            that where it came from it would have been rewritten a thousand times and everything that was left from its origin would be the word "and" 
-                            and the Little Blind Text should turn around and return to its own, safe country.
-                            But nothing the copy said could convince her and so it didn’t take long until a few insidious Copy Writers ambushed her, 
-                            made her drunk with Longe and Parole and dragged her into their agency, 
-                            where they abused her for their.</p>
+                        <h2 class="mb-4">Chào mừng đến với Hệ thống Quản lý Tình nguyện viên</h2>
+                        <p>
+                            Hệ thống được xây dựng nhằm kết nối các tổ chức từ thiện với những tình nguyện viên nhiệt huyết, 
+                            tạo cầu nối giúp cộng đồng tham gia vào các hoạt động xã hội ý nghĩa. 
+                            Chúng tôi cung cấp nền tảng quản lý toàn diện từ đăng ký sự kiện, điểm danh, 
+                            đến quyên góp và báo cáo minh bạch.
+                        </p>
+                        <p>
+                            Với giao diện thân thiện và dễ sử dụng, tình nguyện viên có thể dễ dàng tìm kiếm 
+                            các sự kiện phù hợp với lịch trình của mình, đăng ký tham gia chỉ với vài thao tác đơn giản. 
+                            Các tổ chức có thể quản lý danh sách tình nguyện viên, duyệt đơn đăng ký, 
+                            điểm danh và theo dõi nguồn tài trợ một cách hiệu quả. 
+                            Hệ thống còn hỗ trợ thông báo tự động, giúp kết nối giữa tổ chức và tình nguyện viên 
+                            luôn nhanh chóng và kịp thời.
+                        </p>
+                        <p>
+                            Chúng tôi tin rằng mỗi hành động nhỏ đều có ý nghĩa lớn. 
+                            Hãy cùng chúng tôi lan toa yêu thương và xây dựng cộng đồng tốt đẹp hơn. 
+                            Tham gia ngay hôm nay để trở thành một phần của những thay đổi tích cực!
+                        </p>
                     </div>
                 </div>
             </div>

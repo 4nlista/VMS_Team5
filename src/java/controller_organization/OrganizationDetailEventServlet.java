@@ -167,18 +167,6 @@ public class OrganizationDetailEventServlet extends HttpServlet {
                 } else {
                     request.getSession().setAttribute("errorMessage", "Cập nhật thất bại!");
                 }
-
-//            } else if ("delete".equals(action)) {
-//                boolean success = dao.deleteEvent(eventId);
-//
-//                if (success) {
-//                    request.getSession().setAttribute("successMessage", "Xóa sự kiện thành công!");
-//                    response.sendRedirect(request.getContextPath() + "/OrganizationListServlet");
-//                    return;
-//                } else {
-//                    request.getSession().setAttribute("errorMessage", "Xóa sự kiện thất bại!");
-//                }
-//            }
             }
         } catch (Exception e) {
             e.printStackTrace();
