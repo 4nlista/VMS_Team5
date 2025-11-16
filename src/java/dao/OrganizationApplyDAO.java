@@ -88,7 +88,7 @@ public class OrganizationApplyDAO {
             e.printStackTrace();
         }
     }
-    
+
     // Đếm số volunteer đã được approved cho event (dùng để check slot)
     public int countApprovedVolunteers(int eventId) {
         String sql = "SELECT COUNT(*) FROM Event_Volunteers WHERE event_id = ? AND status = 'approved'";
@@ -161,8 +161,8 @@ public class OrganizationApplyDAO {
         }
         return list;
     }
-    
-    // Tự động chuyển status "pending" → "rejected" nếu không duyệt trong 24h trước sự kiện
+
+    // Tự động chuyển status "pending" → "rejected" nếu không duyệt trong 24h trước sự kiện, lấy chuẩn đến từng minutes
     public int autoRejectPendingApplications(int eventId) {
         String sql = """
             UPDATE Event_Volunteers 
@@ -176,13 +176,12 @@ public class OrganizationApplyDAO {
               AND EXISTS (
                   SELECT 1 FROM Events 
                   WHERE id = ? 
-                    AND DATEDIFF(HOUR, GETDATE(), start_date) > 0
-                    AND DATEDIFF(HOUR, GETDATE(), start_date) <= 24
+                    AND DATEDIFF(MINUTE, GETDATE(), start_date) > 0
+                    AND DATEDIFF(MINUTE, GETDATE(), start_date) < 24
               )
         """;
-        
-        try (Connection con = DBContext.getConnection(); 
-             PreparedStatement ps = con.prepareStatement(sql)) {
+
+        try (Connection con = DBContext.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, eventId);
             ps.setInt(2, eventId);
             return ps.executeUpdate(); // Trả về số row bị ảnh hưởng
@@ -191,27 +190,25 @@ public class OrganizationApplyDAO {
             return 0;
         }
     }
-    
-    // Tự động reject đơn cho TẤT CẢ events đang trong khoảng 24h trước diễn ra
+
+    // Tự động reject đơn cho TẤT CẢ events đang trong khoảng 24h trước diễn ra , lấy chuẩn từng minutes
     public int autoRejectAllPendingApplications() {
         String sql = """
-            UPDATE Event_Volunteers 
-            SET status = 'rejected', 
-                note = CASE 
-                    WHEN note IS NULL OR note = '' THEN N'Tự động từ chối do không được xử lý trong 24h trước sự kiện'
-                    ELSE note + N' (Tự động từ chối)'
-                END
-            WHERE status = 'pending'
-              AND EXISTS (
-                  SELECT 1 FROM Events 
-                  WHERE id = Event_Volunteers.event_id 
-                    AND DATEDIFF(HOUR, GETDATE(), start_date) > 0
-                    AND DATEDIFF(HOUR, GETDATE(), start_date) <= 24
-              )
-        """;
-        
-        try (Connection con = DBContext.getConnection(); 
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        UPDATE Event_Volunteers
+        SET status = 'rejected',
+            note = CASE
+                WHEN note IS NULL OR note = '' THEN N'Tự động từ chối do còn dưới 24h trước sự kiện'
+                ELSE note + N' (auto rejected)'
+            END
+        WHERE status = 'pending'
+          AND EXISTS (
+              SELECT 1 FROM Events
+              WHERE id = Event_Volunteers.event_id
+                AND DATEDIFF(MINUTE, GETDATE(), start_date) BETWEEN 1 AND 1440
+          )
+    """;
+
+        try (Connection con = DBContext.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             return ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();

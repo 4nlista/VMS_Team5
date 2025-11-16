@@ -23,8 +23,8 @@ public class AutoRejectScheduler implements ServletContextListener {
         // Khởi tạo timer khi webapp start
         timer = new Timer(true); // daemon thread
         
-        // Chạy mỗi 1 giờ (3600000 milliseconds)
-        long interval = 3600000; // 1 hour
+        // Chạy mỗi 1 PHÚT để test (60000 milliseconds)
+        long interval = 60000; // 1 minute (production: 3600000 = 1 hour)
         
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -42,9 +42,9 @@ public class AutoRejectScheduler implements ServletContextListener {
                     e.printStackTrace();
                 }
             }
-        }, 0, interval); // Chạy ngay lập tức, sau đó mỗi 1 giờ
+        }, 0, interval); // Chạy ngay lập tức, sau đó mỗi 1 phút
         
-        System.out.println("[AutoRejectScheduler] Đã khởi động - Chạy mỗi 1 giờ");
+        System.out.println("[AutoRejectScheduler] Đã khởi động - Chạy mỗi 1 PHÚT (test mode)");
     }
     
     @Override
