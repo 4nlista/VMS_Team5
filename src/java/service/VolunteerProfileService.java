@@ -111,8 +111,8 @@ public class VolunteerProfileService {
         // Upload avatar using UnifiedImageUploadService
         String avatarPath = existingProfile.getImages();
         UnifiedImageUploadService uploadService = new UnifiedImageUploadService();
-        Map<String, Object> uploadResult = uploadService.uploadAvatar(request, existingProfile.getAccountId(), "avatar");
-        
+        Map<String, Object> uploadResult = uploadService.uploadAvatar(request, existingProfile.getId(), "avatar");
+
         if ((boolean) uploadResult.get("success")) {
             avatarPath = (String) uploadResult.get("fileName");
         } else {

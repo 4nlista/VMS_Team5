@@ -20,6 +20,7 @@ import model.Notification;
 import model.User;
 import service.FileStorageService;
 import service.OrganizationNewsManagementService;
+import service.UnifiedImageUploadService;
 
 /**
  *
@@ -119,7 +120,15 @@ public class OrganizationNewsCreateServlet extends HttpServlet {
 
         String imageFileName = null;
         if (filePart != null && filePart.getSize() > 0) {
-            imageFileName = storage.saveNewsImage(filePart.getInputStream(), filePart.getSubmittedFileName());
+            UnifiedImageUploadService uploadService = new UnifiedImageUploadService();
+            Map<String, Object> uploadResult = uploadService.uploadNewsImage(request, 0, "newsImage");
+            if ((boolean) uploadResult.get("success")) {
+                imageFileName = (String) uploadResult.get("fileName");
+            } else {
+                request.setAttribute("errorMessage", uploadResult.get("error"));
+                request.getRequestDispatcher("/organization/create_news_org.jsp").forward(request, response);
+                return;
+            }
         }
 
         try {

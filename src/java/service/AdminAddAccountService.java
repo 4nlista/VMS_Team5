@@ -93,7 +93,27 @@ public class AdminAddAccountService {
     
 
     public String uploadAvatar(InputStream avatarInputStream, String fileName, int accountId) {
-        return fileStorageService.saveAvatar(avatarInputStream, fileName, accountId);
+        try {
+            // Detect content type from filename
+            String contentType = fileStorageService.detectContentType(fileName);
+            
+            // Get file size
+            long fileSize = avatarInputStream.available();
+            
+            // Use unified upload method
+            return fileStorageService.uploadImage(
+                avatarInputStream, 
+                fileName, 
+                fileSize, 
+                contentType, 
+                "avatar", 
+                accountId, 
+                FileStorageService.MAX_AVATAR_SIZE
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     // Expose unique checks for servlet delegation

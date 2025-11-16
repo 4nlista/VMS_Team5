@@ -12,6 +12,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.User;
 import jakarta.servlet.annotation.MultipartConfig;
+import service.UnifiedImageUploadService;
+import dao.AdminUserDAO;
+import java.util.Map;
 
 /**
  *
@@ -53,13 +56,21 @@ public class AdminUserEditServlet extends HttpServlet {
 			} catch (Exception ignored) {
 			}
 
-			// handle avatar: this returns false on validation failure and sets request.errors
-			boolean avatarOk = userService.handleAvatarUpload(request, userId);
-
-			if (avatarOk) {
+			// Upload avatar using UnifiedImageUploadService
+			UnifiedImageUploadService uploadService = new UnifiedImageUploadService();
+			Map<String, Object> uploadResult = uploadService.uploadAvatar(request, userId, "avatar");
+			
+			if ((boolean) uploadResult.get("success")) {
+				String fileName = (String) uploadResult.get("fileName");
+				AdminUserDAO userDAO = new AdminUserDAO();
+				userDAO.updateAvatar(userId, fileName);
 				response.sendRedirect("AdminUserServlet?id=" + userId);
 			} else {
-				// avatar validation failed -> forward back to edit with errors (do not redirect)
+				// avatar validation failed -> forward back to edit with errors
+				String errorMsg = (String) uploadResult.get("error");
+				Map<String, String> errors = new java.util.HashMap<>();
+				errors.put("avatar", errorMsg);
+				request.setAttribute("errors", errors);
 				try {
 					User user = userService.loadUserDetail(request);
 					request.setAttribute("user", user);
