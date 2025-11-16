@@ -28,7 +28,7 @@ public class UnifiedImageUploadService {
     }
     
     /**
-     * Upload ảnh news (giới hạn 5MB)
+     * Upload ảnh news (giới hạn 2MB)
      * @param request HttpServletRequest
      * @param newsId ID bài viết (có thể = 0 nếu tạo mới)
      * @param partName Tên của Part trong form (thường là "newsImage")
@@ -125,7 +125,7 @@ public class UnifiedImageUploadService {
                     return result;
                 }
                 
-                // ✅ Success
+                //  Success
                 result.put("success", true);
                 result.put("fileName", savedFileName);
                 return result;
