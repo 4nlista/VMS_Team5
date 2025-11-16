@@ -43,7 +43,7 @@ public class CreateEventsService {
 
         // Validate 1.5: Ngày bắt đầu không được ở quá khứ
         if (e.getStartDate().before(now)) {
-            return "Ngày bắt đầu phải trước ngày kết thúc!";
+            return "Ngày bắt đầu không được ở quá khứ!";
         }
 
         // Validate 2: Sự kiện không được kéo dài quá 7 ngày
