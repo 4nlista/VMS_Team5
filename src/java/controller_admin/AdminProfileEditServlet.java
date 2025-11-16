@@ -4,14 +4,17 @@
 package controller_admin;
 
 import java.io.IOException;
+import java.util.Map;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import dao.AdminUserDAO;
 import model.User;
 import service.AdminProfileService;
+import service.UnifiedImageUploadService;
 
 /**
  *
@@ -22,6 +25,8 @@ import service.AdminProfileService;
 public class AdminProfileEditServlet extends HttpServlet {
 
 	private final AdminProfileService profileService = new AdminProfileService();
+	private final UnifiedImageUploadService uploadService = new UnifiedImageUploadService();
+	private final AdminUserDAO userDAO = new AdminUserDAO();
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -45,12 +50,18 @@ public class AdminProfileEditServlet extends HttpServlet {
 			} catch (Exception ignored) {
 			}
 
-			// handle avatar: this returns false on validation failure and sets request.errors
-			boolean avatarOk = profileService.handleAvatarUpload(request, userId);
-
-			if (avatarOk) {
+			// Upload avatar using UnifiedImageUploadService
+			Map<String, Object> uploadResult = uploadService.uploadAvatar(request, userId, "avatar");
+			
+			if ((boolean) uploadResult.get("success")) {
+				String fileName = (String) uploadResult.get("fileName");
+				userDAO.updateAvatar(userId, fileName);
 				response.sendRedirect("AdminProfileServlet?id=1");
 			} else {
+				String errorMsg = (String) uploadResult.get("error");
+				Map<String, String> errors = new java.util.HashMap<>();
+				errors.put("avatar", errorMsg);
+				request.setAttribute("errors", errors);
 				// avatar validation failed -> forward back to edit with errors (do not redirect)
 				try {
 					User user = profileService.loadProfileById(request);

@@ -206,10 +206,6 @@ public class AdminProfileService {
         }
     }
 
-    public boolean handleAvatarUpload(HttpServletRequest request, int userId) {
-        return AvatarUploadService.handleAvatarUpload(request, userId, this.userDAO);
-    }
-
     private String safeTrim(String s) {
         return (s == null) ? null : s.trim();
     }

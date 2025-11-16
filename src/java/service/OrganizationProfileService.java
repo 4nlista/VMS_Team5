@@ -203,64 +203,6 @@ public class OrganizationProfileService {
         }
     }
 
-    public boolean handleAvatarUpload(HttpServletRequest request, int userId) {
-        Map<String, String> errors = (Map<String, String>) request.getAttribute("errors");
-        if (errors == null) {
-            errors = new HashMap<>();
-        }
-        Part avatarPart = null;
-        try {
-            avatarPart = request.getPart("avatar");
-        } catch (Exception e) {
-            e.printStackTrace();
-            errors.put("avatar", "File upload lỗi hoặc quá lớn.");
-            request.setAttribute("errors", errors);
-            return false;
-        }
-        // Nothing uploaded -> preserve existing
-        if (avatarPart == null || avatarPart.getSize() == 0) {
-            return true;
-        }
-        // Validate content type
-        String contentType = avatarPart.getContentType();
-        if (contentType == null || !contentType.startsWith("image/")) {
-            errors.put("avatar", "File phải là ảnh.");
-            request.setAttribute("errors", errors);
-            return false;
-        }
-        // Validate size
-        if (avatarPart.getSize() > MAX_AVATAR_BYTES) {
-            errors.put("avatar", "Ảnh phải <= 5MB.");
-            request.setAttribute("errors", errors);
-            return false;
-        }
-        // Save using FileStorageService
-        try {
-            String submitted = avatarPart.getSubmittedFileName();
-            String saved = null;
-            try (InputStream is = avatarPart.getInputStream()) {
-                saved = storage.saveAvatar(is, submitted, userId); // accountId ~ userId for simplicity
-            }
-            if (saved == null) {
-                errors.put("avatar", "Lưu ảnh thất bại.");
-                request.setAttribute("errors", errors);
-                return false;
-            }
-            boolean ok = dao.updateAvatar(userId, saved);
-            if (!ok) {
-                errors.put("avatar", "Cập nhật avatar thất bại trong DB.");
-                request.setAttribute("errors", errors);
-                return false;
-            }
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            errors.put("avatar", "Lưu file avatar thất bại.");
-            request.setAttribute("errors", errors);
-            return false;
-        }
-    }
-
     private String safeTrim(String s) {
         return (s == null) ? null : s.trim();
     }

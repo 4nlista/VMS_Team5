@@ -4,17 +4,17 @@
 package controller_organization;
 
 import java.io.IOException;
+import java.util.Map;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Part;
-import java.util.Map;
+import dao.OrganizationProfileDAO;
 import model.User;
-import service.FileStorageService;
 import service.OrganizationProfileService;
+import service.UnifiedImageUploadService;
 
 /**
  *
@@ -25,7 +25,8 @@ import service.OrganizationProfileService;
 public class OrganizationProfileEditServlet extends HttpServlet {
 
     private final OrganizationProfileService service = new OrganizationProfileService();
-    private final FileStorageService storage = new FileStorageService();
+    private final UnifiedImageUploadService uploadService = new UnifiedImageUploadService();
+    private final OrganizationProfileDAO dao = new OrganizationProfileDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -52,12 +53,19 @@ public class OrganizationProfileEditServlet extends HttpServlet {
                 userId = Integer.parseInt(request.getParameter("id"));
             } catch (Exception ignored) {
             }
-            // handle avatar: this returns false on validation failure and sets request.errors
-            boolean avatarOk = service.handleAvatarUpload(request, userId);
-            if (avatarOk) {
+            // Upload avatar using UnifiedImageUploadService
+            Map<String, Object> uploadResult = uploadService.uploadAvatar(request, userId, "avatar");
+            
+            if ((boolean) uploadResult.get("success")) {
+                String fileName = (String) uploadResult.get("fileName");
+                dao.updateAvatar(userId, fileName);
                 response.sendRedirect(request.getContextPath() + "/OrganizationProfileDetail?id=" + userId + "&success=updated");
                 return;
             } else {
+                String errorMsg = (String) uploadResult.get("error");
+                Map<String, String> errors = new java.util.HashMap<>();
+                errors.put("avatar", errorMsg);
+                request.setAttribute("errors", errors);
                 // avatar validation failed -> forward back, but preserve submitted textual values
                 try {
                     // load DB user so avatarPreview can show existing avatar (not strictly necessary)
