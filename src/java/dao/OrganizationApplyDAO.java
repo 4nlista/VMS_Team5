@@ -198,7 +198,7 @@ public class OrganizationApplyDAO {
         SET status = 'rejected',
             note = CASE
                 WHEN note IS NULL OR note = '' THEN N'Tự động từ chối do còn dưới 24h trước sự kiện'
-                ELSE note + N' (auto rejected)'
+                ELSE note + N' (Tự động từ chối)'
             END
         WHERE status = 'pending'
           AND EXISTS (

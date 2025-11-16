@@ -18,7 +18,7 @@ import service.AdminAddAccountService;
 @WebServlet(name = "AdminAddAccountServlet", urlPatterns = {"/admin/AdminAddAccountServlet", "/admin/check-unique"})
 @MultipartConfig(
     fileSizeThreshold = 1024 * 1024,  // 1 MB
-    maxFileSize = 1024 * 1024 * 5,  // 5 MB
+    maxFileSize = 1024 * 1024 * 2,  // 5 MB
     maxRequestSize = 1024 * 1024 * 10  // 10 MB
 )
 public class AdminAddAccountServlet extends HttpServlet {

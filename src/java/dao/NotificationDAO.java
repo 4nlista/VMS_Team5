@@ -31,7 +31,7 @@ public class NotificationDAO {
     public boolean insertNotification(Notification notification) {
         String sql = "INSERT INTO Notifications (sender_id, receiver_id, message, type, event_id) "
                 + "VALUES (?, ?, ?, ?, ?)";
-        System.out.println("🔍 [DAO] insertNotification called");
+        System.out.println(" [DAO] insertNotification called");
         System.out.println("   SQL: " + sql);
         System.out.println("   - sender_id: " + notification.getSenderId());
         System.out.println("   - receiver_id: " + notification.getReceiverId());
@@ -51,10 +51,10 @@ public class NotificationDAO {
                 ps.setNull(5, Types.INTEGER);  // Nếu = 0 thì set NULL
             }
             int rowsAffected = ps.executeUpdate();
-            System.out.println("✅ [DAO] Rows affected: " + rowsAffected);
+            System.out.println(" [DAO] Rows affected: " + rowsAffected);
             return rowsAffected > 0;
         } catch (SQLException e) {
-            System.out.println("❌ [DAO] SQLException occurred!");
+            System.out.println(" [DAO] SQLException occurred!");
             System.out.println("   Error message: " + e.getMessage());
             System.out.println("   SQL State: " + e.getSQLState());
             System.out.println("   Error Code: " + e.getErrorCode());
@@ -214,35 +214,35 @@ public class NotificationDAO {
     }
 
     // 10. Validate: Kiểm tra thời gian gửi thông báo cuối cùng (phải cách nhau >= 8 tiếng)
-    public boolean canSendNotification(int senderId, int eventId) {
-        String sql = "SELECT TOP 1 created_at FROM Notifications "
-                + "WHERE sender_id = ? AND event_id = ? "
-                + "ORDER BY created_at DESC";
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, senderId);
-            ps.setInt(2, eventId);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                Timestamp lastSentTime = rs.getTimestamp("created_at");
-                Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-
-                // Tính khoảng cách thời gian (milliseconds)
-                long diffInMillis = currentTime.getTime() - lastSentTime.getTime();
-                long diffInHours = diffInMillis / (1000 * 60 * 60); // Convert to hours
-
-                // Phải cách nhau >= 8 tiếng
-                return diffInHours >= 8;
-            }
-
-            // Nếu chưa có thông báo nào → Cho phép gửi
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
+//    public boolean canSendNotification(int senderId, int eventId) {
+//        String sql = "SELECT TOP 1 created_at FROM Notifications "
+//                + "WHERE sender_id = ? AND event_id = ? "
+//                + "ORDER BY created_at DESC";
+//        try {
+//            PreparedStatement ps = conn.prepareStatement(sql);
+//            ps.setInt(1, senderId);
+//            ps.setInt(2, eventId);
+//            ResultSet rs = ps.executeQuery();
+//
+//            if (rs.next()) {
+//                Timestamp lastSentTime = rs.getTimestamp("created_at");
+//                Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+//
+//                // Tính khoảng cách thời gian (milliseconds)
+//                long diffInMillis = currentTime.getTime() - lastSentTime.getTime();
+//                long diffInHours = diffInMillis / (1000 * 60 * 60); // Convert to hours
+//
+//                // Phải cách nhau >= 8 tiếng
+//                return diffInHours >= 8;
+//            }
+//
+//            // Nếu chưa có thông báo nào → Cho phép gửi
+//            return true;
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//    }
 
     // 11. Lấy thời gian còn lại cho đến khi có thể gửi thông báo tiếp theo (đơn vị: giờ)
     public long getHoursUntilNextNotification(int senderId, int eventId) {
