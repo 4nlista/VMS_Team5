@@ -27,11 +27,9 @@ public class OrganizationDetailEventDAO {
         }
     }
     // Lấy thông tin chi tiết 1 sự kiện theo ID
-
     public Event getEventById(int eventId) {
         Event event = null;
 
-        // Viết rõ từng cột thay vì e.*
         String sql = "SELECT e.id, e.title, e.images, e.description, "
                 + "e.start_date, e.end_date, e.location, e.needed_volunteers, "
                 + "e.status, e.visibility, e.organization_id, e.category_id, "
