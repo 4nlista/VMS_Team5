@@ -176,8 +176,8 @@ public class OrganizationApplyDAO {
               AND EXISTS (
                   SELECT 1 FROM Events 
                   WHERE id = ? 
+                    AND DATEDIFF(HOUR, GETDATE(), start_date) > 0
                     AND DATEDIFF(HOUR, GETDATE(), start_date) <= 24
-                    AND start_date > GETDATE()
               )
         """;
         
@@ -205,8 +205,8 @@ public class OrganizationApplyDAO {
               AND EXISTS (
                   SELECT 1 FROM Events 
                   WHERE id = Event_Volunteers.event_id 
+                    AND DATEDIFF(HOUR, GETDATE(), start_date) > 0
                     AND DATEDIFF(HOUR, GETDATE(), start_date) <= 24
-                    AND start_date > GETDATE()
               )
         """;
         
