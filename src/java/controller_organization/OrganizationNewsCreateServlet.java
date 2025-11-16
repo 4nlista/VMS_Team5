@@ -105,7 +105,6 @@ public class OrganizationNewsCreateServlet extends HttpServlet {
 
         FileStorageService storage = new FileStorageService();
         Part filePart = request.getPart("newsImage");
-
         Map<String, String> fieldErrors = service.validateNewsInput(request, filePart);
 
         // Preserve input
@@ -121,7 +120,7 @@ public class OrganizationNewsCreateServlet extends HttpServlet {
         String imageFileName = null;
         if (filePart != null && filePart.getSize() > 0) {
             UnifiedImageUploadService uploadService = new UnifiedImageUploadService();
-            Map<String, Object> uploadResult = uploadService.uploadNewsImage(request, 0, "newsImage");
+            Map<String, Object> uploadResult = uploadService.uploadNewsImage(filePart, 0);
             if ((boolean) uploadResult.get("success")) {
                 imageFileName = (String) uploadResult.get("fileName");
             } else {

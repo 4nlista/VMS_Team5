@@ -50,15 +50,13 @@ public class OrganizationNewsEditServlet extends HttpServlet {
 		}
 	}
 
-	@Override
+    @Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 		    throws ServletException, IOException {
 
 		FileStorageService storage = new FileStorageService();
 		Part filePart = request.getPart("newsImage");
-		Map<String, String> fieldErrors = service.validateNewsInput(request, filePart);
-
-		// Preserve input
+		Map<String, String> fieldErrors = service.validateNewsInput(request, filePart);		// Preserve input
 		New newsInput = service.buildNewsFromRequest(request);
 		request.setAttribute("news", newsInput);
 		request.setAttribute("fieldErrors", fieldErrors);
@@ -68,12 +66,12 @@ public class OrganizationNewsEditServlet extends HttpServlet {
 			return;
 		}
 
-		// Save image if uploaded
+        // Save image if uploaded
 		String imageFileName = null;
 		if (filePart != null && filePart.getSize() > 0) {
 			int newsId = Integer.parseInt(request.getParameter("id"));
 			UnifiedImageUploadService uploadService = new UnifiedImageUploadService();
-			Map<String, Object> uploadResult = uploadService.uploadNewsImage(request, newsId, "newsImage");
+			Map<String, Object> uploadResult = uploadService.uploadNewsImage(filePart, newsId);
 			if ((boolean) uploadResult.get("success")) {
 				imageFileName = (String) uploadResult.get("fileName");
 			} else {

@@ -2,6 +2,7 @@ package controller_organization;
 
 import dao.OrganizationDetailEventDAO;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,7 +15,10 @@ import model.Donation;
 import model.Event;
 
 @WebServlet(name = "OrganizationDetailEventServlet", urlPatterns = {"/OrganizationDetailEventServlet"})
-
+@MultipartConfig(
+    maxFileSize = 2 * 1024 * 1024,      // 2MB
+    maxRequestSize = 5 * 1024 * 1024    // 5MB total request
+)
 public class OrganizationDetailEventServlet extends HttpServlet {
 
     @Override

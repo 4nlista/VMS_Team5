@@ -20,7 +20,7 @@
             <c:forEach var="e" items="${lastEvents}">
                 <div class="col-md-4 d-flex align-items-stretch">
                     <div class="blog-entry align-self-stretch h-100 w-100">
-                        <a class="block-20" style="background-image: url('${pageContext.request.contextPath}/UploadImagesServlet?file=${e.images}');"></a>
+                        <a class="block-20" style="background-image: url('${pageContext.request.contextPath}/EventImage?file=${e.images}');"></a>
                         <div class="text p-4 d-block h-100">
                             <div class="meta d-flex justify-content-end">
                                 <a href="${pageContext.request.contextPath}/ViewFeedbackEventsServlet?eventId=${e.id}" class="meta-chat">

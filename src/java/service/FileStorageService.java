@@ -24,7 +24,7 @@ public class FileStorageService {
 	
 	// Giới hạn kích thước file
 	public static final long MAX_AVATAR_SIZE = 1L * 1024 * 1024; // 1MB cho avatar
-	public static final long MAX_IMAGE_SIZE = 2L * 1024 * 1024; // 5MB cho news/event images
+	public static final long MAX_IMAGE_SIZE = 2L * 1024 * 1024; // 2MB cho news/event images
 
 	private String getBaseUploadPath() {
 		File dir = new File(BASE_DIR);

@@ -49,7 +49,7 @@
                                     <div class="mb-3">
                                         <label class="fw-bold d-block mb-2">Hình ảnh</label>
                                         <c:if test="${not empty event.images}">
-                                            <img src="<%= request.getContextPath() %>/UploadImagesServlet?file=${event.images}" 
+                                            <img src="<%= request.getContextPath() %>/EventImage?file=${event.images}" 
                                                  alt="Event Image" 
                                                  class="img-fluid rounded" 
                                                  style="width: 100%; max-height: 280px; object-fit: cover;" />
