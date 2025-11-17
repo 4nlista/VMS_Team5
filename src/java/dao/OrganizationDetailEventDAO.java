@@ -107,15 +107,32 @@ public class OrganizationDetailEventDAO {
         List<Donation> donations = new ArrayList<>();
         String sql = """ 
                      SELECT 
-                         d.*,
+                         d.id,
+                         d.event_id,
+                         d.volunteer_id,
+                         d.donor_id,
+                         d.amount,
+                         d.donate_date,
+                         d.status,
+                         d.payment_method,
+                         d.payment_txn_ref,
+                         d.note,
                          a.username AS volunteer_username,
                          u.full_name AS volunteer_full_name,
-                         e.title AS event_title
+                         u.phone AS volunteer_phone,
+                         u.email AS volunteer_email,
+                         e.title AS event_title,
+                         dn.donor_type,
+                         dn.full_name AS donor_full_name,
+                         dn.phone AS donor_phone,
+                         dn.email AS donor_email,
+                         dn.is_anonymous
                      FROM Donations d
-                     JOIN Accounts a ON d.volunteer_id = a.id
-                     JOIN Users u ON a.id = u.account_id
                      JOIN Events e ON d.event_id = e.id
-                     WHERE d.event_id = ?
+                     LEFT JOIN Accounts a ON d.volunteer_id = a.id
+                     LEFT JOIN Users u ON a.id = u.account_id
+                     LEFT JOIN Donors dn ON d.donor_id = dn.id
+                     WHERE d.event_id = ? AND d.status = 'success'
                      ORDER BY d.donate_date DESC;
                      """;
 
@@ -137,7 +154,21 @@ public class OrganizationDetailEventDAO {
                 donation.setNote(rs.getString("note"));
                 donation.setVolunteerUsername(rs.getString("volunteer_username"));
                 donation.setVolunteerFullName(rs.getString("volunteer_full_name"));
+                donation.setVolunteerPhone(rs.getString("volunteer_phone"));
+                donation.setVolunteerEmail(rs.getString("volunteer_email"));
                 donation.setEventTitle(rs.getString("event_title"));
+                Object donorIdObj = rs.getObject("donor_id");
+                if (donorIdObj != null) {
+                    donation.setDonorId(((Number) donorIdObj).intValue());
+                }
+                donation.setDonorType(rs.getString("donor_type"));
+                donation.setDonorFullName(rs.getString("donor_full_name"));
+                donation.setDonorPhone(rs.getString("donor_phone"));
+                donation.setDonorEmail(rs.getString("donor_email"));
+                Object anonymousObj = rs.getObject("is_anonymous");
+                if (anonymousObj != null) {
+                    donation.setDonorAnonymous(rs.getBoolean("is_anonymous"));
+                }
 
                 donations.add(donation);
             }
@@ -282,6 +313,7 @@ public class OrganizationDetailEventDAO {
                      d.id,
                      d.event_id,
                      d.volunteer_id,
+                     d.donor_id,
                      d.amount,
                      d.donate_date,
                      d.status,
@@ -290,12 +322,20 @@ public class OrganizationDetailEventDAO {
                      d.note,
                      a.username AS volunteer_username,
                      u.full_name AS volunteer_full_name,
-                     e.title AS event_title
+                     u.phone AS volunteer_phone,
+                     u.email AS volunteer_email,
+                     e.title AS event_title,
+                     dn.donor_type,
+                     dn.full_name AS donor_full_name,
+                     dn.phone AS donor_phone,
+                     dn.email AS donor_email,
+                     dn.is_anonymous
                  FROM Donations d
-                 JOIN Accounts a ON d.volunteer_id = a.id
-                 JOIN Users u ON a.id = u.account_id
                  JOIN Events e ON d.event_id = e.id
-                 WHERE d.event_id = ?
+                 LEFT JOIN Accounts a ON d.volunteer_id = a.id
+                 LEFT JOIN Users u ON a.id = u.account_id
+                 LEFT JOIN Donors dn ON d.donor_id = dn.id
+                     WHERE d.event_id = ? AND d.status = 'success'
                  ORDER BY d.donate_date DESC
                  OFFSET ? ROWS
                  FETCH NEXT ? ROWS ONLY
@@ -326,7 +366,21 @@ public class OrganizationDetailEventDAO {
                 donation.setNote(rs.getString("note"));
                 donation.setVolunteerUsername(rs.getString("volunteer_username"));
                 donation.setVolunteerFullName(rs.getString("volunteer_full_name"));
+                donation.setVolunteerPhone(rs.getString("volunteer_phone"));
+                donation.setVolunteerEmail(rs.getString("volunteer_email"));
                 donation.setEventTitle(rs.getString("event_title"));
+                Object donorIdObj = rs.getObject("donor_id");
+                if (donorIdObj != null) {
+                    donation.setDonorId(((Number) donorIdObj).intValue());
+                }
+                donation.setDonorType(rs.getString("donor_type"));
+                donation.setDonorFullName(rs.getString("donor_full_name"));
+                donation.setDonorPhone(rs.getString("donor_phone"));
+                donation.setDonorEmail(rs.getString("donor_email"));
+                Object anonymousObj = rs.getObject("is_anonymous");
+                if (anonymousObj != null) {
+                    donation.setDonorAnonymous(rs.getBoolean("is_anonymous"));
+                }
 
                 donations.add(donation);
             }
@@ -343,7 +397,7 @@ public class OrganizationDetailEventDAO {
 
 // Đếm TỔNG SỐ donations của 1 event
     public int countDonationsByEventId(int eventId) {
-        String sql = "SELECT COUNT(*) as total FROM Donations WHERE event_id = ?";
+        String sql = "SELECT COUNT(*) as total FROM Donations WHERE event_id = ? AND status = 'success'";
 
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -363,6 +417,21 @@ public class OrganizationDetailEventDAO {
             e.printStackTrace();
         }
 
+        return 0;
+    }
+
+    public double sumSuccessfulDonationsByEvent(int eventId) {
+        String sql = "SELECT COALESCE(SUM(amount), 0) AS total_amount FROM Donations WHERE event_id = ? AND status = 'success'";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, eventId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getDouble("total_amount");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return 0;
     }
 

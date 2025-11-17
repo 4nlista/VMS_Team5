@@ -196,7 +196,7 @@
                                         <div class="mb-3">
                                             <label class="form-label text-muted">Tổng tiền tài trợ</label>
                                             <input type="text" class="form-control fw-bold text-success" 
-                                                   value="${event.totalDonation} VND" disabled>
+                                                   value="<fmt:formatNumber value='${event.totalDonation}' type='number' groupingUsed='true'/> VND" disabled>
                                         </div>
                                     </div>
                                 </div>
@@ -240,7 +240,7 @@
                                     <thead>
                                         <tr>
                                             <th style="width: 7%;">STT</th>
-                                            <th style="width: 15%;">Họ và Tên</th>
+                                            <th style="width: 15%;">Người ủng hộ</th>
                                             <th style="width: 15%;">Số tiền</th>
                                             <th style="width: 19%;">Thời gian</th>                             
                                             <th style="width: 13%;">Phương thức</th>
@@ -253,7 +253,7 @@
                                         <c:forEach var="donation" items="${donations}" varStatus="loop">
                                             <tr>
                                                 <td>${loop.index + 1}</td>
-                                                <td>${donation.volunteerFullName}</td>
+                                                <td>${donation.displayDonorName}</td>
                                                 <td class="amount-highlight">
                                                     <fmt:formatNumber value="${donation.amount}" type="number" groupingUsed="true"/> VND
                                                 </td>

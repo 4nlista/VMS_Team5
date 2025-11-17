@@ -91,7 +91,21 @@
                                                     <span class="badge bg-info text-white">${donation.paymentTxnRef != null ? donation.paymentTxnRef : 'N/A'}</span>
                                                 </li>
                                                 <li class="list-group-item">
-                                                    <strong>Tên người donate:</strong> ${donation.volunteerFullName != null ? donation.volunteerFullName : 'Ẩn danh'}
+                                                    <strong>Đối tượng:</strong>
+                                                    <c:choose>
+                                                        <c:when test="${donation.donorType == 'guest'}">
+                                                            Khách (Guest)
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            Tình nguyện viên
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </li>
+                                                <li class="list-group-item">
+                                                    <strong>Tên người donate:</strong> ${donation.displayDonorName}
+                                                </li>
+                                                <li class="list-group-item">
+                                                    <strong>Số điện thoại:</strong> ${donation.displayDonorPhone}
                                                 </li>
                                                 <li class="list-group-item">
                                                     <strong>Số tiền:</strong>

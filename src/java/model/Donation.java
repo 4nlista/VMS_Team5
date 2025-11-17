@@ -4,7 +4,6 @@
  */
 package model;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -27,6 +26,8 @@ public class Donation {
     private String volunteerUsername;       // tài khoản volunteer
     private String volunteerFullName;       // tên của volunteer
     private String volunteerAvatar;        // avartar của volunteer
+    private String volunteerEmail;
+    private String volunteerPhone;
     private String eventTitle;              // tiêu đề sự kiện
 
     // Thống kê
@@ -38,6 +39,13 @@ public class Donation {
     private String emailOrganization;
     private String phoneOrganization;
     
+    // Donor info (guest or volunteer via Donors table)
+    private Integer donorId;
+    private String donorType;
+    private String donorFullName;
+    private String donorPhone;
+    private String donorEmail;
+    private Boolean donorAnonymous;
     
 
     public Donation() {
@@ -178,6 +186,22 @@ public class Donation {
     public void setVolunteerAvatar(String volunteerAvatar) {
         this.volunteerAvatar = volunteerAvatar;
     }
+
+    public String getVolunteerEmail() {
+        return volunteerEmail;
+    }
+
+    public void setVolunteerEmail(String volunteerEmail) {
+        this.volunteerEmail = volunteerEmail;
+    }
+
+    public String getVolunteerPhone() {
+        return volunteerPhone;
+    }
+
+    public void setVolunteerPhone(String volunteerPhone) {
+        this.volunteerPhone = volunteerPhone;
+    }
     
     
 
@@ -227,6 +251,86 @@ public class Donation {
 
     public void setPhoneOrganization(String phoneOrganization) {
         this.phoneOrganization = phoneOrganization;
+    }
+
+    public Integer getDonorId() {
+        return donorId;
+    }
+
+    public void setDonorId(Integer donorId) {
+        this.donorId = donorId;
+    }
+
+    public String getDonorType() {
+        return donorType;
+    }
+
+    public void setDonorType(String donorType) {
+        this.donorType = donorType;
+    }
+
+    public String getDonorFullName() {
+        return donorFullName;
+    }
+
+    public void setDonorFullName(String donorFullName) {
+        this.donorFullName = donorFullName;
+    }
+
+    public String getDonorPhone() {
+        return donorPhone;
+    }
+
+    public void setDonorPhone(String donorPhone) {
+        this.donorPhone = donorPhone;
+    }
+
+    public String getDonorEmail() {
+        return donorEmail;
+    }
+
+    public void setDonorEmail(String donorEmail) {
+        this.donorEmail = donorEmail;
+    }
+
+    public Boolean getDonorAnonymous() {
+        return donorAnonymous;
+    }
+
+    public void setDonorAnonymous(Boolean donorAnonymous) {
+        this.donorAnonymous = donorAnonymous;
+    }
+
+    public String getDisplayDonorName() {
+        if ("guest".equalsIgnoreCase(donorType)) {
+            if (Boolean.TRUE.equals(donorAnonymous)) {
+                return "Không rõ";
+            }
+            return (donorFullName != null && !donorFullName.trim().isEmpty()) ? donorFullName : "Khách ẩn danh";
+        }
+        return (volunteerFullName != null && !volunteerFullName.trim().isEmpty())
+                ? volunteerFullName
+                : (donorFullName != null ? donorFullName : "Không rõ");
+    }
+
+    public String getDisplayDonorPhone() {
+        if ("guest".equalsIgnoreCase(donorType)) {
+            if (Boolean.TRUE.equals(donorAnonymous)) {
+                return "Không rõ";
+            }
+            return (donorPhone != null && !donorPhone.trim().isEmpty()) ? donorPhone : "Không rõ";
+        }
+        return (volunteerPhone != null && !volunteerPhone.trim().isEmpty()) ? volunteerPhone : "Không rõ";
+    }
+
+    public String getDisplayDonorEmail() {
+        if ("guest".equalsIgnoreCase(donorType)) {
+            if (Boolean.TRUE.equals(donorAnonymous)) {
+                return "Không rõ";
+            }
+            return (donorEmail != null && !donorEmail.trim().isEmpty()) ? donorEmail : "Không rõ";
+        }
+        return (volunteerEmail != null && !volunteerEmail.trim().isEmpty()) ? volunteerEmail : "Không rõ";
     }
 
     

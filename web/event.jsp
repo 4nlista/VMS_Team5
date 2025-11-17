@@ -118,8 +118,8 @@
                                         <label class="form-label fw-bold mb-1">Trạng thái Donate</label>
                                         <select name="donateFilter" class="form-select">
                                             <option value="all" ${donateFilter == 'all' ? 'selected' : ''}>Tất cả</option>
-                                            <option value="donated" ${donateFilter == 'donated' ? 'selected' : ''}>Đã donate</option>
-                                            <option value="not_donated" ${donateFilter == 'not_donated' ? 'selected' : ''}>Chưa donate</option>
+                                            <option value="donated" ${donateFilter == 'donated' ? 'selected' : ''}>Đã ủng hộ</option>
+                                            <option value="not_donated" ${donateFilter == 'not_donated' ? 'selected' : ''}>Chưa ủng hộ</option>
                                         </select>
                                     </div>
                                 </div>
@@ -217,7 +217,7 @@
                                             <c:choose>
                                                 <c:when test="${e.hasDonated}">
                                                     <span class="text-success">
-                                                        <i class="icon-check"></i> Đã donate
+                                                        <i class="icon-check"></i> Đã ủng hộ
                                                     </span>
                                                 </c:when>
                                                 <c:otherwise>

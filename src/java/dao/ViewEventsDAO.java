@@ -258,9 +258,9 @@ public class ViewEventsDAO {
         return false;
     }
 
-// Kiểm tra volunteer đã donate sự kiện chưa
+    // Kiểm tra volunteer đã ủng hộ thành công sự kiện chưa
     public boolean hasVolunteerDonated(int volunteerId, int eventId) {
-        String sql = "SELECT COUNT(*) FROM Donations WHERE volunteer_id = ? AND event_id = ?";
+        String sql = "SELECT COUNT(*) FROM Donations WHERE volunteer_id = ? AND event_id = ? AND status = 'success'";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, volunteerId);

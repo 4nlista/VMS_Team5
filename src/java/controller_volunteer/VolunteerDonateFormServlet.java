@@ -57,7 +57,7 @@ public class VolunteerDonateFormServlet extends HttpServlet {
             // Check if volunteer already donated
             boolean alreadyDonated = donationService.hasVolunteerDonated(volunteerId, eventId);
             if (alreadyDonated) {
-                session.setAttribute("errorMessage", "Bạn đã donate cho sự kiện này rồi!");
+                session.setAttribute("errorMessage", "Bạn đã ủng hộ sự kiện này rồi!");
                 response.sendRedirect(request.getContextPath() + "/VolunteerEventServlet");
                 return;
             }

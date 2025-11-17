@@ -705,6 +705,7 @@ public class ViewDonorsDAO {
                 d.id AS donation_id,
                 d.volunteer_id,
                 d.event_id,
+                d.donor_id,
                 d.amount AS donate_amount,
                 d.donate_date,
                 d.status AS donation_status,
@@ -716,12 +717,18 @@ public class ViewDonorsDAO {
                 a.username AS volunteer_username,
                 u.email AS volunteer_email,
                 u.phone AS volunteer_phone,
-                e.title AS event_title
+                e.title AS event_title,
+                dn.donor_type,
+                dn.full_name AS donor_full_name,
+                dn.phone AS donor_phone,
+                dn.email AS donor_email,
+                dn.is_anonymous
             FROM Donations d
             JOIN Events e ON d.event_id = e.id
             LEFT JOIN Accounts a ON d.volunteer_id = a.id
             LEFT JOIN Users u ON a.id = u.account_id
-            WHERE d.id = ? AND d.event_id = ?
+            LEFT JOIN Donors dn ON d.donor_id = dn.id
+            WHERE d.id = ? AND d.event_id = ? AND d.status = 'success'
         """;
 
         System.out.println("==> getDonationByIdForOrganization() - DonationId: " + donationId + ", EventId: " + eventId);
@@ -752,6 +759,20 @@ public class ViewDonorsDAO {
                             0,  // total_amount not needed for this view
                             0   // events_count not needed for this view
                     );
+                    donation.setVolunteerEmail(rs.getString("volunteer_email"));
+                    donation.setVolunteerPhone(rs.getString("volunteer_phone"));
+                    Object donorIdObj = rs.getObject("donor_id");
+                    if (donorIdObj != null) {
+                        donation.setDonorId(((Number) donorIdObj).intValue());
+                    }
+                    donation.setDonorType(rs.getString("donor_type"));
+                    donation.setDonorFullName(rs.getString("donor_full_name"));
+                    donation.setDonorPhone(rs.getString("donor_phone"));
+                    donation.setDonorEmail(rs.getString("donor_email"));
+                    Object anonymousObj = rs.getObject("is_anonymous");
+                    if (anonymousObj != null) {
+                        donation.setDonorAnonymous(rs.getBoolean("is_anonymous"));
+                    }
                     return donation;
                 } else {
                     System.out.println("==> getDonationByIdForOrganization() - KHÔNG tìm thấy donation!");
