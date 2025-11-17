@@ -1,4 +1,8 @@
-<%-- Document : detail_event_org Created on : Oct 30, 2025, 9:45:25 PM Author : Admin --%>
+<%-- 
+    Document   : edit_event_org
+    Created on : 17 Nov 2025, 23:52:21
+    Author     : Admin
+--%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
