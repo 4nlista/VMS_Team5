@@ -194,7 +194,7 @@
                                                 <c:otherwise>
                                                     <c:if test="${e.rejectedCount > 0}">
                                                         <small class="text-warning d-block">
-                                                            ⚠️ Đơn trước bị từ chối (${e.rejectedCount}/3)
+                                                            ️ Đơn trước bị từ chối (${e.rejectedCount}/3)
                                                         </small>
                                                     </c:if>
                                                     <a href="${pageContext.request.contextPath}/VolunteerApplyEventServlet?eventId=${e.id}">

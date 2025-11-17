@@ -8,7 +8,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import model.Donation;
 import model.Event;
@@ -214,16 +213,28 @@ public class OrganizationDetailEventDAO {
             java.sql.Timestamp startDate, java.sql.Timestamp endDate, int neededVolunteers,
             String status, String visibility, int categoryId) {
 
-        // VALIDATE 1: Ngày bắt đầu phải < Ngày kết thúc 
-        if (startDate.after(endDate) || startDate.equals(endDate)) {
-            System.out.println("Lỗi : ngày bắt đầu phải < ngày kết thúc");
+        // VALIDATE 1: Ngày kết thúc PHẢI SAU ngày bắt đầu (so sánh bằng milliseconds để chính xác)
+        long startTime = startDate.getTime();
+        long endTime = endDate.getTime();
+        long diff = endTime - startTime;
+        
+        System.out.println("[DAO DEBUG] updateEvent validation:");
+        System.out.println("  Start: " + startDate + " (" + startTime + " ms)");
+        System.out.println("  End: " + endDate + " (" + endTime + " ms)");
+        System.out.println("  Diff: " + diff + " ms (" + (diff / (1000 * 60)) + " minutes)");
+        
+        if (endTime <= startTime) {
+            System.out.println("[DAO ERROR] Ngày kết thúc phải sau ngày bắt đầu!");
+            System.out.println("  Start: " + startDate + " (" + startTime + " ms)");
+            System.out.println("  End: " + endDate + " (" + endTime + " ms)");
+            System.out.println("  Diff: " + diff + " ms");
             return false;
         }
 
         //  VALIDATE 2: Ngày bắt đầu không được ở quá khứ (tùy yêu cầu, nếu không cần thì xóa)
         java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(System.currentTimeMillis());
         if (startDate.before(currentTimestamp)) {
-            System.out.println("Lỗi : ngày bắt đầu không được ở quá khứ");
+            System.out.println("Lỗi: Ngày bắt đầu không được ở quá khứ");
             return false;
         }
 
