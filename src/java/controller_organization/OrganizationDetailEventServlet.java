@@ -124,9 +124,7 @@ public class OrganizationDetailEventServlet extends HttpServlet {
 
                 if (endTime <= startTime) {
                     String errorMsg = String.format(
-                            "Ngày kết thúc phải sau ngày bắt đầu! (Bắt đầu: %s, Kết thúc: %s)",
-                            new SimpleDateFormat("dd/MM/yyyy HH:mm").format(startDate),
-                            new SimpleDateFormat("dd/MM/yyyy HH:mm").format(endDate)
+                            "Ngày kết thúc phải sau ngày bắt đầu!"
                     );
                     System.out.println("[ERROR] " + errorMsg);
                     request.getSession().setAttribute("errorMessage", errorMsg);
