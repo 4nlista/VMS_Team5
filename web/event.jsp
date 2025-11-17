@@ -222,13 +222,13 @@
                                                 </c:when>
                                                 <c:otherwise>
                                                     <% if (acc != null && "volunteer".equals(acc.getRole())) { %>
-                                                        <!-- Volunteer: dùng VolunteerPaymentServlet -->
-                                                        <a href="${pageContext.request.contextPath}/VolunteerPaymentServlet?eventId=${e.id}">
+                                                    <!-- Volunteer: dùng VolunteerDonateFormServlet -->
+                                                    <a href="${pageContext.request.contextPath}/VolunteerDonateFormServlet?eventId=${e.id}">
                                                             Ủng hộ <i class="ion-ios-add-circle"></i>
                                                         </a>
                                                     <% } else { %>
-                                                        <!-- Guest: dùng donate_form.jsp -->
-                                                        <a href="${pageContext.request.contextPath}/donate_form.jsp?eventId=${e.id}">
+                                                        <!-- Guest: dùng GuestDonateFormServlet -->
+                                                        <a href="${pageContext.request.contextPath}/GuestDonateFormServlet?eventId=${e.id}">
                                                             Ủng hộ <i class="ion-ios-add-circle"></i>
                                                         </a>
                                                     <% } %>

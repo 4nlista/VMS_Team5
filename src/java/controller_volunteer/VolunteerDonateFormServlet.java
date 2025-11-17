@@ -14,7 +14,7 @@ import model.Event;
 import model.User;
 import service.VolunteerDonationService;
 
-@WebServlet(name = "VolunteerDonateFormServlet", urlPatterns = {"/VolunteerPaymentServlet"})
+@WebServlet(name = "VolunteerDonateFormServlet", urlPatterns = {"/VolunteerDonateFormServlet"})
 public class VolunteerDonateFormServlet extends HttpServlet {
 
     private VolunteerDonationService donationService;
