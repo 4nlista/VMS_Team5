@@ -213,13 +213,13 @@ public class VolunteerPaymentDonationReturnServlet extends HttpServlet {
                     System.out.println("Event: " + eventTitle);
                     System.out.println("Txn Ref: " + vnp_TxnRef);
                     sendThankYouEmail(donorEmail, amountInVND, eventTitle, vnp_TxnRef);
-                    System.out.println("✓ Thank you email sent successfully to: " + donorEmail);
+                    System.out.println(" Thank you email sent successfully to: " + donorEmail);
                 } catch (Exception e) {
-                    System.err.println("✗ Failed to send thank you email: " + e.getMessage());
+                    System.err.println(" Failed to send thank you email: " + e.getMessage());
                     e.printStackTrace();
                 }
             } else {
-                System.out.println("✗ Email not sent - Payment status: " + paymentStatus + 
+                System.out.println(" Email not sent - Payment status: " + paymentStatus + 
                                  ", Donor email: " + (donorEmail != null ? donorEmail : "NULL"));
             }
 

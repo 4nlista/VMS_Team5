@@ -166,7 +166,7 @@ public class VolunteerPaymentDonationServlet extends HttpServlet {
                 return;
             }
 
-            // Redirect to VNPay payment gateway
+            // Redirect to VNPay payment gateway    -- điều hướng đến trang paymentv2/Ncb/Transaction/Index.html?token
             response.sendRedirect(paymentUrl);
 
         } catch (NumberFormatException e) {
