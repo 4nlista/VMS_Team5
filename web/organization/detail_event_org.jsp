@@ -14,54 +14,6 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
               rel="stylesheet" />
         <link href="<%= request.getContextPath() %>/organization/css/org.css" rel="stylesheet" />
-        <style>
-            body {
-                background-color: #f8f9fa;
-            }
-
-            .event-image-container {
-                border: 2px solid #e9ecef;
-                border-radius: 10px;
-                overflow: hidden;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            }
-
-            .event-image-container img {
-                width: 100%;
-                height: auto;
-                display: block;
-            }
-
-            .info-table th {
-                background-color: #f8f9fa;
-                font-weight: 600;
-                color: #495057;
-            }
-
-            .section-title {
-                border-left: 4px solid #0d6efd;
-                padding-left: 15px;
-                margin-bottom: 20px;
-            }
-
-            .donor-table {
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            }
-
-            .donor-table thead {
-                background-color: #0d6efd;
-                color: white;
-            }
-
-            .donor-table tbody tr:hover {
-                background-color: #f8f9fa;
-            }
-
-            .amount-highlight {
-                color: #198754;
-                font-weight: 600;
-            }
-        </style>
     </head>
 
     <body>
@@ -92,13 +44,14 @@
                             <c:remove var="errorMessage" scope="session" />
                         </c:if>
                     </div>
-                    <!-- Kiểm tra điều kiện disable form -->
+                    <!-- Kiểm tra điều kiện disable form để hiển thị cảnh bảo -->
                     <jsp:useBean id="now" class="java.util.Date" />
-                    <c:set var="hoursUntilStart"
-                           value="${(event.startDate.time - now.time) / (60 * 60 * 1000)}" />
+                    <c:set var="msUntilStart" value="${event.startDate.time - now.time}" />
                     <c:set var="isEventEnded" value="${event.endDate.time < now.time}" />
-                    <c:set var="isWithin24Hours" value="${hoursUntilStart <= 24 && hoursUntilStart >= 0}" />
+                    <c:set var="isWithin24Hours" value="${msUntilStart <= 24*60*60*1000 && msUntilStart > 0}" />
                     <c:set var="canUpdate" value="${!isEventEnded && !isWithin24Hours}" />
+
+
 
                     <!-- Hiển thị cảnh báo nếu không thể cập nhật -->
                     <c:if test="${isEventEnded}">
@@ -398,70 +351,6 @@
 
                 <script
                 src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-                <script>
-                                                                                // Client-side validation: Đảm bảo end_date > start_date
-                                                                                function validateEventDates() {
-                                                                                    const startDateInput = document.querySelector('input[name="startDate"]');
-                                                                                    const endDateInput = document.querySelector('input[name="endDate"]');
-
-                                                                                    if (!startDateInput || !endDateInput) {
-                                                                                        return true; // Nếu không tìm thấy input thì bỏ qua
-                                                                                    }
-
-                                                                                    const startDateStr = startDateInput.value;
-                                                                                    const endDateStr = endDateInput.value;
-
-                                                                                    if (!startDateStr || !endDateStr) {
-                                                                                        return true; // Nếu rỗng thì để server validation xử lý
-                                                                                    }
-
-                                                                                    // Parse datetime-local (format: yyyy-MM-ddTHH:mm)
-                                                                                    const startDate = new Date(startDateStr);
-                                                                                    const endDate = new Date(endDateStr);
-
-                                                                                    console.log('[Client Validation] Start:', startDateStr, '->', startDate);
-                                                                                    console.log('[Client Validation] End:', endDateStr, '->', endDate);
-                                                                                    console.log('[Client Validation] Start time:', startDate.getTime());
-                                                                                    console.log('[Client Validation] End time:', endDate.getTime());
-                                                                                    console.log('[Client Validation] Diff:', endDate.getTime() - startDate.getTime(), 'ms');
-
-                                                                                    if (endDate.getTime() <= startDate.getTime()) {
-                                                                                        alert('Lỗi: Ngày kết thúc phải sau ngày bắt đầu!\n\n' +
-                                                                                                'Bắt đầu: ' + startDateStr + '\n' +
-                                                                                                'Kết thúc: ' + endDateStr);
-                                                                                        return false; // Chặn submit
-                                                                                    }
-
-                                                                                    return true; // Cho phép submit
-                                                                                }
-
-                                                                                // Validate ngay khi user thay đổi giá trị
-                                                                                document.addEventListener('DOMContentLoaded', function () {
-                                                                                    const startDateInput = document.querySelector('input[name="startDate"]');
-                                                                                    const endDateInput = document.querySelector('input[name="endDate"]');
-
-                                                                                    if (startDateInput && endDateInput) {
-                                                                                        function checkDates() {
-                                                                                            const startDateStr = startDateInput.value;
-                                                                                            const endDateStr = endDateInput.value;
-
-                                                                                            if (startDateStr && endDateStr) {
-                                                                                                const startDate = new Date(startDateStr);
-                                                                                                const endDate = new Date(endDateStr);
-
-                                                                                                if (endDate.getTime() <= startDate.getTime()) {
-                                                                                                    endDateInput.setCustomValidity('Ngày kết thúc phải sau ngày bắt đầu!');
-                                                                                                } else {
-                                                                                                    endDateInput.setCustomValidity('');
-                                                                                                }
-                                                                                            }
-                                                                                        }
-
-                                                                                        startDateInput.addEventListener('change', checkDates);
-                                                                                        endDateInput.addEventListener('change', checkDates);
-                                                                                    }
-                                                                                });
-                </script>
         </body>
 
     </html>

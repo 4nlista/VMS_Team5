@@ -16,8 +16,8 @@ import model.Event;
 
 @WebServlet(name = "OrganizationDetailEventServlet", urlPatterns = {"/OrganizationDetailEventServlet"})
 @MultipartConfig(
-    maxFileSize = 2 * 1024 * 1024,      // 2MB
-    maxRequestSize = 5 * 1024 * 1024    // 5MB total request
+        maxFileSize = 2 * 1024 * 1024, // 2MB
+        maxRequestSize = 5 * 1024 * 1024 // 5MB total request
 )
 public class OrganizationDetailEventServlet extends HttpServlet {
 
@@ -106,7 +106,7 @@ public class OrganizationDetailEventServlet extends HttpServlet {
                 sdf.setLenient(false); // Không cho phép parse linh hoạt
                 java.util.Date startDate = null;
                 java.util.Date endDate = null;
-                
+
                 try {
                     startDate = sdf.parse(startDateStr);
                     endDate = sdf.parse(endDateStr);
@@ -121,17 +121,12 @@ public class OrganizationDetailEventServlet extends HttpServlet {
                 // So sánh trực tiếp bằng milliseconds để chính xác
                 long startTime = startDate.getTime();
                 long endTime = endDate.getTime();
-                
-                System.out.println("[DEBUG] Validation dates:");
-                System.out.println("  Start: " + startDateStr + " -> " + startDate + " (" + startTime + " ms)");
-                System.out.println("  End: " + endDateStr + " -> " + endDate + " (" + endTime + " ms)");
-                System.out.println("  Diff: " + (endTime - startTime) + " ms");
-                
+
                 if (endTime <= startTime) {
                     String errorMsg = String.format(
-                        "Ngày kết thúc phải sau ngày bắt đầu! (Bắt đầu: %s, Kết thúc: %s)",
-                        new SimpleDateFormat("dd/MM/yyyy HH:mm").format(startDate),
-                        new SimpleDateFormat("dd/MM/yyyy HH:mm").format(endDate)
+                            "Ngày kết thúc phải sau ngày bắt đầu! (Bắt đầu: %s, Kết thúc: %s)",
+                            new SimpleDateFormat("dd/MM/yyyy HH:mm").format(startDate),
+                            new SimpleDateFormat("dd/MM/yyyy HH:mm").format(endDate)
                     );
                     System.out.println("[ERROR] " + errorMsg);
                     request.getSession().setAttribute("errorMessage", errorMsg);
@@ -153,8 +148,8 @@ public class OrganizationDetailEventServlet extends HttpServlet {
                 }
 
                 // 2. Không cập nhật trong vòng 24h trước khi sự kiện bắt đầu
-                long hoursUntilStart = (currentEvent.getStartDate().getTime() - now.getTime()) / (60 * 60 * 1000);
-                if (hoursUntilStart <= 24) {
+                long hoursUntilStart = currentEvent.getStartDate().getTime() - now.getTime();
+                if (hoursUntilStart <= 24L * 60 * 60 * 1000) {
                     request.getSession().setAttribute("errorMessage",
                             "Không thể cập nhật trong vòng 24h trước khi sự kiện diễn ra!");
                     response.sendRedirect(request.getContextPath() + "/OrganizationDetailEventServlet?eventId=" + eventId);
@@ -190,11 +185,7 @@ public class OrganizationDetailEventServlet extends HttpServlet {
                 // Update event - validation đã được kiểm tra ở trên
                 java.sql.Timestamp startTimestamp = new java.sql.Timestamp(startDate.getTime());
                 java.sql.Timestamp endTimestamp = new java.sql.Timestamp(endDate.getTime());
-                
-                System.out.println("[DEBUG] Calling updateEvent with:");
-                System.out.println("  Start Timestamp: " + startTimestamp + " (" + startTimestamp.getTime() + " ms)");
-                System.out.println("  End Timestamp: " + endTimestamp + " (" + endTimestamp.getTime() + " ms)");
-                
+
                 boolean success = dao.updateEvent(eventId, title, description, location,
                         startTimestamp, endTimestamp,
                         neededVolunteers, status, visibility, categoryId);
@@ -205,8 +196,8 @@ public class OrganizationDetailEventServlet extends HttpServlet {
                     // Nếu updateEvent return false, có thể do validation ở DAO
                     String existingError = (String) request.getSession().getAttribute("errorMessage");
                     if (existingError == null || existingError.isEmpty()) {
-                        request.getSession().setAttribute("errorMessage", 
-                            "Cập nhật thất bại! Vui lòng kiểm tra lại thông tin (có thể ngày kết thúc không hợp lệ).");
+                        request.getSession().setAttribute("errorMessage",
+                                "Cập nhật thất bại! Vui lòng kiểm tra lại thông tin (có thể ngày kết thúc không hợp lệ).");
                     }
                 }
             }
