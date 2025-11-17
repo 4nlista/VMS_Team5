@@ -279,27 +279,10 @@
                                                     </c:choose>
                                                 </td>
                                                 <td>
-                                                    <c:choose>
-                                                        <c:when test="${donation.status == 'pending'}">
-                                                            <form action="<%= request.getContextPath() %>/ProcessDonationServlet" 
-                                                                  method="post" style="display:inline;">
-                                                                <input type="hidden" name="donationId" value="${donation.id}">
-                                                                <input type="hidden" name="eventId" value="${event.id}">
-                                                                <input type="hidden" name="volunteerId" value="${donation.volunteerId}">
-                                                                <button type="submit" name="action" value="approve" 
-                                                                        class="btn btn-primary btn-sm">Chấp nhận</button>
-                                                                <button type="submit" name="action" value="reject" 
-                                                                        class="btn btn-danger btn-sm"
-                                                                        onclick="return confirm('Bạn có chắc muốn từ chối đơn này?')">Từ chối</button>
-                                                            </form>
-                                                        </c:when>
-                                                        <c:when test="${donation.status == 'success'}">
-                                                            <span class="badge bg-success">Đã xử lí</span>
-                                                        </c:when>
-                                                        <c:when test="${donation.status == 'cancelled'}">
-                                                            <span class="badge bg-danger">Đã từ chối</span>
-                                                        </c:when>
-                                                    </c:choose>
+                                                    <a href="${pageContext.request.contextPath}/OrganizationDonationDetailServlet?donationId=${donation.id}&eventId=${event.id}&page=${currentPage}"
+                                                       class="btn btn-sm btn-info text-white fw-bold">
+                                                        <i class="bi bi-eye text-white"></i> Chi tiết
+                                                    </a>
                                                 </td>
                                             </tr>
                                         </c:forEach>

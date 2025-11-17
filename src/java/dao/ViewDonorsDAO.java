@@ -23,8 +23,7 @@ public class ViewDonorsDAO {
 
     public ViewDonorsDAO() {
         try {
-            DBContext db = new DBContext();
-            this.conn = db.getConnection(); // lấy connection từ DBContext
+            this.conn = DBContext.getConnection(); // lấy connection từ DBContext
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -52,8 +51,8 @@ public class ViewDonorsDAO {
                         d.donate_date,
                         d.status AS donation_status,
                         d.payment_method,
+                        d.payment_txn_ref,
                         d.note,
-                        d.qr_code,
                         ROW_NUMBER() OVER (PARTITION BY d.volunteer_id ORDER BY d.donate_date DESC) AS rn
                     FROM Donations d
                 )
@@ -66,13 +65,13 @@ public class ViewDonorsDAO {
                     a.username AS volunteer_username,
                     td.total_amount,
                     td.events_count,
-                    e.title AS event_title,       
+                    e.title AS event_title,
                     ld.donate_amount,
                     ld.donate_date,
                     ld.donation_status,
                     ld.payment_method,
-                    ld.note,
-                    ld.qr_code
+                    ld.payment_txn_ref,
+                    ld.note
                 FROM TotalDonations td
                 JOIN LatestDonation ld 
                     ON td.volunteer_id = ld.volunteer_id AND ld.rn = 1  
@@ -92,7 +91,7 @@ public class ViewDonorsDAO {
                         rs.getTimestamp("donate_date"),
                         rs.getString("donation_status"),
                         rs.getString("payment_method"),
-                        rs.getString("qr_code"), // nếu có
+                        rs.getString("payment_txn_ref"),
                         rs.getString("note"),
                         rs.getString("volunteer_username"),
                         rs.getString("volunteer_name"),
@@ -118,7 +117,7 @@ public class ViewDonorsDAO {
         List<Donation> list = new ArrayList<>();
 
         String sql = """
-    SELECT 
+    SELECT
         d.id AS donation_id,
         d.volunteer_id,
         d.event_id,
@@ -126,8 +125,8 @@ public class ViewDonorsDAO {
         d.donate_date,
         d.status AS donation_status,
         d.payment_method,
+        d.payment_txn_ref,
         d.note,
-        d.qr_code,
         u.full_name AS volunteer_name,
         u.avatar AS volunteer_avatar,
         a.username AS volunteer_username,
@@ -160,7 +159,7 @@ public class ViewDonorsDAO {
                             rs.getTimestamp("donate_date"),
                             rs.getString("donation_status"),
                             rs.getString("payment_method"),
-                            rs.getString("qr_code"),
+                            rs.getString("payment_txn_ref"),
                             rs.getString("note"),
                             rs.getString("volunteer_username"),
                             rs.getString("volunteer_name"),
@@ -204,7 +203,7 @@ public class ViewDonorsDAO {
                                              d.status AS donation_status,
                                              d.payment_method,
                                              d.note,
-                                             d.qr_code,
+                                             d.payment_txn_ref,
                                              ROW_NUMBER() OVER (PARTITION BY d.volunteer_id ORDER BY d.donate_date DESC) AS rn
                                          FROM Donations d
                                      )
@@ -223,7 +222,7 @@ public class ViewDonorsDAO {
                                          ld.donation_status,
                                          ld.payment_method,
                                          ld.note,
-                                         ld.qr_code
+                                         ld.payment_txn_ref
                                      FROM TotalDonations td
                                      JOIN LatestDonation ld 
                                          ON td.volunteer_id = ld.volunteer_id AND ld.rn = 1  
@@ -243,7 +242,7 @@ public class ViewDonorsDAO {
                         rs.getTimestamp("donate_date"),
                         rs.getString("donation_status"),
                         rs.getString("payment_method"),
-                        rs.getString("qr_code"), // nếu có
+                        rs.getString("payment_txn_ref"),
                         rs.getString("note"),
                         rs.getString("volunteer_username"),
                         rs.getString("volunteer_name"),
@@ -282,8 +281,7 @@ public class ViewDonorsDAO {
                                              d.status AS donation_status,
                                              d.payment_method,
                                              d.note,
-                                             d.qr_code,
-                                             ROW_NUMBER() OVER (PARTITION BY d.volunteer_id ORDER BY d.donate_date DESC) AS rn
+                                                                          ROW_NUMBER() OVER (PARTITION BY d.volunteer_id ORDER BY d.donate_date DESC) AS rn
                                          FROM Donations d
                                      )
                                      SELECT 
@@ -301,8 +299,7 @@ public class ViewDonorsDAO {
                                          ld.donation_status,
                                          ld.payment_method,
                                          ld.note,
-                                         ld.qr_code
-                                     FROM TotalDonations td
+                                      FROM TotalDonations td
                                      JOIN LatestDonation ld 
                                          ON td.volunteer_id = ld.volunteer_id AND ld.rn = 1  
                                      JOIN Events e ON ld.event_id = e.id
@@ -324,7 +321,7 @@ public class ViewDonorsDAO {
                             rs.getTimestamp("donate_date"),
                             rs.getString("donation_status"),
                             rs.getString("payment_method"),
-                            rs.getString("qr_code"),
+                            rs.getString("payment_txn_ref"),
                             rs.getString("note"),
                             rs.getString("volunteer_username"),
                             rs.getString("volunteer_name"),
@@ -390,7 +387,7 @@ public class ViewDonorsDAO {
                 d.donate_date,
                 d.status,
                 d.payment_method,
-                d.qr_code,
+                d.payment_txn_ref,
                 d.note,
                 a.username AS volunteer_username,
                 u.full_name AS volunteer_full_name,
@@ -439,7 +436,7 @@ public class ViewDonorsDAO {
                             rs.getTimestamp("donate_date"),
                             rs.getString("status"),
                             rs.getString("payment_method"),
-                            rs.getString("qr_code"),
+                            rs.getString("payment_txn_ref"),
                             rs.getString("note"),
                             rs.getString("volunteer_username"),
                             rs.getString("volunteer_full_name"),
@@ -507,7 +504,7 @@ public class ViewDonorsDAO {
                 d.donate_date,
                 d.status,
                 d.payment_method,
-                d.qr_code,
+                d.payment_txn_ref,
                 d.note,
                 a.username AS volunteer_username,
                 u.full_name AS volunteer_full_name,
@@ -563,7 +560,7 @@ public class ViewDonorsDAO {
                             rs.getTimestamp("donate_date"),
                             rs.getString("status"),
                             rs.getString("payment_method"),
-                            rs.getString("qr_code"),
+                            rs.getString("payment_txn_ref"),
                             rs.getString("note"),
                             rs.getString("volunteer_username"),
                             rs.getString("volunteer_full_name"),
@@ -621,6 +618,150 @@ public class ViewDonorsDAO {
             ex.printStackTrace();
         }
         return 0;
+    }
+
+    // Lấy chi tiết donation theo ID và volunteer ID (để đảm bảo volunteer chỉ xem được donation của mình)
+    public Donation getDonationById(int donationId, int volunteerId) {
+        String sql = """
+            SELECT
+                d.id AS donation_id,
+                d.volunteer_id,
+                d.event_id,
+                d.amount AS donate_amount,
+                d.donate_date,
+                d.status AS donation_status,
+                d.payment_method,
+                d.payment_txn_ref,
+                d.note,
+                u.full_name AS volunteer_name,
+                u.avatar AS volunteer_avatar,
+                a.username AS volunteer_username,
+                e.title AS event_title,
+                u_org.full_name AS organization_name,
+                u_org.email AS email_organization,
+                u_org.phone AS phone_organization,
+                (SELECT SUM(amount) FROM Donations WHERE volunteer_id = ? AND status = 'success') AS total_amount,
+                (SELECT COUNT(DISTINCT event_id) FROM Donations WHERE volunteer_id = ?) AS events_count
+            FROM Donations d
+            JOIN Events e ON d.event_id = e.id
+            JOIN Accounts a ON d.volunteer_id = a.id
+            JOIN Users u ON a.id = u.account_id
+            LEFT JOIN Accounts a_org ON e.organization_id = a_org.id
+            LEFT JOIN Users u_org ON a_org.id = u_org.account_id
+            WHERE d.id = ? AND d.volunteer_id = ?
+        """;
+
+        System.out.println("==> getDonationById() - DonationId: " + donationId + ", VolunteerId: " + volunteerId);
+
+        // Sử dụng connection mới để đảm bảo connection không bị đóng
+        try (Connection connection = DBContext.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, volunteerId);  // cho subquery total_amount
+            ps.setInt(2, volunteerId);  // cho subquery events_count
+            ps.setInt(3, donationId);   // cho WHERE d.id = ?
+            ps.setInt(4, volunteerId);  // cho WHERE d.volunteer_id = ?
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    System.out.println("==> getDonationById() - Tìm thấy donation!");
+                    Donation donation = new Donation(
+                            rs.getInt("donation_id"),
+                            rs.getInt("event_id"),
+                            rs.getInt("volunteer_id"),
+                            rs.getDouble("donate_amount"),
+                            rs.getTimestamp("donate_date"),
+                            rs.getString("donation_status"),
+                            rs.getString("payment_method"),
+                            rs.getString("payment_txn_ref"),
+                            rs.getString("note"),
+                            rs.getString("volunteer_username"),
+                            rs.getString("volunteer_name"),
+                            rs.getString("volunteer_avatar"),
+                            rs.getString("event_title"),
+                            rs.getDouble("total_amount"),
+                            rs.getInt("events_count")
+                    );
+                    // Set organization information
+                    donation.setOrganizationName(rs.getString("organization_name"));
+                    donation.setEmailOrganization(rs.getString("email_organization"));
+                    donation.setPhoneOrganization(rs.getString("phone_organization"));
+                    return donation;
+                } else {
+                    System.out.println("==> getDonationById() - KHÔNG tìm thấy donation!");
+                }
+            }
+        } catch (Exception ex) {
+            System.err.println("==> getDonationById() - Lỗi: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    // Lấy chi tiết donation theo ID và event ID (for organization to view donations in their events)
+    public Donation getDonationByIdForOrganization(int donationId, int eventId) {
+        String sql = """
+            SELECT
+                d.id AS donation_id,
+                d.volunteer_id,
+                d.event_id,
+                d.amount AS donate_amount,
+                d.donate_date,
+                d.status AS donation_status,
+                d.payment_method,
+                d.payment_txn_ref,
+                d.note,
+                u.full_name AS volunteer_name,
+                u.avatar AS volunteer_avatar,
+                a.username AS volunteer_username,
+                u.email AS volunteer_email,
+                u.phone AS volunteer_phone,
+                e.title AS event_title
+            FROM Donations d
+            JOIN Events e ON d.event_id = e.id
+            LEFT JOIN Accounts a ON d.volunteer_id = a.id
+            LEFT JOIN Users u ON a.id = u.account_id
+            WHERE d.id = ? AND d.event_id = ?
+        """;
+
+        System.out.println("==> getDonationByIdForOrganization() - DonationId: " + donationId + ", EventId: " + eventId);
+
+        try (Connection connection = DBContext.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, donationId);
+            ps.setInt(2, eventId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    System.out.println("==> getDonationByIdForOrganization() - Tìm thấy donation!");
+                    Donation donation = new Donation(
+                            rs.getInt("donation_id"),
+                            rs.getInt("event_id"),
+                            rs.getInt("volunteer_id"),
+                            rs.getDouble("donate_amount"),
+                            rs.getTimestamp("donate_date"),
+                            rs.getString("donation_status"),
+                            rs.getString("payment_method"),
+                            rs.getString("payment_txn_ref"),
+                            rs.getString("note"),
+                            rs.getString("volunteer_username"),
+                            rs.getString("volunteer_name"),
+                            rs.getString("volunteer_avatar"),
+                            rs.getString("event_title"),
+                            0,  // total_amount not needed for this view
+                            0   // events_count not needed for this view
+                    );
+                    return donation;
+                } else {
+                    System.out.println("==> getDonationByIdForOrganization() - KHÔNG tìm thấy donation!");
+                }
+            }
+        } catch (Exception ex) {
+            System.err.println("==> getDonationByIdForOrganization() - Lỗi: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+        return null;
     }
 
 }

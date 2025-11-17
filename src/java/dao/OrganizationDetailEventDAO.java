@@ -133,7 +133,7 @@ public class OrganizationDetailEventDAO {
                 donation.setDonateDate(rs.getTimestamp("donate_date"));
                 donation.setStatus(rs.getString("status"));
                 donation.setPaymentMethod(rs.getString("payment_method"));
-                donation.setQrCode(rs.getString("qr_code"));
+                donation.setPaymentTxnRef(rs.getString("payment_txn_ref"));
                 donation.setNote(rs.getString("note"));
                 donation.setVolunteerUsername(rs.getString("volunteer_username"));
                 donation.setVolunteerFullName(rs.getString("volunteer_full_name"));
@@ -272,77 +272,6 @@ public class OrganizationDetailEventDAO {
 //        }
 //    }
 
-    // Duyệt đơn donate (cập nhật status = 'success' và cộng vào total_donation)
-    public boolean approveDonation(int donationId, int eventId) {
-        try {
-            conn.setAutoCommit(false);
-
-            // 1. Lấy số tiền của donation
-            String getAmountSql = "SELECT amount FROM Donations WHERE id = ?";
-            PreparedStatement ps1 = conn.prepareStatement(getAmountSql);
-            ps1.setInt(1, donationId);
-            ResultSet rs = ps1.executeQuery();
-
-            double amount = 0;
-            if (rs.next()) {
-                amount = rs.getDouble("amount");
-            }
-            rs.close();
-            ps1.close();
-
-            // 2. Update status donation
-            String updateDonationSql = "UPDATE Donations SET status = 'success' WHERE id = ?";
-            PreparedStatement ps2 = conn.prepareStatement(updateDonationSql);
-            ps2.setInt(1, donationId);
-            ps2.executeUpdate();
-            ps2.close();
-
-            // 3. Cộng vào total_donation của event
-            String updateEventSql = "UPDATE Events SET total_donation = total_donation + ? WHERE id = ?";
-            PreparedStatement ps3 = conn.prepareStatement(updateEventSql);
-            ps3.setDouble(1, amount);
-            ps3.setInt(2, eventId);
-            ps3.executeUpdate();
-            ps3.close();
-
-            conn.commit();
-            return true;
-
-        } catch (Exception e) {
-            try {
-                conn.rollback();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-            e.printStackTrace();
-            return false;
-        } finally {
-            try {
-                conn.setAutoCommit(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    // Từ chối đơn donate
-    public boolean rejectDonation(int donationId) {
-        String sql = "UPDATE Donations SET status = 'cancelled' WHERE id = ?";
-
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, donationId);
-
-            int rowsAffected = ps.executeUpdate();
-            ps.close();
-            return rowsAffected > 0;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
     // Lấy danh sách donations CÓ PHÂN TRANG
     public List<Donation> getDonationsByEventIdPaging(int eventId, int page, int pageSize) {
         List<Donation> donations = new ArrayList<>();
@@ -357,7 +286,7 @@ public class OrganizationDetailEventDAO {
                      d.donate_date,
                      d.status,
                      d.payment_method,
-                     d.qr_code,
+                     d.payment_txn_ref,
                      d.note,
                      a.username AS volunteer_username,
                      u.full_name AS volunteer_full_name,
@@ -393,7 +322,7 @@ public class OrganizationDetailEventDAO {
                 donation.setDonateDate(rs.getDate("donate_date"));
                 donation.setStatus(rs.getString("status"));
                 donation.setPaymentMethod(rs.getString("payment_method"));
-                donation.setQrCode(rs.getString("qr_code"));
+                donation.setPaymentTxnRef(rs.getString("payment_txn_ref"));
                 donation.setNote(rs.getString("note"));
                 donation.setVolunteerUsername(rs.getString("volunteer_username"));
                 donation.setVolunteerFullName(rs.getString("volunteer_full_name"));

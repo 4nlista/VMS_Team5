@@ -69,4 +69,14 @@ public class DisplayDonateService {
     public List<Donation> getDonorsPaged(int offset, int limit) {
         return viewUserDonationDAO.getDonorsPaged(offset, limit);
     }
+    
+    // Lấy chi tiết donation theo ID và volunteer ID
+    public Donation getDonationById(int donationId, int volunteerId) {
+        return viewUserDonationDAO.getDonationById(donationId, volunteerId);
+    }
+
+    // Lấy chi tiết donation theo ID và event ID (for organization)
+    public Donation getDonationByIdForOrganization(int donationId, int eventId) {
+        return viewUserDonationDAO.getDonationByIdForOrganization(donationId, eventId);
+    }
 }
