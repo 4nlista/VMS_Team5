@@ -218,9 +218,9 @@
                                         <thead>
                                             <tr>
                                                 <th style="width: 7%;">STT</th>
-                                                <th style="width: 15%;">Họ và Tên</th>
+                                                <th style="width: 15%;">Người ủng hộ</th>
                                                 <th style="width: 15%;">Số tiền</th>
-                                                <th style="width: 19%;">Thời gian</th>
+                                                <th style="width: 19%;">Thời gian</th>                             
                                                 <th style="width: 13%;">Phương thức</th>
                                                 <th style="width: 15%;">Trạng thái</th>
                                                 <th style="width: 15%;">Thao tác</th>
@@ -231,28 +231,24 @@
                                             <c:forEach var="donation" items="${donations}" varStatus="loop">
                                                 <tr>
                                                     <td>${loop.index + 1}</td>
-                                                    <td>${donation.volunteerFullName}</td>
+                                                    <td>${donation.displayDonorName}</td>
                                                     <td class="amount-highlight">
-                                                        <fmt:formatNumber value="${donation.amount}"
-                                                                          type="number" groupingUsed="true" /> VND
+                                                        <fmt:formatNumber value="${donation.amount}" type="number" groupingUsed="true"/> VND
                                                     </td>
                                                     <td>
-                                                        <fmt:formatDate value="${donation.donateDate}"
-                                                                        pattern="dd/MM/yyyy HH:mm:ss" />
+                                                        <fmt:formatDate value="${donation.donateDate}" pattern="dd/MM/yyyy HH:mm:ss"/>
                                                     </td>
                                                     <td>
                                                         <span class="badge bg-info">
-                                                            <i
-                                                                class="bi bi-qr-code me-1"></i>${donation.paymentMethod}
+                                                            <i class="bi bi-qr-code me-1"></i>${donation.paymentMethod}
                                                         </span>
                                                     </td>
                                                     <td>
                                                         <c:choose>
                                                             <c:when test="${donation.status == 'pending'}">
-                                                                <span class="badge bg-warning text-dark">Chưa xử
-                                                                    lý</span>
-                                                                </c:when>
-                                                                <c:when test="${donation.status == 'success'}">
+                                                                <span class="badge bg-warning text-dark">Chưa xử lý</span>
+                                                            </c:when>
+                                                            <c:when test="${donation.status == 'success'}">
                                                                 <span class="badge bg-success">Thành công</span>
                                                             </c:when>
                                                             <c:when test="${donation.status == 'cancelled'}">
@@ -261,43 +257,17 @@
                                                         </c:choose>
                                                     </td>
                                                     <td>
-                                                        <c:choose>
-                                                            <c:when test="${donation.status == 'pending'}">
-                                                                <form
-                                                                    action="<%= request.getContextPath() %>/ProcessDonationServlet"
-                                                                    method="post" style="display:inline;">
-                                                                    <input type="hidden" name="donationId"
-                                                                           value="${donation.id}">
-                                                                    <input type="hidden" name="eventId"
-                                                                           value="${event.id}">
-                                                                    <input type="hidden" name="volunteerId"
-                                                                           value="${donation.volunteerId}">
-                                                                    <button type="submit" name="action"
-                                                                            value="approve"
-                                                                            class="btn btn-primary btn-sm">Chấp
-                                                                        nhận</button>
-                                                                    <button type="submit" name="action"
-                                                                            value="reject"
-                                                                            class="btn btn-danger btn-sm"
-                                                                            onclick="return confirm('Bạn có chắc muốn từ chối đơn này?')">Từ
-                                                                        chối</button>
-                                                                </form>
-                                                            </c:when>
-                                                            <c:when test="${donation.status == 'success'}">
-                                                                <span class="badge bg-success">Đã xử lí</span>
-                                                            </c:when>
-                                                            <c:when test="${donation.status == 'cancelled'}">
-                                                                <span class="badge bg-danger">Đã từ chối</span>
-                                                            </c:when>
-                                                        </c:choose>
+                                                        <a href="${pageContext.request.contextPath}/OrganizationDonationDetailServlet?donationId=${donation.id}&eventId=${event.id}&page=${currentPage}"
+                                                           class="btn btn-sm btn-info text-white fw-bold">
+                                                            <i class="bi bi-eye text-white"></i> Chi tiết
+                                                        </a>
                                                     </td>
                                                 </tr>
                                             </c:forEach>
 
                                             <c:if test="${empty donations}">
                                                 <tr>
-                                                    <td colspan="7" class="text-center text-muted">Chưa có đơn
-                                                        donate nào</td>
+                                                    <td colspan="7" class="text-center text-muted">Chưa có đơn donate nào</td>
                                                 </tr>
                                             </c:if>
                                         </tbody>
@@ -308,7 +278,7 @@
                                             <ul class="pagination justify-content-center">
                                                 <!-- Nút Previous -->
                                                 <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
-                                                    <a class="page-link"
+                                                    <a class="page-link" 
                                                        href="${pageContext.request.contextPath}/OrganizationDetailEventServlet?eventId=${event.id}&page=${currentPage - 1}">
                                                         Trước
                                                     </a>
@@ -317,7 +287,7 @@
                                                 <!-- Các số trang -->
                                                 <c:forEach var="i" begin="1" end="${totalPages}">
                                                     <li class="page-item ${i == currentPage ? 'active' : ''}">
-                                                        <a class="page-link"
+                                                        <a class="page-link" 
                                                            href="${pageContext.request.contextPath}/OrganizationDetailEventServlet?eventId=${event.id}&page=${i}">
                                                             ${i}
                                                         </a>
@@ -325,9 +295,8 @@
                                                 </c:forEach>
 
                                                 <!-- Nút Next -->
-                                                <li
-                                                    class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
-                                                    <a class="page-link"
+                                                <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                                                    <a class="page-link" 
                                                        href="${pageContext.request.contextPath}/OrganizationDetailEventServlet?eventId=${event.id}&page=${currentPage + 1}">
                                                         Sau
                                                     </a>
@@ -337,15 +306,12 @@
 
                                         <!-- Hiển thị thông tin -->
                                         <div class="text-center text-muted">
-                                            Trang ${currentPage} / ${totalPages} (Tổng ${totalDonations} đơn
-                                            donate)
+                                            Trang ${currentPage} / ${totalPages} (Tổng ${totalDonations} đơn donate)
                                         </div>
                                     </c:if>
                                 </div>
                             </div>
                         </div>
-
-
 
                     </div>
                 </div>
