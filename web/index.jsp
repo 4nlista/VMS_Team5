@@ -8,22 +8,39 @@
     </head>
     <body>
 
-        <!-- Hiển thị thông báo -->
-        <c:if test="${not empty message}">
-            <div class="alert alert-${messageType}" role="alert" 
-                 style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; min-width: 400px; max-width: 600px;">
-                <span style="color: #166534; font-weight: 600;"><c:out value="${message}"/></span>
+        <!-- Hiển thị thông báo (unified message display) -->
+        <c:if test="${not empty message or not empty sessionScope.message}">
+            <c:set var="displayMessage" value="${not empty message ? message : sessionScope.message}" />
+            <c:set var="displayType" value="${not empty messageType ? messageType : sessionScope.messageType}" />
+
+            <div class="alert alert-${displayType} alert-dismissible fade show" role="alert"
+                 style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; min-width: 400px; max-width: 600px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                <c:choose>
+                    <c:when test="${displayType == 'success'}">
+                        <i class="bi bi-check-circle-fill"></i> <strong>Thành công!</strong>
+                    </c:when>
+                    <c:when test="${displayType == 'danger'}">
+                        <i class="bi bi-exclamation-triangle-fill"></i> <strong>Lỗi!</strong>
+                    </c:when>
+                    <c:otherwise>
+                        <strong>Thông báo:</strong>
+                    </c:otherwise>
+                </c:choose>
+                <c:out value="${displayMessage}"/>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
+
+            <c:remove var="message" scope="session"/>
+            <c:remove var="messageType" scope="session"/>
+
             <script>
                 setTimeout(function () {
                     var alertEl = document.querySelector('.alert');
                     if (alertEl) {
-                        alertEl.classList.add('fade');
-                        alertEl.addEventListener('transitionend', function () {
-                            alertEl.remove();
-                        }, {once: true});
+                        var bsAlert = new bootstrap.Alert(alertEl);
+                        bsAlert.close();
                     }
-                }, 3000);
+                }, 5000);
             </script>
         </c:if>
         <!-- Navbar -->

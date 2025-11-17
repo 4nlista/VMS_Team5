@@ -86,7 +86,8 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle <%= (currentPage.contains("GuessNewServlet") 
                                                             || currentPage.contains("gallery.jsp") 
-                                                            || currentPage.contains("GuessEventServlet")) 
+                                                            || currentPage.contains("GuessEventServlet")
+                                                            || currentPage.contains("VolunteerExploreEventServlet")) 
                                                             ? "active" : "" %>" 
                        href="#" id="exploreDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Khám phá
@@ -94,7 +95,13 @@
                     <div class="dropdown-menu" aria-labelledby="exploreDropdown">
                         <a class="dropdown-item <%= currentPage.contains("GuessNewServlet") ? "active" : "" %>" href="<%= request.getContextPath() %>/GuessNewServlet">Bài viết</a>
                         <a class="dropdown-item <%= currentPage.contains("gallery.jsp") ? "active" : "" %>" href="<%= request.getContextPath() %>/gallery.jsp">Hình ảnh</a>
-                        <a class="dropdown-item <%= currentPage.contains("event.jsp") ? "active" : "" %>" href="<%= request.getContextPath() %>/GuessEventServlet">Sự kiện</a>
+                        <% if (acc != null && "volunteer".equals(acc.getRole())) { %>
+                            <!-- Volunteer đã đăng nhập: dùng VolunteerExploreEventServlet để khám phá sự kiện -->
+                            <a class="dropdown-item <%= currentPage.contains("VolunteerExploreEventServlet") || currentPage.contains("event.jsp") ? "active" : "" %>" href="<%= request.getContextPath() %>/VolunteerExploreEventServlet">Sự kiện</a>
+                        <% } else { %>
+                            <!-- Guest chưa đăng nhập: dùng GuessEventServlet -->
+                            <a class="dropdown-item <%= currentPage.contains("event.jsp") ? "active" : "" %>" href="<%= request.getContextPath() %>/GuessEventServlet">Sự kiện</a>
+                        <% } %>
                     </div>
                 </li>
                 <!-- End Dropdown Khám phá -->

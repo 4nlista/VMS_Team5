@@ -32,7 +32,7 @@ public class Event {
     private double donateVolunteer;  // tổng số tiền donate
 
     private boolean hasApplied;  // Đã đăng ký chưa
-    private boolean hasDonated;  // Đã donate chưa
+    private boolean hasDonated;  // Đã ủng hộ chưa
     private int rejectedCount;  // biến đếm số lần đăng kí
     private boolean isFull;
 

@@ -49,7 +49,7 @@ public class DonationDAO {
         List<Donation> list = new ArrayList<>();
 
         String sql = """
-            SELECT 
+            SELECT
                 d.id,
                 d.event_id,
                 d.volunteer_id,
@@ -57,14 +57,14 @@ public class DonationDAO {
                 d.donate_date,
                 d.status,
                 d.payment_method,
-                d.qr_code,
+                d.payment_txn_ref,
                 d.note,
                 a.username AS volunteerUsername,
                 u.full_name AS volunteerFullName,
                 e.title AS eventTitle
             FROM Donations d
-            JOIN Accounts a ON d.volunteer_id = a.id
-            JOIN Users u ON a.id = u.account_id
+            LEFT JOIN Accounts a ON d.volunteer_id = a.id
+            LEFT JOIN Users u ON a.id = u.account_id
             JOIN Events e ON d.event_id = e.id
             WHERE d.volunteer_id = ?
             ORDER BY d.donate_date DESC
@@ -85,7 +85,7 @@ public class DonationDAO {
                         rs.getTimestamp("donate_date") != null ? new java.util.Date(rs.getTimestamp("donate_date").getTime()) : null,
                         rs.getString("status"),
                         rs.getString("payment_method"),
-                        rs.getString("qr_code"),
+                        rs.getString("payment_txn_ref"),
                         rs.getString("note"),
                         rs.getString("volunteerUsername"),
                         rs.getString("volunteerFullName"),

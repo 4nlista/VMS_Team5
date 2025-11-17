@@ -7,6 +7,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -60,13 +61,13 @@
                                             <strong>Tiêu đề:</strong> ${event.title}
                                         </li>
                                         <li class="list-group-item">
-                                            <strong>Người tổ chức:</strong> ${donation.organizationName}
+                                            <strong>Người tổ chức:</strong> ${event.organizationName != null ? event.organizationName : donation.organizationName}
                                         </li>
                                         <li class="list-group-item">
-                                            <strong>Email:</strong> ${donation.emailOrganization}
+                                            <strong>Email:</strong> ${donation.emailOrganization != null ? donation.emailOrganization : 'N/A'}
                                         </li>
                                         <li class="list-group-item">
-                                            <strong>Số điện thoại:</strong> ${donation.phoneOrganization}
+                                            <strong>Số điện thoại:</strong> ${donation.phoneOrganization != null ? donation.phoneOrganization : 'N/A'}
                                         </li>
                                         <li class="list-group-item">
                                             <strong>Danh mục:</strong> ${event.categoryName}
@@ -100,8 +101,8 @@
                                 <div class="card-body">
                                     <ul class="list-group list-group-flush">
                                         <li class="list-group-item">
-                                            <strong>Mã donate:</strong> 
-                                            <span class="badge bg-info text-dark">${donation.qrCode}</span>
+                                            <strong>Mã giao dịch:</strong>
+                                            <span class="badge bg-info text-white fw-bold">${donation.paymentTxnRef != null ? donation.paymentTxnRef : 'N/A'}</span>
                                         </li>
                                         <li class="list-group-item">
                                             <strong>Tên người donate:</strong> ${donation.volunteerFullName}
@@ -113,15 +114,15 @@
                                             </span>
                                         </li>
                                         <li class="list-group-item">
-                                            <strong>Phương thức thanh toán:</strong> 
+                                            <strong>Phương thức thanh toán:</strong>
                                             <c:choose>
                                                 <c:when test="${donation.paymentMethod == 'QR Code'}">
-                                                    <span class="badge bg-primary">
+                                                    <span class="badge bg-primary text-white fw-bold">
                                                         <i class="bi bi-qr-code"></i> QR Code
                                                     </span>
                                                 </c:when>
                                                 <c:when test="${donation.paymentMethod == 'Bank Transfer'}">
-                                                    <span class="badge bg-info">
+                                                    <span class="badge bg-info text-white fw-bold">
                                                         <i class="bi bi-bank"></i> Bank Transfer
                                                     </span>
                                                 </c:when>
@@ -143,22 +144,22 @@
                                             <strong>Trạng thái:</strong>
                                             <c:choose>
                                                 <c:when test="${donation.status == 'success'}">
-                                                    <span class="badge bg-success">
+                                                    <span class="badge bg-success text-white fw-bold">
                                                         <i class="bi bi-check-circle"></i> Thành công
                                                     </span>
                                                 </c:when>
                                                 <c:when test="${donation.status == 'pending'}">
-                                                    <span class="badge bg-warning text-dark">
+                                                    <span class="badge bg-warning text-white fw-bold">
                                                         <i class="bi bi-clock"></i> Đang xử lý
                                                     </span>
                                                 </c:when>
                                                 <c:when test="${donation.status == 'cancelled'}">
-                                                    <span class="badge bg-danger">
+                                                    <span class="badge bg-danger text-white fw-bold">
                                                         <i class="bi bi-x-circle"></i> Bị từ chối
                                                     </span>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <span class="badge bg-secondary">${donation.status}</span>
+                                                    <span class="badge bg-secondary text-white fw-bold">${donation.status}</span>
                                                 </c:otherwise>
                                             </c:choose>
                                         </li>
@@ -177,7 +178,20 @@
 
                     <!-- Nút quay lại -->
                     <div class="text-center mt-4">
-                        <a href="${pageContext.request.contextPath}/VolunteerDonateServlet" class="btn btn-primary">
+                        <c:set var="backUrl" value="${pageContext.request.contextPath}/VolunteerDonateServlet" />
+                        <c:if test="${not empty returnPage && returnPage != '1'}">
+                            <c:set var="backUrl" value="${backUrl}?page=${returnPage}" />
+                        </c:if>
+                        <c:if test="${not empty startDate}">
+                            <c:set var="backUrl" value="${backUrl}${empty returnPage || returnPage == '1' ? '?' : '&'}startDate=${startDate}" />
+                        </c:if>
+                        <c:if test="${not empty endDate}">
+                            <c:set var="backUrl" value="${backUrl}${fn:contains(backUrl, '?') ? '&' : '?'}endDate=${endDate}" />
+                        </c:if>
+                        <c:if test="${not empty statusFilter}">
+                            <c:set var="backUrl" value="${backUrl}${fn:contains(backUrl, '?') ? '&' : '?'}status=${statusFilter}" />
+                        </c:if>
+                        <a href="${backUrl}" class="btn btn-primary">
                             <i class="bi bi-arrow-left"></i> Quay lại lịch sử thanh toán
                         </a>
                     </div>

@@ -38,6 +38,7 @@ public class OrganizationDetailEventServlet extends HttpServlet {
             OrganizationDetailEventDAO dao = new OrganizationDetailEventDAO();
 
             Event event = dao.getEventById(eventId);
+            double totalDonationAmount = dao.sumSuccessfulDonationsByEvent(eventId);
             List<Event> categories = dao.getAllCategories();
             List<Donation> donations;
             int totalPages;
@@ -57,6 +58,7 @@ public class OrganizationDetailEventServlet extends HttpServlet {
                 request.getRequestDispatcher("/error.jsp").forward(request, response);
                 return;
             }
+            event.setTotalDonation(totalDonationAmount);
 
             dao.close();
 
@@ -66,6 +68,7 @@ public class OrganizationDetailEventServlet extends HttpServlet {
             request.setAttribute("currentPage", currentPage);
             request.setAttribute("totalPages", totalPages);
             request.setAttribute("totalDonations", totalDonations);
+            request.setAttribute("totalDonationAmount", totalDonationAmount);
             request.getRequestDispatcher("/organization/detail_event_org.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {

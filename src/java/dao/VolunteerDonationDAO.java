@@ -27,15 +27,12 @@ public class VolunteerDonationDAO {
         }
     }
 
-    
-    
-    
     // Tạo donation mới
     public boolean createDonation(int eventId, int volunteerId, double amount,
-            String paymentMethod, String qrCode, String note) {
+            String paymentMethod, String note) {
         String sql = "INSERT INTO Donations (event_id, volunteer_id, amount, donate_date, "
-                + "status, payment_method, qr_code, note) "
-                + "VALUES (?, ?, ?, GETDATE(), 'pending', ?, ?, ?)";
+                + "status, payment_method, note) "
+                + "VALUES (?, ?, ?, GETDATE(), 'pending', ?, ?)";
 
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -43,8 +40,7 @@ public class VolunteerDonationDAO {
             ps.setInt(2, volunteerId);
             ps.setDouble(3, amount);
             ps.setString(4, paymentMethod);
-            ps.setString(5, qrCode);
-            ps.setString(6, note);
+            ps.setString(5, note);
 
             int rows = ps.executeUpdate();
             ps.close();
@@ -54,16 +50,6 @@ public class VolunteerDonationDAO {
             e.printStackTrace();
             return false;
         }
-    }
-
-    // Sinh mã QR code theo format: QR-250901-V5-500K
-    public String generateQRCode(int volunteerId, double amount) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd");
-        String dateStr = sdf.format(new java.util.Date());
-
-        String amountStr = String.format("%.0fK", amount / 1000);
-
-        return "QR-" + dateStr + "-V" + volunteerId + "-" + amountStr;
     }
 
     public void close() {
