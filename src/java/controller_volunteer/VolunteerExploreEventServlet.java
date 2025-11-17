@@ -53,7 +53,7 @@ public class VolunteerExploreEventServlet extends HttpServlet {
         Integer volunteerId = acc.getId();
 
         int page = 1;
-        int limit = 3;
+        int limit = 6;
         String pageParam = request.getParameter("page");
 
         if (pageParam != null) {

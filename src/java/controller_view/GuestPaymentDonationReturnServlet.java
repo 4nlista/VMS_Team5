@@ -79,7 +79,7 @@ public class GuestPaymentDonationReturnServlet extends HttpServlet {
             HttpSession currentSession = request.getSession();
             currentSession.setAttribute("message", "Lỗi kết nối cơ sở dữ liệu: " + e.getMessage());
             currentSession.setAttribute("messageType", "danger");
-            response.sendRedirect(request.getContextPath() + "/index.jsp");
+            response.sendRedirect(request.getContextPath() + "/home");
             return;
         }
 
@@ -250,7 +250,7 @@ public class GuestPaymentDonationReturnServlet extends HttpServlet {
         }
 
         // Redirect to home page
-        response.sendRedirect(request.getContextPath() + "/index.jsp");
+        response.sendRedirect(request.getContextPath() + "/home");
     }
 
     /**
