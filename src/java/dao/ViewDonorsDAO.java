@@ -260,53 +260,61 @@ public class ViewDonorsDAO {
         return list;
     }
 
+    // lấy danh sách các nhà donate + phân trang
     public List<Donation> getDonorsPaged(int offset, int limit) {
         List<Donation> list = new ArrayList<>();
         String sql = """
                       WITH TotalDonations AS (
-                                         SELECT 
-                                             d.volunteer_id,
-                                             SUM(d.amount) AS total_amount,
-                                             COUNT(DISTINCT d.event_id) AS events_count
-                                         FROM Donations d where d.status = 'success'
-                                         GROUP BY d.volunteer_id
-                                     ),
-                                     LatestDonation AS (
-                                         SELECT
-                                             d.id,
-                                             d.volunteer_id,
-                                             d.event_id,
-                                             d.amount AS donate_amount,
-                                             d.donate_date,
-                                             d.status AS donation_status,
-                                             d.payment_method,
-                                             d.note,
-                                                                          ROW_NUMBER() OVER (PARTITION BY d.volunteer_id ORDER BY d.donate_date DESC) AS rn
-                                         FROM Donations d
-                                     )
-                                     SELECT 
-                                         ld.id AS donation_id,
-                                         ld.volunteer_id,
-                                         ld.event_id,
-                                         u.full_name AS volunteer_name,
-                                         u.avatar AS volunteer_avatar,
-                                         a.username AS volunteer_username,
-                                         td.total_amount,
-                                         td.events_count,
-                                         e.title AS event_title,       
-                                         ld.donate_amount,
-                                         ld.donate_date,
-                                         ld.donation_status,
-                                         ld.payment_method,
-                                         ld.note,
-                                      FROM TotalDonations td
-                                     JOIN LatestDonation ld 
-                                         ON td.volunteer_id = ld.volunteer_id AND ld.rn = 1  
-                                     JOIN Events e ON ld.event_id = e.id
-                                     JOIN Accounts a ON td.volunteer_id = a.id
-                                     JOIN Users u ON a.id = u.account_id
-                                     ORDER BY td.total_amount DESC
-                                     OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
+                              SELECT 
+                                  d.volunteer_id,
+                                  SUM(d.amount) AS total_amount,
+                                  COUNT(DISTINCT d.event_id) AS events_count
+                              FROM Donations d 
+                              WHERE d.status = 'success'
+                              GROUP BY d.volunteer_id
+                          ),
+                          LatestDonation AS (
+                              SELECT
+                                  d.id,
+                                  d.volunteer_id,
+                                  d.event_id,
+                                  d.amount AS donate_amount,
+                                  d.donate_date,
+                                  d.status AS donation_status,
+                                  d.payment_method,
+                                  d.payment_txn_ref,
+                                  d.note,
+                                  ROW_NUMBER() OVER (
+                                      PARTITION BY d.volunteer_id 
+                                      ORDER BY d.donate_date DESC
+                                  ) AS rn
+                              FROM Donations d
+                              WHERE d.status = 'success'
+                          )
+                          SELECT 
+                              ld.id AS donation_id,
+                              ld.volunteer_id,
+                              ld.event_id,
+                              u.full_name AS volunteer_name,
+                              u.avatar AS volunteer_avatar,
+                              a.username AS volunteer_username,
+                              td.total_amount,
+                              td.events_count,
+                              e.title AS event_title,       
+                              ld.donate_amount,
+                              ld.donate_date,
+                              ld.donation_status,
+                              ld.payment_method,
+                              ld.payment_txn_ref,
+                              ld.note
+                          FROM TotalDonations td
+                          JOIN LatestDonation ld 
+                              ON td.volunteer_id = ld.volunteer_id AND ld.rn = 1  
+                          JOIN Events e ON ld.event_id = e.id
+                          JOIN Accounts a ON td.volunteer_id = a.id
+                          JOIN Users u ON a.id = u.account_id
+                          ORDER BY td.total_amount DESC
+                          OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
                      """;
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, offset);
@@ -372,12 +380,12 @@ public class ViewDonorsDAO {
         }
         return 0;
     }
-    
+
     // Phân trang với filter theo ngày cho volunteer donation history
     public List<Donation> getUserDonationsPagedWithDateFilter(int volunteerId, int page, int pageSize, String startDate, String endDate) {
         List<Donation> list = new ArrayList<>();
         int offset = (page - 1) * pageSize;
-        
+
         StringBuilder sql = new StringBuilder("""
             SELECT 
                 d.id,
@@ -398,34 +406,34 @@ public class ViewDonorsDAO {
             JOIN Events e ON d.event_id = e.id
             WHERE d.volunteer_id = ?
         """);
-        
+
         // Thêm điều kiện filter ngày
         boolean hasStartDate = startDate != null && !startDate.trim().isEmpty();
         boolean hasEndDate = endDate != null && !endDate.trim().isEmpty();
-        
+
         if (hasStartDate) {
             sql.append(" AND d.donate_date >= ?");
         }
         if (hasEndDate) {
             sql.append(" AND d.donate_date <= ?");
         }
-        
+
         sql.append(" ORDER BY d.donate_date DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
-        
+
         try (PreparedStatement ps = conn.prepareStatement(sql.toString())) {
             int paramIndex = 1;
             ps.setInt(paramIndex++, volunteerId);
-            
+
             if (hasStartDate) {
                 ps.setString(paramIndex++, startDate + " 00:00:00");
             }
             if (hasEndDate) {
                 ps.setString(paramIndex++, endDate + " 23:59:59");
             }
-            
+
             ps.setInt(paramIndex++, offset);
             ps.setInt(paramIndex++, pageSize);
-            
+
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Donation d = new Donation(
@@ -452,32 +460,32 @@ public class ViewDonorsDAO {
         }
         return list;
     }
-    
+
     // Đếm tổng số donations với filter ngày
     public int getTotalDonationsByVolunteerWithDateFilter(int volunteerId, String startDate, String endDate) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Donations WHERE volunteer_id = ?");
-        
+
         boolean hasStartDate = startDate != null && !startDate.trim().isEmpty();
         boolean hasEndDate = endDate != null && !endDate.trim().isEmpty();
-        
+
         if (hasStartDate) {
             sql.append(" AND donate_date >= ?");
         }
         if (hasEndDate) {
             sql.append(" AND donate_date <= ?");
         }
-        
+
         try (PreparedStatement ps = conn.prepareStatement(sql.toString())) {
             int paramIndex = 1;
             ps.setInt(paramIndex++, volunteerId);
-            
+
             if (hasStartDate) {
                 ps.setString(paramIndex++, startDate + " 00:00:00");
             }
             if (hasEndDate) {
                 ps.setString(paramIndex++, endDate + " 23:59:59");
             }
-            
+
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return rs.getInt(1);
@@ -488,13 +496,13 @@ public class ViewDonorsDAO {
         }
         return 0;
     }
-    
+
     // Lọc donations với filter đầy đụ (ngày + trạng thái)
-    public List<Donation> getUserDonationsWithAllFilters(int volunteerId, int page, int pageSize, 
-                                                         String startDate, String endDate, String status) {
+    public List<Donation> getUserDonationsWithAllFilters(int volunteerId, int page, int pageSize,
+            String startDate, String endDate, String status) {
         List<Donation> list = new ArrayList<>();
         int offset = (page - 1) * pageSize;
-        
+
         StringBuilder sql = new StringBuilder("""
             SELECT 
                 d.id,
@@ -515,12 +523,12 @@ public class ViewDonorsDAO {
             JOIN Events e ON d.event_id = e.id
             WHERE d.volunteer_id = ?
         """);
-        
+
         // Thêm điều kiện filter ngày
         boolean hasStartDate = startDate != null && !startDate.trim().isEmpty();
         boolean hasEndDate = endDate != null && !endDate.trim().isEmpty();
         boolean hasStatus = status != null && !status.trim().isEmpty() && !"all".equals(status);
-        
+
         if (hasStartDate) {
             sql.append(" AND d.donate_date >= ?");
         }
@@ -530,13 +538,13 @@ public class ViewDonorsDAO {
         if (hasStatus) {
             sql.append(" AND d.status = ?");
         }
-        
+
         sql.append(" ORDER BY d.donate_date DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
-        
+
         try (PreparedStatement ps = conn.prepareStatement(sql.toString())) {
             int paramIndex = 1;
             ps.setInt(paramIndex++, volunteerId);
-            
+
             if (hasStartDate) {
                 ps.setString(paramIndex++, startDate + " 00:00:00");
             }
@@ -546,10 +554,10 @@ public class ViewDonorsDAO {
             if (hasStatus) {
                 ps.setString(paramIndex++, status);
             }
-            
+
             ps.setInt(paramIndex++, offset);
             ps.setInt(paramIndex++, pageSize);
-            
+
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Donation d = new Donation(
@@ -576,15 +584,15 @@ public class ViewDonorsDAO {
         }
         return list;
     }
-    
+
     // Đếm tổng số donations với filter đầy đủ
     public int getTotalDonationsWithAllFilters(int volunteerId, String startDate, String endDate, String status) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Donations WHERE volunteer_id = ?");
-        
+
         boolean hasStartDate = startDate != null && !startDate.trim().isEmpty();
         boolean hasEndDate = endDate != null && !endDate.trim().isEmpty();
         boolean hasStatus = status != null && !status.trim().isEmpty() && !"all".equals(status);
-        
+
         if (hasStartDate) {
             sql.append(" AND donate_date >= ?");
         }
@@ -594,11 +602,11 @@ public class ViewDonorsDAO {
         if (hasStatus) {
             sql.append(" AND status = ?");
         }
-        
+
         try (PreparedStatement ps = conn.prepareStatement(sql.toString())) {
             int paramIndex = 1;
             ps.setInt(paramIndex++, volunteerId);
-            
+
             if (hasStartDate) {
                 ps.setString(paramIndex++, startDate + " 00:00:00");
             }
@@ -608,7 +616,7 @@ public class ViewDonorsDAO {
             if (hasStatus) {
                 ps.setString(paramIndex++, status);
             }
-            
+
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return rs.getInt(1);
@@ -654,8 +662,7 @@ public class ViewDonorsDAO {
         System.out.println("==> getDonationById() - DonationId: " + donationId + ", VolunteerId: " + volunteerId);
 
         // Sử dụng connection mới để đảm bảo connection không bị đóng
-        try (Connection connection = DBContext.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
 
             ps.setInt(1, volunteerId);  // cho subquery total_amount
             ps.setInt(2, volunteerId);  // cho subquery events_count
@@ -733,8 +740,7 @@ public class ViewDonorsDAO {
 
         System.out.println("==> getDonationByIdForOrganization() - DonationId: " + donationId + ", EventId: " + eventId);
 
-        try (Connection connection = DBContext.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
 
             ps.setInt(1, donationId);
             ps.setInt(2, eventId);
@@ -756,8 +762,8 @@ public class ViewDonorsDAO {
                             rs.getString("volunteer_name"),
                             rs.getString("volunteer_avatar"),
                             rs.getString("event_title"),
-                            0,  // total_amount not needed for this view
-                            0   // events_count not needed for this view
+                            0, // total_amount not needed for this view
+                            0 // events_count not needed for this view
                     );
                     donation.setVolunteerEmail(rs.getString("volunteer_email"));
                     donation.setVolunteerPhone(rs.getString("volunteer_phone"));

@@ -21,7 +21,7 @@ public class DisplayDonateService {
         viewUserDonationDAO = new ViewDonorsDAO();
     }
 
-    // trả về danh sách 3 sự kiện mới nhất
+    // trả về danh sách 3 người donate nhiều nhất
     public List<Donation> getTop3UserDonation() {
         return viewUserDonationDAO.getTop3UserDonation();
     }
@@ -66,6 +66,7 @@ public class DisplayDonateService {
         return viewUserDonationDAO.getTotalDonors();
     }
     
+    // danh sách các nhà tài trợ có phân trang
     public List<Donation> getDonorsPaged(int offset, int limit) {
         return viewUserDonationDAO.getDonorsPaged(offset, limit);
     }
