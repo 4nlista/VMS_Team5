@@ -1,13 +1,15 @@
 package utils;
 
+import dao.NotificationDAO;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import model.EventVolunteer;
+import model.Notification;
 import service.OrganizationApplyService;
 
 /**
@@ -29,11 +31,31 @@ public class AutoRejectScheduler implements ServletContextListener {
         scheduler.scheduleAtFixedRate(() -> {
             try {
                 OrganizationApplyService service = new OrganizationApplyService();
-                int rejectedCount = service.autoRejectAllPendingApplications();
+                List<EventVolunteer> rejectedVolunteers = service.autoRejectAllPendingApplications();
 
-                if (rejectedCount > 0) {
+                if (!rejectedVolunteers.isEmpty()) {
                     System.out.println("[AutoRejectScheduler] Đã tự động từ chối "
-                            + rejectedCount + " đơn do còn < 24h trước sự kiện");
+                            + rejectedVolunteers.size() + " đơn do còn < 24h trước sự kiện");
+                    
+                    // Gửi thông báo cho từng volunteer bị reject
+                    NotificationDAO notiDAO = new NotificationDAO();
+                    for (EventVolunteer volunteer : rejectedVolunteers) {
+                        try {
+                            Notification noti = new Notification();
+                            noti.setSenderId(volunteer.getOrganizationId()); // Organization gửi
+                            noti.setReceiverId(volunteer.getVolunteerId());  // Volunteer nhận
+                            noti.setMessage("Đơn đăng ký sự kiện \"" + volunteer.getEventTitle()
+                                    + "\" của bạn đã bị tự động từ chối do không được xử lý trong 24h trước sự kiện.");
+                            noti.setType("apply");
+                            noti.setEventId(volunteer.getEventId());
+                            notiDAO.insertNotification(noti);
+                        } catch (Exception e) {
+                            System.err.println("[AutoRejectScheduler] Lỗi gửi thông báo cho volunteer "
+                                    + volunteer.getVolunteerId() + ": " + e.getMessage());
+                        }
+                    }
+                    System.out.println("[AutoRejectScheduler] Đã gửi " + rejectedVolunteers.size()
+                            + " thông báo cho volunteers");
                 }
             } catch (Exception e) {
                 System.err.println("[AutoRejectScheduler] Lỗi: " + e.getMessage());

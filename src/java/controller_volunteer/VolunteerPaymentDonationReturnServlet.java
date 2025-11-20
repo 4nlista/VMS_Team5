@@ -222,6 +222,52 @@ public class VolunteerPaymentDonationReturnServlet extends HttpServlet {
                 System.out.println(" Email not sent - Payment status: " + paymentStatus + 
                                  ", Donor email: " + (donorEmail != null ? donorEmail : "NULL"));
             }
+            
+            // GỬI THÔNG BÁO CHO ORGANIZATION KHI DONATE THÀNH CÔNG
+            if ("success".equals(paymentStatus)) {
+                try {
+                    if (eventId != null && donationDetail != null) {
+                        // Lấy thông tin organization từ event
+                        dao.ViewEventsDAO eventDAO = new dao.ViewEventsDAO();
+                        model.Event event = eventDAO.getEventById(eventId);
+                        
+                        if (event != null) {
+                            long amountInVND = Long.parseLong(vnp_Amount) / 100;
+                            
+                            // Lấy tên donor để hiển thị trong thông báo
+                            String donorName = "Một nhà hảo tâm";
+                            if (volunteerId != null) {
+                                // Nếu là volunteer, lấy tên từ User
+                                dao.AdminUserDAO userDAO = new dao.AdminUserDAO();
+                                model.User volUser = userDAO.getUserByAccountId(volunteerId);
+                                if (volUser != null && volUser.getFull_name() != null) {
+                                    donorName = volUser.getFull_name();
+                                }
+                            } else if (donationDetail.donorFullName != null && !donationDetail.donorFullName.isEmpty()) {
+                                donorName = donationDetail.donorFullName;
+                            }
+                            
+                            // Gửi thông báo cho organization
+                            dao.NotificationDAO notiDAO = new dao.NotificationDAO();
+                            model.Notification noti = new model.Notification();
+                            noti.setSenderId(volunteerId != null ? volunteerId : 0); // 0 nếu là guest
+                            noti.setReceiverId(event.getOrganizationId());
+                            noti.setMessage(donorName + " đã ủng hộ " 
+                                    + String.format("%,d", amountInVND) 
+                                    + " VNĐ cho sự kiện \"" + event.getTitle() + "\" của bạn");
+                            noti.setType("donation");
+                            noti.setEventId(eventId);
+                            notiDAO.insertNotification(noti);
+                            
+                            System.out.println("[Donation] Đã gửi thông báo cho organization " 
+                                    + event.getOrganizationId() + " về donation từ " + donorName);
+                        }
+                    }
+                } catch (Exception e) {
+                    System.err.println("[Donation] Lỗi khi gửi thông báo cho organization: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
 
             // Clear session data
             session.removeAttribute("donation_donor_id");

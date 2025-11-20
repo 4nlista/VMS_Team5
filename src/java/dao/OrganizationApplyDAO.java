@@ -192,8 +192,43 @@ public class OrganizationApplyDAO {
     }
 
     // Tự động reject đơn cho TẤT CẢ events đang trong khoảng 24h trước diễn ra , lấy chuẩn từng minutes
-    public int autoRejectAllPendingApplications() {
-        String sql = """
+    // Trả về danh sách các volunteer bị reject để gửi thông báo
+    public List<EventVolunteer> autoRejectAllPendingApplications() {
+        List<EventVolunteer> rejectedVolunteers = new ArrayList<>();
+        
+        // Bước 1: Lấy danh sách pending volunteers trước khi reject
+        String selectSql = """
+        SELECT ev.id, ev.event_id, ev.volunteer_id, ev.apply_date, ev.status, ev.note,
+               e.title AS event_title, e.organization_id
+        FROM Event_Volunteers ev
+        JOIN Events e ON ev.event_id = e.id
+        WHERE ev.status = 'pending'
+          AND DATEDIFF(MINUTE, GETDATE(), e.start_date) BETWEEN 1 AND 1440
+        """;
+        
+        try (Connection con = DBContext.getConnection(); 
+             PreparedStatement ps = con.prepareStatement(selectSql);
+             ResultSet rs = ps.executeQuery()) {
+            
+            while (rs.next()) {
+                EventVolunteer ev = new EventVolunteer();
+                ev.setId(rs.getInt("id"));
+                ev.setEventId(rs.getInt("event_id"));
+                ev.setVolunteerId(rs.getInt("volunteer_id"));
+                ev.setApplyDate(rs.getTimestamp("apply_date"));
+                ev.setStatus(rs.getString("status"));
+                ev.setNote(rs.getString("note"));
+                // Thêm thông tin để gửi notification
+                ev.setEventTitle(rs.getString("event_title"));
+                ev.setOrganizationId(rs.getInt("organization_id"));
+                rejectedVolunteers.add(ev);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        // Bước 2: Update status thành rejected
+        String updateSql = """
         UPDATE Event_Volunteers
         SET status = 'rejected',
             note = CASE
@@ -206,14 +241,16 @@ public class OrganizationApplyDAO {
               WHERE id = Event_Volunteers.event_id
                 AND DATEDIFF(MINUTE, GETDATE(), start_date) BETWEEN 1 AND 1440
           )
-    """;
+        """;
 
-        try (Connection con = DBContext.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
-            return ps.executeUpdate();
+        try (Connection con = DBContext.getConnection(); 
+             PreparedStatement ps = con.prepareStatement(updateSql)) {
+            ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
-            return 0;
         }
+        
+        return rejectedVolunteers;
     }
 
 }

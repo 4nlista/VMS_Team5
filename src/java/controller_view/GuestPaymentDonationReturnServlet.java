@@ -222,6 +222,53 @@ public class GuestPaymentDonationReturnServlet extends HttpServlet {
                 System.out.println("✗ Email not sent - Payment status: " + paymentStatus + 
                                  ", Donor email: " + (donorEmail != null ? donorEmail : "NULL"));
             }
+            
+            // GỬI THÔNG BÁO CHO ORGANIZATION KHI GUEST DONATE THÀNH CÔNG
+            if ("success".equals(paymentStatus)) {
+                try {
+                    if (eventId != null && donationDetail != null) {
+                        // Lấy thông tin organization từ event
+                        dao.ViewEventsDAO eventDAO = new dao.ViewEventsDAO();
+                        model.Event event = eventDAO.getEventById(eventId);
+                        
+                        if (event != null) {
+                            long amountInVND = Long.parseLong(vnp_Amount) / 100;
+                            
+                            // Lấy tên donor (guest) để hiển thị trong thông báo
+                            String donorName = "Một nhà hảo tâm";
+                            if (donationDetail.donorFullName != null && !donationDetail.donorFullName.isEmpty()) {
+                                donorName = donationDetail.donorFullName;
+                            }
+                            
+                            // Gửi thông báo cho organization
+                            dao.NotificationDAO notiDAO = new dao.NotificationDAO();
+                            model.Notification noti = new model.Notification();
+                            // Guest không có account_id, dùng organization_id làm sender để tránh FK constraint
+                            noti.setSenderId(event.getOrganizationId()); 
+                            noti.setReceiverId(event.getOrganizationId());
+                            noti.setMessage(donorName + " đã ủng hộ " 
+                                    + String.format("%,d", amountInVND) 
+                                    + " VNĐ cho sự kiện \"" + event.getTitle() + "\" của bạn");
+                            noti.setType("donation");
+                            noti.setEventId(eventId);
+                            
+                            boolean inserted = notiDAO.insertNotification(noti);
+                            if (inserted) {
+                                System.out.println("[Guest Donation] ✓ Đã gửi thông báo cho organization " 
+                                        + event.getOrganizationId() + " về donation từ guest: " + donorName);
+                            } else {
+                                System.err.println("[Guest Donation] ✗ FAILED to insert notification!");
+                            }
+                            
+                            System.out.println("[Guest Donation] Đã gửi thông báo cho organization " 
+                                    + event.getOrganizationId() + " về donation từ guest: " + donorName);
+                        }
+                    }
+                } catch (Exception e) {
+                    System.err.println("[Guest Donation] Lỗi khi gửi thông báo cho organization: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
 
             // Clear session data
             session.removeAttribute("donation_donor_id");

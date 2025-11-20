@@ -4,11 +4,11 @@
  */
 package dao;
 
-import utils.DBContext;
-import model.Notification;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import model.Notification;
+import utils.DBContext;
 
 /**
  *

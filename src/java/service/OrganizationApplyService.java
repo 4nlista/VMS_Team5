@@ -45,7 +45,8 @@ public class OrganizationApplyService {
     }
     
     // Tự động reject pending applications cho tất cả events
-    public int autoRejectAllPendingApplications() {
+    // Trả về danh sách volunteers bị reject để gửi thông báo
+    public List<EventVolunteer> autoRejectAllPendingApplications() {
         return organizationApplyDAO.autoRejectAllPendingApplications();
     }
     
