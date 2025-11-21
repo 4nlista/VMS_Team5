@@ -10,21 +10,21 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
- * Payment Gateway Configuration and Utility Class for VMS Team 5
- * Currently supports VNPay, can be extended for other payment gateways
+ * Class cấu hình và tiện ích cho Cổng thanh toán - VMS Team 5
+ * Hiện tại hỗ trợ VNPay, có thể mở rộng cho các cổng thanh toán khác
  */
 public class PaymentConfig {
 
-    // VNPay Configuration
-    // NOTE: These credentials MUST match your VNPay Merchant Account
-    // Get them from: https://sandbox.vnpayment.vn/merchantv2/
+    // Cấu hình VNPay
+    // LƯU Ý: Các thông tin này PHẢI khớp với tài khoản VNPay Merchant của bạn
+    // Lấy từ: https://sandbox.vnpayment.vn/merchantv2/
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
     public static String vnp_TmnCode = "4YUP19I4";  // TODO: Replace with your TMN Code from VNPay Merchant Portal
     public static String secretKey = "MDUIFDCRAKLNBPOFIAFNEKFRNMFBYEPX";  // TODO: Replace with your Hash Secret from VNPay Merchant Portal
     public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
 
     /**
-     * Generate MD5 hash
+     * Tạo mã hash MD5
      */
     public static String md5(String message) {
         String digest = null;
@@ -43,7 +43,7 @@ public class PaymentConfig {
     }
 
     /**
-     * Generate SHA256 hash
+     * Tạo mã hash SHA256
      */
     public static String sha256(String message) {
         String digest = null;
@@ -62,8 +62,8 @@ public class PaymentConfig {
     }
 
     /**
-     * Hash all fields for VNPay signature
-     * NOTE: Fields should already be URL encoded before passing to this method
+     * Hash tất cả các field để tạo chữ ký VNPay
+     * LƯU Ý: Các field phải được URL encode trước khi truyền vào method này
      */
     public static String hashAllFields(Map<String, String> fields) {
         List<String> fieldNames = new ArrayList<>(fields.keySet());
@@ -86,7 +86,7 @@ public class PaymentConfig {
     }
 
     /**
-     * Generate HMAC SHA512 signature
+     * Tạo chữ ký HMAC SHA512 để bảo mật giao dịch
      */
     public static String hmacSHA512(final String key, final String data) {
         try {
@@ -110,7 +110,7 @@ public class PaymentConfig {
     }
 
     /**
-     * Get client IP address
+     * Lấy địa chỉ IP của client
      */
     public static String getIpAddress(HttpServletRequest request) {
         String ipAddress;
@@ -126,7 +126,7 @@ public class PaymentConfig {
     }
 
     /**
-     * Generate random number string
+     * Tạo chuỗi số ngẫu nhiên (dùng cho mã giao dịch)
      */
     public static String getRandomNumber(int len) {
         Random rnd = new Random();
@@ -139,11 +139,11 @@ public class PaymentConfig {
     }
 
     /**
-     * Get return URL dynamically from request for guest donations
-     * This ensures the return URL works on any machine (localhost, IP, or domain)
+     * Lấy return URL động từ request cho guest donations
+     * Đảm bảo return URL hoạt động trên mọi môi trường (localhost, IP, hoặc domain)
      *
-     * @param request HttpServletRequest to extract server information
-     * @return Full return URL for payment gateway callback
+     * @param request HttpServletRequest để lấy thông tin server
+     * @return URL đầy đủ để VNPay callback về
      */
     public static String getGuestDonationReturnUrl(HttpServletRequest request) {
         String scheme = request.getScheme(); // http or https
@@ -161,18 +161,18 @@ public class PaymentConfig {
             url.append(":").append(serverPort);
         }
 
-        // Add context path and return path
+        // Thêm context path và đường dẫn return
         url.append(contextPath).append("/guest-payment-donation-return");
 
         return url.toString();
     }
 
     /**
-     * Get return URL dynamically from request for volunteer donations
-     * This ensures the return URL works on any machine (localhost, IP, or domain)
+     * Lấy return URL động từ request cho volunteer donations
+     * Đảm bảo return URL hoạt động trên mọi môi trường (localhost, IP, hoặc domain)
      *
-     * @param request HttpServletRequest to extract server information
-     * @return Full return URL for payment gateway callback
+     * @param request HttpServletRequest để lấy thông tin server
+     * @return URL đầy đủ để VNPay callback về
      */
     public static String getVolunteerDonationReturnUrl(HttpServletRequest request) {
         String scheme = request.getScheme(); // http or https

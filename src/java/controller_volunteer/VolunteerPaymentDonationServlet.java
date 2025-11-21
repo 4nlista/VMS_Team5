@@ -17,8 +17,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * Servlet for initiating payment gateway donation for VOLUNTEERS
- * Handles volunteer donations without approval requirement
+ * Servlet khởi tạo thanh toán donate qua cổng thanh toán cho VOLUNTEER
+ * Xử lý donation của volunteer không cần phê duyệt
  */
 @WebServlet(name = "VolunteerPaymentDonationServlet", urlPatterns = {"/volunteer-payment-donation"})
 public class VolunteerPaymentDonationServlet extends HttpServlet {
@@ -38,7 +38,7 @@ public class VolunteerPaymentDonationServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
 
         try {
-            // Check volunteer authentication
+            // Kiểm tra xác thực volunteer đã đăng nhập chưa
             HttpSession session = request.getSession(false);
             if (session == null || session.getAttribute("account") == null) {
                 response.sendRedirect(request.getContextPath() + "/LoginServlet");
@@ -48,19 +48,19 @@ public class VolunteerPaymentDonationServlet extends HttpServlet {
             model.Account acc = (model.Account) session.getAttribute("account");
             int accountId = acc.getId();
 
-            // Get volunteer details
+            // Lấy thông tin chi tiết volunteer từ bảng Users
             dao.UserDAO userDAO = new dao.UserDAO();
             model.User user = userDAO.getUserByAccountId(accountId);
             String fullName = user.getFull_name();
             String email = user.getEmail();
             String phone = user.getPhone();
 
-            // Get parameters
+            // Lấy các tham số từ form
             String eventIdStr = request.getParameter("eventId");
             String amountStr = request.getParameter("amount");
             String note = request.getParameter("note");
 
-            // Validation
+            // Kiểm tra tham số bắt buộc
             if (eventIdStr == null || amountStr == null) {
                 request.setAttribute("error", "Thiếu tham số bắt buộc");
                 response.sendRedirect(request.getContextPath() + "/VolunteerEventServlet");
@@ -70,7 +70,7 @@ public class VolunteerPaymentDonationServlet extends HttpServlet {
             int eventId = Integer.parseInt(eventIdStr);
             long amountVND = Long.parseLong(amountStr);
 
-            // Validate amount using service
+            // Validate số tiền donate (tối thiểu 10,000 VND)
             String amountError = donationService.validateDonationAmount(amountVND);
             if (amountError != null) {
                 request.setAttribute("error", amountError);
@@ -78,7 +78,7 @@ public class VolunteerPaymentDonationServlet extends HttpServlet {
                 return;
             }
 
-            // Create donor record for volunteer using service
+            // Tạo hoặc lấy bản ghi donor cho volunteer trong bảng Donors
             int donorId;
             try {
                 donorId = donationService.createOrGetDonor(accountId, fullName, phone, email);
@@ -88,20 +88,20 @@ public class VolunteerPaymentDonationServlet extends HttpServlet {
                 return;
             }
 
-            // VNPay payment parameters
+            // Các tham số cấu hình VNPay
             String vnp_Version = "2.1.0";
             String vnp_Command = "pay";
             String orderType = "other";
 
-            // Amount in VND cents (multiply by 100 for VNPay format)
+            // Chuyển đổi số tiền sang đơn vị xu (nhân 100 theo định dạng VNPay)
             long amount = amountVND * 100;
 
-            // Generate unique transaction reference
+            // Tạo mã tham chiếu giao dịch duy nhất
             String paymentTxnRef = "DONATE" + eventId + "_" + PaymentConfig.getRandomNumber(8);
             String vnp_IpAddr = PaymentConfig.getIpAddress(request);
             String vnp_TmnCode = PaymentConfig.vnp_TmnCode;
 
-            // Build VNPay parameters
+            // Xây dựng các tham số gửi đến VNPay
             Map<String, String> vnp_Params = new HashMap<>();
             vnp_Params.put("vnp_Version", vnp_Version);
             vnp_Params.put("vnp_Command", vnp_Command);
@@ -116,7 +116,7 @@ public class VolunteerPaymentDonationServlet extends HttpServlet {
             vnp_Params.put("vnp_ReturnUrl", PaymentConfig.getVolunteerDonationReturnUrl(request));
             vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
 
-            // Set expiry time (15 minutes)
+            // Thiết lập thời gian hết hạn giao dịch (15 phút)
             Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
             SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
             String vnp_CreateDate = formatter.format(cld.getTime());
@@ -126,7 +126,7 @@ public class VolunteerPaymentDonationServlet extends HttpServlet {
             String vnp_ExpireDate = formatter.format(cld.getTime());
             vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);
 
-            // Build query string and hash
+            // Xây dựng chuỗi query và tạo chữ ký bảo mật
             List<String> fieldNames = new ArrayList<>(vnp_Params.keySet());
             Collections.sort(fieldNames);
             
@@ -150,11 +150,11 @@ public class VolunteerPaymentDonationServlet extends HttpServlet {
             queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
             String paymentUrl = PaymentConfig.vnp_PayUrl + "?" + queryUrl;
 
-            // Save payment record as pending using service
+            // Lưu bản ghi thanh toán với trạng thái pending vào bảng Payment_Donations
             try {
                 donationService.createPaymentDonation(donorId, eventId, paymentTxnRef, amount, vnp_Params.get("vnp_OrderInfo"), "VNPay");
 
-                // Store donor info and note in session for later use
+                // Lưu thông tin vào session để sử dụng sau khi VNPay callback
                 session.setAttribute("donation_donor_id", donorId);
                 session.setAttribute("donation_event_id", eventId);
                 session.setAttribute("donation_note", note);
@@ -166,7 +166,7 @@ public class VolunteerPaymentDonationServlet extends HttpServlet {
                 return;
             }
 
-            // Redirect to VNPay payment gateway    -- điều hướng đến trang paymentv2/Ncb/Transaction/Index.html?token
+            // Chuyển hướng người dùng đến cổng thanh toán VNPay
             response.sendRedirect(paymentUrl);
 
         } catch (NumberFormatException e) {

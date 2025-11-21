@@ -17,7 +17,8 @@ import java.sql.SQLException;
 import java.util.*;
 
 /**
- * Servlet for handling payment gateway donation return callback for GUESTS
+ * Servlet xử lý callback trả về từ cổng thanh toán VNPay cho GUEST
+ * Nhận kết quả thanh toán từ VNPay và cập nhật vào database
  */
 @WebServlet(name = "GuestPaymentDonationReturnServlet", urlPatterns = {"/guest-payment-donation-return"})
 public class GuestPaymentDonationReturnServlet extends HttpServlet {
@@ -296,7 +297,7 @@ public class GuestPaymentDonationReturnServlet extends HttpServlet {
             currentSession.setAttribute("messageType", "danger");
         }
 
-        // Redirect to home page
+        // Chuyển hướng guest về trang chủ
         response.sendRedirect(request.getContextPath() + "/home");
     }
 
