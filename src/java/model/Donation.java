@@ -19,7 +19,7 @@ public class Donation {
     private Date donateDate;
     private String status;
     private String paymentMethod;
-    private String paymentTxnRef;  // Payment transaction reference (for VNPay, etc.)
+    private String paymentTxnRef;  // Mã tham chiếu giao dịch (dùng lưu txn ref từ cổng thanh toán như VNPay)
     private String note;
 
     // Thông tin bổ sung để hiển thị

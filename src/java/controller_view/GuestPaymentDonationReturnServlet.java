@@ -27,6 +27,13 @@ public class GuestPaymentDonationReturnServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        // --- Luồng xử lý callback từ VNPay (GET) ---
+        // 1) Thu tất cả tham số VNPay trả về
+        // 2) Lấy vnp_SecureHash và loại bỏ các field hash trước khi verify
+        // 3) Sinh lại chữ ký bằng PaymentConfig.hashAllFields(...) và so sánh
+        // 4) Nếu chữ ký hợp lệ và response code = success -> cập nhật Payment_Donations, tạo Donations, gửi email + noti
+        // 5) Nếu thất bại hoặc chữ ký không hợp lệ -> cập nhật payment là failed và ghi log
+        // 6) Redirect/hiển thị thông báo cho user
         // Get all parameters from VNPay
         Map<String, String> fields = new HashMap<>();
         for (Enumeration<String> params = request.getParameterNames(); params.hasMoreElements();) {
@@ -43,10 +50,10 @@ public class GuestPaymentDonationReturnServlet extends HttpServlet {
             }
         }
 
-        // Get secure hash from VNPay
+        // Lấy chữ ký bảo mật VNPay trả về để so sánh với chữ ký nội sinh
         String vnp_SecureHash = request.getParameter("vnp_SecureHash");
 
-        // Remove hash fields before validating
+        // Loại bỏ các field liên quan tới hash trước khi sinh lại hash để verify
         try {
             String encodedHashType = java.net.URLEncoder.encode("vnp_SecureHashType", StandardCharsets.UTF_8.toString());
             String encodedHash = java.net.URLEncoder.encode("vnp_SecureHash", StandardCharsets.UTF_8.toString());
@@ -57,7 +64,7 @@ public class GuestPaymentDonationReturnServlet extends HttpServlet {
             fields.remove("vnp_SecureHash");
         }
 
-        // Validate signature
+        // Sinh lại chữ ký từ các field nhận được và so sánh với vnp_SecureHash
         String signValue = PaymentConfig.hashAllFields(fields);
         boolean isValidSignature = signValue.equals(vnp_SecureHash);
 
@@ -72,7 +79,7 @@ public class GuestPaymentDonationReturnServlet extends HttpServlet {
         String vnp_TransactionStatus = request.getParameter("vnp_TransactionStatus");
         String vnp_CardType = request.getParameter("vnp_CardType");
 
-        // Process payment result
+        // Xử lý kết quả thanh toán: cập nhật Payment_Donations, tạo Donations nếu success, và gửi email/notification
         PaymentDonationDAO dao;
         try {
             dao = new PaymentDonationDAO();
@@ -99,13 +106,14 @@ public class GuestPaymentDonationReturnServlet extends HttpServlet {
             PaymentDonationDAO.PaymentDonationDetail donationDetail = dao.getPaymentDonationByTxnRef(vnp_TxnRef);
 
             if (isValidSignature) {
-                // Check transaction status
+                // Chữ ký hợp lệ -> kiểm tra mã phản hồi/transaction status từ VNPay
+                // Thông thường vnp_ResponseCode == "00" nghĩa là thanh toán thành công
                 if ("00".equals(vnp_ResponseCode) && "00".equals(vnp_TransactionStatus)) {
                     // Payment successful
                     paymentStatus = "success";
                     message = "Cảm ơn bạn đã ủng hộ.";
 
-                    // Update payment record
+                    // Cập nhật trạng thái payment trong Payment_Donations là success
                     dao.updatePaymentDonation(
                         vnp_TxnRef,
                         vnp_BankCode,
@@ -118,7 +126,8 @@ public class GuestPaymentDonationReturnServlet extends HttpServlet {
                         "success"
                     );
 
-                    // Create donation record
+                    // Tạo bản ghi trong bảng Donations (thực tế chuyển tiền về hệ thống)
+                    // Lưu ý: amount từ VNPay trả về cần /100 để về VND
                     if (donorId != null && eventId != null) {
                         System.out.println("=== DEBUG: GuestPaymentDonationReturnServlet ===");
                         System.out.println("vnp_Amount (raw): " + vnp_Amount);
@@ -149,7 +158,7 @@ public class GuestPaymentDonationReturnServlet extends HttpServlet {
                     }
 
                 } else {
-                    // Payment failed
+                    // Thanh toán thất bại theo VNPay response -> đánh dấu failed và tạo record failed nếu cần
                     paymentStatus = "failed";
                     message = "Ủng hộ thất bại: " + getPaymentErrorMessage(vnp_ResponseCode) + " (Mã lỗi: " + vnp_ResponseCode + ")";
 
@@ -174,7 +183,7 @@ public class GuestPaymentDonationReturnServlet extends HttpServlet {
                     }
                 }
             } else {
-                // Invalid signature
+                // Chữ ký không hợp lệ -> nghi vấn gian lận, không tin tưởng nội dung callback
                 paymentStatus = "failed";
                 message = "Chữ ký thanh toán không hợp lệ. Giao dịch này có thể gian lận. Vui lòng liên hệ hỗ trợ.";
 
@@ -199,7 +208,7 @@ public class GuestPaymentDonationReturnServlet extends HttpServlet {
                 }
             }
 
-            // Send thank you email if donation was successful and email is available
+            // Nếu thanh toán thành công và có email donor, gọi hàm gửi email cảm ơn
             System.out.println("=== DEBUG: Checking email sending conditions ===");
             System.out.println("Payment status: " + paymentStatus);
             System.out.println("Donor email: " + (donorEmail != null ? donorEmail : "NULL"));
@@ -224,7 +233,8 @@ public class GuestPaymentDonationReturnServlet extends HttpServlet {
                                  ", Donor email: " + (donorEmail != null ? donorEmail : "NULL"));
             }
             
-            // GỬI THÔNG BÁO CHO ORGANIZATION KHI GUEST DONATE THÀNH CÔNG
+            // Nếu donation thành công, gửi thông báo (Notification) đến tổ chức chủ quản của event
+            // Thông báo này giúp organization biết có donation mới từ guest
             if ("success".equals(paymentStatus)) {
                 try {
                     if (eventId != null && donationDetail != null) {

@@ -16,6 +16,7 @@ import utils.DBContext;
  */
 public class VolunteerDonationDAO {
 
+    // Kết nối DB dùng cho các thao tác liên quan đến bảng `Donations` cho volunteer
     private Connection conn;
 
     public VolunteerDonationDAO() {
@@ -27,7 +28,10 @@ public class VolunteerDonationDAO {
         }
     }
 
-    // Tạo donation mới
+    // Tạo một bản ghi donation mới cho volunteer.
+    // - Ghi trạng thái ban đầu là 'pending' (chờ xác nhận/hoàn tất thanh toán).
+    // - Hàm này thường được gọi khi volunteer muốn đóng góp trực tiếp (không qua cổng thanh toán),
+    //   hoặc để khởi tạo donation trước khi cập nhật trạng thái sau khi xác nhận thanh toán.
     public boolean createDonation(int eventId, int volunteerId, double amount,
             String paymentMethod, String note) {
         String sql = "INSERT INTO Donations (event_id, volunteer_id, amount, donate_date, "

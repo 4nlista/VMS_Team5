@@ -11,8 +11,8 @@ import service.GuestDonationService;
 import java.io.IOException;
 
 /**
- * Servlet for displaying donation form for guests
- * URL: /donate_form.jsp (accessed directly as JSP)
+ * Servlet dùng để hiển thị form quyên góp cho khách (guest)
+ * URL: /donate_form.jsp (có thể truy cập trực tiếp bằng JSP)
  */
 @WebServlet(name = "GuestDonateFormServlet", urlPatterns = {"/GuestDonateFormServlet"})
 public class GuestDonateFormServlet extends HttpServlet {
@@ -28,7 +28,7 @@ public class GuestDonateFormServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Get eventId from URL parameter
+        // Lấy `eventId` từ tham số URL
         String eventIdParam = request.getParameter("eventId");
 
         if (eventIdParam == null || eventIdParam.isEmpty()) {
@@ -39,7 +39,7 @@ public class GuestDonateFormServlet extends HttpServlet {
         try {
             int eventId = Integer.parseInt(eventIdParam);
 
-            // Get event information using service
+            // Lấy thông tin event bằng service
             Event event = donationService.getEventById(eventId);
 
             if (event == null) {
@@ -48,11 +48,11 @@ public class GuestDonateFormServlet extends HttpServlet {
                 return;
             }
 
-            // Pass event information to JSP
+            // Đưa thông tin event vào request để JSP hiển thị
             request.setAttribute("event", event);
             request.setAttribute("eventId", eventId);
 
-            // Forward to donation form
+            // Chuyển tiếp đến trang form quyên góp
             request.getRequestDispatcher("/donate_form.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {

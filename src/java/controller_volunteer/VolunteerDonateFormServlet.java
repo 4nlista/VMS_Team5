@@ -27,19 +27,19 @@ public class VolunteerDonateFormServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Get eventId from URL
+        // Lấy `eventId` từ tham số URL
         String eventIdParam = request.getParameter("eventId");
         if (eventIdParam == null || eventIdParam.isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
 
-        // Get volunteerId from session
+        // Lấy `volunteerId` và `username` của volunteer từ session
         HttpSession session = request.getSession();
         Integer volunteerId = (Integer) session.getAttribute("accountId");
         String volunteerName = (String) session.getAttribute("username");
 
-        // Priority: Get from Account object if available
+        // Ưu tiên lấy thông tin từ đối tượng `Account` trong session nếu có
         Account account = (Account) session.getAttribute("account");
         if (account != null) {
             volunteerId = account.getId();
@@ -54,7 +54,7 @@ public class VolunteerDonateFormServlet extends HttpServlet {
         try {
             int eventId = Integer.parseInt(eventIdParam);
 
-            // Check if volunteer already donated
+                // Kiểm tra volunteer đã donate cho event này chưa
             boolean alreadyDonated = donationService.hasVolunteerDonated(volunteerId, eventId);
             if (alreadyDonated) {
                 session.setAttribute("errorMessage", "Bạn đã ủng hộ sự kiện này rồi!");
@@ -62,7 +62,7 @@ public class VolunteerDonateFormServlet extends HttpServlet {
                 return;
             }
 
-            // Get event information
+            // Lấy thông tin `Event` để hiển thị form donate
             Event event = donationService.getEventById(eventId);
 
             if (event == null) {
@@ -71,11 +71,11 @@ public class VolunteerDonateFormServlet extends HttpServlet {
                 return;
             }
 
-            // Get volunteer user information from User table
+            // Lấy thông tin chi tiết của volunteer từ bảng `User` (full_name, email, phone)
             UserDAO userDAO = new UserDAO();
             User volunteerUser = userDAO.getUserByAccountId(volunteerId);
             
-            // Use full_name from User table if available, otherwise use username from Account
+            // Nếu `full_name` tồn tại thì hiển thị; nếu không thì dùng username
             String displayName = volunteerName;
             String volunteerEmail = null;
             String volunteerPhone = null;
@@ -88,7 +88,7 @@ public class VolunteerDonateFormServlet extends HttpServlet {
                 volunteerPhone = volunteerUser.getPhone();
             }
 
-            // Pass information to JSP
+            // Đưa dữ liệu cần thiết vào request để JSP hiển thị form thanh toán
             request.setAttribute("event", event);
             request.setAttribute("volunteerId", volunteerId);
             request.setAttribute("volunteerName", displayName);

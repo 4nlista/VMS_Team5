@@ -5,7 +5,11 @@ import java.math.BigDecimal;
 import utils.DBContext;
 
 /**
- * DAO for Payment Donation operations (VNPay and other payment gateways)
+ * DAO quản lý các thao tác liên quan tới thanh toán (Payment_Donations) và Donors
+ * - Chịu trách nhiệm tạo/tra cứu donor (guest/volunteer)
+ * - Lưu bản ghi thanh toán tạm (pending) trước khi gateway trả về
+ * - Cập nhật chi tiết giao dịch khi callback từ gateway (VNPay)
+ * - Tạo bản ghi Donations khi giao dịch thành công
  */
 public class PaymentDonationDAO {
 
@@ -15,10 +19,9 @@ public class PaymentDonationDAO {
         this.connection = new DBContext().getConnection();
     }
 
-    /**
-     * Create or get donor record
-     * @return donor_id
-     */
+    // Tạo mới hoặc lấy lại bản ghi donor từ bảng `Donors`
+    // - Nếu là volunteer và đã tồn tại donor liên kết với account_id, sẽ trả về id đó
+    // - Nếu chưa tồn tại thì insert mới và trả về id sinh ra
     public int createOrGetDonor(String donorType, Integer accountId, String fullName,
                                  String phone, String email, boolean isAnonymous) throws SQLException {
         // For volunteers, check if donor already exists
@@ -57,9 +60,8 @@ public class PaymentDonationDAO {
         throw new SQLException("Failed to create donor record");
     }
 
-    /**
-     * Create payment donation record (VNPay or other gateway)
-     */
+    // Tạo bản ghi trong `Payment_Donations` để lưu thông tin giao dịch trước khi redirect sang gateway
+    // Trạng thái mặc định là 'pending'.
     public void createPaymentDonation(int donorId, int eventId, String paymentTxnRef, 
                                        long amount, String orderInfo, String paymentGateway) throws SQLException {
         String sql = "INSERT INTO Payment_Donations (donor_id, event_id, payment_txn_ref, payment_amount, " +
@@ -76,9 +78,8 @@ public class PaymentDonationDAO {
         }
     }
 
-    /**
-     * Update payment donation record with transaction details
-     */
+    // Cập nhật bản ghi Payment_Donations khi nhận callback từ gateway
+    // Cập nhật các trường: bank code, card type, pay date, response code, transaction status, secure hash, payment_status
     public void updatePaymentDonation(String paymentTxnRef, String bankCode, String cardType,
                                        String payDate, String responseCode, String transactionNo,
                                        String transactionStatus, String secureHash, 
@@ -102,9 +103,10 @@ public class PaymentDonationDAO {
         }
     }
 
-    /**
-     * Create donation record after successful payment
-     */
+    // Tạo bản ghi `Donations` sau khi xác nhận thanh toán thành công
+    // - Ghi donation vào bảng Donations cùng donor_id / volunteer_id nếu có
+    // - Cập nhật liên kết tới Payment_Donations (donation_id)
+    // - Ghi chú: tổng tiền (total_donation) của event được cập nhật bằng trigger DB (trg_UpdateDonationTotals)
     public int createDonation(int eventId, Integer volunteerId, int donorId, BigDecimal amount, String status,
                                String paymentMethod, String paymentTxnRef, String note) throws SQLException {
         
@@ -147,11 +149,10 @@ public class PaymentDonationDAO {
                 int donationId = rs.getInt(1);
                 System.out.println("Donation created with ID: " + donationId);
 
-                // Update Payment_Donations with donation_id
+                // Cập nhật Payment_Donations để liên kết payment với donation vừa tạo
                 updatePaymentDonationId(paymentTxnRef, donationId);
 
-                // Note: total_donation is automatically updated by trigger trg_UpdateDonationTotals
-                // when a donation is inserted/updated/deleted, so no manual update is needed here
+                // Ghi chú: total_donation của Events được cập nhật bởi trigger trong DB, không cần update thủ công
                 
                 // Get total_donation after trigger execution (wait a bit for trigger)
                 try {
@@ -175,9 +176,7 @@ public class PaymentDonationDAO {
         throw new SQLException("Failed to create donation record");
     }
     
-    /**
-     * Get current total_donation for an event
-     */
+    // Lấy giá trị total_donation hiện tại của event từ bảng Events
     private BigDecimal getEventTotalDonation(int eventId) throws SQLException {
         String sql = "SELECT total_donation FROM Events WHERE id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -190,9 +189,7 @@ public class PaymentDonationDAO {
         return BigDecimal.ZERO;
     }
     
-    /**
-     * Check all donations for an event (for debugging)
-     */
+    // Hàm debug: in tất cả donation của event, tính tổng các donation có status = 'success'
     private void checkAllDonationsForEvent(int eventId) throws SQLException {
         String sql = "SELECT id, amount, status, payment_txn_ref, donate_date " +
                      "FROM Donations WHERE event_id = ? ORDER BY donate_date DESC";
@@ -219,9 +216,7 @@ public class PaymentDonationDAO {
         }
     }
 
-    /**
-     * Link payment to donation
-     */
+    // Cập nhật trường donation_id trong Payment_Donations để liên kết transaction với donation
     private void updatePaymentDonationId(String paymentTxnRef, int donationId) throws SQLException {
         String sql = "UPDATE Payment_Donations SET donation_id = ? WHERE payment_txn_ref = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -231,9 +226,7 @@ public class PaymentDonationDAO {
         }
     }
 
-    /**
-     * Get payment donation details by transaction reference
-     */
+    // Lấy chi tiết bản ghi Payment_Donations kèm thông tin donor và event theo payment_txn_ref
     public PaymentDonationDetail getPaymentDonationByTxnRef(String paymentTxnRef) throws SQLException {
         String sql = "SELECT pd.*, d.id as donor_id, d.donor_type, d.account_id, d.full_name, " +
                      "d.phone, d.email, d.is_anonymous, e.title as event_title " +
@@ -268,9 +261,7 @@ public class PaymentDonationDAO {
         return null;
     }
 
-    /**
-     * Get donor email for notification
-     */
+    // Lấy email của donor để gửi thông báo (nếu donor là anonymous thì trả về null)
     public String getDonorEmail(int donorId) throws SQLException {
         String sql = "SELECT d.email, d.donor_type, d.account_id, u.email as volunteer_email, d.is_anonymous " +
                      "FROM Donors d " +
@@ -304,9 +295,7 @@ public class PaymentDonationDAO {
         return null;
     }
 
-    /**
-     * Inner class for payment donation details
-     */
+    // Lớp chứa chi tiết PaymentDonation để trả về cho servlet khi cần xử lý logic sau callback
     public static class PaymentDonationDetail {
         public int paymentId;
         public int donationId;
@@ -325,9 +314,7 @@ public class PaymentDonationDAO {
         public boolean isAnonymous;
     }
 
-    /**
-     * Close database connection
-     */
+    // Đóng kết nối DB
     public void close() {
         try {
             if (connection != null && !connection.isClosed()) {

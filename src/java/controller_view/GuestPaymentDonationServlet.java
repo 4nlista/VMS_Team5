@@ -38,6 +38,14 @@ public class GuestPaymentDonationServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
 
         try {
+            // --- Luồng chính của POST:
+            // 1) Đọc và validate input từ form donate (eventId, amount, guest info)
+            // 2) Tạo hoặc lấy donor record trong bảng Donors (guest hoặc anonymous)
+            // 3) Chuẩn bị tham số gửi tới VNPay (amount nhân 100, txnRef, returnUrl, create/expire date,...)
+            // 4) Tạo chữ ký (HMAC SHA512) và build paymentUrl
+            // 5) Lưu record vào Payment_Donations với trạng thái 'pending'
+            // 6) Redirect guest tới VNPay để thực hiện thanh toán
+
             // Lấy các tham số cơ bản từ form
             String eventIdStr = request.getParameter("eventId");
             String amountStr = request.getParameter("amount");
@@ -88,7 +96,8 @@ public class GuestPaymentDonationServlet extends HttpServlet {
                 email = guestEmail;
             }
 
-            // Tạo bản ghi donor cho guest trong bảng Donors
+            // Tạo (hoặc lấy) bản ghi donor cho guest trong bảng `Donors`
+            // Mục đích: lưu thông tin donor (guest hoặc ẩn danh) để liên kết khi callback thành công
             int donorId;
             try {
                 donorId = donationService.createOrGetDonor(fullName, phone, email, isAnonymous);
@@ -98,7 +107,8 @@ public class GuestPaymentDonationServlet extends HttpServlet {
                 return;
             }
 
-            // Các tham số cấu hình VNPay
+            // Chuẩn bị các tham số cấu hình/tiêu chuẩn gửi tới VNPay
+            // (version, command, orderType, amount đã chuyển đổi, txnRef, returnUrl...)
             String vnp_Version = "2.1.0";
             String vnp_Command = "pay";
             String orderType = "other";
@@ -111,7 +121,7 @@ public class GuestPaymentDonationServlet extends HttpServlet {
             String vnp_IpAddr = PaymentConfig.getIpAddress(request);
             String vnp_TmnCode = PaymentConfig.vnp_TmnCode;
 
-            // Xây dựng các tham số gửi đến VNPay
+            // Gom tất cả tham số vào map `vnp_Params` để mã hóa / tạo chữ ký
             Map<String, String> vnp_Params = new HashMap<>();
             vnp_Params.put("vnp_Version", vnp_Version);
             vnp_Params.put("vnp_Command", vnp_Command);
@@ -137,7 +147,8 @@ public class GuestPaymentDonationServlet extends HttpServlet {
             String vnp_ExpireDate = formatter.format(cld.getTime());
             vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);
 
-            // Xây dựng chuỗi query và tạo chữ ký bảo mật
+            // Tạo chuỗi dữ liệu để ký (URL-encode các giá trị), sắp xếp tên trường theo thứ tự, sau đó sinh HMAC SHA512
+            // Kết quả: `vnp_SecureHash` được đính kèm vào query string
             List<String> fieldNames = new ArrayList<>(vnp_Params.keySet());
             Collections.sort(fieldNames);
 
@@ -161,7 +172,8 @@ public class GuestPaymentDonationServlet extends HttpServlet {
             queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
             String paymentUrl = PaymentConfig.vnp_PayUrl + "?" + queryUrl;
 
-            // Lưu bản ghi thanh toán với trạng thái pending vào bảng Payment_Donations
+            // Lưu bản ghi giao dịch tạm vào `Payment_Donations` (payment status = 'pending')
+            // Mục đích: cung cấp reference để cập nhật khi nhận callback từ VNPay
             try {
                 donationService.createPaymentDonation(donorId, eventId, paymentTxnRef, amount, vnp_Params.get("vnp_OrderInfo"), "VNPay");
 
@@ -178,7 +190,7 @@ public class GuestPaymentDonationServlet extends HttpServlet {
                 return;
             }
 
-            // Chuyển hướng guest đến cổng thanh toán VNPay
+            // Redirect người dùng sang cổng VNPay (paymentUrl) để hoàn tất thanh toán
             response.sendRedirect(paymentUrl);
 
         } catch (NumberFormatException e) {

@@ -29,7 +29,8 @@ public class DonationDAO {
         }
     }
 
-    // truy vấn tổng tiền donation trong database
+    // Truy vấn tổng số tiền đã donate thành công (status = 'success').
+    // Dùng để hiển thị tổng tiền quyên góp trên giao diện hoặc báo cáo.
     public double getTotalDonationAmount() {
         double total = 0;
         String sql = "select SUM(amount) as total_success from Donations where status = 'success'";
@@ -44,7 +45,8 @@ public class DonationDAO {
     }
     
     
-    // dùng cho org xem đc tổng tiền donate của volunteer
+    // Lấy lịch sử donation của volunteer (dành cho tổ chức/quan sát viên).
+    // Trả về danh sách `Donation` kèm thông tin event, username và fullname của volunteer.
      public List<Donation> getDonationHistoryByVolunteerId(int volunteerId) {
         List<Donation> list = new ArrayList<>();
 
@@ -103,7 +105,8 @@ public class DonationDAO {
         return list;
     }
     
-    // Lấy chi tiết donation theo ID (bao gồm thông tin event và organization)
+    // Lấy chi tiết donation theo ID (bao gồm thông tin event, volunteer và organization).
+    // Thường dùng để hiện chi tiết sau khi thanh toán hoàn tất hoặc trong trang quản lý.
     public Donation getDonationDetailById(int donationId) {
         String sql = """
             SELECT 
