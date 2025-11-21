@@ -65,8 +65,8 @@
     <div class="donation-form-container">
         <div class="form-card">
             <div class="form-header">
-                <h2><i class="bi bi-heart-fill text-danger"></i> Make a Donation</h2>
-                <p>Support our volunteer events and make a difference!</p>
+                <h2><i class="bi bi-heart-fill text-danger"></i> Tài trợ sự kiện</h2>
+                <p>Hãy ủng hộ các sự kiện tình nguyện của chúng tôi và tạo nên sự khác biệt!</p>
             </div>
 
             <!-- Error Message -->
@@ -83,18 +83,18 @@
                 <!-- Event Information (if available) -->
                 <c:if test="${not empty event}">
                     <div class="mb-4">
-                        <label class="form-label fw-bold">Event</label>
+                        <label class="form-label fw-bold">Sự kiện</label>
                         <input type="text" class="form-control" value="${event.title}" readonly>
                     </div>
                 </c:if>
 
                 <!-- Donation Amount -->
                 <div class="mb-4">
-                    <label class="form-label fw-bold">Donation Amount (VND) <span class="text-danger">*</span></label>
+                    <label class="form-label fw-bold">Số tiền tài trợ (VND) <span class="text-danger">*</span></label>
                     <input type="number" class="form-control" name="amount" id="amount"
-                           min="10000" step="1000" placeholder="Enter amount (minimum 10,000 VND)" required>
+                           min="10000" step="1000" placeholder="Nhập số tiền..." required>
                     <div>
-                        <small class="text-muted" id="amount-note">Minimum donation: 10,000 VND</small>
+                        <small class="text-muted" id="amount-note">Số tiền tối thiểu: 10,000 VND</small>
                         <small class="text-danger fst-italic" id="amount-error"></small>
                     </div>
                 </div>
@@ -105,23 +105,23 @@
                         <input class="form-check-input" type="checkbox" id="isAnonymous" name="isAnonymous" 
                                value="true">
                         <label class="form-check-label fw-bold" for="isAnonymous">
-                            <i class="bi bi-incognito"></i> Donate Anonymously
+                            <i class="bi bi-incognito"></i> Tài trợ ẩn danh
                         </label>
                     </div>
-                    <small class="text-muted">Check this if you wish to remain anonymous</small>
+                    <small class="text-muted">Chọn mục này nếu bạn muốn ẩn danh</small>
                 </div>
 
                 <!-- Donor Information Section -->
                 <div class="donor-info-section" id="donorInfoSection">
-                    <h5 class="mb-3">Donor Information</h5>
+                    <h5 class="mb-3">Thông tin cá nhân</h5>
                     <p class="required-note">
-                        <i class="bi bi-info-circle"></i> Please provide at least ONE of the following: Name, Phone, or Email
+                        <i class="bi bi-info-circle"></i> Vui lòng để lại thông tin: Tên, Số điện thoại hoặc Email
                     </p>
 
                     <div class="mb-3">
-                        <label class="form-label">Full Name</label>
+                        <label class="form-label">Họ và tên</label>
                         <input type="text" class="form-control" name="guestName" id="guestName" 
-                               placeholder="Enter your name">
+                               placeholder="Tên của bạn...">
                         <div>
                             <small class="text-muted" id="guestName-note"></small>
                             <small class="text-danger fst-italic" id="guestName-error"></small>
@@ -129,21 +129,21 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Phone Number</label>
+                        <label class="form-label">Số điện thoại</label>
                         <input type="tel" class="form-control" name="guestPhone" id="guestPhone" 
-                               placeholder="0xxxxxxxxx (10-11 digits)" pattern="^0\d{9,10}$">
+                               placeholder="0xxxxxxxxx (10-11 chữ số)" pattern="^0\d{9,10}$">
                         <div>
-                            <small class="text-muted" id="guestPhone-note">Must be 10-11 digits and start with 0</small>
+                            <small class="text-muted" id="guestPhone-note">Bao gồm 10-11 chữ số và bắt đầu là 0</small>
                             <small class="text-danger fst-italic" id="guestPhone-error"></small>
                         </div>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Email Address</label>
+                        <label class="form-label">Email</label>
                         <input type="email" class="form-control" name="guestEmail" id="guestEmail" 
-                               placeholder="your.email@example.com">
+                               placeholder="Email của bạn...">
                         <div>
-                            <small class="text-muted" id="guestEmail-note">We'll send a thank you email if donation is successful</small>
+                            <small class="text-muted" id="guestEmail-note">Chúng tôi sẽ gửi email cảm ơn sau khi tài trợ thành công</small>
                             <small class="text-danger fst-italic" id="guestEmail-error"></small>
                         </div>
                     </div>
@@ -152,18 +152,18 @@
 
                 <!-- Note -->
                 <div class="mb-4">
-                    <label class="form-label">Message (Optional)</label>
+                    <label class="form-label">Ghi chú</label>
                     <textarea class="form-control" name="note" rows="3" 
-                              placeholder="Leave a message of support..."></textarea>
+                              placeholder="Để lại lời nhắn gửi..."></textarea>
                 </div>
 
                 <!-- Submit Buttons -->
                 <div class="d-flex gap-2">
                     <a href="<%= request.getContextPath() %>/GuessEventServlet" class="btn btn-secondary flex-fill">
-                        <i class="bi bi-arrow-left"></i> Cancel
+                        <i class="bi bi-arrow-left"></i> Hủy
                     </a>
                     <button type="submit" class="btn btn-success flex-fill" id="submitBtn">
-                        <i class="bi bi-credit-card"></i> Proceed to Payment
+                        <i class="bi bi-credit-card"></i> Thanh toán
                     </button>
                 </div>
             </form>
