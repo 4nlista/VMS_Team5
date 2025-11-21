@@ -131,7 +131,7 @@
                     <div class="mb-3">
                         <label class="form-label">Số điện thoại</label>
                         <input type="tel" class="form-control" name="guestPhone" id="guestPhone" 
-                               placeholder="0xxxxxxxxx (10-11 chữ số)" pattern="^0\d{9,10}$">
+                               placeholder="0xxxxxxxxx" pattern="^0\d{9,10}$">
                         <div>
                             <small class="text-muted" id="guestPhone-note">Bao gồm 10-11 chữ số và bắt đầu là 0</small>
                             <small class="text-danger fst-italic" id="guestPhone-error"></small>

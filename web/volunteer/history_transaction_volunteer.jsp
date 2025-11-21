@@ -39,15 +39,15 @@
                         <table class="table table-striped table-hover align-middle" style="table-layout: fixed; width: 100%;">
                             <thead class="table-dark">
                                 <tr>
-                                    <th scope="col" style="width:4%;">STT</th>
-                                    <th scope="col" style="width:12%;">Mã giao dịch</th>
+                                    <th scope="col" style="width:5%;">STT</th>
+                                    <th scope="col" style="width:15%;">Mã giao dịch</th>
                                     <th scope="col" style="width:18%;">Sự kiện</th>
                                     <th scope="col" style="width:10%;">Số tiền</th>
                                     <th scope="col" style="width:10%;">Phương thức</th>
-                                    <th scope="col" style="width:13%;">Ngày thanh toán</th>
-                                    <th scope="col" style="width:13%; word-wrap: break-word; overflow-wrap: break-word;">Ghi chú</th>
-                                    <th scope="col" style="width:8%;">Trạng thái</th>
-                                    <th scope="col" style="width:7%;">Chi tiết</th>
+                                    <th scope="col" style="width:15%;">Ngày thanh toán</th>
+<!--                                    <th scope="col" style="width:13%; word-wrap: break-word; overflow-wrap: break-word;">Ghi chú</th>-->
+                                    <th scope="col" style="width:12%;">Trạng thái</th>
+                                    <th scope="col" style="width:10%;">Chi tiết</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -92,10 +92,10 @@
                                                 <c:otherwise>-</c:otherwise>
                                             </c:choose>
                                         </td>
-                                        <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
+<!--                                        <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
                                             title="${d.note != null ? d.note : ''}">
                                             ${d.note != null ? d.note : ""}
-                                        </td>
+                                        </td>-->
                                         <td>
                                             <c:choose>
                                                 <c:when test="${d.status == 'success'}">
