@@ -146,10 +146,7 @@ public class VolunteerPaymentDonationReturnServlet extends HttpServlet {
                         dao.createDonation(eventId, volunteerId, donorId, amount, "success", "VNPay", vnp_TxnRef, note);
                         
                         // Lấy email của donor để gửi email cảm ơn
-                        System.out.println("=== DEBUG: Getting donor email ===");
-                        System.out.println("Donor ID: " + donorId);
                         donorEmail = dao.getDonorEmail(donorId);
-                        System.out.println("Donor email retrieved: " + (donorEmail != null ? donorEmail : "NULL"));
                         if (donorEmail == null || donorEmail.isEmpty()) {
                             System.out.println("WARNING: Donor email is null or empty, cannot send thank you email");
                         }
@@ -207,9 +204,6 @@ public class VolunteerPaymentDonationReturnServlet extends HttpServlet {
             }
 
             // Gửi email cảm ơn nếu donation thành công và có email
-            System.out.println("=== DEBUG: Checking email sending conditions ===");
-            System.out.println("Payment status: " + paymentStatus);
-            System.out.println("Donor email: " + (donorEmail != null ? donorEmail : "NULL"));
             
             if ("success".equals(paymentStatus) && donorEmail != null && !donorEmail.isEmpty()) {
                 try {
