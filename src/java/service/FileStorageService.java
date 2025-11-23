@@ -23,7 +23,7 @@ public class FileStorageService {
 	private static final String EVENT_SUBDIR = "events";
 	
 	// Giới hạn kích thước file
-	public static final long MAX_AVATAR_SIZE = 1L * 1024 * 1024; // 1MB cho avatar
+	public static final long MAX_AVATAR_SIZE = 2L * 1024 * 1024; // 1MB cho avatar
 	public static final long MAX_IMAGE_SIZE = 2L * 1024 * 1024; // 2MB cho news/event images
 
 	private String getBaseUploadPath() {

@@ -16,7 +16,7 @@ import model.ProfileVolunteer;
 
 public class VolunteerProfileService {
 
-    private static final long MAX_AVATAR_SIZE = 5L * 1024L * 1024L;
+    private static final long MAX_AVATAR_SIZE = 2L * 1024L * 1024L;
     private static final DateTimeFormatter DOB_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
 
     private final ProfileVolunteerDAO profileVolunteerDAO;

@@ -23,7 +23,7 @@ public class OrganizationProfileService {
 
     private OrganizationProfileDAO dao = new OrganizationProfileDAO();
     private FileStorageService storage = new FileStorageService();
-    private static final long MAX_AVATAR_BYTES = 5L * 1024 * 1024; // 5MB
+    private static final long MAX_AVATAR_BYTES = 2L * 1024 * 1024; // 2MB
 
     public Integer getLoggedInAccountId(HttpServletRequest request) {
         HttpSession session = request.getSession(false);

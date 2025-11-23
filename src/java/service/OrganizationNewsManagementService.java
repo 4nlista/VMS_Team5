@@ -47,7 +47,7 @@ public class OrganizationNewsManagementService {
                 errors.put("image", "Chỉ cho phép các định dạng ảnh JPG, PNG, GIF.");
             }
             if (filePart.getSize() > MAX_IMAGE_SIZE) {
-                errors.put("image", "Ảnh quá lớn. Kích thước tối đa 5MB.");
+                errors.put("image", "Ảnh quá lớn. Kích thước tối đa 2MB.");
             }
         }
 

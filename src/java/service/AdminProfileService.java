@@ -27,7 +27,7 @@ import model.User;
 public class AdminProfileService {
 
     private final AdminUserDAO userDAO = new AdminUserDAO();
-    private static final long MAX_AVATAR_BYTES = 5L * 1024 * 1024; // 5MB
+    private static final long MAX_AVATAR_BYTES = 2L * 1024 * 1024; // 2MB
 
     /**
      * Load admin default profile (usually id = 1).
