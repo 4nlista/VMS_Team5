@@ -19,20 +19,27 @@ public class AdminEventLockServlet extends HttpServlet {
         try {
             int eventId = Integer.parseInt(request.getParameter("id"));
             boolean success = service.lockEvent(eventId);
-            
+
             // Preserve filter parameters and page number
             String status = request.getParameter("status");
             String category = request.getParameter("category");
             String visibility = request.getParameter("visibility");
             String page = request.getParameter("page");
-            
+
             StringBuilder redirectUrl = new StringBuilder(request.getContextPath() + "/AdminEventsServlet?");
             if (success) {
                 redirectUrl.append("lockSuccess=true");
             } else {
-                redirectUrl.append("lockError=24h_restriction");
+                // Kiểm tra xem sự kiện đã kết thúc chưa
+                AdminEventsService checkService = new AdminEventsService();
+                dao.AdminEventsDAO dao = new dao.AdminEventsDAO();
+                if (dao.isEventActuallyEnded(eventId)) {
+                    redirectUrl.append("lockError=event_ended");
+                } else {
+                    redirectUrl.append("lockError=24h_restriction");
+                }
             }
-            
+
             if (status != null && !status.isEmpty()) {
                 redirectUrl.append("&status=").append(status);
             }
@@ -45,7 +52,7 @@ public class AdminEventLockServlet extends HttpServlet {
             if (page != null && !page.isEmpty()) {
                 redirectUrl.append("&page=").append(page);
             }
-            
+
             response.sendRedirect(redirectUrl.toString());
         } catch (Exception e) {
             e.printStackTrace();
@@ -53,4 +60,3 @@ public class AdminEventLockServlet extends HttpServlet {
         }
     }
 }
-

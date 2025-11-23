@@ -29,7 +29,7 @@ public class AdminEventsService {
         String category = request.getParameter("category");
         String visibility = request.getParameter("visibility");
         String pageParam = request.getParameter("page");
-        
+
         int page = 1;
         int pageSize = 5; // 5 items per page
         try {
@@ -97,33 +97,43 @@ public class AdminEventsService {
     }
 
     // Khóa sự kiện (set status = inactive)
-    // Không cho phép khóa sự kiện nếu còn < 24h trước khi diễn ra
+// Không cho phép khóa sự kiện nếu:
+// 1. Còn < 24h trước khi diễn ra
+// 2. Đã kết thúc thật sự (end_date < now và status = closed)
     public boolean lockEvent(int eventId) {
+        // Kiểm tra nếu sự kiện đã thực sự kết thúc
+        if (adminEventsDAO.isEventActuallyEnded(eventId)) {
+            return false; // Không cho phép khóa sự kiện đã kết thúc
+        }
+
         // Lấy start_date của sự kiện
         java.sql.Timestamp startDate = adminEventsDAO.getEventStartDate(eventId);
         if (startDate == null) {
             return false; // Sự kiện không tồn tại
         }
-        
+
         // Kiểm tra nếu sự kiện còn < 24h trước khi diễn ra
         Date now = new Date();
         Date eventStart = new Date(startDate.getTime());
-        
+
         // Tính số milliseconds trong 24 giờ
         long hours24InMillis = 24 * 60 * 60 * 1000L;
         long timeDifference = eventStart.getTime() - now.getTime();
-        
+
         // Nếu sự kiện còn < 24h trước khi diễn ra, không cho phép khóa
         if (timeDifference > 0 && timeDifference < hours24InMillis) {
             return false;
         }
-        
+
         return adminEventsDAO.updateEventStatus(eventId, "inactive");
     }
 
-    // Mở khóa sự kiện (set status = active)
     public boolean unlockEvent(int eventId) {
+        // Kiểm tra nếu sự kiện đã thực sự kết thúc
+        if (adminEventsDAO.isEventActuallyEnded(eventId)) {
+            return false; // Không cho phép mở khóa sự kiện đã kết thúc
+        }
+
         return adminEventsDAO.updateEventStatus(eventId, "active");
     }
 }
-
