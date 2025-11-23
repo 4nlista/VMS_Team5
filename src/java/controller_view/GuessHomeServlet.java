@@ -43,13 +43,13 @@ public class GuessHomeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        double totalDonationSystem = sumService.getTotalDonations();
+        int getTotalApply = sumService.getTotalApply();
         // lấy danh sách event đang hoạt động công khai (đã phân trang)
         List<Event> lastEvents = eventService.getLatestActivePublicEvents();
         List<Donation> topDonates = donateService.getTop3UserDonation();
         List<New> allNews = displayNewService.getTop3PostNews();
         
-        request.setAttribute("totalDonationSystem", totalDonationSystem);
+        request.setAttribute("getTotalApply", getTotalApply);
         request.setAttribute("lastEvents", eventService.getLatestActivePublicEvents());
         request.setAttribute("topDonates", donateService.getTop3UserDonation());
         request.setAttribute("allNews", displayNewService.getTop3PostNews());

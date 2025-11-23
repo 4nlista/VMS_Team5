@@ -45,7 +45,7 @@ public class VolunteerHomeServlet extends HttpServlet {
         List<Donation> topDonates = donateService.getTop3UserDonation();
         List<New> allNews = displayNewService.getAllPostNews();
 
-        double totalDonationSystem = sumService.getTotalDonations();
+        int getTotalApply = sumService.getTotalApply();
 
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("account") == null) {
@@ -75,7 +75,7 @@ public class VolunteerHomeServlet extends HttpServlet {
         session.setAttribute("username", acc.getUsername());
         // Forward đến JSP, không redirect
 
-        request.setAttribute("totalDonationSystem", totalDonationSystem);
+        request.setAttribute("getTotalApply", getTotalApply);
         request.setAttribute("lastEvents", eventService.getLatestActivePublicEvents());
         request.setAttribute("topDonates", donateService.getTop3UserDonation());
         request.setAttribute("allNews", displayNewService.getTop3PostNews());
