@@ -92,7 +92,7 @@
                                     <div class="col-12">
                                         <label class="form-label required">Chọn Ảnh Sự Kiện</label>
                                         <input type="file" class="form-control" name="eventImage" id="eventImage" accept="image/*" required>
-                                        <small class="text-muted">Kích thước tối đa: 2MB. Định dạng: JPG, PNG, GIF, WebP</small>
+                                        <small class="text-muted">Kích thước tối đa: 2MB.</small>
                                         <div id="fileError" class="text-danger mt-2" style="display: none;"></div>
                                     </div>
                                 </div>

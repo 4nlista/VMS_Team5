@@ -170,7 +170,7 @@
                                     <div class="mt-2" id="avatar-preview" style="display: none;">
                                         <img id="preview-img" src="" alt="Preview" style="max-width: 150px; max-height: 150px; border-radius: 8px;">
                                     </div>
-                                    <small class="text-muted">Chỉ chấp nhận file ảnh (JPG, PNG, etc.)</small>
+                                    <small class="text-muted">Chỉ chấp nhận file ảnh <= 2MB</small>
                                 </div>
 
                                 <div class="col-md-6">

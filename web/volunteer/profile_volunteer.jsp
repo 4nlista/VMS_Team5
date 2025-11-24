@@ -79,7 +79,7 @@
                                             <div class="mb-3 text-start">
                                                 <label class="form-label fw-semibold">Ảnh đại diện</label>
                                                 <input type="file" class="form-control${not empty errors['avatar'] ? ' is-invalid' : ''}" name="avatar" id="avatar" accept="image/*">
-                                                <small class="text-muted d-block mt-1">Hỗ trợ JPG, PNG, GIF (≤2MB).</small>
+                                                <small class="text-muted d-block mt-1">Hỗ trợ file ≤2MB.</small>
                                                 <c:if test="${not empty errors['avatar']}">
                                                     <div class="invalid-feedback d-block">${errors['avatar']}</div>
                                                 </c:if>

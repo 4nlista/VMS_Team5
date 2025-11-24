@@ -56,7 +56,7 @@
                                         </div>
                                         
                                         <input type="file" class="form-control" name="newsImage" id="newsImage" accept="image/*" required>
-                                        <small class="text-muted">Kích thước tối đa: 2MB. Định dạng: JPG, PNG, GIF, WebP</small>
+                                        <small class="text-muted">Kích thước tối đa: 2MB.</small>
                                         <div id="newsFileError" class="text-danger mt-2" style="display: none;"></div>
                                         
                                         <c:if test="${fieldErrors.image != null}">
