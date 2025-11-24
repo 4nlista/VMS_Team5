@@ -39,7 +39,7 @@ public class Donation {
     private String emailOrganization;
     private String phoneOrganization;
     
-    // Donor info (guest or volunteer via Donors table)
+    // Thông tin của donors 
     private Integer donorId;
     private String donorType;
     private String donorFullName;
