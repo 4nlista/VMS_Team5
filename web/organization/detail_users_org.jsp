@@ -52,7 +52,6 @@
                                         </c:choose>
 
                                         <div class="fw-semibold fs-5">${profile.fullName}</div>
-                                        <div class="mt-2 text-muted small">${profile.organizationName}</div>
                                     </div>
 
                                     <!-- RIGHT: Fields -->
