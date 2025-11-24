@@ -7,6 +7,14 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@page import="model.Account"%>
+<%
+    // acc is already declared in navbar.jsp, so we just get it here for eventServlet calculation
+    Account accForEvent = (Account) session.getAttribute("account");
+    String eventServlet = (accForEvent != null && "volunteer".equals(accForEvent.getRole())) 
+                          ? "VolunteerExploreEventServlet" 
+                          : "GuessEventServlet";
+%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -22,8 +30,13 @@
             <div class="container">
                 <div class="row no-gutters slider-text align-items-center justify-content-center" data-scrollax-parent="true">
                     <div class="col-md-7 ftco-animate text-center" data-scrollax=" properties: { translateY: '70%' }">
-                        <h1 class="mb-3 bread text-center" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">
-                            Danh sách đánh giá
+                        <p class="breadcrumbs" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">
+                            <span class="mr-2"><a href="<%= request.getContextPath() %>/VolunteerHomeServlet">Home</a></span> 
+                            <span class="mr-2"><a href="<%= request.getContextPath() %>/<%= eventServlet %>">Sự kiện</a></span> 
+                            <span>Bình luận</span>
+                        </p>
+                        <h1 class="mb-3 bread" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">
+                            Bình luận sự kiện: ${event.title}
                         </h1>
                     </div>
                 </div>
@@ -123,12 +136,12 @@
                                 <div class="mt-4 text-center">
                                     <c:choose>
                                         <c:when test="${not empty returnPage && returnPage > 1}">
-                                            <a href="${pageContext.request.contextPath}/GuessEventServlet?page=${returnPage}" class="btn btn-secondary">
+                                            <a href="${pageContext.request.contextPath}/<%= eventServlet %>?page=${returnPage}" class="btn btn-secondary">
                                                 <i class="icon-arrow-left"></i> Quay lại danh sách sự kiện
                                             </a>
                                         </c:when>
                                         <c:otherwise>
-                                            <a href="${pageContext.request.contextPath}/GuessEventServlet" class="btn btn-secondary">
+                                            <a href="${pageContext.request.contextPath}/<%= eventServlet %>" class="btn btn-secondary">
                                                 <i class="icon-arrow-left"></i> Quay lại danh sách sự kiện
                                             </a>
                                         </c:otherwise>

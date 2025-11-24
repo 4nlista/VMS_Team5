@@ -15,45 +15,23 @@
         <div class="page-content container-fluid mt-5 pt-5 pb-5" style="max-width: 1400px;">
             <h1 class="mb-4 text-center">Lịch sử thanh toán</h1>
 
-            <!-- Form lọc theo ngày -->
-            <div class="card mb-4 shadow-sm">
-                <div class="card-body">
-                    <form method="GET" action="<%= request.getContextPath() %>/VolunteerDonateServlet" class="row g-3 align-items-end">
-                        <div class="col-md-3">
-                            <label for="startDate" class="form-label fw-bold">
-                                <i class="bi bi-calendar-event"></i> Từ ngày
-                            </label>
-                            <input type="date" class="form-control" id="startDate" name="startDate" value="${startDate}">
-                        </div>
-                        <div class="col-md-3">
-                            <label for="endDate" class="form-label fw-bold">
-                                <i class="bi bi-calendar-check"></i> Đến ngày
-                            </label>
-                            <input type="date" class="form-control" id="endDate" name="endDate" value="${endDate}">
-                        </div>
-                        <div class="col-md-3">
-                            <label for="status" class="form-label fw-bold">
-                                <i class="bi bi-check-circle"></i> Trạng thái
-                            </label>
-                            <select class="form-select" id="status" name="status">
-                                <option value="all" ${statusFilter == 'all' ? 'selected' : ''}>Tất cả</option>
-                                <option value="success" ${statusFilter == 'success' ? 'selected' : ''}>Thành công</option>
-                                <option value="pending" ${statusFilter == 'pending' ? 'selected' : ''}>Đang xử lý</option>
-                                <option value="cancelled" ${statusFilter == 'cancelled' ? 'selected' : ''}>Bị từ chối</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <input type="hidden" name="page" value="1">
-                            <button type="submit" class="btn btn-primary me-2">
-                                <i class="bi bi-funnel"></i> Lọc
-                            </button>
-                            <a href="<%= request.getContextPath() %>/VolunteerDonateServlet" class="btn btn-secondary">
-                                <i class="bi bi-x-circle"></i> Xóa lọc
-                            </a>
-                        </div>
-                    </form>
+            <!-- Success Message -->
+            <c:if test="${not empty sessionScope.successMessage}">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="bi bi-check-circle-fill"></i> <strong>Thành công!</strong> ${sessionScope.successMessage}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-            </div>
+                <c:remove var="successMessage" scope="session"/>
+            </c:if>
+
+            <!-- Error Message -->
+            <c:if test="${not empty sessionScope.errorMessage}">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill"></i> <strong>Lỗi!</strong> ${sessionScope.errorMessage}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <c:remove var="errorMessage" scope="session"/>
+            </c:if>
 
             <div class="card shadow-sm border">
                 <div class="card-body">
@@ -62,32 +40,50 @@
                             <thead class="table-dark">
                                 <tr>
                                     <th scope="col" style="width:5%;">STT</th>
-                                    <!--                                    <th scope="col" style="width:13%;">Mã QR</th>-->
-                                    <th scope="col" style="width:25%;">Sự kiện</th>
+                                    <th scope="col" style="width:15%;">Mã giao dịch</th>
+                                    <th scope="col" style="width:18%;">Sự kiện</th>
                                     <th scope="col" style="width:10%;">Số tiền</th>
-                                    <th scope="col" style="width:15%;">Phương thức</th>
+                                    <th scope="col" style="width:10%;">Phương thức</th>
                                     <th scope="col" style="width:15%;">Ngày thanh toán</th>
-                                    <!--                                    <th scope="col" style="width:15%; word-wrap: break-word; overflow-wrap: break-word;">Ghi chú</th>-->
-                                    <th scope="col" style="width:15%;">Trạng thái</th>
-                                    <!--tôi thêm button này nhé -->
-                                    <th scope="col" style="width:15%;">Xem chi tiết</th>
+<!--                                    <th scope="col" style="width:13%; word-wrap: break-word; overflow-wrap: break-word;">Ghi chú</th>-->
+                                    <th scope="col" style="width:12%;">Trạng thái</th>
+                                    <th scope="col" style="width:10%;">Chi tiết</th>
                                 </tr>
                             </thead>
                             <tbody>
 
                                 <c:if test="${empty volunteerDonations}">
                                     <tr>
-                                        <td colspan="8" class="text-center">Chưa có giao dịch nào.</td>
+                                        <td colspan="9" class="text-center">Chưa có giao dịch nào.</td>
                                     </tr>
                                 </c:if>
 
                                 <c:forEach var="d" items="${volunteerDonations}" varStatus="status">
                                     <tr>
                                         <td>${status.index + 1 + (currentPage - 1) * pageSize}</td>
-<!--                                        <td>${d.qrCode != null ? d.qrCode : "-"}</td>-->
+                                        <td>
+                                            <c:choose>
+                                                <c:when test="${d.paymentTxnRef != null && !d.paymentTxnRef.isEmpty()}">
+                                                    <small>${d.paymentTxnRef}</small>
+                                                </c:when>
+                                                <c:otherwise>-</c:otherwise>
+                                            </c:choose>
+                                        </td>
                                         <td>${d.eventTitle != null ? d.eventTitle : "-"}</td>
-                                        <td><fmt:formatNumber value="${d.amount}" pattern="#,###" /> </td>
-                                        <td>${d.paymentMethod != null ? d.paymentMethod : "-"}</td>
+                                        <td>
+                                            <fmt:formatNumber value="${d.amount}" type="number" groupingUsed="true"/> VNĐ
+                                        </td>
+                                        <td>
+                                            <c:choose>
+                                                <c:when test="${d.paymentMethod == 'VNPay'}">
+                                                    <i class="bi bi-credit-card text-primary"></i> VNPay
+                                                </c:when>
+                                                <c:when test="${d.paymentMethod == 'QR'}">
+                                                    <i class="bi bi-qr-code"></i> QR Code
+                                                </c:when>
+                                                <c:otherwise>${d.paymentMethod != null ? d.paymentMethod : "-"}</c:otherwise>
+                                            </c:choose>
+                                        </td>
                                         <td>
                                             <c:choose>
                                                 <c:when test="${d.donateDate != null}">
@@ -96,27 +92,53 @@
                                                 <c:otherwise>-</c:otherwise>
                                             </c:choose>
                                         </td>
-<!--                                        <td>${d.note != null ? d.note : ""}</td>-->
+<!--                                        <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
+                                            title="${d.note != null ? d.note : ''}">
+                                            ${d.note != null ? d.note : ""}
+                                        </td>-->
                                         <td>
                                             <c:choose>
                                                 <c:when test="${d.status == 'success'}">
-                                                    <span class="badge bg-success">Thành công</span>
+                                                    <span class="badge bg-success text-white fw-bold">
+                                                        <i class="bi bi-check-circle"></i> Thành công
+                                                    </span>
+                                                </c:when>
+                                                <c:when test="${d.status == 'failed'}">
+                                                    <span class="badge bg-danger text-white fw-bold">
+                                                        <i class="bi bi-x-circle"></i> Thất bại
+                                                    </span>
                                                 </c:when>
                                                 <c:when test="${d.status == 'pending'}">
-                                                    <span class="badge bg-warning text-dark">Đang xử lý</span>
+                                                    <span class="badge bg-warning text-white fw-bold">
+                                                        <i class="bi bi-clock"></i> Đang xử lý
+                                                    </span>
                                                 </c:when>
                                                 <c:when test="${d.status == 'cancelled'}">
-                                                    <span class="badge bg-danger">Bị từ chối</span>
+                                                    <span class="badge bg-secondary text-white fw-bold">
+                                                        <i class="bi bi-slash-circle"></i> Đã hủy
+                                                    </span>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <span class="badge bg-secondary">${d.status}</span>
+                                                    <span class="badge bg-secondary text-white fw-bold">${d.status}</span>
                                                 </c:otherwise>
                                             </c:choose>
                                         </td>
                                         <td>
-                                            <a href="${pageContext.request.contextPath}/VolunteerDetailPaymentServlet?donationId=${d.id}" 
-                                               class="btn btn-sm btn-info">
-                                                <i class="bi bi-eye"></i> Xem chi tiết
+                                            <c:url var="detailUrl" value="/VolunteerDonationDetailServlet">
+                                                <c:param name="donationId" value="${d.id}"/>
+                                                <c:param name="page" value="${currentPage}"/>
+                                                <c:if test="${not empty startDate}">
+                                                    <c:param name="startDate" value="${startDate}"/>
+                                                </c:if>
+                                                <c:if test="${not empty endDate}">
+                                                    <c:param name="endDate" value="${endDate}"/>
+                                                </c:if>
+                                                <c:if test="${not empty statusFilter}">
+                                                    <c:param name="status" value="${statusFilter}"/>
+                                                </c:if>
+                                            </c:url>
+                                            <a href="${detailUrl}" class="btn btn-sm btn-info text-white fw-bold">
+                                                <i class="bi bi-eye text-white"></i> Chi tiết
                                             </a>
                                         </td>
                                     </tr>

@@ -87,4 +87,31 @@ public class UserDAO {
         }
         return false;
     }
+
+    // 4. Get user by account_id
+    public User getUserByAccountId(int accountId) {
+        String sql = "SELECT * FROM Users WHERE account_id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, accountId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setAccount_id(rs.getInt("account_id"));
+                user.setFull_name(rs.getString("full_name"));
+                user.setDob(rs.getDate("dob"));
+                user.setGender(rs.getString("gender"));
+                user.setPhone(rs.getString("phone"));
+                user.setEmail(rs.getString("email"));
+                user.setAddress(rs.getString("address"));
+                user.setAvatar(rs.getString("avatar"));
+                user.setJob_title(rs.getString("job_title"));
+                user.setBio(rs.getString("bio"));
+                return user;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

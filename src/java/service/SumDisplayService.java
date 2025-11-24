@@ -16,4 +16,8 @@ public class SumDisplayService {
     public double getTotalDonations() {
         return donationDAO.getTotalDonationAmount();
     }
+    
+    public int getTotalApply() {
+         return donationDAO.getTotalApply();
+    }
 }

@@ -88,7 +88,7 @@ public class OrganizationApplyDAO {
             e.printStackTrace();
         }
     }
-    
+
     // Đếm số volunteer đã được approved cho event (dùng để check slot)
     public int countApprovedVolunteers(int eventId) {
         String sql = "SELECT COUNT(*) FROM Event_Volunteers WHERE event_id = ? AND status = 'approved'";
@@ -161,8 +161,8 @@ public class OrganizationApplyDAO {
         }
         return list;
     }
-    
-    // Tự động chuyển status "pending" → "rejected" nếu không duyệt trong 24h trước sự kiện
+
+    // Tự động chuyển status "pending" → "rejected" nếu không duyệt trong 24h trước sự kiện, lấy chuẩn đến từng minutes
     public int autoRejectPendingApplications(int eventId) {
         String sql = """
             UPDATE Event_Volunteers 
@@ -176,13 +176,12 @@ public class OrganizationApplyDAO {
               AND EXISTS (
                   SELECT 1 FROM Events 
                   WHERE id = ? 
-                    AND DATEDIFF(HOUR, GETDATE(), start_date) <= 24
-                    AND start_date > GETDATE()
+                    AND DATEDIFF(MINUTE, GETDATE(), start_date) > 0
+                    AND DATEDIFF(MINUTE, GETDATE(), start_date) < 24
               )
         """;
-        
-        try (Connection con = DBContext.getConnection(); 
-             PreparedStatement ps = con.prepareStatement(sql)) {
+
+        try (Connection con = DBContext.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, eventId);
             ps.setInt(2, eventId);
             return ps.executeUpdate(); // Trả về số row bị ảnh hưởng
@@ -191,32 +190,67 @@ public class OrganizationApplyDAO {
             return 0;
         }
     }
-    
-    // Tự động reject đơn cho TẤT CẢ events đang trong khoảng 24h trước diễn ra
-    public int autoRejectAllPendingApplications() {
-        String sql = """
-            UPDATE Event_Volunteers 
-            SET status = 'rejected', 
-                note = CASE 
-                    WHEN note IS NULL OR note = '' THEN N'Tự động từ chối do không được xử lý trong 24h trước sự kiện'
-                    ELSE note + N' (Tự động từ chối)'
-                END
-            WHERE status = 'pending'
-              AND EXISTS (
-                  SELECT 1 FROM Events 
-                  WHERE id = Event_Volunteers.event_id 
-                    AND DATEDIFF(HOUR, GETDATE(), start_date) <= 24
-                    AND start_date > GETDATE()
-              )
+
+    // Tự động reject đơn cho TẤT CẢ events đang trong khoảng 24h trước diễn ra , lấy chuẩn từng minutes
+    // Trả về danh sách các volunteer bị reject để gửi thông báo
+    public List<EventVolunteer> autoRejectAllPendingApplications() {
+        List<EventVolunteer> rejectedVolunteers = new ArrayList<>();
+        
+        // Bước 1: Lấy danh sách pending volunteers trước khi reject
+        String selectSql = """
+        SELECT ev.id, ev.event_id, ev.volunteer_id, ev.apply_date, ev.status, ev.note,
+               e.title AS event_title, e.organization_id
+        FROM Event_Volunteers ev
+        JOIN Events e ON ev.event_id = e.id
+        WHERE ev.status = 'pending'
+          AND DATEDIFF(MINUTE, GETDATE(), e.start_date) BETWEEN 1 AND 1440
         """;
         
         try (Connection con = DBContext.getConnection(); 
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            return ps.executeUpdate();
+             PreparedStatement ps = con.prepareStatement(selectSql);
+             ResultSet rs = ps.executeQuery()) {
+            
+            while (rs.next()) {
+                EventVolunteer ev = new EventVolunteer();
+                ev.setId(rs.getInt("id"));
+                ev.setEventId(rs.getInt("event_id"));
+                ev.setVolunteerId(rs.getInt("volunteer_id"));
+                ev.setApplyDate(rs.getTimestamp("apply_date"));
+                ev.setStatus(rs.getString("status"));
+                ev.setNote(rs.getString("note"));
+                // Thêm thông tin để gửi notification
+                ev.setEventTitle(rs.getString("event_title"));
+                ev.setOrganizationId(rs.getInt("organization_id"));
+                rejectedVolunteers.add(ev);
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            return 0;
         }
+        
+        // Bước 2: Update status thành rejected
+        String updateSql = """
+        UPDATE Event_Volunteers
+        SET status = 'rejected',
+            note = CASE
+                WHEN note IS NULL OR note = '' THEN N'Tự động từ chối do còn dưới 24h trước sự kiện'
+                ELSE note + N' (Tự động từ chối)'
+            END
+        WHERE status = 'pending'
+          AND EXISTS (
+              SELECT 1 FROM Events
+              WHERE id = Event_Volunteers.event_id
+                AND DATEDIFF(MINUTE, GETDATE(), start_date) BETWEEN 1 AND 1440
+          )
+        """;
+
+        try (Connection con = DBContext.getConnection(); 
+             PreparedStatement ps = con.prepareStatement(updateSql)) {
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return rejectedVolunteers;
     }
 
 }

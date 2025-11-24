@@ -7,6 +7,14 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@page import="model.Account"%>
+<%
+    // acc is already declared in navbar.jsp, so we just get it here for eventServlet calculation
+    Account accForEvent = (Account) session.getAttribute("account");
+    String eventServlet = (accForEvent != null && "volunteer".equals(accForEvent.getRole())) 
+                          ? "VolunteerExploreEventServlet" 
+                          : "GuessEventServlet";
+%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -110,8 +118,8 @@
                                         <label class="form-label fw-bold mb-1">Trạng thái Donate</label>
                                         <select name="donateFilter" class="form-select">
                                             <option value="all" ${donateFilter == 'all' ? 'selected' : ''}>Tất cả</option>
-                                            <option value="donated" ${donateFilter == 'donated' ? 'selected' : ''}>Đã donate</option>
-                                            <option value="not_donated" ${donateFilter == 'not_donated' ? 'selected' : ''}>Chưa donate</option>
+                                            <option value="donated" ${donateFilter == 'donated' ? 'selected' : ''}>Đã ủng hộ</option>
+                                            <option value="not_donated" ${donateFilter == 'not_donated' ? 'selected' : ''}>Chưa ủng hộ</option>
                                         </select>
                                     </div>
                                 </div>
@@ -141,7 +149,7 @@
                     <c:forEach var="e" items="${events}">
                         <div class="col-md-4 d-flex align-items-stretch mb-5">
                             <div class="blog-entry align-self-stretch h-100 w-100">
-                                <a class="block-20" style="background-image: url('${pageContext.request.contextPath}/UploadImagesServlet?file=${e.images}');"></a>                           
+                                <a class="block-20" style="background-image: url('${pageContext.request.contextPath}/EventImage?file=${e.images}');"></a>                           
                                 <div class="text p-4 d-block h-100">
                                     <div class="meta d-flex justify-content-end">
                                         <a href="${pageContext.request.contextPath}/ViewFeedbackEventsServlet?eventId=${e.id}&page=${currentPage}" class="meta-chat">
@@ -194,7 +202,7 @@
                                                 <c:otherwise>
                                                     <c:if test="${e.rejectedCount > 0}">
                                                         <small class="text-warning d-block">
-                                                            ⚠️ Đơn trước bị từ chối (${e.rejectedCount}/3)
+                                                            ️ Đơn trước bị từ chối (${e.rejectedCount}/3)
                                                         </small>
                                                     </c:if>
                                                     <a href="${pageContext.request.contextPath}/VolunteerApplyEventServlet?eventId=${e.id}">
@@ -209,13 +217,21 @@
                                             <c:choose>
                                                 <c:when test="${e.hasDonated}">
                                                     <span class="text-success">
-                                                        <i class="icon-check"></i> Đã donate
+                                                        <i class="icon-check"></i> Đã ủng hộ
                                                     </span>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <a href="${pageContext.request.contextPath}/VolunteerPaymentServlet?eventId=${e.id}">
-                                                        Ủng hộ <i class="ion-ios-add-circle"></i>
-                                                    </a>
+                                                    <% if (acc != null && "volunteer".equals(acc.getRole())) { %>
+                                                    <!-- Volunteer: dùng VolunteerDonateFormServlet -->
+                                                    <a href="${pageContext.request.contextPath}/VolunteerDonateFormServlet?eventId=${e.id}">
+                                                            Ủng hộ <i class="ion-ios-add-circle"></i>
+                                                        </a>
+                                                    <% } else { %>
+                                                        <!-- Guest: dùng GuestDonateFormServlet -->
+                                                        <a href="${pageContext.request.contextPath}/GuestDonateFormServlet?eventId=${e.id}">
+                                                            Ủng hộ <i class="ion-ios-add-circle"></i>
+                                                        </a>
+                                                    <% } %>
                                                 </c:otherwise>
                                             </c:choose>
                                         </p>
@@ -230,47 +246,37 @@
                 <!-- Phân trang -->
                 <div class="row mt-5">
                     <div class="col text-center">
-                        <!-- Hiển thị thông tin -->
-                        <p class="text-muted mb-3">
-                            Trang ${currentPage} / ${totalPages} 
-                            <c:if test="${not empty events}">
-                                (Tổng: ${totalPages * 6 > 6 ? (totalPages - 1) * 6 : 0} - ${currentPage * 6 > (totalPages * 6) ? totalPages * 6 : currentPage * 6} sự kiện)
-                            </c:if>
-                        </p>
+                        <div class="block-27">
+                            <ul>
+                                <!-- Nút Previous -->
+                                <c:if test="${currentPage > 1}">
+                                    <li><a href="<%= eventServlet %>?page=${currentPage - 1}">&lt;</a></li>
+                                    </c:if>
+                                    <c:if test="${currentPage == 1}">
+                                    <li class="disabled"><span>&lt;</span></li>
+                                    </c:if>
 
-                        <c:if test="${totalPages > 1}">
-                            <div class="block-27">
-                                <ul>
-                                    <!-- Nút Previous -->
-                                    <c:if test="${currentPage > 1}">
-                                        <li><a href="GuessEventServlet?page=${currentPage - 1}&category=${selectedCategory}&startDate=${startDate}&endDate=${endDate}&sort=${sortOrder}#filter-section">&lt;</a></li>
-                                        </c:if>
-                                        <c:if test="${currentPage == 1}">
-                                        <li class="disabled"><span>&lt;</span></li>
-                                        </c:if>
+                                <!-- Danh sách số trang -->
+                                <c:forEach begin="1" end="${totalPages}" var="i">
+                                    <c:choose>
+                                        <c:when test="${i == currentPage}">
+                                            <li class="active"><span>${i}</span></li>
+                                                </c:when>
+                                                <c:otherwise>
+                                            <li><a href="<%= eventServlet %>?page=${i}">${i}</a></li>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </c:forEach>
 
-                                    <!-- Danh sách số trang -->
-                                    <c:forEach begin="1" end="${totalPages}" var="i">
-                                        <c:choose>
-                                            <c:when test="${i == currentPage}">
-                                                <li class="active"><span>${i}</span></li>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                <li><a href="GuessEventServlet?page=${i}&category=${selectedCategory}&startDate=${startDate}&endDate=${endDate}&sort=${sortOrder}#filter-section">${i}</a></li>
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </c:forEach>
-
-                                    <!-- Nút Next -->
-                                    <c:if test="${currentPage < totalPages}">
-                                        <li><a href="GuessEventServlet?page=${currentPage + 1}&category=${selectedCategory}&startDate=${startDate}&endDate=${endDate}&sort=${sortOrder}#filter-section">&gt;</a></li>
-                                        </c:if>
-                                        <c:if test="${currentPage == totalPages}">
-                                        <li class="disabled"><span>&gt;</span></li>
-                                        </c:if>
-                                </ul>
-                            </div>
-                        </c:if>
+                                <!-- Nút Next -->
+                                <c:if test="${currentPage < totalPages}">
+                                    <li><a href="<%= eventServlet %>?page=${currentPage + 1}">&gt;</a></li>
+                                    </c:if>
+                                    <c:if test="${currentPage == totalPages}">
+                                    <li class="disabled"><span>&gt;</span></li>
+                                    </c:if>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>

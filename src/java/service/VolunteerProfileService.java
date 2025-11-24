@@ -16,7 +16,7 @@ import model.ProfileVolunteer;
 
 public class VolunteerProfileService {
 
-    private static final long MAX_AVATAR_SIZE = 5L * 1024L * 1024L;
+    private static final long MAX_AVATAR_SIZE = 2L * 1024L * 1024L;
     private static final DateTimeFormatter DOB_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
 
     private final ProfileVolunteerDAO profileVolunteerDAO;
@@ -108,39 +108,28 @@ public class VolunteerProfileService {
             }
         }
 
+        // Upload avatar using UnifiedImageUploadService
         String avatarPath = existingProfile.getImages();
-        Part avatarPart = null;
-        try {
-            avatarPart = request.getPart("avatar");
-        } catch (IllegalStateException | IOException | ServletException ex) {
-            errors.put("avatar", "Không thể tải ảnh đại diện. Vui lòng thử lại.");
-        }
+        UnifiedImageUploadService uploadService = new UnifiedImageUploadService();
+        Map<String, Object> uploadResult = uploadService.uploadAvatar(request, existingProfile.getId(), "avatar");
 
-        if (avatarPart != null && avatarPart.getSize() > 0) {
-            if (avatarPart.getSize() > MAX_AVATAR_SIZE) {
-                errors.put("avatar", "Ảnh đại diện phải nhỏ hơn hoặc bằng 5MB.");
-            }
-            String contentType = avatarPart.getContentType();
-            if (contentType == null || !contentType.startsWith("image/")) {
-                errors.put("avatar", "Tệp tải lên phải là hình ảnh.");
-            }
-            if (!errors.containsKey("avatar")) {
-                try (InputStream inputStream = avatarPart.getInputStream()) {
-                    String submittedFilename = avatarPart.getSubmittedFileName();
-                    String savedFile = fileStorageService.saveAvatar(inputStream, submittedFilename, existingProfile.getId());
-                    if (savedFile == null) {
-                        errors.put("avatar", "Lưu ảnh đại diện thất bại. Vui lòng thử lại.");
-                    } else {
-                        avatarPath = savedFile;
-                    }
-                } catch (IOException ex) {
-                    errors.put("avatar", "Đã xảy ra lỗi khi xử lý ảnh.");
+        if ((boolean) uploadResult.get("success")) {
+            avatarPath = (String) uploadResult.get("fileName");
+        } else {
+            // Check if there was an upload attempt (file selected)
+            try {
+                Part avatarPart = request.getPart("avatar");
+                if (avatarPart != null && avatarPart.getSize() > 0) {
+                    // Upload was attempted but failed
+                    errors.put("avatar", (String) uploadResult.get("error"));
                 }
+                // If no file selected, keep existing avatar
+            } catch (Exception ex) {
+                // Ignore - no file part
             }
         }
 
-        if ((avatarPath == null || avatarPath.trim().isEmpty())
-                && (avatarPart == null || avatarPart.getSize() == 0)) {
+        if (avatarPath == null || avatarPath.trim().isEmpty()) {
             errors.put("avatar", "Ảnh đại diện không được để trống.");
         }
 

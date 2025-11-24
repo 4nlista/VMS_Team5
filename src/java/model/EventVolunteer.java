@@ -12,6 +12,7 @@ public class EventVolunteer {
     private String eventTitle;       // Tên sự kiện
     private String categoryName;     // Tên danh mục
     private String organizationName; // Tên tổ chức
+    private int organizationId;      // ID tổ chức (để gửi notification)
     private int volunteerId;         // ID volunteer
     private String volunteerName;    // Tên volunteer
     private Date applyDate;          // Ngày đăng ký
@@ -227,6 +228,14 @@ public class EventVolunteer {
 
     public void setOrgEmail(String orgEmail) {
         this.orgEmail = orgEmail;
+    }
+
+    public int getOrganizationId() {
+        return organizationId;
+    }
+
+    public void setOrganizationId(int organizationId) {
+        this.organizationId = organizationId;
     }
 
 }

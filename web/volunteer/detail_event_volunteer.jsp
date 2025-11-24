@@ -115,7 +115,7 @@
                                                     <c:choose>
                                                         <c:when test="${ev.status eq 'approved'}">Tham gia</c:when>
                                                         <c:when test="${ev.status eq 'pending'}">Đang xử lý</c:when>
-                                                        <c:otherwise>Hủy / Không hợp lệ</c:otherwise>
+                                                        <c:otherwise>Hủy</c:otherwise>
                                                     </c:choose>
                                                 </span>
                                             </li>

@@ -20,7 +20,7 @@
             <c:forEach var="e" items="${lastEvents}">
                 <div class="col-md-4 d-flex align-items-stretch">
                     <div class="blog-entry align-self-stretch h-100 w-100">
-                        <a class="block-20" style="background-image: url('${pageContext.request.contextPath}/UploadImagesServlet?file=${e.images}');"></a>
+                        <a class="block-20" style="background-image: url('${pageContext.request.contextPath}/EventImage?file=${e.images}');"></a>
                         <div class="text p-4 d-block h-100">
                             <div class="meta d-flex justify-content-end">
                                 <a href="${pageContext.request.contextPath}/ViewFeedbackEventsServlet?eventId=${e.id}" class="meta-chat">
@@ -33,8 +33,12 @@
                             <h3 class="heading mb-1"><a href="${pageContext.request.contextPath}/VolunteerApplyEventServlet?eventId=${e.id}">${e.title}</a></h3>
                             <p class="text-muted mb-1"><i>Loại sự kiện: ${e.categoryName}</i></p>
                             <p class="time-loc">
-                                <span class="mr-2"><i class="icon-clock-o"></i> Bắt đầu: ${e.startDate}</span><br/>
-                                <span class="mr-2"><i class="icon-clock-o"></i> Kết thúc: ${e.endDate}</span><br/>
+                                <span class="mr-2"><i class="icon-clock-o"></i> Bắt đầu: 
+                                    <fmt:formatDate value="${e.startDate}" pattern="dd/MM/yyyy HH:mm" />
+                                </span><br/>
+                                <span class="mr-2"><i class="icon-clock-o"></i> Kết thúc: 
+                                    <fmt:formatDate value="${e.endDate}" pattern="dd/MM/yyyy HH:mm" />
+                                </span><br/>
                                 <span><i class="icon-map-o"></i> Địa điểm : ${e.location}</span>
                             </p>
                             <p>${e.description}</p>

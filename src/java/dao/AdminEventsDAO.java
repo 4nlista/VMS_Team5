@@ -56,25 +56,24 @@ public class AdminEventsDAO {
             LEFT JOIN Categories c ON e.category_id = c.category_id
             ORDER BY e.id DESC
             """;
-        try (PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 Event e = new Event(
-                    rs.getInt("id"),
-                    rs.getString("images"),
-                    rs.getString("title"),
-                    rs.getString("description"),
-                    rs.getTimestamp("start_date"),
-                    rs.getTimestamp("end_date"),
-                    rs.getString("location"),
-                    rs.getInt("needed_volunteers"),
-                    rs.getString("status"),
-                    rs.getString("visibility"),
-                    rs.getInt("organization_id"),
-                    rs.getInt("category_id"),
-                    rs.getDouble("total_donation"),
-                    rs.getString("organization_name"),
-                    rs.getString("category_name")
+                        rs.getInt("id"),
+                        rs.getString("images"),
+                        rs.getString("title"),
+                        rs.getString("description"),
+                        rs.getTimestamp("start_date"),
+                        rs.getTimestamp("end_date"),
+                        rs.getString("location"),
+                        rs.getInt("needed_volunteers"),
+                        rs.getString("status"),
+                        rs.getString("visibility"),
+                        rs.getInt("organization_id"),
+                        rs.getInt("category_id"),
+                        rs.getDouble("total_donation"),
+                        rs.getString("organization_name"),
+                        rs.getString("category_name")
                 );
                 list.add(e);
             }
@@ -121,7 +120,7 @@ public class AdminEventsDAO {
         if (visibility != null && !visibility.isEmpty() && !"Tất cả".equals(visibility)) {
             sql += " AND e.visibility = ?";
         }
-        
+
         sql += " ORDER BY e.id DESC";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -139,21 +138,21 @@ public class AdminEventsDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Event e = new Event(
-                        rs.getInt("id"),
-                        rs.getString("images"),
-                        rs.getString("title"),
-                        rs.getString("description"),
-                        rs.getTimestamp("start_date"),
-                        rs.getTimestamp("end_date"),
-                        rs.getString("location"),
-                        rs.getInt("needed_volunteers"),
-                        rs.getString("status"),
-                        rs.getString("visibility"),
-                        rs.getInt("organization_id"),
-                        rs.getInt("category_id"),
-                        rs.getDouble("total_donation"),
-                        rs.getString("organization_name"),
-                        rs.getString("category_name")
+                            rs.getInt("id"),
+                            rs.getString("images"),
+                            rs.getString("title"),
+                            rs.getString("description"),
+                            rs.getTimestamp("start_date"),
+                            rs.getTimestamp("end_date"),
+                            rs.getString("location"),
+                            rs.getInt("needed_volunteers"),
+                            rs.getString("status"),
+                            rs.getString("visibility"),
+                            rs.getInt("organization_id"),
+                            rs.getInt("category_id"),
+                            rs.getDouble("total_donation"),
+                            rs.getString("organization_name"),
+                            rs.getString("category_name")
                     );
                     list.add(e);
                 }
@@ -195,21 +194,21 @@ public class AdminEventsDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     event = new Event(
-                        rs.getInt("id"),
-                        rs.getString("images"),
-                        rs.getString("title"),
-                        rs.getString("description"),
-                        rs.getTimestamp("start_date"),
-                        rs.getTimestamp("end_date"),
-                        rs.getString("location"),
-                        rs.getInt("needed_volunteers"),
-                        rs.getString("status"),
-                        rs.getString("visibility"),
-                        rs.getInt("organization_id"),
-                        rs.getInt("category_id"),
-                        rs.getDouble("total_donation"),
-                        rs.getString("organization_name"),
-                        rs.getString("category_name")
+                            rs.getInt("id"),
+                            rs.getString("images"),
+                            rs.getString("title"),
+                            rs.getString("description"),
+                            rs.getTimestamp("start_date"),
+                            rs.getTimestamp("end_date"),
+                            rs.getString("location"),
+                            rs.getInt("needed_volunteers"),
+                            rs.getString("status"),
+                            rs.getString("visibility"),
+                            rs.getInt("organization_id"),
+                            rs.getInt("category_id"),
+                            rs.getDouble("total_donation"),
+                            rs.getString("organization_name"),
+                            rs.getString("category_name")
                     );
                 }
             }
@@ -269,13 +268,12 @@ public class AdminEventsDAO {
     public List<Category> getAllCategories() {
         List<Category> list = new ArrayList<>();
         String sql = "SELECT category_id, name, description FROM Categories ORDER BY name";
-        try (PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 Category c = new Category(
-                    rs.getInt("category_id"),
-                    rs.getString("name"),
-                    rs.getString("description")
+                        rs.getInt("category_id"),
+                        rs.getString("name"),
+                        rs.getString("description")
                 );
                 list.add(c);
             }
@@ -365,7 +363,7 @@ public class AdminEventsDAO {
         if (visibility != null && !visibility.isEmpty() && !"Tất cả".equals(visibility)) {
             sql += " AND e.visibility = ?";
         }
-        
+
         sql += " ORDER BY e.id DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -385,21 +383,21 @@ public class AdminEventsDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Event e = new Event(
-                        rs.getInt("id"),
-                        rs.getString("images"),
-                        rs.getString("title"),
-                        rs.getString("description"),
-                        rs.getTimestamp("start_date"),
-                        rs.getTimestamp("end_date"),
-                        rs.getString("location"),
-                        rs.getInt("needed_volunteers"),
-                        rs.getString("status"),
-                        rs.getString("visibility"),
-                        rs.getInt("organization_id"),
-                        rs.getInt("category_id"),
-                        rs.getDouble("total_donation"),
-                        rs.getString("organization_name"),
-                        rs.getString("category_name")
+                            rs.getInt("id"),
+                            rs.getString("images"),
+                            rs.getString("title"),
+                            rs.getString("description"),
+                            rs.getTimestamp("start_date"),
+                            rs.getTimestamp("end_date"),
+                            rs.getString("location"),
+                            rs.getInt("needed_volunteers"),
+                            rs.getString("status"),
+                            rs.getString("visibility"),
+                            rs.getInt("organization_id"),
+                            rs.getInt("category_id"),
+                            rs.getDouble("total_donation"),
+                            rs.getString("organization_name"),
+                            rs.getString("category_name")
                     );
                     list.add(e);
                 }
@@ -409,5 +407,36 @@ public class AdminEventsDAO {
         }
         return list;
     }
-}
 
+    // Kiểm tra xem sự kiện đã thực sự kết thúc chưa (end_date < now)
+    public boolean isEventActuallyEnded(int eventId) {
+        String sql = "SELECT CASE WHEN end_date < GETDATE() THEN 1 ELSE 0 END AS is_ended FROM Events WHERE id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, eventId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("is_ended") == 1;
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+
+// Lấy end_date của sự kiện
+    public java.sql.Timestamp getEventEndDate(int eventId) {
+        String sql = "SELECT end_date FROM Events WHERE id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, eventId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getTimestamp("end_date");
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+}

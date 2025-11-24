@@ -22,13 +22,13 @@ public class VolunteerCancelService {
             return "Không tìm thấy đơn đăng ký!";
         }
 
-        // Kiểm tra thời gian còn lại trước sự kiện
         Event event = viewsEventDAO.getEventById(eventId);
         if (event != null && event.getStartDate() != null) {
-            long diff = event.getStartDate().getTime() - new Date().getTime();
-            long hoursRemaining = TimeUnit.MILLISECONDS.toHours(diff);
 
-            if (hoursRemaining <= 24) {
+            long diffMs = event.getStartDate().getTime() - System.currentTimeMillis();
+
+            // Không cho hủy nếu còn dưới hoặc đúng 24h
+            if (diffMs <= 24L * 60 * 60 * 1000) {
                 return "Không thể hủy đơn vì sự kiện sắp diễn ra trong vòng 24 giờ!";
             }
         }
@@ -45,4 +45,5 @@ public class VolunteerCancelService {
                 return "Trạng thái không hợp lệ!";
         }
     }
+
 }

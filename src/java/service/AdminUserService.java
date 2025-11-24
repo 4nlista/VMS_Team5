@@ -251,7 +251,4 @@ public class AdminUserService {
 			return null;
 		}
 	}
-	public boolean handleAvatarUpload(HttpServletRequest request, int userId) {
-    return AvatarUploadService.handleAvatarUpload(request, userId, this.userDAO);
-}
 }

@@ -15,6 +15,8 @@ import jakarta.servlet.http.Part;
 import java.io.File;
 
 import java.io.IOException;
+import java.util.Map;
+import service.UnifiedImageUploadService;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -66,15 +68,6 @@ public class OrganizationCreateEventServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Lấy tên file đã upload từ hidden input (đã upload qua UploadImagesServlet)
-        String fileName = request.getParameter("uploadedImage");
-        // Nếu không có file đã upload, báo lỗi
-        if (fileName == null || fileName.trim().isEmpty()) {
-            request.setAttribute("errorMsg", "Vui lòng chọn ảnh sự kiện trước khi tạo!");
-            request.getRequestDispatcher("/organization/create_events_org.jsp").forward(request, response);
-            return;
-        }
-
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
 
@@ -100,6 +93,22 @@ public class OrganizationCreateEventServlet extends HttpServlet {
         String neededVolunteersStr = request.getParameter("neededVolunteers");
         String startDateStr = request.getParameter("startDate");
         String endDateStr = request.getParameter("endDate");
+
+        // Upload ảnh sự kiện
+        Part filePart = request.getPart("eventImage");
+        UnifiedImageUploadService uploadService = new UnifiedImageUploadService();
+        Map<String, Object> uploadResult = uploadService.uploadEventImage(filePart, 0);
+        
+        String fileName = null;
+        if (uploadResult.get("success") != null && (boolean) uploadResult.get("success")) {
+            fileName = (String) uploadResult.get("fileName");
+        } else {
+            // Nếu upload thất bại, báo lỗi
+            String errorMsg = uploadResult.get("error") != null ? (String) uploadResult.get("error") : "Vui lòng chọn ảnh sự kiện!";
+            session.setAttribute("errorMessage", errorMsg);
+            response.sendRedirect(request.getContextPath() + "/OrganizationCreateEventServlet");
+            return;
+        }
 
         try {
             int categoryId = Integer.parseInt(categoryIdStr);

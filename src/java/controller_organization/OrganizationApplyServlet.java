@@ -42,7 +42,7 @@ public class OrganizationApplyServlet extends HttpServlet {
             return;
         }
         Account acc = (Account) session.getAttribute("account");
-        acc = accountService.getAccountById(acc.getId()); // cập nhật từ DB
+        acc = accountService.getAccountById(acc.getId());
         if (acc == null || !"organization".equals(acc.getRole())) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "Truy cập bị từ chối");
             return;
@@ -56,24 +56,65 @@ public class OrganizationApplyServlet extends HttpServlet {
         int organizationId = acc.getId();
         int eventId = Integer.parseInt(eventIdParam);
 
-        // nhận trạng thái lọc, mặc định là all
-        String statusFilter = request.getParameter(("statusFilter"));
+        String statusFilter = request.getParameter("statusFilter");
         if (statusFilter == null) {
             statusFilter = "all";
         }
 
-        // Tự động reject và lấy số lượng bị ảnh hưởng
+        // =====  GỬI THÔNG BÁO CHO CÁC VOLUNTEER BỊ AUTO-REJECT =====
+        // Lấy danh sách volunteer bị auto-reject (trước khi update)
+        List<EventVolunteer> pendingVolunteers = organizationApplyService
+                .getFilterVolunteersByEvent(organizationId, eventId, "pending");
+
+        // Tự động reject và lấy số lượng eventid
         int autoRejectedCount = organizationApplyService.autoRejectPendingApplications(eventId);
+
+        // Nếu có đơn bị reject → Gửi thông báo cho từng volunteer
         if (autoRejectedCount > 0) {
+            try {
+                // Lấy thông tin event và organization
+                ViewEventsDAO viewEventDAO = new ViewEventsDAO();
+                Event event = viewEventDAO.getEventById(eventId);
+
+                AdminUserDAO userDAO = new AdminUserDAO();
+                User orgUser = userDAO.getUserByAccountId(acc.getId());
+                String orgName = (orgUser != null) ? orgUser.getFull_name() : "Tổ chức";
+                String eventTitle = (event != null) ? event.getTitle() : "sự kiện";
+
+                NotificationDAO notiDAO = new NotificationDAO();
+
+                // Gửi thông báo cho TỪNG volunteer trong danh sách pending
+                for (EventVolunteer volunteer : pendingVolunteers) {
+                    Notification noti = new Notification();
+                    noti.setSenderId(acc.getId());
+                    noti.setReceiverId(volunteer.getVolunteerId());
+                    noti.setMessage("Đơn đăng ký sự kiện \"" + eventTitle
+                            + "\" của bạn đã bị tự động từ chối do không được xử lý trong 24h trước sự kiện.");
+                    noti.setType("apply");
+                    noti.setEventId(eventId);
+                    notiDAO.insertNotification(noti);
+                }
+
+                System.out.println("[AutoReject] Đã gửi " + autoRejectedCount
+                        + " thông báo cho volunteers bị từ chối");
+
+            } catch (Exception e) {
+                System.err.println("[AutoReject] Lỗi khi gửi thông báo: " + e.getMessage());
+                e.printStackTrace();
+            }
+
             session.setAttribute("warningMessage",
-                    "Đã tự động từ chối " + autoRejectedCount + " đơn đăng ký do không được xử lý trong 24h trước sự kiện.");
+                    "Đã tự động từ chối " + autoRejectedCount
+                    + " đơn đăng ký do không được xử lý trong 24h trước sự kiện.");
         }
 
-        List<EventVolunteer> volunteers = organizationApplyService.getFilterVolunteersByEvent(organizationId, eventId, statusFilter);
+        // Lấy lại danh sách volunteers sau khi đã reject
+        List<EventVolunteer> volunteers = organizationApplyService
+                .getFilterVolunteersByEvent(organizationId, eventId, statusFilter);
+
         request.setAttribute("volunteers", volunteers);
         request.setAttribute("eventId", eventId);
         request.setAttribute("statusFilter", statusFilter);
-        // Gửi sang JSP
         request.setAttribute("account", acc);
         request.getRequestDispatcher("/organization/apply_org.jsp").forward(request, response);
     }
@@ -103,24 +144,24 @@ public class OrganizationApplyServlet extends HttpServlet {
             // KIỂM TRA SLOT TRƯỚC KHI DUYỆT
             ViewEventsDAO viewEventDAO = new ViewEventsDAO();
             Event event = viewEventDAO.getEventById(eventId);
-            
+
             if (event != null) {
                 int currentApproved = organizationApplyService.countApprovedVolunteers(eventId);
                 int neededVolunteers = event.getNeededVolunteers();
-                
+
                 if (currentApproved >= neededVolunteers) {
                     // ĐÃ FULL SLOT - TỰ ĐỘNG REJECT
                     organizationApplyService.updateVolunteerStatus(applyEventId, "rejected");
-                    session.setAttribute("warningMessage", 
-                        "Sự kiện đã đủ " + neededVolunteers + " tình nguyện viên. Đơn này đã tự động bị từ chối.");
-                    
+                    session.setAttribute("warningMessage",
+                            "Sự kiện đã đủ " + neededVolunteers + " tình nguyện viên. Đơn này đã tự động bị từ chối.");
+
                     // GỬI THÔNG BÁO CHO VOLUNTEER VỀ VIỆC BỊ TỪ CHỐI
                     try {
                         AdminUserDAO userDAO = new AdminUserDAO();
                         User orgUser = userDAO.getUserByAccountId(acc.getId());
                         String orgName = (orgUser != null) ? orgUser.getFull_name() : "Tổ chức";
                         String eventTitle = event.getTitle();
-                        
+
                         NotificationDAO notiDAO = new NotificationDAO();
                         Notification noti = new Notification();
                         noti.setSenderId(acc.getId());
@@ -136,7 +177,7 @@ public class OrganizationApplyServlet extends HttpServlet {
                     // CÒN SLOT - DUYỆT BÌNH THƯỜNG
                     organizationApplyService.updateVolunteerStatus(applyEventId, "approved");
                     session.setAttribute("successMessage", "Đã duyệt đơn đăng ký thành công!");
-                    
+
                     // GỬI THÔNG BÁO CHO VOLUNTEER
                     try {
                         AdminUserDAO userDAO = new AdminUserDAO();

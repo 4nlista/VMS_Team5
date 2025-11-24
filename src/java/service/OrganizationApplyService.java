@@ -36,7 +36,6 @@ public class OrganizationApplyService {
     public List<EventVolunteer> getFilterVolunteersByEvent(int organizationId, int eventId, String statusFilter) {
         // Tự động reject các pending applications trước khi load danh sách
         organizationApplyDAO.autoRejectPendingApplications(eventId);
-        
         return organizationApplyDAO.getFilterVolunteersByEvent(organizationId, eventId, statusFilter);
     }
     
@@ -46,7 +45,8 @@ public class OrganizationApplyService {
     }
     
     // Tự động reject pending applications cho tất cả events
-    public int autoRejectAllPendingApplications() {
+    // Trả về danh sách volunteers bị reject để gửi thông báo
+    public List<EventVolunteer> autoRejectAllPendingApplications() {
         return organizationApplyDAO.autoRejectAllPendingApplications();
     }
     

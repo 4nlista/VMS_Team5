@@ -19,20 +19,20 @@ public class AdminEventUnlockServlet extends HttpServlet {
         try {
             int eventId = Integer.parseInt(request.getParameter("id"));
             boolean success = service.unlockEvent(eventId);
-            
+
             // Preserve filter parameters and page number
             String status = request.getParameter("status");
             String category = request.getParameter("category");
             String visibility = request.getParameter("visibility");
             String page = request.getParameter("page");
-            
+
             StringBuilder redirectUrl = new StringBuilder(request.getContextPath() + "/AdminEventsServlet?");
             if (success) {
                 redirectUrl.append("unlockSuccess=true");
             } else {
-                redirectUrl.append("unlockError=true");
+                redirectUrl.append("unlockError=event_ended");
             }
-            
+
             if (status != null && !status.isEmpty()) {
                 redirectUrl.append("&status=").append(status);
             }
@@ -45,7 +45,7 @@ public class AdminEventUnlockServlet extends HttpServlet {
             if (page != null && !page.isEmpty()) {
                 redirectUrl.append("&page=").append(page);
             }
-            
+
             response.sendRedirect(redirectUrl.toString());
         } catch (Exception e) {
             e.printStackTrace();
@@ -53,4 +53,3 @@ public class AdminEventUnlockServlet extends HttpServlet {
         }
     }
 }
-

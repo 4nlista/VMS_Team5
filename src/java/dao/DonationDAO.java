@@ -29,7 +29,8 @@ public class DonationDAO {
         }
     }
 
-    // truy vấn tổng tiền donation trong database
+    // Truy vấn tổng số tiền đã donate thành công (status = 'success').
+    // Dùng để hiển thị tổng tiền quyên góp trên giao diện hoặc báo cáo.
     public double getTotalDonationAmount() {
         double total = 0;
         String sql = "select SUM(amount) as total_success from Donations where status = 'success'";
@@ -42,14 +43,14 @@ public class DonationDAO {
         }
         return total;
     }
-    
-    
-    // dùng cho org xem đc tổng tiền donate của volunteer
-     public List<Donation> getDonationHistoryByVolunteerId(int volunteerId) {
+
+    // Lấy lịch sử donation của volunteer (dành cho tổ chức/quan sát viên).
+    // Trả về danh sách `Donation` kèm thông tin event, username và fullname của volunteer.
+    public List<Donation> getDonationHistoryByVolunteerId(int volunteerId) {
         List<Donation> list = new ArrayList<>();
 
         String sql = """
-            SELECT 
+            SELECT
                 d.id,
                 d.event_id,
                 d.volunteer_id,
@@ -57,21 +58,20 @@ public class DonationDAO {
                 d.donate_date,
                 d.status,
                 d.payment_method,
-                d.qr_code,
+                d.payment_txn_ref,
                 d.note,
                 a.username AS volunteerUsername,
                 u.full_name AS volunteerFullName,
                 e.title AS eventTitle
             FROM Donations d
-            JOIN Accounts a ON d.volunteer_id = a.id
-            JOIN Users u ON a.id = u.account_id
+            LEFT JOIN Accounts a ON d.volunteer_id = a.id
+            LEFT JOIN Users u ON a.id = u.account_id
             JOIN Events e ON d.event_id = e.id
             WHERE d.volunteer_id = ?
             ORDER BY d.donate_date DESC
         """;
 
-        try (Connection connection = DBContext.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
 
             ps.setInt(1, volunteerId);
             ResultSet rs = ps.executeQuery();
@@ -85,13 +85,13 @@ public class DonationDAO {
                         rs.getTimestamp("donate_date") != null ? new java.util.Date(rs.getTimestamp("donate_date").getTime()) : null,
                         rs.getString("status"),
                         rs.getString("payment_method"),
-                        rs.getString("qr_code"),
+                        rs.getString("payment_txn_ref"),
                         rs.getString("note"),
                         rs.getString("volunteerUsername"),
                         rs.getString("volunteerFullName"),
                         rs.getString("eventTitle"),
                         0, // totalAmountDonated, có thể tính thêm nếu muốn
-                        0  // numberOfEventsDonated, có thể tính thêm nếu muốn
+                        0 // numberOfEventsDonated, có thể tính thêm nếu muốn
                 );
                 list.add(donation);
             }
@@ -102,8 +102,9 @@ public class DonationDAO {
 
         return list;
     }
-    
-    // Lấy chi tiết donation theo ID (bao gồm thông tin event và organization)
+
+    // Lấy chi tiết donation theo ID (bao gồm thông tin event, volunteer và organization).
+    // Thường dùng để hiện chi tiết sau khi thanh toán hoàn tất hoặc trong trang quản lý.
     public Donation getDonationDetailById(int donationId) {
         String sql = """
             SELECT 
@@ -137,44 +138,59 @@ public class DonationDAO {
             JOIN Users u_org ON a_org.id = u_org.account_id
             WHERE d.id = ?
         """;
-        
-        try (Connection connection = DBContext.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
-            
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+
             ps.setInt(1, donationId);
             ResultSet rs = ps.executeQuery();
-            
+
             if (rs.next()) {
                 Donation donation = new Donation(
-                    rs.getInt("id"),
-                    rs.getInt("event_id"),
-                    rs.getInt("volunteer_id"),
-                    rs.getDouble("amount"),
-                    rs.getTimestamp("donate_date") != null ? new java.util.Date(rs.getTimestamp("donate_date").getTime()) : null,
-                    rs.getString("status"),
-                    rs.getString("payment_method"),
-                    rs.getString("qr_code"),
-                    rs.getString("note"),
-                    rs.getString("volunteerUsername"),
-                    rs.getString("volunteerFullName"),
-                    rs.getString("eventTitle"),
-                    0,
-                    0
+                        rs.getInt("id"),
+                        rs.getInt("event_id"),
+                        rs.getInt("volunteer_id"),
+                        rs.getDouble("amount"),
+                        rs.getTimestamp("donate_date") != null ? new java.util.Date(rs.getTimestamp("donate_date").getTime()) : null,
+                        rs.getString("status"),
+                        rs.getString("payment_method"),
+                        rs.getString("qr_code"),
+                        rs.getString("note"),
+                        rs.getString("volunteerUsername"),
+                        rs.getString("volunteerFullName"),
+                        rs.getString("eventTitle"),
+                        0,
+                        0
                 );
-                
+
                 // Set thông tin organization
                 donation.setOrganizationName(rs.getString("organizationName"));
                 donation.setEmailOrganization(rs.getString("emailOrganization"));
                 donation.setPhoneOrganization(rs.getString("phoneOrganization"));
-                
+
                 return donation;
             }
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         return null;
+    }
+
+    // lấy danh sách tổng số lượt đăng ký tham gia
+    public int getTotalApply() {
+        int total = 0;
+        String sql = "SELECT COUNT(*) AS total_approved_volunteers\n"
+                + "FROM Event_Volunteers\n"
+                + "WHERE status = 'approved'";
+        try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                total = rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return total;
     }
 
 }

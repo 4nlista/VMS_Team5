@@ -79,7 +79,7 @@
                                             <div class="mb-3 text-start">
                                                 <label class="form-label fw-semibold">Ảnh đại diện</label>
                                                 <input type="file" class="form-control${not empty errors['avatar'] ? ' is-invalid' : ''}" name="avatar" id="avatar" accept="image/*">
-                                                <small class="text-muted d-block mt-1">Hỗ trợ JPG, PNG, GIF (≤5MB).</small>
+                                                <small class="text-muted d-block mt-1">Hỗ trợ JPG, PNG, GIF (≤2MB).</small>
                                                 <c:if test="${not empty errors['avatar']}">
                                                     <div class="invalid-feedback d-block">${errors['avatar']}</div>
                                                 </c:if>
@@ -408,7 +408,7 @@
                         }
                     } catch (e) { /* ignore */
                     }
-                }, 400);
+                }, 400);    //Đó là số mili-giây (ms) mà hệ thống chờ sau khi bạn dừng nhập, rồi mới gọi servlet để kiểm tra trùng email/phone.
 
                 // Bind events
                 fields.fullName.addEventListener('input', () => validateRequired(fields.fullName, 'Họ và tên'));
@@ -444,14 +444,14 @@
                             setError(fields.avatar, 'Tệp tải lên phải là hình ảnh.');
                             return;
                         }
-                        const MAX_SIZE = 5 * 1024 * 1024;
+                        const MAX_SIZE = 2 * 1024 * 1024;
                         if (file.size > MAX_SIZE) {
                             if (avatarObjectURL) {
                                 URL.revokeObjectURL(avatarObjectURL);
                                 avatarObjectURL = null;
                             }
                             avatarPreview.src = avatarPreview.getAttribute('data-original-src');
-                            setError(fields.avatar, 'Ảnh đại diện phải nhỏ hơn hoặc bằng 5MB.');
+                            setError(fields.avatar, 'Ảnh đại diện phải nhỏ hơn hoặc bằng 2MB.');
                             return;
                         }
                         clearError(fields.avatar);

@@ -78,55 +78,30 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>
                     </c:if>
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <h5 class="card-title">Bước 1: Tải ảnh sự kiện</h5>
-
-                            <form method="post" action="UploadImagesServlet" enctype="multipart/form-data">
+                    
+                    <form method="post" action="OrganizationCreateEventServlet" enctype="multipart/form-data" id="createEventForm">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">Ảnh Sự Kiện</h5>
                                 <div class="row">
-
-                                    <div class="col-md-6">
-                                        <%-- Preview ảnh --%>
-                                        <c:if test="${not empty sessionScope.uploadedFileName}">
-                                            <div class="image-preview">
-                                                <img src="UploadImagesServlet?file=${sessionScope.uploadedFileName}" alt="Preview">
-                                            </div>
-                                            <small class="text-success d-block mt-2">
-                                                <i class="bi bi-check-circle"></i> Đã tải lên: ${sessionScope.uploadedFileName}
-                                            </small>
-                                        </c:if>
+                                    <div class="col-12 text-center mb-3">
+                                        <img id="imagePreview" 
+                                             src=""
+                                             style="max-width:300px; max-height:300px; object-fit:contain; border:2px dashed #dee2e6; border-radius:8px; padding:20px; background-color:#f8f9fa;" />
                                     </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label required">Ảnh Sự Kiện</label>
-                                        <c:choose>
-                                            <c:when test="${not empty uploadedFileName}">
-                                                <input type="text" class="form-control" value="${sessionScope.uploadedFileName}" readonly>
-                                                <input type="hidden" name="uploadedImage" value="${sessionScope.uploadedFileName}">
-                                            </c:when>
-                                            <c:otherwise>
-                                                <input type="text" class="form-control" value="Chưa tải ảnh" readonly>
-                                            </c:otherwise>
-                                        </c:choose>
+                                    <div class="col-12">
+                                        <label class="form-label required">Chọn Ảnh Sự Kiện</label>
+                                        <input type="file" class="form-control" name="eventImage" id="eventImage" accept="image/*" required>
+                                        <small class="text-muted">Kích thước tối đa: 2MB. Định dạng: JPG, PNG, GIF, WebP</small>
+                                        <div id="fileError" class="text-danger mt-2" style="display: none;"></div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label required">Chọn Ảnh</label>
-                                        <input type="file" class="form-control" name="eventImage" accept="image/*" 
-                                               onchange="this.form.submit()" required>
-                                    </div>
-
                                 </div>
-                            </form>
+                            </div>
                         </div>
-                    </div>
 
-                    <form method="post" action="OrganizationCreateEventServlet" enctype="multipart/form-data">
-                        <%-- ✅ ĐOẠN VỪA THÊM --%>
-                        <c:if test="${not empty sessionScope.uploadedFileName}">
-                            <input type="hidden" name="uploadedImage" value="${sessionScope.uploadedFileName}">
-                        </c:if>
-                        <%-- KẾT THÚC ĐOẠN THÊM --%>
                         <div class="card">
                             <div class="card-body">
+                                <h5 class="card-title mb-3">Thông Tin Sự Kiện</h5>
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <label class="form-label required">Tiêu Đề</label>
@@ -198,9 +173,69 @@
                     setTimeout(function() {
                         var bsAlert = new bootstrap.Alert(alert);
                         bsAlert.close();
-                    }, 5000); // 5 giây cho alert error để user đọc rõ
+                    }, 5000);
                 }
             };
+
+            // Preview ảnh và validate kích thước
+            const fileInput = document.getElementById('eventImage');
+            const imagePreview = document.getElementById('imagePreview');
+            const fileError = document.getElementById('fileError');
+            const form = document.getElementById('createEventForm');
+            const MAX_SIZE = 2 * 1024 * 1024; // 2MB
+
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                fileError.style.display = 'none';
+                
+                if (!file) {
+                    imagePreview.src = 'https://cdn-icons-png.flaticon.com/512/3209/3209265.png';
+                    return;
+                }
+
+                // Validate file type
+                if (!file.type.startsWith('image/')) {
+                    fileError.textContent = '⚠️ File phải là ảnh (JPG, PNG, GIF, WebP)';
+                    fileError.style.display = 'block';
+                    fileInput.value = '';
+                    imagePreview.src = 'https://cdn-icons-png.flaticon.com/512/3209/3209265.png';
+                    return;
+                }
+
+                // Validate file size
+                if (file.size > MAX_SIZE) {
+                    const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                    fileError.textContent = `⚠️ Kích thước file (${sizeMB}MB) vượt quá giới hạn 2MB!`;
+                    fileError.style.display = 'block';
+                    fileInput.value = '';
+                    imagePreview.src = 'https://cdn-icons-png.flaticon.com/512/3209/3209265.png';
+                    return;
+                }
+
+                // Preview ảnh
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+
+            // Validate trước khi submit
+            form.addEventListener('submit', function(e) {
+                const file = fileInput.files[0];
+                if (!file) {
+                    e.preventDefault();
+                    fileError.textContent = '⚠️ Vui lòng chọn ảnh sự kiện!';
+                    fileError.style.display = 'block';
+                    return false;
+                }
+                if (file.size > MAX_SIZE) {
+                    e.preventDefault();
+                    fileError.textContent = '⚠️ Kích thước file vượt quá 2MB!';
+                    fileError.style.display = 'block';
+                    return false;
+                }
+            });
         </script>
     </body>
 </html>

@@ -119,5 +119,5 @@ public class New {
     public void setOrganizationName(String organizationName) {
         this.organizationName = organizationName;
     }
-    
+
 }

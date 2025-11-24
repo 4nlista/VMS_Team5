@@ -7,6 +7,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -74,7 +75,9 @@
                                     <tr>
                                         <td>${loop.index + 1}</td>
                                         <td class="text-truncate" title="">${newItem.title}</td>
-                                        <td class="text-truncate" title="">${newItem.createdAt}</td>
+                                        <td class="text-truncate">
+                                            <fmt:formatDate value="${newItem.createdAt}" pattern="dd/MM/yyyy HH:mm:ss"/>
+                                        </td>
                                         <td>
                                             <c:choose>
                                                 <c:when test="${newItem.status == 'published'}">
@@ -99,13 +102,13 @@
                                                     Xem
                                                 </button>
                                             </form>
-                                            
+
                                             <!-- Nút Sửa: Chỉ hiện khi KHÔNG phải pending hoặc rejected -->
                                             <c:if test="${newItem.status != 'pending' && newItem.status != 'rejected'}">
                                                 <a href="${pageContext.request.contextPath}/OrganizationNewsEdit?id=${newItem.id}" 
                                                    class="btn btn-warning btn-sm me-1">Sửa</a>
                                             </c:if>
-                                            
+
                                             <!-- Nút Xóa -->
                                             <form action="${pageContext.request.contextPath}/OrganizationNewsDelete" 
                                                   method="post" 
